@@ -102,7 +102,7 @@ contact_matrix <- function(n = 1, age.limits, survey = "polymod", countries, sur
         if (length(missing.countries) > 0)
         {
             warning("Could not find population data for ", paste(missing.countries, collapse = ", "), ". ",
-                    " Use countries() to get a list of country names.")
+                    " Use wpp_countries() to get a list of country names.")
         }
 
         survey.pop <- pop[country %in% survey.countries & year == survey.year][, list(population = sum(population) * 1000), by = "lower.age.limit"]
