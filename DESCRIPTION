@@ -3,9 +3,11 @@ Title: Social Mixing Matrices for Infectious Disease Modelling
 Version: 0.0.0.9000
 Authors@R: person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre"))
 Depends:
-    R (>= 3.3.1)
+    R (>= 3.3.1),
+    data.table
 Imports:
-    reshape2
+    reshape2,
+    wpp2015
 Description: Provides methods for sampling contact matrices from diary data and
     calculate simple epidemiological quantities from it.
 License: GPL-3
