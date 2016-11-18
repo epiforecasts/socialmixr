@@ -113,7 +113,7 @@ contact_matrix <- function(n = 1, age.limits, survey = "polymod", countries, sur
     if (missing(age.limits)) {
         age.limits <- unique(survey.pop$lower.age.limits)
     } else {
-        ages[, lower.age.limit := reduce.agegroups(lower.age.limit, age.limits)]
+        ages[, lower.age.limit := reduce_agegroups(lower.age.limit, age.limits)]
         ages <- ages[, list(population = sum(population)), by = lower.age.limit]
     }
     setkey(ages, lower.age.limit)
@@ -133,18 +133,18 @@ contact_matrix <- function(n = 1, age.limits, survey = "polymod", countries, sur
                    max(contacts[, get(contact.age.column)], na.rm = TRUE)) + 1
 
     ## possibly adjust age groups according to maximum age (so as not to have empty age groups)
-    ages[, lower.age.limit := reduce.agegroups(lower.age.limit, lower.age.limit[lower.age.limit < max.age])]
+    ages[, lower.age.limit := reduce_agegroups(lower.age.limit, lower.age.limit[lower.age.limit < max.age])]
     ages <- ages[, list(population = sum(population)), by = lower.age.limit]
 
     ## assign age group to participants
-    participants[, lower.age.limit := reduce.agegroups(get(part.age.column), ages$lower.age.limit)]
+    participants[, lower.age.limit := reduce_agegroups(get(part.age.column), ages$lower.age.limit)]
     present.lower.age.limits <-
         participants[, .N, by = lower.age.limit][N > 1]$lower.age.limit
     present.lower.age.limits <-
         present.lower.age.limits[order(present.lower.age.limits)]
 
     ## reduce to all lower limits that exist in the data
-    ages[, lower.age.limit := reduce.agegroups(lower.age.limit, present.lower.age.limits)]
+    ages[, lower.age.limit := reduce_agegroups(lower.age.limit, present.lower.age.limits)]
     ages <- ages[, list(population = sum(population)), by = lower.age.limit]
 
     ## set upper age limits
