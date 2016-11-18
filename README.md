@@ -4,10 +4,10 @@ Social mixing matrices for infectious disease modelling in R
 [socialmixr](https://github.com/sbfnk/socialmixr) is an `R` package to derive social mixing matrices from survey data.
 
 It mainly contains:
-- a function `contact_matrix` to sample contact matrices from 
-- functions `endemic.age.dist` to estimate the expected equilibrium age distribution using the method of Wallinga
-- functions `epidemic.age.dist` to estimate the expected outbreak age distribution using the method of Wallinga
-- various social mixing data sets
+- a function `contact_matrix` to sample contact matrices from diary data
+<!-- - functions `endemic.age.dist` to estimate the expected equilibrium age distribution using the method of Wallinga -->
+<!-- - functions `epidemic.age.dist` to estimate the expected outbreak age distribution using the method of Wallinga -->
+<!-- - various social mixing data sets -->
 
 Installation
 ==============
