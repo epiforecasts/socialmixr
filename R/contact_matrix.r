@@ -28,8 +28,8 @@ contact_matrix <- function(n = 1, age.limits, survey = "polymod", countries, sur
     if ((missing(survey.pop) || is.character(survey.pop)) &&
         (missing(mixing.pop) || is.character(mixing.pop)))
     {
-        data(popM)
-        data(popF)
+        data(popM, package = "wpp2015")
+        data(popF, package = "wpp2015")
 
         popM <- data.table(popM)
         popF <- data.table(popF)
