@@ -2,4 +2,6 @@
 
 export(contact_matrix)
 import(wpp2015)
+importFrom(data.table,data.table)
+importFrom(data.table,setnames)
 importFrom(reshape2,melt)

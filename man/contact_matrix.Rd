@@ -46,7 +46,7 @@ contact_matrix(n = 1, age.limits, survey = "polymod", countries, survey.pop,
 \item{symmetry}{make contact matrix symmetric}
 }
 \value{
-a list of sampled contact matrices
+a list of sampled contact matrices, and the underlying demography
 }
 \description{
 Samples polymod using weights following Baguelin et al. (2013), but
