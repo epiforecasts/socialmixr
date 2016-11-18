@@ -17,9 +17,10 @@
 ##' @param country.column column indicating the country
 ##' @param add.weights additional weight columns (e.g., minutes etc
 ##' @param symmetry make contact matrix symmetric
-##' @return a list of sampled contact matrices
+##' @return a list of sampled contact matrices, and the underlying demography
 ##' @import wpp2015
 ##' @importFrom reshape2 melt
+##' @importFrom data.table data.table setnames
 ##' @export
 ##' @author Sebastian Funk
 contact_matrix <- function(n = 1, age.limits, survey = "polymod", countries, survey.pop, mixing.pop, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year")
@@ -69,7 +70,7 @@ contact_matrix <- function(n = 1, age.limits, survey = "polymod", countries, sur
 
     if (!missing(countries))
     {
-        survey_data <- lapply(survey_data, function (x) {x[get(country.column %in% countries)]})
+        survey_data[["participants"]] <- survey_data[["participants"]][get(country.column) %in% countries]
     }
 
     if (missing(survey.pop))
@@ -123,7 +124,7 @@ contact_matrix <- function(n = 1, age.limits, survey = "polymod", countries, sur
     participants <- copy(data.table(survey_data[["participants"]]))
     contacts <- copy(data.table(survey_data[["contacts"]]))
     if (nrow(participants[is.na(get(part.age.column))]) > 0) {
-        warning("removing participants without age")
+        warning("removing participants with no age recorded")
     }
     participants <- participants[!is.na(get(part.age.column))]
 
@@ -148,10 +149,6 @@ contact_matrix <- function(n = 1, age.limits, survey = "polymod", countries, sur
 
     ## set upper age limits
     ages[, upper.age.limit := c(ages$lower.age.limit[-1], max.age)]
-
-    ## reduce age groups in contacts
-    contacts[, lower.age.limit := reduce.agegroups(get(part.age.column), ages$lower.age.limit)]
-    contacts <- merge(contacts, ages[, list(lower.age.limit, upper.age.limit)], by = "lower.age.limit")
 
     participants[, agegroup := cut(participants[, get(part.age.column)],
                                    breaks = union(present.lower.age.limits, max.age),
@@ -280,7 +277,7 @@ contact_matrix <- function(n = 1, age.limits, survey = "polymod", countries, sur
     if (length(ret) > 1)
         return(list(matrices = ret, demography = ages))
     else if (length(ret) == 1)
-        return(list(matrix = ret[[1]], demography = ages))
+        return(c(ret[[1]], list(demography = ages)))
     else
         stop("No matrix.")
 }
