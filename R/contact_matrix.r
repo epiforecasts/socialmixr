@@ -21,6 +21,7 @@
 ##' @import wpp2015
 ##' @importFrom stats xtabs runif
 ##' @importFrom reshape2 melt dcast
+##' @importFrom utils data
 ##' @importFrom data.table data.table setnames
 ##' @export
 ##' @author Sebastian Funk
@@ -29,6 +30,9 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
     ## load population data if necessary
     if (missing(survey.pop) || is.character(survey.pop))
     {
+        data(popF, package = "wpp2015", envir = environment())
+        data(popM, package = "wpp2015", envir = environment())
+
         popM <- data.table(popM)
         popF <- data.table(popF)
 
