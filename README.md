@@ -9,7 +9,7 @@ It contains:
 - a function `contact_matrix` to sample contact matrices from diary data
 <!-- - functions `endemic.age.dist` to estimate the expected equilibrium age distribution using the method of Wallinga -->
 <!-- - functions `epidemic.age.dist` to estimate the expected outbreak age distribution using the method of Wallinga -->
-- various social mixing data sets -->
+- various social mixing data sets
 
 Installation
 ==============
