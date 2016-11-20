@@ -105,6 +105,9 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
         {
             stop("Could not construct survey population data.")
         }
+    } else
+    {
+        survey.pop <- data.table(survey.pop)
     }
 
     setkey(survey.pop, lower.age.limit)
