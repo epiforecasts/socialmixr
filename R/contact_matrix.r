@@ -100,6 +100,11 @@ contact_matrix <- function(n = 1, survey = "POLYMOD", countries, survey.pop, age
         }
 
         survey.pop <- pop[country %in% survey.countries & year == survey.year][, list(population = sum(population) * 1000), by = "lower.age.limit"]
+
+        if (nrow(survey.pop) == 0)
+        {
+            stop("Could not construct survey population data.")
+        }
     }
 
     setkey(survey.pop, lower.age.limit)
