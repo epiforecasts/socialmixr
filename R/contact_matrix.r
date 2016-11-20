@@ -29,9 +29,6 @@ contact_matrix <- function(n = 1, survey = "POLYMOD", countries, survey.pop, age
     ## load population data if necessary
     if (missing(survey.pop) || is.character(survey.pop))
     {
-        data(popM, package = "wpp2015")
-        data(popF, package = "wpp2015")
-
         popM <- data.table(popM)
         popF <- data.table(popF)
 
