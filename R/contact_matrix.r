@@ -23,7 +23,7 @@
 ##' @importFrom data.table data.table setnames
 ##' @export
 ##' @author Sebastian Funk
-contact_matrix <- function(n = 1, age.limits, survey = "polymod", countries, survey.pop, mixing.pop, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year")
+contact_matrix <- function(n = 1, age.limits, survey = "POLYMOD", countries, survey.pop, mixing.pop, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year")
 {
     ## load population data if necessary
     if ((missing(survey.pop) || is.character(survey.pop)) &&
@@ -50,23 +50,20 @@ contact_matrix <- function(n = 1, age.limits, survey = "polymod", countries, sur
     ## check if survey is given as character
     if (is.character(survey))
     {
-        if (tolower(survey) == "polymod")
+        tryCatch(
         {
-            survey_data <- list(participants = polymod$participants,
-                                contacts = polymod$contacts)
-        } else
+            survey <- get(tolower(survey))
+            survey_data <- list(participants = survey$participants,
+                                contacts = survey$contacts)
+        }, error = function(e)
         {
-            stop("Unknown survey, '", survey, "''")
-        }
-    } else
+            stop("Survey ", survey, " not found.")
+        })
+    } else if (!is.list(survey) || is.null(names(survey)) || !(all(names(survey) %in% c("participants", "contacts"))))
     {
-        if (!is.list(survey) || is.null(names(survey)) || !(all(names(survey) %in% c("participants", "contacts"))))
-        {
-            stop("'survey' must be either a character string or a named list with elements named 'participants' and 'contacts'")
-        }
-        survey_data <- survey
+        stop("'survey' must be either a character string or a named list with elements named 'participants' and 'contacts'")
     }
-    survey_data <- lapply(survey_data, data.table)
+    survey_data <- lapply(survey, data.table)
 
     if (!missing(countries))
     {
