@@ -284,10 +284,10 @@ contact_matrix <- function(n = 1, survey = "POLYMOD", countries, survey.pop, age
 
         if (split)
         {
-            contacts <- apply(weighted.matrix, 2, sum)
+            nb_contacts <- apply(weighted.matrix, 2, sum)
             age_proportions <- survey.pop$population / sum(survey.pop$population)
-            weighted.matrix <- t(t(weighted.matrix / contacts) / age_proportions)
-            ret[[i]][["contacts"]] <- contacts
+            weighted.matrix <- t(t(weighted.matrix / nb_contacts) / age_proportions)
+            ret[[i]][["contacts"]] <- nb_contacts
         }
 
         ret[[i]][["matrix"]] <- weighted.matrix
