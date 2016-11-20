@@ -5,7 +5,7 @@
 \title{Samples polymod using weights following Baguelin et al. (2013), but
 using a bootstrap; first, contacts and ages are sampled}
 \usage{
-contact_matrix(n = 1, age.limits, survey = "polymod", countries, survey.pop,
+contact_matrix(n = 1, age.limits, survey = "POLYMOD", countries, survey.pop,
   mixing.pop, bootstrap = FALSE, symmetric = TRUE, normalise = FALSE,
   split = FALSE, add.weights = c(), part.age.column = "participant_age",
   contact.age.column = "cnt_age_mean", id.column = "global_id",

@@ -2,7 +2,7 @@
 % Please edit documentation in R/wpp_countries.r
 \name{wpp_countries}
 \alias{wpp_countries}
-\title{List all countries for which socialmixr has population data}
+\title{List all countries and regions for which socialmixr has population data}
 \usage{
 wpp_countries()
 }

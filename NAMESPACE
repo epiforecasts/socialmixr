@@ -2,8 +2,10 @@
 
 export(contact_matrix)
 export(reduce_agegroups)
+export(survey_countries)
 export(wpp_countries)
 import(wpp2015)
 importFrom(data.table,data.table)
+importFrom(data.table,setkey)
 importFrom(data.table,setnames)
 importFrom(reshape2,melt)
