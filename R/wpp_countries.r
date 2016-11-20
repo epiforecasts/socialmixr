@@ -6,8 +6,6 @@
 ##' @export
 wpp_countries <- function()
 {
-    data(popF, package = "wpp2015")
-    data(popM, package = "wpp2015")
     pop <- data.table(rbind(popF, popM))
     setkey(pop, country)
     return(unique(pop$country))
