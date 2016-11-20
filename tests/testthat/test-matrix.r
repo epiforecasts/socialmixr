@@ -7,7 +7,7 @@ participants_reduced$participants$added_weight <- 0.5
 
 options <-
   list(test1 = list(survey = "POLYMOD", normalise = TRUE, split = TRUE),
-       test2 = list(n = 2, survey = participants_reduced, countries = c("Italy"), age.limits = c(0, 1), add.weights = "added_weight", normalise = TRUE, split = TRUE, bootstrap = TRUE))
+       test2 = list(n = 2, survey = participants_reduced, countries = c("Italy"), age.limits = c(0, 1), add.weights = "added_weight", normalise = TRUE, split = TRUE))
 
 contacts <- lapply(options, function(x) {do.call(contact_matrix, x)})
 
@@ -53,4 +53,9 @@ test_that("error is thrown if no survey population can be generated",
 test_that("warning is thrown if country is not found",
 {
   expect_warning(contact_matrix(survey = "POLYMOD", countries = c("Italy", "Zamonia")), "Could not find population data")
+})
+
+test_that("warning is thrown if n > 1 and bootstrap = FALSE",
+{
+  expect_warning(contact_matrix(survey = "POLYMOD", n = 2, bootstrap = FALSE), "n > 1 does not make sense if not bootstrapping")
 })
