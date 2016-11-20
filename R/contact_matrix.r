@@ -2,10 +2,10 @@
 ##' using a bootstrap; first, contacts and ages are sampled
 ##'
 ##' @param n number of matrices to sample
-##' @param age.limits Lower limits of the age groups; if not given, will use 5 year age limits as in the population data
 ##' @param survey either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from
 ##' @param countries limit to one or more countries; if not given, will use all countries in the survey
 ##' @param survey.pop survey population -- either a data frame with columns lower.age.limit and population, or a character vector giving the name(s) to use with the 2013 WHO population; if not given, will use the country populations from the desired countries, or all countries in the survey if \code{countries} is not given
+##' @param age.limits Lower limits of the age groups; if not given, will use 5 year age limits as in the survey population data
 ##' @param bootstrap whether to sample using a bootstrap; will be set to TRUE if n > 1
 ##' @param symmetric whether to make matrix symmetric
 ##' @param normalise whether to normalise to eigenvalue 1
@@ -24,7 +24,7 @@
 ##' @importFrom data.table data.table setnames
 ##' @export
 ##' @author Sebastian Funk
-contact_matrix <- function(n = 1, age.limits, survey = "POLYMOD", countries, survey.pop, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year")
+contact_matrix <- function(n = 1, survey = "POLYMOD", countries, survey.pop, age.limits, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year")
 {
     ## load population data if necessary
     if (missing(survey.pop) || is.character(survey.pop))
