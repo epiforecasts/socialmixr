@@ -19,7 +19,7 @@
 ##' @param year.column column indicating the year
 ##' @return a list of sampled contact matrices, and the underlying demography
 ##' @import wpp2015
-##' @importFrom stats xtabs
+##' @importFrom stats xtabs runif
 ##' @importFrom reshape2 melt dcast
 ##' @importFrom data.table data.table setnames
 ##' @export
