@@ -17,7 +17,7 @@
 ##' @param dayofweek.column column indicating the day of the week
 ##' @param country.column column indicating the country
 ##' @param year.column column indicating the year
-##' @return a list of sampled contact matrices, and the underlying demography
+##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
 ##' @import wpp2015
 ##' @importFrom stats xtabs runif
 ##' @importFrom reshape2 melt dcast
@@ -294,7 +294,7 @@ contact_matrix <- function(n = 1, survey = "POLYMOD", countries, survey.pop, age
     }
 
     if (length(ret) > 1)
-        return(list(matrices = ret, demography = survey.pop))
+        return(list(matrices = ret, survey = survey.pop))
     else if (length(ret) == 1)
         return(c(ret[[1]], list(demography = survey.pop)))
     else

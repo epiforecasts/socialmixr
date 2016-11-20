@@ -46,7 +46,7 @@ contact_matrix(n = 1, survey = "POLYMOD", countries, survey.pop, age.limits,
 \item{year.column}{column indicating the year}
 }
 \value{
-a list of sampled contact matrices, and the underlying demography
+a list of sampled contact matrices, and the underlying demography of the surveyed population
 }
 \description{
 Samples polymod using weights following Baguelin et al. (2013), but
