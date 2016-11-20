@@ -10,24 +10,24 @@
 ##' @param symmetric whether to make matrix symmetric
 ##' @param normalise whether to normalise to eigenvalue 1
 ##' @param split whether to split the number of contacts and assortativity
+##' @param add.weights additional weight columns (e.g., minutes etc
 ##' @param part.age.column column indicating age in participant data
 ##' @param contact.age.column column indicating age in contact data
 ##' @param id.column column to match participants with contacts
 ##' @param dayofweek.column column indicating the day of the week
 ##' @param country.column column indicating the country
-##' @param add.weights additional weight columns (e.g., minutes etc
-##' @param symmetry make contact matrix symmetric
+##' @param year.column column indicating the year
 ##' @return a list of sampled contact matrices, and the underlying demography
 ##' @import wpp2015
-##' @importFrom reshape2 melt
+##' @importFrom stats xtabs
+##' @importFrom reshape2 melt dcast
 ##' @importFrom data.table data.table setnames
 ##' @export
 ##' @author Sebastian Funk
-contact_matrix <- function(n = 1, age.limits, survey = "POLYMOD", countries, survey.pop, mixing.pop, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year")
+contact_matrix <- function(n = 1, age.limits, survey = "POLYMOD", countries, survey.pop, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year")
 {
     ## load population data if necessary
-    if ((missing(survey.pop) || is.character(survey.pop)) &&
-        (missing(mixing.pop) || is.character(mixing.pop)))
+    if (missing(survey.pop) || is.character(survey.pop))
     {
         data(popM, package = "wpp2015")
         data(popF, package = "wpp2015")

@@ -6,8 +6,8 @@
 using a bootstrap; first, contacts and ages are sampled}
 \usage{
 contact_matrix(n = 1, age.limits, survey = "POLYMOD", countries, survey.pop,
-  mixing.pop, bootstrap = FALSE, symmetric = TRUE, normalise = FALSE,
-  split = FALSE, add.weights = c(), part.age.column = "participant_age",
+  bootstrap = FALSE, symmetric = TRUE, normalise = FALSE, split = FALSE,
+  add.weights = c(), part.age.column = "participant_age",
   contact.age.column = "cnt_age_mean", id.column = "global_id",
   dayofweek.column = "day_of_week", country.column = "country",
   year.column = "year")
@@ -42,6 +42,8 @@ contact_matrix(n = 1, age.limits, survey = "POLYMOD", countries, survey.pop,
 \item{dayofweek.column}{column indicating the day of the week}
 
 \item{country.column}{column indicating the country}
+
+\item{year.column}{column indicating the year}
 
 \item{symmetry}{make contact matrix symmetric}
 }
