@@ -116,27 +116,27 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
         age.limits <- unique(survey.pop$lower.age.limits)
     } else {
         age.limits <- age.limits[order(age.limits)]
-        survey.pop <- survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, age.limits)]
-        survey.pop <- survey.pop[, list(population = sum(population)), by = lower.age.limit]
-
         missing.ages <- setdiff(age.limits[age.limits <= max(survey.pop$lower.age.limit)], survey.pop$lower.age.limit)
         if (length(missing.ages) > 0) {
             warning("Not all age groups represented in population data (5-year age band). Linearly estimating age group sizes from the 5-year bands.")
             survey.pop <- survey.pop[, original.upper.age.limit := c(survey.pop$lower.age.limit[-1], NA)]
             survey.pop <- survey.pop[, original.lower.age.limit := lower.age.limit]
             all.ages <- data.frame(lower.age.limit = age.limits[age.limits <= max(survey.pop$lower.age.limit)])
-            survey.pop <- merge(survey.pop, all.ages, all.y = TRUE, by = "lower.age.limit")
+            survey.pop <- merge(survey.pop, all.ages, all = TRUE, by = "lower.age.limit")
             survey.pop <- survey.pop[, segment := cumsum(!is.na(original.lower.age.limit))]
             survey.pop <- survey.pop[, original.lower.age.limit := original.lower.age.limit[1], by = segment]
             survey.pop <- survey.pop[, original.upper.age.limit := original.upper.age.limit[1], by = segment]
             survey.pop <- survey.pop[, population := population[1], by = segment]
             survey.pop <- survey.pop[, upper.age.limit := c(survey.pop$lower.age.limit[-1], NA)]
-            survey.pop <-
-                survey.pop[!is.na(original.upper.age.limit),
-                           population := round(population * (upper.age.limit - lower.age.limit) /
-                               (original.upper.age.limit - original.lower.age.limit))]
+            survey.pop[!is.na(original.upper.age.limit),
+                       population := round(population * (upper.age.limit - lower.age.limit) /
+                                           (original.upper.age.limit - original.lower.age.limit))]
             survey.pop <- survey.pop[, list(lower.age.limit, population)]
         }
+
+        survey.pop <- survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, age.limits)]
+        survey.pop <- survey.pop[, list(population = sum(population)), by = lower.age.limit]
+
     }
     setkey(survey.pop, lower.age.limit)
 
