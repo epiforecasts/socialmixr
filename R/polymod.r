@@ -15,4 +15,4 @@
 #'   ...
 #' }
 #' @source \url{http://dx.doi.org/10.1371/journal.pmed.0050074}
-"POLYMOD"
+"polymod"

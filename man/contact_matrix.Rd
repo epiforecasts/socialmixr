@@ -17,7 +17,7 @@ contact_matrix(n = 1, age.limits, survey = "POLYMOD", countries, survey.pop,
 
 \item{age.limits}{Lower limits of the age groups; if not given, will use 5 year age limits as in the population data}
 
-\item{survey}{either a survey ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from}
+\item{survey}{either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from}
 
 \item{countries}{limit to one or more countries; if not given, will use all countries in the survey}
 
@@ -44,8 +44,6 @@ contact_matrix(n = 1, age.limits, survey = "POLYMOD", countries, survey.pop,
 \item{country.column}{column indicating the country}
 
 \item{year.column}{column indicating the year}
-
-\item{symmetry}{make contact matrix symmetric}
 }
 \value{
 a list of sampled contact matrices, and the underlying demography

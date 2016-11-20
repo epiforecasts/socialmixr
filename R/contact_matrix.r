@@ -3,7 +3,7 @@
 ##'
 ##' @param n number of matrices to sample
 ##' @param age.limits Lower limits of the age groups; if not given, will use 5 year age limits as in the population data
-##' @param survey either a survey ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from
+##' @param survey either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from
 ##' @param countries limit to one or more countries; if not given, will use all countries in the survey
 ##' @param survey.pop survey population -- either a data frame with columns lower.age.limit and population, or a character vector giving the name(s) to use with the 2013 WHO population; if not given, will use the country populations from the desired countries, or all countries in the survey if \code{countries} is not given
 ##' @param bootstrap whether to sample using a bootstrap; will be set to TRUE if n > 1
