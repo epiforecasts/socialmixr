@@ -7,6 +7,11 @@ test_that("list of surveys is not empty",
 
 test_that("surveys can be cited",
 {
-  expect_true(all(sapply(surveys(), function(x) {class(survey_citation(x, quiet = TRUE)) == "bibentry"})))
+  expect_true(all(sapply(surveys(), function(x) {class(survey_citation(x)) == "bibentry"})))
+})
+
+test_that("missing surveys can't' be cited",
+{
+  expect_error(survey_citation("bogus"), "Survey.*not found")
 })
 
