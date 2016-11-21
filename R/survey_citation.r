@@ -4,6 +4,7 @@
 ##' @param quiet if set to TRUE, do not print entry, just return bibentry object
 ##' @return citation as bibentry
 ##' @importFrom RefManageR ReadCrossRef
+##' @importFrom utils bibentry
 ##' @export
 survey_citation <- function(survey, quiet = FALSE)
 {
