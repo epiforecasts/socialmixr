@@ -18,9 +18,8 @@
 ##' @param country.column column indicating the country
 ##' @param year.column column indicating the year
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
-##' @import wpp2015
 ##' @importFrom stats xtabs runif
-##' @importFrom reshape2 melt dcast
+##' @importFrom reshape2 melt
 ##' @importFrom utils data
 ##' @importFrom data.table data.table setnames
 ##' @export
@@ -30,22 +29,7 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
     ## load population data if necessary
     if (missing(survey.pop) || is.character(survey.pop))
     {
-        data(popF, package = "wpp2015", envir = environment())
-        data(popM, package = "wpp2015", envir = environment())
-
-        popM <- data.table(popM)
-        popF <- data.table(popF)
-
-        popM <- popM[, sex := "male"]
-        popF <- popF[, sex := "female"]
-
-        pop <- rbind(popM, popF)
-
-        pop <- melt(pop, id.vars = c("country", "country_code", "age", "sex"), variable.name = "year")
-        pop <- data.table(dcast(pop, country + country_code + age + year ~ sex, value.var = "value"))
-        pop <- pop[, year := as.integer(as.character(year))]
-        pop <- pop[, lower.age.limit := as.integer(sub("[-+].*$", "", age))]
-        pop <- pop[, list(country, lower.age.limit, year, population = female + male)]
+        pop <- data.table(pop_age())
     }
 
     ## check if survey is given as character
