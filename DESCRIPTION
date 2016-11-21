@@ -1,13 +1,15 @@
 Package: socialmixr
-Title: Social Mixing Matrices for Infectious Disease Modelling
 Version: 0.0.0.9000
+Date: 2016-11-21
+Title: Social Mixing Matrices for Infectious Disease Modelling
 Authors@R: person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre"))
 Depends:
     R (>= 3.3.1),
     data.table
 Imports:
     reshape2,
-    wpp2015
+    wpp2015,
+    RefManageR
 Description: Provides methods for sampling contact matrices from diary data and
     calculate simple epidemiological quantities from it.
 License: GPL-3

@@ -2,7 +2,7 @@
 % Please edit documentation in R/reduce_agegroups.r
 \name{reduce_agegroups}
 \alias{reduce_agegroups}
-\title{Reduce the number of age groups given a broader set of limtis}
+\title{Reduce the number of age groups given a broader set of limits}
 \usage{
 reduce_agegroups(x, limits)
 }

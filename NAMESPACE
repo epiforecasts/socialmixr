@@ -2,9 +2,12 @@
 
 export(contact_matrix)
 export(reduce_agegroups)
+export(survey_citation)
 export(survey_countries)
+export(surveys)
 export(wpp_countries)
 import(wpp2015)
+importFrom(RefManageR,ReadCrossRef)
 importFrom(data.table,data.table)
 importFrom(data.table,setkey)
 importFrom(data.table,setnames)
