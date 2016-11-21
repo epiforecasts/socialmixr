@@ -1,4 +1,4 @@
-##' Reduce the number of age groups given a broader set of limtis
+##' Reduce the number of age groups given a broader set of limits
 ##'
 ##' Operates on lower limits
 ##' @param x vector of limits
