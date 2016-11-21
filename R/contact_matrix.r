@@ -51,14 +51,14 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
     ## check if survey is given as character
     if (is.character(survey))
     {
+        survey_name <- survey
         tryCatch(
         {
-            survey <- get(tolower(survey))
-            survey_data <- list(participants = survey$participants,
-                                contacts = survey$contacts)
+            survey <- get(tolower(survey_name))
+            message("Using survey ", sQuote(survey_name), ". To cite this in a publication, use the output of survey_citation('", survey_name, "')")
         }, error = function(e)
         {
-            stop("Survey ", survey, " not found.")
+            stop("Survey ", survey_name, " not found.")
         })
     } else if (!is.list(survey) || is.null(names(survey)) || !(all(names(survey) %in% c("participants", "contacts"))))
     {
