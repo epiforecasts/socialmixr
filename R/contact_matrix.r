@@ -1,5 +1,6 @@
-##' Samples polymod using weights following Baguelin et al. (2013), but
-##' using a bootstrap; first, contacts and ages are sampled
+##' Generate a contact matrix from diary survey data
+##'
+##' Samples a contact survey using a bootstrap
 ##'
 ##' @param survey either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from
 ##' @param countries limit to one or more countries; if not given, will use all countries in the survey

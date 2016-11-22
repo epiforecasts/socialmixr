@@ -2,8 +2,7 @@
 % Please edit documentation in R/contact_matrix.r
 \name{contact_matrix}
 \alias{contact_matrix}
-\title{Samples polymod using weights following Baguelin et al. (2013), but
-using a bootstrap; first, contacts and ages are sampled}
+\title{Generate a contact matrix from diary survey data}
 \usage{
 contact_matrix(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1,
   bootstrap = FALSE, symmetric = TRUE, normalise = FALSE, split = FALSE,
@@ -49,8 +48,7 @@ contact_matrix(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1,
 a list of sampled contact matrices, and the underlying demography of the surveyed population
 }
 \description{
-Samples polymod using weights following Baguelin et al. (2013), but
-using a bootstrap; first, contacts and ages are sampled
+Samples a contact survey using a bootstrap
 }
 \examples{
 m <- contact_matrix()
