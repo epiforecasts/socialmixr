@@ -100,7 +100,7 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
                     " Use wpp_countries() to get a list of country names.")
         }
 
-        survey.pop <- pop[country %in% survey.countries & year == survey.year][, list(population = sum(population) * 1000), by = "lower.age.limit"]
+        survey.pop <- pop[country %in% survey.countries & year == survey.year][, list(population = sum(population)), by = "lower.age.limit"]
 
         if (nrow(survey.pop) == 0)
         {

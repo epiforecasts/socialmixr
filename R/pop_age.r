@@ -24,6 +24,9 @@ pop_age <- function()
     pop <- data.table(dcast(pop, country + country_code + age + year ~ sex, value.var = "value"))
     pop <- pop[, year := as.integer(as.character(year))]
     pop <- pop[, lower.age.limit := as.integer(sub("[-+].*$", "", age))]
-    pop <- pop[, list(country, lower.age.limit, year, population = female + male)]
+    pop <- pop[, list(country, lower.age.limit, year, population = (female + male) * 1000)]
+
+    setkey(pop, country, lower.age.limit, year)
+
     return(as.data.frame(pop))
 }
