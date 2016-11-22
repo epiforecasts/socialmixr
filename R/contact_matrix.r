@@ -18,6 +18,7 @@
 ##' @param dayofweek.column column indicating the day of the week
 ##' @param country.column column indicating the country
 ##' @param year.column column indicating the year
+##' @param quiet if TRUE, suppress messages
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
 ##' @importFrom stats xtabs runif
 ##' @importFrom reshape2 melt
@@ -31,7 +32,7 @@
 ##' m <- contact_matrix(normalise = TRUE, split = TRUE)
 ##' m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year")
+contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year", quiet = TRUE)
 {
     ## load population data if necessary
     if (missing(survey.pop) || is.character(survey.pop))
@@ -46,7 +47,12 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
         tryCatch(
         {
             survey <- get(tolower(survey_name))
-            message("Using survey ", sQuote(survey_name), ". To cite this in a publication, use the output of survey_citation('", survey_name, "')")
+            if (!quiet)
+            {
+              message("Using survey ", sQuote(survey_name),
+                      ". To cite this in a publication, use the output of survey_citation('", survey_name, "')")
+
+            }
         }, error = function(e)
         {
             stop("Survey ", survey_name, " not found.")

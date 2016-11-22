@@ -9,7 +9,7 @@ contact_matrix(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1,
   add.weights = c(), part.age.column = "participant_age",
   contact.age.column = "cnt_age_mean", id.column = "global_id",
   dayofweek.column = "day_of_week", country.column = "country",
-  year.column = "year")
+  year.column = "year", quiet = TRUE)
 }
 \arguments{
 \item{survey}{either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from}
@@ -43,6 +43,8 @@ contact_matrix(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1,
 \item{country.column}{column indicating the country}
 
 \item{year.column}{column indicating the year}
+
+\item{quiet}{if TRUE, suppress messages}
 }
 \value{
 a list of sampled contact matrices, and the underlying demography of the surveyed population
