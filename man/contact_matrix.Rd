@@ -52,6 +52,13 @@ a list of sampled contact matrices, and the underlying demography of the surveye
 Samples polymod using weights following Baguelin et al. (2013), but
 using a bootstrap; first, contacts and ages are sampled
 }
+\examples{
+m <- contact_matrix()
+m <- contact_matrix(n = 5)
+m <- contact_matrix(normalise = TRUE)
+m <- contact_matrix(normalise = TRUE, split = TRUE)
+m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+}
 \author{
 Sebastian Funk
 }

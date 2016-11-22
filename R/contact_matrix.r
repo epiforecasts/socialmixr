@@ -23,6 +23,12 @@
 ##' @importFrom utils data
 ##' @importFrom data.table data.table setnames
 ##' @export
+##' @examples
+##' m <- contact_matrix()
+##' m <- contact_matrix(n = 5)
+##' m <- contact_matrix(normalise = TRUE)
+##' m <- contact_matrix(normalise = TRUE, split = TRUE)
+##' m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
 contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year")
 {
