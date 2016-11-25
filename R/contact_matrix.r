@@ -63,7 +63,7 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
     }
     survey_data <- lapply(survey, data.table)
 
-    if (!missing(countries))
+    if (!missing(countries) & country.column %in% names(survey_data[["participants"]]))
     {
         survey_data[["participants"]] <- survey_data[["participants"]][get(country.column) %in% countries]
     }
