@@ -7,7 +7,10 @@
 ##' @importFrom reshape2 dcast
 ##' @importFrom data.table data.table
 ##' @export
-pop_age <- function()
+##' @param country countries, will return all if not given
+##' @param year years, will return all if not given
+##' @param age.limits lower age limits, will return all if not given
+pop_age <- function(countries, years, age.limits)
 {
     data(popF, package = "wpp2015", envir = environment())
     data(popM, package = "wpp2015", envir = environment())
@@ -20,11 +23,29 @@ pop_age <- function()
 
     pop <- rbind(popM, popF)
 
+    if (!missing(countries))
+    {
+        pop <- pop[country %in% countries]
+    }
+
     pop <- melt(pop, id.vars = c("country", "country_code", "age", "sex"), variable.name = "year")
     pop <- data.table(dcast(pop, country + country_code + age + year ~ sex, value.var = "value"))
-    pop <- pop[, year := as.integer(as.character(year))]
+
+    pop[, year := as.integer(as.character(year))]
+
+    if (!missing(years))
+    {
+        pop <- pop[year %in% years]
+    }
+
     pop <- pop[, lower.age.limit := as.integer(sub("[-+].*$", "", age))]
     pop <- pop[, list(country, lower.age.limit, year, population = (female + male) * 1000)]
+
+    if (!missing(age.limits))
+    {
+        pop <- pop[, lower.age.limit := reduce_agegroups(lower.age.limit, age.limits)]
+        pop <- pop[, list(population = sum(population)), by = list(country, lower.age.limit, year)]
+    }
 
     setkey(pop, country, lower.age.limit, year)
 
