@@ -93,7 +93,7 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
             warning("No year column found in the data. Will use ", survey.year, " data.")
         }
 
-        missing.countries <- setdiff(survey.countries, survey_data[["participants"]][[country.column]])
+        missing.countries <- setdiff(survey.countries, pop[, unique(country)])
         if (length(missing.countries) > 0)
         {
             warning("Could not find population data for ", paste(missing.countries, collapse = ", "), ". ",
@@ -295,6 +295,10 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
         }
 
         ret[[i]][["matrix"]] <- weighted.matrix
+    }
+
+    if (exists("survey.year")) {
+        survey.pop[, year := survey.year]
     }
 
     if (length(ret) > 1)
