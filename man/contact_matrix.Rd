@@ -2,15 +2,14 @@
 % Please edit documentation in R/contact_matrix.r
 \name{contact_matrix}
 \alias{contact_matrix}
-\title{Samples polymod using weights following Baguelin et al. (2013), but
-using a bootstrap; first, contacts and ages are sampled}
+\title{Generate a contact matrix from diary survey data}
 \usage{
 contact_matrix(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1,
   bootstrap = FALSE, symmetric = TRUE, normalise = FALSE, split = FALSE,
   add.weights = c(), part.age.column = "participant_age",
   contact.age.column = "cnt_age_mean", id.column = "global_id",
   dayofweek.column = "day_of_week", country.column = "country",
-  year.column = "year")
+  year.column = "year", quiet = TRUE)
 }
 \arguments{
 \item{survey}{either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from}
@@ -44,13 +43,21 @@ contact_matrix(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1,
 \item{country.column}{column indicating the country}
 
 \item{year.column}{column indicating the year}
+
+\item{quiet}{if TRUE, suppress messages}
 }
 \value{
 a list of sampled contact matrices, and the underlying demography of the surveyed population
 }
 \description{
-Samples polymod using weights following Baguelin et al. (2013), but
-using a bootstrap; first, contacts and ages are sampled
+Samples a contact survey using a bootstrap
+}
+\examples{
+m <- contact_matrix()
+m <- contact_matrix(n = 5)
+m <- contact_matrix(normalise = TRUE)
+m <- contact_matrix(normalise = TRUE, split = TRUE)
+m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 }
 \author{
 Sebastian Funk

@@ -1,5 +1,6 @@
-##' Samples polymod using weights following Baguelin et al. (2013), but
-##' using a bootstrap; first, contacts and ages are sampled
+##' Generate a contact matrix from diary survey data
+##'
+##' Samples a contact survey using a bootstrap
 ##'
 ##' @param survey either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from
 ##' @param countries limit to one or more countries; if not given, will use all countries in the survey
@@ -17,35 +18,26 @@
 ##' @param dayofweek.column column indicating the day of the week
 ##' @param country.column column indicating the country
 ##' @param year.column column indicating the year
+##' @param quiet if TRUE, suppress messages
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
-##' @import wpp2015
 ##' @importFrom stats xtabs runif
-##' @importFrom reshape2 melt dcast
+##' @importFrom reshape2 melt
 ##' @importFrom utils data
 ##' @importFrom data.table data.table setnames
 ##' @export
+##' @examples
+##' m <- contact_matrix()
+##' m <- contact_matrix(n = 5)
+##' m <- contact_matrix(normalise = TRUE)
+##' m <- contact_matrix(normalise = TRUE, split = TRUE)
+##' m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year")
+contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year", quiet = TRUE)
 {
     ## load population data if necessary
     if (missing(survey.pop) || is.character(survey.pop))
     {
-        data(popF, package = "wpp2015", envir = environment())
-        data(popM, package = "wpp2015", envir = environment())
-
-        popM <- data.table(popM)
-        popF <- data.table(popF)
-
-        popM <- popM[, sex := "male"]
-        popF <- popF[, sex := "female"]
-
-        pop <- rbind(popM, popF)
-
-        pop <- melt(pop, id.vars = c("country", "country_code", "age", "sex"), variable.name = "year")
-        pop <- data.table(dcast(pop, country + country_code + age + year ~ sex, value.var = "value"))
-        pop <- pop[, year := as.integer(as.character(year))]
-        pop <- pop[, lower.age.limit := as.integer(sub("[-+].*$", "", age))]
-        pop <- pop[, list(country, lower.age.limit, year, population = female + male)]
+        pop <- data.table(pop_age())
     }
 
     ## check if survey is given as character
@@ -55,7 +47,12 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
         tryCatch(
         {
             survey <- get(tolower(survey_name))
-            message("Using survey ", sQuote(survey_name), ". To cite this in a publication, use the output of survey_citation('", survey_name, "')")
+            if (!quiet)
+            {
+              message("Using survey ", sQuote(survey_name),
+                      ". To cite this in a publication, use the output of survey_citation('", survey_name, "')")
+
+            }
         }, error = function(e)
         {
             stop("Survey ", survey_name, " not found.")
@@ -66,7 +63,7 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
     }
     survey_data <- lapply(survey, data.table)
 
-    if (!missing(countries))
+    if (!missing(countries) & country.column %in% names(survey_data[["participants"]]))
     {
         survey_data[["participants"]] <- survey_data[["participants"]][get(country.column) %in% countries]
     }
@@ -96,14 +93,14 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
             warning("No year column found in the data. Will use ", survey.year, " data.")
         }
 
-        missing.countries <- setdiff(survey.countries, survey_data[["participants"]][[country.column]])
+        missing.countries <- setdiff(survey.countries, pop[, unique(country)])
         if (length(missing.countries) > 0)
         {
             warning("Could not find population data for ", paste(missing.countries, collapse = ", "), ". ",
                     " Use wpp_countries() to get a list of country names.")
         }
 
-        survey.pop <- pop[country %in% survey.countries & year == survey.year][, list(population = sum(population) * 1000), by = "lower.age.limit"]
+        survey.pop <- pop[country %in% survey.countries & year == survey.year][, list(population = sum(population)), by = "lower.age.limit"]
 
         if (nrow(survey.pop) == 0)
         {
@@ -301,6 +298,10 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
 
             ret[[i]][["matrix"]] <- weighted.matrix
         }
+    }
+
+    if (exists("survey.year")) {
+        survey.pop[, year := survey.year]
     }
 
     if (length(ret) > 1)

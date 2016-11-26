@@ -17,7 +17,7 @@ surveys <- function()
 survey_countries <- function(survey, country.column = "country")
 {
     survey <- get(tolower(survey))
-    return(unique(survey[["participants"]][[country.column]]))
+    return(as.character(unique(survey[["participants"]][[country.column]])))
 }
 
 ##' List all countries and regions for which socialmixr has population data
@@ -34,6 +34,6 @@ wpp_countries <- function()
     data(popM, package = "wpp2015", envir = environment())
     pop <- data.table(rbind(popF, popM))
     setkey(pop, country)
-    return(unique(pop$country))
-}
+    return(as.character(unique(pop$country))
+)}
 
