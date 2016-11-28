@@ -262,9 +262,8 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
 
             if (symmetric & prod(dim(as.matrix(weighted.matrix))) > 1) {
                 ## set C_{ij} N_j and C_{ji} N_i (which should both be equal) to
-                ## 0.5 * their sum; then C_{ij} is that sum / N_j
-                normalised.weighted.matrix <- t(apply(weighted.matrix, 1,
-                                                      function(x) { x * survey.pop$population }))
+              ## 0.5 * their sum; then C_{ij} is that sum / N_j
+                normalised.weighted.matrix <- weighted.matrix %*% diag(survey.pop$population)
                 weighted.matrix <- t(apply(0.5 * (normalised.weighted.matrix +
                                                   t(normalised.weighted.matrix)),
                                            1, function(x) { x / survey.pop$population }))
