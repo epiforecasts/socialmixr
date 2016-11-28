@@ -7,8 +7,8 @@
 ##' @importFrom reshape2 dcast
 ##' @importFrom data.table data.table
 ##' @export
-##' @param country countries, will return all if not given
-##' @param year years, will return all if not given
+##' @param countries countries, will return all if not given
+##' @param years years, will return all if not given
 ##' @param age.limits lower age limits, will return all if not given
 pop_age <- function(countries, years, age.limits)
 {
