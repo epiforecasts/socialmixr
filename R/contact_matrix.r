@@ -144,157 +144,160 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
     ret <- list()
 
     ## clean participant data of age NAs
-    participants <- copy(data.table(survey_data[["participants"]]))
-    contacts <- copy(data.table(survey_data[["contacts"]]))
-    if (nrow(participants[is.na(get(part.age.column))]) > 0) {
-        warning("removing participants with no age recorded")
-    }
-    participants <- participants[!is.na(get(part.age.column))]
-
-    ## check maximum age in the data
-    max.age <- min(max(participants[, get(part.age.column)]),
-                   max(contacts[, get(contact.age.column)], na.rm = TRUE)) + 1
-
-    ## possibly adjust age groups according to maximum age (so as not to have empty age groups)
-    survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, lower.age.limit[lower.age.limit < max.age])]
-    survey.pop <- survey.pop[, list(population = sum(population)), by = lower.age.limit]
-
-    ## assign age group to participants
-    participants[, lower.age.limit := reduce_agegroups(get(part.age.column), survey.pop$lower.age.limit)]
-    present.lower.age.limits <-
-        participants[, .N, by = lower.age.limit][N > 1]$lower.age.limit
-    present.lower.age.limits <-
-        present.lower.age.limits[order(present.lower.age.limits)]
-
-    ## reduce to all lower limits that exist in the data
-    survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, present.lower.age.limits)]
-    survey.pop <- survey.pop[, list(population = sum(population)), by = lower.age.limit]
-
-    ## set upper age limits
-    survey.pop[, upper.age.limit := c(survey.pop$lower.age.limit[-1], max.age)]
-
-    participants[, agegroup := cut(participants[, get(part.age.column)],
-                                   breaks = union(present.lower.age.limits, max.age),
-                                   right = FALSE)]
-
-    ## assign weights to participants, to account for weekend/weekday
-    ## variation
-    if (dayofweek.column %in% colnames(participants))
+    if (n > 0)
     {
-        participants[get(dayofweek.column) %in% 1:5, weight := 5 / nrow(participants[get(dayofweek.column) %in% 1:5])]
-        participants[!(get(dayofweek.column) %in% 1:5),
-                    weight := 2 / nrow(participants[!(get(dayofweek.column) %in% 1:5)])]
-    } else
-    {
-        participants[, weight := 1]
-    }
-
-    ## get number of participants in each age group
-    participants.age <- unname(table(participants[, lower.age.limit]))
-
-    if (n > 1)
-    {
-        if (missing(bootstrap))
-        {
-            bootstrap <- TRUE
-        } else if (!bootstrap)
-        {
-            warning("n > 1 does not make sense if not bootstrapping. Will return just one sample.")
-            n <- 1
+        participants <- copy(data.table(survey_data[["participants"]]))
+        contacts <- copy(data.table(survey_data[["contacts"]]))
+        if (nrow(participants[is.na(get(part.age.column))]) > 0) {
+            warning("removing participants with no age recorded")
         }
-    }
+        participants <- participants[!is.na(get(part.age.column))]
 
-    for (i in seq_len(n))
-    {
-        if (bootstrap)
+        ## check maximum age in the data
+        max.age <- min(max(participants[, get(part.age.column)]),
+                       max(contacts[, get(contact.age.column)], na.rm = TRUE)) + 1
+
+        ## possibly adjust age groups according to maximum age (so as not to have empty age groups)
+        survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, lower.age.limit[lower.age.limit < max.age])]
+        survey.pop <- survey.pop[, list(population = sum(population)), by = lower.age.limit]
+
+        ## assign age group to participants
+        participants[, lower.age.limit := reduce_agegroups(get(part.age.column), survey.pop$lower.age.limit)]
+        present.lower.age.limits <-
+            participants[, .N, by = lower.age.limit][N > 1]$lower.age.limit
+        present.lower.age.limits <-
+            present.lower.age.limits[order(present.lower.age.limits)]
+
+        ## reduce to all lower limits that exist in the data
+        survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, present.lower.age.limits)]
+        survey.pop <- survey.pop[, list(population = sum(population)), by = lower.age.limit]
+
+        ## set upper age limits
+        survey.pop[, upper.age.limit := c(survey.pop$lower.age.limit[-1], max.age)]
+
+        participants[, agegroup := cut(participants[, get(part.age.column)],
+                                       breaks = union(present.lower.age.limits, max.age),
+                                       right = FALSE)]
+
+        ## assign weights to participants, to account for weekend/weekday
+        ## variation
+        if (dayofweek.column %in% colnames(participants))
         {
-            ## take a bootstrap sample from the participants
-            part.sample <- participants[sample(nrow(participants), replace = T)]
+            participants[get(dayofweek.column) %in% 1:5, weight := 5 / nrow(participants[get(dayofweek.column) %in% 1:5])]
+            participants[!(get(dayofweek.column) %in% 1:5),
+                         weight := 2 / nrow(participants[!(get(dayofweek.column) %in% 1:5)])]
         } else
         {
-            ## just use all participants
-            part.sample <- copy(participants)
+            participants[, weight := 1]
         }
 
-        ## gather contacts for sampled participants
-        contacts.sample <- data.table(merge(contacts, part.sample, by = id.column,
-                                            all = F, allow.cartesian = T))
+        ## get number of participants in each age group
+        participants.age <- unname(table(participants[, lower.age.limit]))
 
-        ## sample contacts
-        for (this.agegroup in unique(contacts.sample[is.na(get(contact.age.column)), agegroup]))
+        if (n > 1)
         {
-            if (nrow(contacts.sample[!is.na(get(contact.age.column)) & agegroup == this.agegroup]) > 0)
+            if (missing(bootstrap))
             {
-                contacts.sample[is.na(get(contact.age.column)) & agegroup == this.agegroup,
-                                paste(contact.age.column) :=
-                                    sample(contacts.sample[!is.na(get(contact.age.column)) & agegroup == this.agegroup,
-                                                           get(contact.age.column)], size = .N, replace = TRUE)]
-            } else {
-                contacts.sample[is.na(get(contact.age.column)) & agegroup == this.agegroup,
-                                paste(contact.age.column) := runif(.N, min = lower.age.limit, max = upper.age.limit - 1)]
-            }
-        }
-        ## age groups
-        contacts.sample[, cnt.agegroup := cut(get(contact.age.column),
-                                              breaks = union(present.lower.age.limits, max.age),
-                                              right = FALSE)]
-
-        ## further weigh contacts if columns are specified
-        if (length(add.weights) > 0) {
-            for (i in 1:length(add.weights)) {
-                contacts.sample[, weight := weight * get(add.weights)]
+                bootstrap <- TRUE
+            } else if (!bootstrap)
+            {
+                warning("n > 1 does not make sense if not bootstrapping. Will return just one sample.")
+                n <- 1
             }
         }
 
-        ## calculate weighted contact matrix
-        weighted.matrix <- xtabs(data = contacts.sample,
-                                 formula = weight ~ cnt.agegroup + agegroup)
-        ## calculate normalisation vector
-        norm.vector <- xtabs(data = part.sample, formula = weight ~ agegroup)
-
-        ## normalise contact matrix
-        weighted.matrix <- t(apply(weighted.matrix, 1, function(x) { x / norm.vector} ))
-        ## get rid of name but preserve row and column names
-        cols <- rownames(weighted.matrix)
-        weighted.matrix <- unname(weighted.matrix)
-
-        if (symmetric & prod(dim(as.matrix(weighted.matrix))) > 1) {
-            ## set C_{ij} N_j and C_{ji} N_i (which should both be equal) to
-            ## 0.5 * their sum; then C_{ij} is that sum / N_j
-            normalised.weighted.matrix <- t(apply(weighted.matrix, 1,
-                                                  function(x) { x * survey.pop$population }))
-            weighted.matrix <- t(apply(0.5 * (normalised.weighted.matrix +
-                                              t(normalised.weighted.matrix)),
-                                       1, function(x) { x / survey.pop$population }))
-        }
-
-        rownames(weighted.matrix) <- cols
-        colnames(weighted.matrix) <- cols
-
-        ret[[i]] <- list()
-
-        if (normalise)
+        for (i in seq_len(n))
         {
-            if (!any(is.na(weighted.matrix)))
+            if (bootstrap)
             {
-                spectrum <- eigen(weighted.matrix, only.values = TRUE)$values[1]
-                weighted.matrix <- weighted.matrix / spectrum
-                ret[[i]][["normalisation"]] <- spectrum
+                ## take a bootstrap sample from the participants
+                part.sample <- participants[sample(nrow(participants), replace = T)]
             } else
             {
-                ret[[i]][["normalisation"]] <- NA_real_
+                ## just use all participants
+                part.sample <- copy(participants)
             }
-        }
 
-        if (split)
-        {
-            nb_contacts <- apply(weighted.matrix, 2, sum)
-            age_proportions <- survey.pop$population / sum(survey.pop$population)
-            weighted.matrix <- t(t(weighted.matrix / nb_contacts) / age_proportions)
-            ret[[i]][["contacts"]] <- nb_contacts
-        }
+            ## gather contacts for sampled participants
+            contacts.sample <- data.table(merge(contacts, part.sample, by = id.column,
+                                                all = F, allow.cartesian = T))
 
-        ret[[i]][["matrix"]] <- weighted.matrix
+            ## sample contacts
+            for (this.agegroup in unique(contacts.sample[is.na(get(contact.age.column)), agegroup]))
+            {
+                if (nrow(contacts.sample[!is.na(get(contact.age.column)) & agegroup == this.agegroup]) > 0)
+                {
+                    contacts.sample[is.na(get(contact.age.column)) & agegroup == this.agegroup,
+                                    paste(contact.age.column) :=
+                                        sample(contacts.sample[!is.na(get(contact.age.column)) & agegroup == this.agegroup,
+                                                               get(contact.age.column)], size = .N, replace = TRUE)]
+                } else {
+                    contacts.sample[is.na(get(contact.age.column)) & agegroup == this.agegroup,
+                                    paste(contact.age.column) := runif(.N, min = lower.age.limit, max = upper.age.limit - 1)]
+                }
+            }
+            ## age groups
+            contacts.sample[, cnt.agegroup := cut(get(contact.age.column),
+                                                  breaks = union(present.lower.age.limits, max.age),
+                                                  right = FALSE)]
+
+            ## further weigh contacts if columns are specified
+            if (length(add.weights) > 0) {
+                for (i in 1:length(add.weights)) {
+                    contacts.sample[, weight := weight * get(add.weights)]
+                }
+            }
+
+            ## calculate weighted contact matrix
+            weighted.matrix <- xtabs(data = contacts.sample,
+                                     formula = weight ~ cnt.agegroup + agegroup)
+            ## calculate normalisation vector
+            norm.vector <- xtabs(data = part.sample, formula = weight ~ agegroup)
+
+            ## normalise contact matrix
+            weighted.matrix <- t(apply(weighted.matrix, 1, function(x) { x / norm.vector} ))
+            ## get rid of name but preserve row and column names
+            cols <- rownames(weighted.matrix)
+            weighted.matrix <- unname(weighted.matrix)
+
+            if (symmetric & prod(dim(as.matrix(weighted.matrix))) > 1) {
+                ## set C_{ij} N_j and C_{ji} N_i (which should both be equal) to
+                ## 0.5 * their sum; then C_{ij} is that sum / N_j
+                normalised.weighted.matrix <- t(apply(weighted.matrix, 1,
+                                                      function(x) { x * survey.pop$population }))
+                weighted.matrix <- t(apply(0.5 * (normalised.weighted.matrix +
+                                                  t(normalised.weighted.matrix)),
+                                           1, function(x) { x / survey.pop$population }))
+            }
+
+            rownames(weighted.matrix) <- cols
+            colnames(weighted.matrix) <- cols
+
+            ret[[i]] <- list()
+
+            if (normalise)
+            {
+                if (!any(is.na(weighted.matrix)))
+                {
+                    spectrum <- eigen(weighted.matrix, only.values = TRUE)$values[1]
+                    weighted.matrix <- weighted.matrix / spectrum
+                    ret[[i]][["normalisation"]] <- spectrum
+                } else
+                {
+                    ret[[i]][["normalisation"]] <- NA_real_
+                }
+            }
+
+            if (split)
+            {
+                nb_contacts <- apply(weighted.matrix, 2, sum)
+                age_proportions <- survey.pop$population / sum(survey.pop$population)
+                weighted.matrix <- t(t(weighted.matrix / nb_contacts) / age_proportions)
+                ret[[i]][["contacts"]] <- nb_contacts
+            }
+
+            ret[[i]][["matrix"]] <- weighted.matrix
+        }
     }
 
     if (exists("survey.year")) {
@@ -306,6 +309,6 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
     else if (length(ret) == 1)
         return(c(ret[[1]], list(demography = survey.pop)))
     else
-        stop("No matrix.")
+        return(list(demography = survey.pop))
 }
 
