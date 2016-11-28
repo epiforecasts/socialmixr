@@ -4,7 +4,14 @@
 \alias{pop_age}
 \title{Get age-specific population data according to the World Population Prospects 2015 edition}
 \usage{
-pop_age()
+pop_age(countries, years, age.limits)
+}
+\arguments{
+\item{age.limits}{lower age limits, will return all if not given}
+
+\item{country}{countries, will return all if not given}
+
+\item{year}{years, will return all if not given}
 }
 \value{
 data frame of age-specific population data
