@@ -1,52 +1,59 @@
-##' Get age-specific population data according to the World Population Prospects 2015 edition
+##' Change age groups in population data
 ##'
-##' This uses data from the \code{wpp2015} package but combines male and female,
-##' and converts age groups to lower age limits
+##' This changes population data to have age groups with the given age.limits, extrapolating linearly between age groups (if more are requested than available) and summing populations (if fewer are requested than available)
 ##' @return data frame of age-specific population data
-##' @import wpp2015
-##' @importFrom data.table data.table dcast
+##' @importFrom data.table data.table
 ##' @export
-##' @param countries countries, will return all if not given
-##' @param years years, will return all if not given
-##' @param age.limits lower age limits, will return all if not given
-pop_age <- function(countries, years, age.limits)
+##' @param pop a data frame with columns indicating lower age limits and population sizes (see 'age.column' and 'pop.column')
+##' @param age.limits lower age limits to extract
+##' @param pop.age.column column in the 'pop' data frame indicating the lower age group limit
+##' @param pop.column column in the 'pop' data frame indicating the population size
+pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.column = "population")
 {
-    data(popF, package = "wpp2015", envir = environment())
-    data(popM, package = "wpp2015", envir = environment())
-
-    popM <- data.table(popM)
-    popF <- data.table(popF)
-
-    popM <- popM[, sex := "male"]
-    popF <- popF[, sex := "female"]
-
-    pop <- rbind(popM, popF)
-
-    if (!missing(countries))
+    if (!is.data.frame(pop) ||
+        length(intersect(colnames(pop), c(pop.age.column, pop.column))) < 2)
     {
-        pop <- pop[country %in% countries]
+        stop("Expecting 'pop' to be a data.frame with columns ", pop.age.column, " and ", pop.column)
     }
 
-    pop <- melt(pop, id.vars = c("country", "country_code", "age", "sex"), variable.name = "year")
-    pop <- data.table(dcast(pop, country + country_code + age + year ~ sex, value.var = "value"))
-
-    pop[, year := as.integer(as.character(year))]
-
-    if (!missing(years))
+    forbidden.columns <- intersect(c("..population", "..segment", "..upper.age.limit", "..original.lower.age.limit", "..original.upper.age.limit"), colnames(pop))
+    if (length(forbidden.columns) > 0)
     {
-        pop <- pop[year %in% years]
+        stop("'pop' must not have any of the (internal) columns ", forbidden.columns)
     }
 
-    pop <- pop[, lower.age.limit := as.integer(sub("[-+].*$", "", age))]
-    pop <- pop[, list(country, lower.age.limit, year, population = (female + male) * 1000)]
+    pop <- data.table(pop)
+    setkeyv(pop, pop.age.column)
 
     if (!missing(age.limits))
     {
-        pop <- pop[, lower.age.limit := reduce_agegroups(lower.age.limit, age.limits)]
-        pop <- pop[, list(population = sum(population)), by = list(country, lower.age.limit, year)]
+        age.limits <- age.limits[order(age.limits)]
+        max.age <- max(pop[, pop.age.column, with=FALSE])
+        missing.ages <- setdiff(age.limits[age.limits <= max.age],
+                                pop[[pop.age.column]])
+        if (length(missing.ages) > 0) {
+            warning("Not all age groups represented in population data (5-year age band). Linearly estimating age group sizes from the 5-year bands.")
+            pop <- pop[, ..original.upper.age.limit := c(pop[[pop.age.column]][-1], NA)]
+            pop <- pop[, ..original.lower.age.limit := get(pop.age.column)]
+            all.ages <- data.frame(age.limits[age.limits <= max(pop[[pop.age.column]])])
+            colnames(all.ages) <- pop.age.column
+            pop <- merge(pop, all.ages, all = TRUE, by = pop.age.column)
+            pop <- pop[, ..segment := cumsum(!is.na(..original.lower.age.limit))]
+            pop <- pop[, ..original.lower.age.limit := ..original.lower.age.limit[1], by = ..segment]
+            pop <- pop[, ..original.upper.age.limit := ..original.upper.age.limit[1], by = ..segment]
+            pop <- pop[, paste(pop.column) := get(pop.column)[1], by = ..segment]
+            pop <- pop[, ..upper.age.limit := c(pop[[pop.age.column]][-1], NA)]
+            pop[!is.na(..original.upper.age.limit),
+                       population := round(population * (..upper.age.limit - get(pop.age.column)) /
+                                           (..original.upper.age.limit - ..original.lower.age.limit))]
+            pop <- pop[, c(pop.age.column, pop.column), with=FALSE]
+        }
+
+        pop <- pop[, paste(pop.age.column) := reduce_agegroups(get(pop.age.column), age.limits)]
+        pop <- pop[, list(..population = sum(get(pop.column))), by = pop.age.column]
+        setnames(pop, "..population", pop.column)
     }
 
-    setkey(pop, country, lower.age.limit, year)
-
+    setkeyv(pop, pop.age.column)
     return(as.data.frame(pop))
 }

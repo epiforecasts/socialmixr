@@ -4,8 +4,7 @@
 ##'
 ##' @param survey either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from
 ##' @param countries limit to one or more countries; if not given, will use all countries in the survey
-##' @param survey.pop survey population -- either a data frame with columns lower.age.limit and population, or a character vector giving the name(s) to use with the 2013 WHO population; if not given, will use the country populations from the desired countries, or all countries in the survey if \code{countries} is not given
-##' @param age.limits Lower limits of the age groups; if not given, will use 5 year age limits as in the survey population data
+##' @param survey.pop survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the desired countries, or all countries in the survey if \code{countries} is not given
 ##' @param n number of matrices to sample
 ##' @param bootstrap whether to sample using a bootstrap; will be set to TRUE if n > 1
 ##' @param symmetric whether to make matrix symmetric
@@ -19,8 +18,9 @@
 ##' @param country.column column indicating the country
 ##' @param year.column column indicating the year
 ##' @param quiet if TRUE, suppress messages
+##' @param ... parameters for 'pop_age', especially 'age.limits'
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
-##' @importFrom stats xtabs runif
+##' @importFrom stats xtabs runif median
 ##' @importFrom utils data
 ##' @importFrom data.table data.table setnames 
 ##' @export
@@ -31,13 +31,8 @@
 ##' m <- contact_matrix(normalise = TRUE, split = TRUE)
 ##' m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year", quiet = TRUE)
+contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year", quiet = TRUE, ...)
 {
-    ## load population data if necessary
-    if (missing(survey.pop) || is.character(survey.pop))
-    {
-        pop <- data.table(pop_age())
-    }
 
     ## check if survey is given as character
     if (is.character(survey))
@@ -67,78 +62,57 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
         survey_data[["participants"]] <- survey_data[["participants"]][get(country.column) %in% countries]
     }
 
-    if (missing(survey.pop))
+    if (missing(survey.pop) || is.character(survey.pop))
     {
-        if (missing(countries))
+        if (!missing(survey.pop))
+        {
+            survey.countries <- survey.pop
+        } else if (!missing(countries))
+        {
+            survey.countries <- countries
+        } else
         {
             if (country.column %in% names(survey_data[["participants"]]))
             {
                 survey.countries <- unique(survey_data[["participants"]][[country.column]])
             } else
             {
-                stop("No 'survey.pop' and or 'countries' given, and no country column found in the data. I don't know which population this is from.")
+                stop("No 'survey.pop' or 'countries' given, and no country column found in the data. I don't know which population this is from.")
             }
-        } else
-        {
-            survey.countries <- countries
         }
+
+        country.pop <- data.table(wpp_age(survey.countries))
 
         if (year.column %in% names(survey_data[["participants"]]))
         {
-            survey.year <- round(mean(survey_data[["participants"]][[year.column]], na.rm = TRUE) / 5) * 5
+            survey.year <- median(survey_data[["participants"]][[year.column]], na.rm = TRUE)
         } else if (missing(year.column))
         {
-            survey.year <- pop[, max(year)]
-            warning("No year column found in the data. Will use ", survey.year, " data.")
+            survey.year <- country.pop[, max(year)]
+            warning("No year column found in the data. Will use ", survey.year, " population data.")
         }
 
-        missing.countries <- setdiff(survey.countries, unique(pop$country))
+        missing.countries <- setdiff(survey.countries, unique(country.pop$country))
         if (length(missing.countries) > 0)
         {
             warning("Could not find population data for ", paste(missing.countries, collapse = ", "), ". ",
                     " Use wpp_countries() to get a list of country names.")
         }
 
-        survey.pop <- pop[country %in% survey.countries & year == survey.year][, list(population = sum(population)), by = "lower.age.limit"]
+        country.pop.year <- unique(country.pop[, year])
+        survey.year <- min(country.pop.year[which.min(abs(survey.year - country.pop.year))])
+        survey.pop <- country.pop[year == survey.year][, list(population = sum(population)), by = "lower.age.limit"]
+        survey.pop <- data.table(pop_age(survey.pop, ...))
 
         if (nrow(survey.pop) == 0)
         {
             stop("Could not construct survey population data.")
         }
+
     } else
     {
         survey.pop <- data.table(survey.pop)
     }
-
-    setkey(survey.pop, lower.age.limit)
-
-    if (missing(age.limits)) {
-        age.limits <- unique(survey.pop$lower.age.limits)
-    } else {
-        age.limits <- age.limits[order(age.limits)]
-        missing.ages <- setdiff(age.limits[age.limits <= max(survey.pop$lower.age.limit)], survey.pop$lower.age.limit)
-        if (length(missing.ages) > 0) {
-            warning("Not all age groups represented in population data (5-year age band). Linearly estimating age group sizes from the 5-year bands.")
-            survey.pop <- survey.pop[, original.upper.age.limit := c(survey.pop$lower.age.limit[-1], NA)]
-            survey.pop <- survey.pop[, original.lower.age.limit := lower.age.limit]
-            all.ages <- data.frame(lower.age.limit = age.limits[age.limits <= max(survey.pop$lower.age.limit)])
-            survey.pop <- merge(survey.pop, all.ages, all = TRUE, by = "lower.age.limit")
-            survey.pop <- survey.pop[, segment := cumsum(!is.na(original.lower.age.limit))]
-            survey.pop <- survey.pop[, original.lower.age.limit := original.lower.age.limit[1], by = segment]
-            survey.pop <- survey.pop[, original.upper.age.limit := original.upper.age.limit[1], by = segment]
-            survey.pop <- survey.pop[, population := population[1], by = segment]
-            survey.pop <- survey.pop[, upper.age.limit := c(survey.pop$lower.age.limit[-1], NA)]
-            survey.pop[!is.na(original.upper.age.limit),
-                       population := round(population * (upper.age.limit - lower.age.limit) /
-                                           (original.upper.age.limit - original.lower.age.limit))]
-            survey.pop <- survey.pop[, list(lower.age.limit, population)]
-        }
-
-        survey.pop <- survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, age.limits)]
-        survey.pop <- survey.pop[, list(population = sum(population)), by = lower.age.limit]
-
-    }
-    setkey(survey.pop, lower.age.limit)
 
     ret <- list()
 

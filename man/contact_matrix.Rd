@@ -4,21 +4,19 @@
 \alias{contact_matrix}
 \title{Generate a contact matrix from diary survey data}
 \usage{
-contact_matrix(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1,
+contact_matrix(survey = "POLYMOD", countries, survey.pop, n = 1,
   bootstrap = FALSE, symmetric = TRUE, normalise = FALSE, split = FALSE,
   add.weights = c(), part.age.column = "participant_age",
   contact.age.column = "cnt_age_mean", id.column = "global_id",
   dayofweek.column = "day_of_week", country.column = "country",
-  year.column = "year", quiet = TRUE)
+  year.column = "year", quiet = TRUE, ...)
 }
 \arguments{
 \item{survey}{either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from}
 
 \item{countries}{limit to one or more countries; if not given, will use all countries in the survey}
 
-\item{survey.pop}{survey population -- either a data frame with columns lower.age.limit and population, or a character vector giving the name(s) to use with the 2013 WHO population; if not given, will use the country populations from the desired countries, or all countries in the survey if \code{countries} is not given}
-
-\item{age.limits}{Lower limits of the age groups; if not given, will use 5 year age limits as in the survey population data}
+\item{survey.pop}{survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the desired countries, or all countries in the survey if \code{countries} is not given}
 
 \item{n}{number of matrices to sample}
 
@@ -45,6 +43,8 @@ contact_matrix(survey = "POLYMOD", countries, survey.pop, age.limits, n = 1,
 \item{year.column}{column indicating the year}
 
 \item{quiet}{if TRUE, suppress messages}
+
+\item{...}{parameters for 'pop_age', especially 'age.limits'}
 }
 \value{
 a list of sampled contact matrices, and the underlying demography of the surveyed population

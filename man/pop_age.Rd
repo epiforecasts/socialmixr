@@ -2,22 +2,24 @@
 % Please edit documentation in R/pop_age.r
 \name{pop_age}
 \alias{pop_age}
-\title{Get age-specific population data according to the World Population Prospects 2015 edition}
+\title{Change age groups in population data}
 \usage{
-pop_age(countries, years, age.limits)
+pop_age(pop, age.limits, pop.age.column = "lower.age.limit",
+  pop.column = "population")
 }
 \arguments{
-\item{countries}{countries, will return all if not given}
+\item{pop}{a data frame with columns indicating lower age limits and population sizes (see 'age.column' and 'pop.column')}
 
-\item{years}{years, will return all if not given}
+\item{age.limits}{lower age limits to extract}
 
-\item{age.limits}{lower age limits, will return all if not given}
+\item{pop.age.column}{column in the 'pop' data frame indicating the lower age group limit}
+
+\item{pop.column}{column in the 'pop' data frame indicating the population size}
 }
 \value{
 data frame of age-specific population data
 }
 \description{
-This uses data from the \code{wpp2015} package but combines male and female,
-and converts age groups to lower age limits
+This changes population data to have age groups with the given age.limits, extrapolating linearly between age groups (if more are requested than available) and summing populations (if fewer are requested than available)
 }
 
