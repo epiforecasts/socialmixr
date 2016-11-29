@@ -106,7 +106,7 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, n = 1, boo
 
     survey.pop <- data.table(pop_age(survey.pop, ...))
 
-    if (nrow(pop) == 0)
+    if (nrow(survey.pop) == 0)
     {
         stop("Could not construct survey population data.")
     }
