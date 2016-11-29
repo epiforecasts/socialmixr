@@ -102,16 +102,13 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, n = 1, boo
         country.pop.year <- unique(country.pop[, year])
         survey.year <- min(country.pop.year[which.min(abs(survey.year - country.pop.year))])
         survey.pop <- country.pop[year == survey.year][, list(population = sum(population)), by = "lower.age.limit"]
-        survey.pop <- data.table(pop_age(survey.pop, ...))
+    }
 
-        if (nrow(survey.pop) == 0)
-        {
-            stop("Could not construct survey population data.")
-        }
+    survey.pop <- data.table(pop_age(survey.pop, ...))
 
-    } else
+    if (nrow(pop) == 0)
     {
-        survey.pop <- data.table(survey.pop)
+        stop("Could not construct survey population data.")
     }
 
     ret <- list()
