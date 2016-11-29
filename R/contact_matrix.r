@@ -22,7 +22,7 @@
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
 ##' @importFrom stats xtabs runif median
 ##' @importFrom utils data
-##' @importFrom data.table data.table setnames 
+##' @importFrom data.table data.table setnames copy
 ##' @export
 ##' @examples
 ##' m <- contact_matrix()
