@@ -7,7 +7,6 @@ Depends:
     R (>= 3.3.1),
     data.table
 Imports:
-    reshape2,
     wpp2015,
     RefManageR
 Description: Provides methods for sampling contact matrices from diary data and

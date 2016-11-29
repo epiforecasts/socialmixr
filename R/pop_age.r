@@ -4,8 +4,7 @@
 ##' and converts age groups to lower age limits
 ##' @return data frame of age-specific population data
 ##' @import wpp2015
-##' @importFrom reshape2 dcast
-##' @importFrom data.table data.table
+##' @importFrom data.table data.table dcast
 ##' @export
 ##' @param countries countries, will return all if not given
 ##' @param years years, will return all if not given

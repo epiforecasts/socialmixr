@@ -21,9 +21,8 @@
 ##' @param quiet if TRUE, suppress messages
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
 ##' @importFrom stats xtabs runif
-##' @importFrom reshape2 melt
 ##' @importFrom utils data
-##' @importFrom data.table data.table setnames
+##' @importFrom data.table data.table setnames 
 ##' @export
 ##' @examples
 ##' m <- contact_matrix()
