@@ -16,12 +16,6 @@ pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.col
         stop("Expecting 'pop' to be a data.frame with columns ", pop.age.column, " and ", pop.column)
     }
 
-    forbidden.columns <- intersect(c("..population", "..segment", "..upper.age.limit", "..original.lower.age.limit", "..original.upper.age.limit"), colnames(pop))
-    if (length(forbidden.columns) > 0)
-    {
-        stop("'pop' must not have any of the (internal) columns ", forbidden.columns)
-    }
-
     pop <- data.table(pop)
     setkeyv(pop, pop.age.column)
 
