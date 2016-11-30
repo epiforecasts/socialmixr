@@ -88,7 +88,7 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, n = 1, boo
             survey.year <- median(survey_data[["participants"]][[year.column]], na.rm = TRUE)
         } else if (missing(year.column))
         {
-            survey.year <- country.pop[, max(year)]
+            survey.year <- country.pop[, max(year, na.rm=TRUE)]
             warning("No year column found in the data. Will use ", survey.year, " population data.")
         }
 
