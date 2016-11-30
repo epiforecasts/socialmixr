@@ -144,6 +144,10 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, n = 1, boo
 
         ## set upper age limits
         survey.pop[, upper.age.limit := c(survey.pop$lower.age.limit[-1], max.age)]
+        participants <-
+            merge(participants,
+                  survey.pop[, list(lower.age.limit, upper.age.limit)],
+                  by="lower.age.limit")
 
         participants[, agegroup := cut(participants[, get(part.age.column)],
                                        breaks = union(present.lower.age.limits, max.age),
