@@ -7,7 +7,8 @@ participants_reduced$participants$added_weight <- 0.5
 
 options <-
   list(test1 = list(survey = "POLYMOD", normalise = TRUE, split = TRUE),
-       test2 = list(n = 2, survey = participants_reduced, countries = c("Italy"), age.limits = c(0, 1), add.weights = "added_weight", normalise = TRUE, split = TRUE))
+       test2 = list(n = 2, survey = participants_reduced, countries = c("Italy"), age.limits = c(0, 1), add.weights = "added_weight", normalise = TRUE, split = TRUE),
+       test3 = list(survey.pop="Australia", split=TRUE, normalise=TRUE))
 
 contacts <- lapply(options, function(x) {do.call(contact_matrix, x)})
 
