@@ -44,7 +44,7 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, n = 1, boo
             if (!quiet)
             {
               message("Using survey ", sQuote(survey_name),
-                      ". To cite this in a publication, use the output of survey_citation('", survey_name, "')")
+                      ". To cite this in a publication, use the output of survey_citation('", survey_name, "'). To suppress this message, use 'quiet = TRUE'")
 
             }
         }, error = function(e)
