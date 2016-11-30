@@ -9,7 +9,7 @@ contact_matrix(survey = "POLYMOD", countries, survey.pop, n = 1,
   add.weights = c(), part.age.column = "participant_age",
   contact.age.column = "cnt_age_mean", id.column = "global_id",
   dayofweek.column = "day_of_week", country.column = "country",
-  year.column = "year", quiet = TRUE, ...)
+  year.column = "year", quiet = FALSE, ...)
 }
 \arguments{
 \item{survey}{either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from}
