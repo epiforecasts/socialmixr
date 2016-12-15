@@ -265,7 +265,7 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, n = 1, boo
             {
                 nb_contacts <- apply(weighted.matrix, 2, sum)
                 age_proportions <- survey.pop$population / sum(survey.pop$population)
-                weighted.matrix <- t(t(weighted.matrix / nb_contacts) / age_proportions)
+                weighted.matrix <- diag(1 / age_proportions) %*% weighted.matrix %*% diag(1 / nb_contacts)
                 ret[[i]][["contacts"]] <- nb_contacts
             }
 
