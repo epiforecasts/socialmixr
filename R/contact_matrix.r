@@ -4,7 +4,7 @@
 ##'
 ##' @param survey either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from
 ##' @param countries limit to one or more countries; if not given, will use all countries in the survey
-##' @param survey.pop survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the desired countries, or all countries in the survey if \code{countries} is not given
+##' @param survey.pop survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the chosen countries, or all countries in the survey if \code{countries} is not given
 ##' @param filter any filters to apply to the data
 ##' @param n number of matrices to sample
 ##' @param bootstrap whether to sample using a bootstrap; will be set to TRUE if n > 1

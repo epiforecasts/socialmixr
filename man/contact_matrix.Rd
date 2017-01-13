@@ -4,7 +4,7 @@
 \alias{contact_matrix}
 \title{Generate a contact matrix from diary survey data}
 \usage{
-contact_matrix(survey = "POLYMOD", countries, survey.pop, n = 1,
+contact_matrix(survey = "POLYMOD", countries, survey.pop, filter, n = 1,
   bootstrap = FALSE, symmetric = TRUE, normalise = FALSE, split = FALSE,
   add.weights = c(), part.age.column = "participant_age",
   contact.age.column = "cnt_age_mean", id.column = "global_id",
@@ -16,7 +16,9 @@ contact_matrix(survey = "POLYMOD", countries, survey.pop, n = 1,
 
 \item{countries}{limit to one or more countries; if not given, will use all countries in the survey}
 
-\item{survey.pop}{survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the desired countries, or all countries in the survey if \code{countries} is not given}
+\item{survey.pop}{survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the chosen countries, or all countries in the survey if \code{countries} is not given}
+
+\item{filter}{any filters to apply to the data}
 
 \item{n}{number of matrices to sample}
 
