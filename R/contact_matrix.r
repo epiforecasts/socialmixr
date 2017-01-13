@@ -5,6 +5,7 @@
 ##' @param survey either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from
 ##' @param countries limit to one or more countries; if not given, will use all countries in the survey
 ##' @param survey.pop survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the desired countries, or all countries in the survey if \code{countries} is not given
+##' @param filter any filters to apply to the data
 ##' @param n number of matrices to sample
 ##' @param bootstrap whether to sample using a bootstrap; will be set to TRUE if n > 1
 ##' @param symmetric whether to make matrix symmetric
@@ -31,7 +32,7 @@
 ##' m <- contact_matrix(normalise = TRUE, split = TRUE)
 ##' m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year", quiet = FALSE, ...)
+contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, filter, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year", quiet = FALSE, ...)
 {
 
     ## check if survey is given as character
@@ -118,6 +119,18 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, n = 1, boo
     {
         participants <- copy(data.table(survey_data[["participants"]]))
         contacts <- copy(data.table(survey_data[["contacts"]]))
+        if (nrow(contacts) > 0 && !missing(filter)) {
+            missing_columns <- setdiff(names(filter), colnames(contacts))
+            if (length(missing_columns) > 0) {
+                warning("filter column(s) ", paste(missing_columns),
+                        " not found")
+                filter <- filter[names(filter) %in% colnames(contacts)]
+            }
+            ## filter contact data
+            for (column in names(filter)) {
+                contacts <- contacts[get(column) == filter[[column]]]
+            }
+        }
         if (nrow(participants[is.na(get(part.age.column))]) > 0) {
             warning("removing participants with no age recorded")
         }
