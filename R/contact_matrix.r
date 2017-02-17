@@ -256,9 +256,6 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, filter, n 
                                            1, function(x) { x / survey.pop$population }))
             }
 
-            rownames(weighted.matrix) <- cols
-            colnames(weighted.matrix) <- cols
-
             ret[[i]] <- list()
 
             if (normalise)
@@ -281,6 +278,9 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, filter, n 
                 weighted.matrix <- diag(1 / age_proportions) %*% weighted.matrix %*% diag(1 / nb_contacts)
                 ret[[i]][["contacts"]] <- nb_contacts
             }
+
+            rownames(weighted.matrix) <- cols
+            colnames(weighted.matrix) <- cols
 
             ret[[i]][["matrix"]] <- weighted.matrix
         }
