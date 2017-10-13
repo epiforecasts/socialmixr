@@ -22,3 +22,14 @@ library('devtools')
 install_github("sbfnk/socialmixr")
 ```
 
+Using the `contact_matrix` function
+==============
+
+Use the R help to find out about usage of the `contact_matrix` function, including a list of examples:
+
+```r
+# install.packages("devtools")
+library('socialmixr')
+?contact_matrix
+```
+
