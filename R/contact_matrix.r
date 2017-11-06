@@ -12,7 +12,7 @@
 ##' @param symmetric whether to make matrix symmetric
 ##' @param normalise whether to normalise to eigenvalue 1
 ##' @param split whether to split the number of contacts and assortativity
-##' @param add.weights additional weight columns (e.g., minutes etc
+##' @param weights columns that contain weights
 ##' @param part.age.column column indicating age in participant data
 ##' @param contact.age.column column indicating age in contact data
 ##' @param id.column column to match participants with contacts
@@ -33,7 +33,7 @@
 ##' m <- contact_matrix(normalise = TRUE, split = TRUE)
 ##' m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits, filter, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, add.weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year", quiet = FALSE, ...)
+contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits, filter, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year", quiet = FALSE, ...)
 {
 
     ## check if survey is given as character string - in that case check find survey within data that comes with the package
@@ -262,9 +262,9 @@ contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits
                                                   right = FALSE)]
 
             ## further weigh contacts if columns are specified
-            if (length(add.weights) > 0) {
-                for (i in 1:length(add.weights)) {
-                    contacts.sample[, weight := weight * get(add.weights)]
+            if (length(weights) > 0) {
+                for (i in 1:length(weights)) {
+                    contacts.sample[, weight := weight * get(weights[i])]
                 }
             }
 
