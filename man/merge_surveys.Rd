@@ -7,7 +7,7 @@
 merge_surveys(surveys)
 }
 \arguments{
-\item{surveys}{surveys to merge, given as a list of surveys compatible with the \code{survey} parameter in \code{\link{contat_mtarix}}.}
+\item{surveys}{surveys to merge, given as a list of surveys compatible with the \code{survey} parameter in \code{\link{contact_mtarix}}.}
 }
 \value{
 a survey in the correct format
