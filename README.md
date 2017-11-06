@@ -50,5 +50,3 @@ The key argument to the `contact_matrix` function is the `survey` that it suppos
 ```r
 surveys()
 ```
-
-If m
