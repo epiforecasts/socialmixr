@@ -19,7 +19,7 @@ pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.col
     pop <- data.table(pop)
     setkeyv(pop, pop.age.column)
 
-    if (!missing(age.limits))
+    if (!missing(age.limits) && !is.na(age.limits))
     {
         age.limits <- age.limits[order(age.limits)]
         max.age <- max(pop[, pop.age.column, with=FALSE])
