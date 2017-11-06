@@ -4,10 +4,15 @@
 \alias{get_survey}
 \title{Get a survey from a variable, either from internal data or passed as an argument}
 \usage{
-get_survey(survey)
+get_survey(survey, quiet = FALSE)
 }
 \arguments{
 \item{survey}{either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from}
+
+\item{quiet}{if TRUE, suppress messages}
+}
+\value{
+a survey in the correct format
 }
 \description{
 Get a survey from a variable, either from internal data or passed as an argument

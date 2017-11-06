@@ -17,7 +17,6 @@
 ##' @param dayofweek.column column indicating the day of the week
 ##' @param country.column column indicating the country
 ##' @param year.column column indicating the year
-##' @param quiet if TRUE, suppress messages
 ##' @param ... further parameters for 'pop_age'
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
 ##' @importFrom stats xtabs runif median
@@ -35,7 +34,7 @@
 ##' @author Sebastian Funk
 contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits, filter, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year", quiet = FALSE, ...)
 {
-    survey_data <- get_survey(survey)
+    survey_data <- get_survey(survey, quiet)
 
     ## check if specific countries are requested (if a survey contains data from multiple countries)
     if (!missing(countries) & country.column %in% names(survey_data[["participants"]]))

@@ -6,7 +6,7 @@
 \usage{
 contact_matrix(survey = "POLYMOD", countries, survey.pop, age.limits, filter,
   n = 1, bootstrap = FALSE, symmetric = TRUE, normalise = FALSE,
-  split = FALSE, add.weights = c(), part.age.column = "participant_age",
+  split = FALSE, weights = c(), part.age.column = "participant_age",
   contact.age.column = "cnt_age_mean", id.column = "global_id",
   dayofweek.column = "day_of_week", country.column = "country",
   year.column = "year", quiet = FALSE, ...)
@@ -32,7 +32,7 @@ contact_matrix(survey = "POLYMOD", countries, survey.pop, age.limits, filter,
 
 \item{split}{whether to split the number of contacts and assortativity}
 
-\item{add.weights}{additional weight columns (e.g., minutes etc}
+\item{weights}{columns that contain weights}
 
 \item{part.age.column}{column indicating age in participant data}
 

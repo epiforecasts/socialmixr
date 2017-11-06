@@ -1,8 +1,9 @@
 ##' Get a survey from a variable, either from internal data or passed as an argument
 ##'
 ##' @param survey either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from
+##' @param quiet if TRUE, suppress messages
 ##' @return a survey in the correct format
-get_survey <- function(survey)
+get_survey <- function(survey, quiet=FALSE)
 {
     ## check if survey is given as character string - in that case check find survey within data that comes with the package
     if (is.character(survey))
