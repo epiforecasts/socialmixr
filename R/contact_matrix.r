@@ -34,6 +34,7 @@
 ##' @author Sebastian Funk
 contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits, filter, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year", quiet = FALSE, ...)
 {
+    ## get the survey
     survey_data <- get_survey(survey, quiet)
 
     ## check if specific countries are requested (if a survey contains data from multiple countries)
