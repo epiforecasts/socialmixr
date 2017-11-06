@@ -1,6 +1,6 @@
 ##' Merge multiple surveys into one
 ##'
-##' @param surveys surveys to merge, given as a list of surveys compatible with the \code{survey} parameter in \code{\link{contact_mtarix}}.
+##' @param surveys surveys to merge, given as a list of surveys compatible with the \code{survey} parameter in \code{\link{contact_matrix}}.
 ##' @return a survey in the correct format
 merge_surveys <- function(surveys)
 {
