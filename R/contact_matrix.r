@@ -2,10 +2,8 @@
 ##'
 ##' Samples a contact survey using a bootstrap
 ##'
-##' @param survey either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from
 ##' @param countries limit to one or more countries; if not given, will use all countries in the survey
 ##' @param survey.pop survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the chosen countries, or all countries in the survey if \code{countries} is not given
-##' @param age.limits lower age limits of age groups to extract
 ##' @param filter any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered
 ##' @param n number of matrices to sample
 ##' @param bootstrap whether to sample using a bootstrap; will be set to TRUE if n > 1
@@ -26,6 +24,8 @@
 ##' @importFrom utils data
 ##' @importFrom data.table data.table setnames copy
 ##' @export
+##' @inheritParams get_survey
+##' @inheritParams pop_age
 ##' @examples
 ##' m <- contact_matrix()
 ##' m <- contact_matrix(n = 5)
@@ -35,29 +35,7 @@
 ##' @author Sebastian Funk
 contact_matrix <- function(survey = "POLYMOD", countries, survey.pop, age.limits, filter, n = 1, bootstrap = FALSE,  symmetric = TRUE, normalise = FALSE, split = FALSE, weights = c(), part.age.column = "participant_age", contact.age.column = "cnt_age_mean", id.column = "global_id", dayofweek.column = "day_of_week", country.column = "country", year.column = "year", quiet = FALSE, ...)
 {
-
-    ## check if survey is given as character string - in that case check find survey within data that comes with the package
-    if (is.character(survey))
-    {
-        survey_name <- survey
-        tryCatch(
-        {
-            survey <- get(tolower(survey_name))
-            if (!quiet)
-            {
-              message("Using survey ", sQuote(survey_name),
-                      ". To cite this in a publication, use the output of survey_citation('", survey_name, "'). To suppress this message, use 'quiet = TRUE'")
-
-            }
-        }, error = function(e)
-        {
-            stop("Survey ", survey_name, " not found.")
-        })
-    } else if (!is.list(survey) || is.null(names(survey)) || !(all(names(survey) %in% c("participants", "contacts"))))
-    {
-        stop("'survey' must be either a character string or a named list with elements named 'participants' and 'contacts'")
-    }
-    survey_data <- lapply(survey, data.table)
+    survey_data <- get_survey(survey)
 
     ## check if specific countries are requested (if a survey contains data from multiple countries)
     if (!missing(countries) & country.column %in% names(survey_data[["participants"]]))
