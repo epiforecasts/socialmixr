@@ -49,7 +49,7 @@ test_that("error is thrown if no survey population can be generated",
 {
   expect_error(contact_matrix(survey = "POLYMOD", country.column = "bogus"), "population data")
   expect_error(suppressWarnings(contact_matrix(survey = "POLYMOD", countries = "Zamonia"), "No survey data available"))
-## })
+})
 
 test_that("warning is thrown if country is not found",
 {
