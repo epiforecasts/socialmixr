@@ -17,4 +17,3 @@ Age groups (limits separated by dashes)
 \description{
 Mostly used for plot labelling
 }
-

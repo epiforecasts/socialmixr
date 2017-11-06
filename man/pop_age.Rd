@@ -22,4 +22,3 @@ data frame of age-specific population data
 \description{
 This changes population data to have age groups with the given age.limits, extrapolating linearly between age groups (if more are requested than available) and summing populations (if fewer are requested than available)
 }
-
