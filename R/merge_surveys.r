@@ -4,18 +4,14 @@
 ##' @return a survey in the correct format
 merge_surveys <- function(surveys)
 {
-    if (length(surveys) > 1) {
-        merged <- get_surveys(surveys[1])
-        for (i in 2:length(surveys)) {
-            survey <- get_surveys(surveys[i])
-            for (dataset in c("participants", "contacts")) {
-                shared_names <- intersect(names(merge[[dataset]], survey[[dataset]]))
-                merged[[dataset]] <- rbind(merge[[dataset]][shared_names],
-                                           surve[[dataset]][shared_names])
-            }
+    merged <- list(participants=list(), contacts=list())
+    if (length(surveys) == 1) surveys <- list(surveys)
+    for (i in seq_along(surveys)) {
+        current_survey <- get_survey(surveys[[i]])
+        for (dataset in c("participants", "contacts")) {
+            merged[[dataset]][[i]] <- current_survey[[dataset]]
         }
-    } else {
-        merged <- get_survey(surveys)
     }
-   return(merged)
+    merged <- lapply(merged, rbindlist)
+    return(merged)
 }
