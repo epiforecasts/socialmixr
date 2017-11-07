@@ -5,8 +5,9 @@
 \title{Generate a contact matrix from diary survey data}
 \usage{
 contact_matrix(survey = "polymod", countries = c(), survey.pop, age.limits,
-  filter, n = 1, bootstrap, symmetric = FALSE, normalise = FALSE,
-  split = FALSE, weigh.dayofweek = FALSE, weights = c(), quiet = FALSE)
+  filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE,
+  normalise = FALSE, split = FALSE, weigh.dayofweek = FALSE,
+  weights = c(), quiet = FALSE)
 }
 \arguments{
 \item{survey}{either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from}
@@ -22,6 +23,8 @@ contact_matrix(survey = "polymod", countries = c(), survey.pop, age.limits,
 \item{n}{number of matrices to sample}
 
 \item{bootstrap}{whether to sample using a bootstrap; by default, will use bootstrap if n > 1}
+
+\item{counts}{whether to return counts (instead of means)}
 
 \item{symmetric}{whether to make matrix symmetric}
 

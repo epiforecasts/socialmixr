@@ -7,6 +7,7 @@
 ##' @param filter any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered
 ##' @param n number of matrices to sample
 ##' @param bootstrap whether to sample using a bootstrap; by default, will use bootstrap if n > 1
+##' @param counts whether to return counts (instead of means)
 ##' @param symmetric whether to make matrix symmetric
 ##' @param normalise whether to normalise to eigenvalue 1
 ##' @param split whether to split the number of contacts and assortativity
@@ -27,7 +28,7 @@
 ##' m <- contact_matrix(normalise = TRUE, split = TRUE)
 ##' m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap,  symmetric = FALSE, normalise = FALSE, split = FALSE, weigh.dayofweek = FALSE, weights = c(), quiet = FALSE)
+contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, normalise = FALSE, split = FALSE, weigh.dayofweek = FALSE, weights = c(), quiet = FALSE)
 {
     ## get the survey
     survey <- get_survey(survey, quiet)
@@ -257,11 +258,13 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
         ## calculate weighted contact matrix
         weighted.matrix <- xtabs(data = contacts.sample,
                                  formula = weight ~ cnt.agegroup + agegroup)
-        ## calculate normalisation vector
-        norm.vector <- xtabs(data = part.sample, formula = weight ~ agegroup)
+        if (!counts) {
+            ## calculate normalisation vector
+            norm.vector <- xtabs(data = part.sample, formula = weight ~ agegroup)
 
-        ## normalise contact matrix
-        weighted.matrix <- t(apply(weighted.matrix, 1, function(x) { x / norm.vector} ))
+            ## normalise contact matrix
+            weighted.matrix <- t(apply(weighted.matrix, 1, function(x) { x / norm.vector} ))
+        }
         ## get rid of name but preserve row and column names
         cols <- rownames(weighted.matrix)
         weighted.matrix <- unname(weighted.matrix)
