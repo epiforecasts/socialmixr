@@ -315,7 +315,7 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
         return_value <- ret[[1]]
     else return_value <- NULL
 
-    return_value[["demography"]] <- survey.pop
+    return_value[["demography"]] <- survey.pop[]
 
     return(return_value)
 }
