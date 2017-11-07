@@ -2,6 +2,7 @@
 ##'
 ##' @param survey A list of 'participants' and 'contacts' (both data frames)
 ##' @return TRUE if the test is passed, an error is thrown otherwise
+##' @export
 check_survey <- function(survey, quiet=FALSE)
 {
     if (!is.list(survey) || is.null(names(survey))) stop("'survey' must be a named list")

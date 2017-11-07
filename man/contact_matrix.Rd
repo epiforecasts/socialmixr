@@ -4,12 +4,12 @@
 \alias{contact_matrix}
 \title{Generate a contact matrix from diary survey data}
 \usage{
-contact_matrix(survey = "POLYMOD", countries, survey.pop, age.limits, filter,
-  n = 1, bootstrap = FALSE, symmetric = TRUE, normalise = FALSE,
-  split = FALSE, weights = c(), part.age.column = "participant_age",
-  contact.age.column = "cnt_age_mean", id.column = "global_id",
-  dayofweek.column = "day_of_week", country.column = "country",
-  year.column = "year", quiet = FALSE, ...)
+contact_matrix(survey = "POLYMOD", countries = c(), survey.pop, age.limits,
+  filter, n = 1, bootstrap = FALSE, symmetric = TRUE, normalise = FALSE,
+  split = FALSE, weigh.dayofweek = FALSE, weights = c(),
+  part.age.column = "participant_age", contact.age.column = "cnt_age_mean",
+  id.column = "global_id", dayofweek.column = "day_of_week",
+  country.column = "country", year.column = "year", quiet = FALSE, ...)
 }
 \arguments{
 \item{survey}{either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from}
