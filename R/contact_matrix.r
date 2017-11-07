@@ -78,88 +78,83 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
     present.lower.age.limits <-
         present.lower.age.limits[order(present.lower.age.limits)]
 
-    ## are population data needed?
-    if (split || symmetric) {
-        ## now, get demographic data (survey population)
-        ## check if survey population is either not given or given as a vector of countries
-        if (missing(survey.pop) || is.character(survey.pop))
+    ## now, get demographic data (survey population)
+    ## check if survey population is either not given or given as a vector of countries
+    if (missing(survey.pop) || is.character(survey.pop))
+    {
+        survey_representative=FALSE
+        if (!missing(survey.pop))
         {
-            survey_representative=FALSE
-            if (!missing(survey.pop))
+            ## survey population is given as vector of countries
+            survey.countries <- survey.pop
+        } else if (!missing(countries))
+        {
+            ## survey population not given but countries requested from survey - get population data from those countries
+            survey.countries <- countries
+        } else
+        {
+            ## neither survey population nor country names given - try to guess country or countries surveyed from participant data
+            if ("country" %in% names(survey$participants))
             {
-                ## survey population is given as vector of countries
-                survey.countries <- survey.pop
-            } else if (!missing(countries))
-            {
-                ## survey population not given but countries requested from survey - get population data from those countries
-                survey.countries <- countries
+                survey.countries <- unique(survey$participants[, country])
             } else
             {
-                ## neither survey population nor country names given - try to guess country or countries surveyed from participant data
-                if ("country" %in% names(survey$participants))
-                {
-                    survey.countries <- unique(survey$participants[, country])
-                } else
-                {
-                    warning("No 'survey.pop' or 'countries' given, and no 'country' column found in the data. I don't know which population this is from. Assuming the survey is representative")
-                    survey_representative=TRUE
-                }
+                warning("No 'survey.pop' or 'countries' given, and no 'country' column found in the data. I don't know which population this is from. Assuming the survey is representative")
+                survey_representative=TRUE
+            }
+        }
+
+        if (!survey_representative) {
+            ## get population data for countries from 'wpp' package
+            country.pop <- data.table(wpp_age(survey.countries))
+
+            ## check if survey data are from a specific year - in that case use demographic data from that year, otherwise latest
+            if ("year" %in% colnames(survey$participants))
+            {
+                survey.year <- survey$participants[, median(year, na.rm=TRUE)]
+            } else
+            {
+                survey.year <- country.pop[, max(year, na.rm=TRUE)]
+                warning("No 'year' column found in the data. Will use ", survey.year, " population data.")
             }
 
-            if (!survey_representative) {
-                ## get population data for countries from 'wpp' package
-                country.pop <- data.table(wpp_age(survey.countries))
-
-                ## check if survey data are from a specific year - in that case use demographic data from that year, otherwise latest
-                if ("year" %in% colnames(survey$participants))
-                {
-                    survey.year <- survey$participants[, median(year, na.rm=TRUE)]
-                } else
-                {
-                    survey.year <- country.pop[, max(year, na.rm=TRUE)]
-                    warning("No 'year' column found in the data. Will use ", survey.year, " population data.")
-                }
-
-                ## check if any survey countries are not in wpp
-                missing.countries <- setdiff(survey.countries, unique(country.pop$country))
-                if (length(missing.countries) > 0)
-                {
-                    warning("Could not find population data for ", paste(missing.countries, collapse = ", "), ". ",
-                            " Use wpp_countries() to get a list of country names.")
-                }
-
-                if (length(missing.countries) == length(survey.countries)) {
-                    warning("No survey data available for any of the requested data. I don't know which population this is from. Assuming the survey is representative")
-                    survey_representative <- TRUE
-                } else {
-                    ## get demographic data closest to survey year
-                    country.pop.year <- unique(country.pop[, year])
-                    survey.year <- min(country.pop.year[which.min(abs(survey.year - country.pop.year))])
-                    survey.pop <- country.pop[year == survey.year][, list(population = sum(population)), by = "lower.age.limit"]
-                }
+            ## check if any survey countries are not in wpp
+            missing.countries <- setdiff(survey.countries, unique(country.pop$country))
+            if (length(missing.countries) > 0)
+            {
+                warning("Could not find population data for ", paste(missing.countries, collapse = ", "), ". ",
+                        " Use wpp_countries() to get a list of country names.")
             }
 
-            if (survey_representative) {
-                survey.pop <- survey$participants[, lower.age.limit := reduce_agegroups(part_age, age.limits)]
-                survey.pop <- survey.pop[, list(population=.N), by=lower.age.limit]
-                survey.pop <- survey.pop[!is.na(lower.age.limit)]
-                if ("year" %in% colnames(survey$participants))
-                {
-                    survey.year <- survey$participants[, median(year, na.rm=TRUE)]
-                }
+            if (length(missing.countries) == length(survey.countries)) {
+                warning("No survey data available for any of the requested data. I don't know which population this is from. Assuming the survey is representative")
+                survey_representative <- TRUE
+            } else {
+                ## get demographic data closest to survey year
+                country.pop.year <- unique(country.pop[, year])
+                survey.year <- min(country.pop.year[which.min(abs(survey.year - country.pop.year))])
+                survey.pop <- country.pop[year == survey.year][, list(population = sum(population)), by = "lower.age.limit"]
+            }
+        }
+
+        if (survey_representative) {
+            survey.pop <- survey$participants[, lower.age.limit := reduce_agegroups(part_age, age.limits)]
+            survey.pop <- survey.pop[, list(population=.N), by=lower.age.limit]
+            survey.pop <- survey.pop[!is.na(lower.age.limit)]
+            if ("year" %in% colnames(survey$participants))
+            {
                 survey.year <- survey$participants[, median(year, na.rm=TRUE)]
             }
+            survey.year <- survey$participants[, median(year, na.rm=TRUE)]
         }
+    }
 
-        ## adjust age groups by interpolating, in case they don't match between demographic and survey data
-        survey.pop <- data.table(pop_age(survey.pop, age.limits))
+    ## adjust age groups by interpolating, in case they don't match between demographic and survey data
+    survey.pop <- data.table(pop_age(survey.pop, age.limits))
 
-        if (nrow(survey.pop) == 0)
-        {
-            stop("Could not construct survey population data.")
-        }
-    } else
+    if (nrow(survey.pop) == 0)
     {
+        warning("Could not construct survey population data.")
         survey.pop <- data.table(lower.age.limit=age.limits, population=NA_integer_)
     }
 
