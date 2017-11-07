@@ -2,7 +2,7 @@ context("Generating contact matrices")
 
 participants_reduced <- polymod
 participants_reduced$participants$year <- NULL
-participants_reduced$participants$day_of_week <- NULL
+participants_reduced$participants$dayofweek <- NULL
 participants_reduced$participants$added_weight <- 0.5
 
 options <-
@@ -47,13 +47,12 @@ test_that("survey argument is validated",
 
 test_that("error is thrown if no survey population can be generated",
 {
-  expect_warning(contact_matrix(survey = "POLYMOD", country.column = "bogus"), "no country colum")
   expect_error(suppressWarnings(contact_matrix(survey = "POLYMOD", countries = "Zamonia"), "No survey data available"))
 })
 
-test_that("warning is thrown if country is not found",
+test_that("error is thrown if country is not found",
 {
-  expect_warning(contact_matrix(survey = "POLYMOD", countries = c("Italy", "Zamonia")), "Could not find population data")
+  expect_error(contact_matrix(survey = "POLYMOD", countries = c("Italy", "Zamonia")), "data not found")
 })
 
 test_that("warning is thrown if n > 1 and bootstrap = FALSE",

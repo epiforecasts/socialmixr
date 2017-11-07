@@ -27,26 +27,30 @@
 ##' m <- contact_matrix(normalise = TRUE, split = TRUE)
 ##' m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap,  symmetric = FALSE, normalise = FALSE, split = FALSE, weigh.dayofweek = FALSE, weights = c(), quiet = FALSE)
+contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap,  symmetric = FALSE, normalise = FALSE, split = FALSE, weigh.dayofweek = FALSE, weights = c(), quiet = FALSE)
 {
     ## get the survey
     survey <- get_survey(survey, quiet)
 
     ## copy data
-    survey <- lapply(survey_data, function(x) {copy(data.table(x))})
+    survey <- lapply(survey, function(x) {copy(data.table(x))})
 
     ## if bootstrap not asked for
     if (missing(bootstrap)) bootstrap <- (n > 1)
 
-    ## check maximum age in the data
-    max.age <- max(survey$participants[, part_age], na.rm = TRUE)
-    if (missing(age.limits)) age.limits <- c(0, seq_len(max.age))
-
     ## check if specific countries are requested (if a survey contains data from multiple countries)
     if (length(countries) > 0 & "country" %in% colnames(survey$participants))
     {
-        survey$participants <- survey$participants["country" %in% countries]
+        missing_countries <- setdiff(countries, survey$participants$country)
+        if (length(missing_countries) > 0) {
+            stop("Survey data not found for ", paste(missing_countries, sep=","), ".")
+        }
+        survey$participants <- survey$participants[country %in% countries]
     }
+
+    ## check maximum age in the data
+    max.age <- max(survey$participants[, part_age], na.rm = TRUE) + 1
+    if (missing(age.limits)) age.limits <- c(0, seq_len(max.age))
 
     ## are population data needed?
     pop_needed <- split || symmetric
@@ -68,12 +72,12 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
             } else
             {
                 ## neither survey population nor country names given - try to guess country or countries surveyed from participant data
-                if (country.column %in% names(survey$participants))
+                if ("country" %in% names(survey$participants))
                 {
-                    survey.countries <- unique(survey$participants[, country.column])
+                    survey.countries <- unique(survey$participants[, country])
                 } else
                 {
-                    warning("No 'survey.pop' or 'countries' given, and no country column found in the data. I don't know which population this is from. Assuming the survey is representative")
+                    warning("No 'survey.pop' or 'countries' given, and no 'country' column found in the data. I don't know which population this is from. Assuming the survey is representative")
                     survey_representative=TRUE
                 }
             }
@@ -89,7 +93,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 } else
                 {
                     survey.year <- country.pop[, max(year, na.rm=TRUE)]
-                    warning("No year column found in the data. Will use ", survey.year, " population data.")
+                    warning("No 'year' column found in the data. Will use ", survey.year, " population data.")
                 }
 
                 ## check if any survey countries are not in wpp
@@ -154,7 +158,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
 
     ## adjust age groups according to what is in the data
     ## possibly adjust age groups according to maximum age (so as not to have empty age groups)
-    survey$participants[, lower.age.limit := reduce_agegroups(part_age, age.limits[age.limits <= max.age])]
+    survey$participants[, lower.age.limit := reduce_agegroups(part_age, age.limits[age.limits < max.age])]
     present.lower.age.limits <-
         survey$participants[, .N, by = lower.age.limit][N > 1]$lower.age.limit
     present.lower.age.limits <-
@@ -281,7 +285,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         {
             if (!any(is.na(weighted.matrix)))
             {
-                spectrum <- eigen(weighted.matrix, only.values = TRUE)$values[1]
+                spectrum <- as.numeric(eigen(weighted.matrix, only.values = TRUE)$values[1])
                 weighted.matrix <- weighted.matrix / spectrum
                 ret[[i]][["normalisation"]] <- spectrum
             } else
