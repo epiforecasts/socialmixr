@@ -47,9 +47,9 @@ contact_matrix <- function(survey = "POLYMOD", countries=c(), survey.pop, age.li
     if (missing(age.limits)) age.limits <- c(0, seq_len(max.age))
 
     ## check if specific countries are requested (if a survey contains data from multiple countries)
-    if (length(countries) > 0 & country.column %in% names(survey_data[["participants"]]))
+    if (length(countries) > 0 & country.column %in% names(participants))
     {
-        survey_data[["participants"]] <- survey_data[["participants"]][get(country.column) %in% countries]
+        participants <- participants[get(country.column) %in% countries]
     }
 
     ## are population data needed?
@@ -72,9 +72,9 @@ contact_matrix <- function(survey = "POLYMOD", countries=c(), survey.pop, age.li
             } else
             {
                 ## neither survey population nor country names given - try to guess country or countries surveyed from participant data
-                if (country.column %in% names(survey_data[["participants"]]))
+                if (country.column %in% names(participants))
                 {
-                    survey.countries <- unique(survey_data[["participants"]][[country.column]])
+                    survey.countries <- unique(participants[[country.column]])
                 } else
                 {
                     warning("No 'survey.pop' or 'countries' given, and no country column found in the data. I don't know which population this is from. Assuming the survey is representative")
@@ -87,9 +87,9 @@ contact_matrix <- function(survey = "POLYMOD", countries=c(), survey.pop, age.li
                 country.pop <- data.table(wpp_age(survey.countries))
 
                 ## check if survey data are from a specific year - in that case use demographic data from that year, otherwise latest
-                if (year.column %in% names(survey_data[["participants"]]))
+                if (year.column %in% names(participants))
                 {
-                    survey.year <- median(survey_data[["participants"]][[year.column]], na.rm = TRUE)
+                    survey.year <- median(participants[[year.column]], na.rm = TRUE)
                 } else if (missing(year.column))
                 {
                     survey.year <- country.pop[, max(year, na.rm=TRUE)]
@@ -116,14 +116,14 @@ contact_matrix <- function(survey = "POLYMOD", countries=c(), survey.pop, age.li
             }
 
             if (survey_representative) {
-                survey.pop <- survey_data[["participants"]][, lower.age.limit := reduce_agegroups(get(part.age.column), age.limits)]
+                survey.pop <- participants[, lower.age.limit := reduce_agegroups(get(part.age.column), age.limits)]
                 survey.pop <- survey.pop[, list(population=.N), by=lower.age.limit]
                 survey.pop <- survey.pop[!is.na(lower.age.limit)]
             }
         }
 
         ## adjust age groups by interpolating, in case they don't match between demographic and survey data
-        survey.pop <- data.table(pop_age(survey.pop, age.limits, ...))
+        survey.pop <- data.table(pop_age(survey.pop, age.limits))
 
         if (nrow(survey.pop) == 0)
         {
