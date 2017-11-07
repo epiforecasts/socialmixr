@@ -52,10 +52,34 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
     max.age <- max(survey$participants[, part_age], na.rm = TRUE) + 1
     if (missing(age.limits)) age.limits <- c(0, seq_len(max.age))
 
-    ## are population data needed?
-    pop_needed <- split || symmetric
+    ## check if any filters have been requested
+    if (nrow(survey$contacts) > 0 && !missing(filter)) {
+        missing_columns <- setdiff(names(filter), colnames(survey$contacts))
+        if (length(missing_columns) > 0) {
+            warning("filter column(s) ", paste(missing_columns), " not found")
+            filter <- filter[names(filter) %in% colnames(survey$contacts)]
+        }
+        ## filter contact data
+        for (column in names(filter)) {
+            survey$contacts <- survey$contacts[get(column) == filter[[column]]]
+        }
+    }
 
-    if (pop_needed) {
+    if (nrow(survey$participants[is.na(part_age)]) > 0) {
+        warning("removing participants with no age recorded")
+        survey$participants <- survey$participants[!is.na(part_age)]
+    }
+
+    ## adjust age groups according to what is in the data
+    ## possibly adjust age groups according to maximum age (so as not to have empty age groups)
+    survey$participants[, lower.age.limit := reduce_agegroups(part_age, age.limits[age.limits < max.age])]
+    present.lower.age.limits <-
+        survey$participants[, .N, by = lower.age.limit][N > 1]$lower.age.limit
+    present.lower.age.limits <-
+        present.lower.age.limits[order(present.lower.age.limits)]
+
+    ## are population data needed?
+    if (split || symmetric) {
         ## now, get demographic data (survey population)
         ## check if survey population is either not given or given as a vector of countries
         if (missing(survey.pop) || is.character(survey.pop))
@@ -134,51 +158,26 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
         {
             stop("Could not construct survey population data.")
         }
+    } else
+    {
+        survey.pop <- data.table(lower.age.limit=age.limits, population=NA_integer_)
     }
 
     ret <- list()
 
-    ## check if any filters have been requested
-    if (nrow(survey$contacts) > 0 && !missing(filter)) {
-        missing_columns <- setdiff(names(filter), colnames(survey$contacts))
-        if (length(missing_columns) > 0) {
-            warning("filter column(s) ", paste(missing_columns), " not found")
-            filter <- filter[names(filter) %in% colnames(survey$contacts)]
-        }
-        ## filter contact data
-        for (column in names(filter)) {
-            survey$contacts <- survey$contacts[get(column) == filter[[column]]]
-        }
-    }
-
-    if (nrow(survey$participants[is.na(part_age)]) > 0) {
-        warning("removing participants with no age recorded")
-        survey$participants <- survey$participants[!is.na(part_age)]
-    }
-
-    ## adjust age groups according to what is in the data
     ## possibly adjust age groups according to maximum age (so as not to have empty age groups)
-    survey$participants[, lower.age.limit := reduce_agegroups(part_age, age.limits[age.limits < max.age])]
-    present.lower.age.limits <-
-        survey$participants[, .N, by = lower.age.limit][N > 1]$lower.age.limit
+    survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, present.lower.age.limits)]
+    setkey(survey.pop, lower.age.limit)
+
+    ## re-assign lower age limits in participants
+    survey$participants[, lower.age.limit :=
+                              reduce_agegroups(part_age, survey.pop$lower.age.limit)]
+    present.lower.age.limits <- unique(survey.pop$lower.age.limit)
     present.lower.age.limits <-
         present.lower.age.limits[order(present.lower.age.limits)]
 
-    if (pop_needed) {
-        ## possibly adjust age groups according to maximum age (so as not to have empty age groups)
-        survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, present.lower.age.limits)]
-        survey.pop <- survey.pop[, list(population = sum(population)), by = lower.age.limit]
-
-        ## re-assign lower age limits in participants
-        survey$participants[, lower.age.limit :=
-                           reduce_agegroups(part_age, survey.pop$lower.age.limit)]
-        present.lower.age.limits <- unique(survey.pop$lower.age.limit)
-        present.lower.age.limits <-
-            present.lower.age.limits[order(present.lower.age.limits)]
-
-        ## set upper age limits
-        survey.pop[, upper.age.limit := c(survey.pop$lower.age.limit[-1], max.age)]
-    }
+    ## set upper age limits
+    survey.pop[, upper.age.limit := c(survey.pop$lower.age.limit[-1], max.age)]
 
     lower.upper.age.limits <-
         data.table(lower.age.limit = present.lower.age.limits,
@@ -188,6 +187,11 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
     survey$participants[, agegroup := cut(survey$participants[, part_age],
                                    breaks = union(present.lower.age.limits, max.age),
                                    right = FALSE)]
+
+    ## get number of participants in each age group
+    survey.pop <- survey.pop[, list(population = sum(population)), by = lower.age.limit]
+    survey.pop[, survey := unname(table(survey$participants[, lower.age.limit]))]
+    if (all(is.na(survey.pop$population))) survey.pop[, population := NULL]
 
     survey$participants[, weight := 1]
     ## assign weights to participants, to account for weekend/weekday variation
@@ -201,9 +205,6 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
             warning("'weigh.dayofweek' is TRUE, but no day of week column in the data. Will ignore.")
         }
     }
-
-    ## get number of participants in each age group
-    participants.age <- unname(table(survey$participants[, lower.age.limit]))
 
     if (n > 1)
     {
@@ -309,7 +310,7 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
         ret[[i]][["matrix"]] <- weighted.matrix
     }
 
-    if (pop_needed && exists("survey.year")) {
+    if (exists("survey.year")) {
         survey.pop[, year := survey.year]
     }
     if (length(ret) > 1)
@@ -318,7 +319,7 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
         return_value <- ret[[1]]
     else return_value <- NULL
 
-    if (!is.null(return_value) && pop_needed) return_value[["demography"]] <- survey.pop
+    return_value[["demography"]] <- survey.pop
 
     return(return_value)
 }
