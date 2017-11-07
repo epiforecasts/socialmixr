@@ -26,5 +26,6 @@ get_survey <- function(survey, quiet=FALSE)
     {
         stop("'survey' must be either a character string or a named list with elements named 'participants' and 'contacts'")
     }
+    check_survey(survey, quiet=TRUE)
     return(survey)
 }
