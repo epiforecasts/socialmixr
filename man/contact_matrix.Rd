@@ -32,6 +32,8 @@ contact_matrix(survey = "POLYMOD", countries = c(), survey.pop, age.limits,
 
 \item{split}{whether to split the number of contacts and assortativity}
 
+\item{weigh.dayofweek}{whether to weigh the day of the week (weight 5 for weekdays ans 2 for weekends)}
+
 \item{weights}{columns that contain weights}
 
 \item{part.age.column}{column indicating age in participant data}

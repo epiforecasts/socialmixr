@@ -10,6 +10,7 @@
 ##' @param symmetric whether to make matrix symmetric
 ##' @param normalise whether to normalise to eigenvalue 1
 ##' @param split whether to split the number of contacts and assortativity
+##' @param weigh.dayofweek whether to weigh the day of the week (weight 5 for weekdays ans 2 for weekends)
 ##' @param weights columns that contain weights
 ##' @param part.age.column column indicating age in participant data
 ##' @param contact.age.column column indicating age in contact data

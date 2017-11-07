@@ -8,6 +8,8 @@ check_survey(survey, quiet = FALSE)
 }
 \arguments{
 \item{survey}{A list of 'participants' and 'contacts' (both data frames)}
+
+\item{quiet}{If TRUE, will not exit quietly if the test is passed.}
 }
 \value{
 TRUE if the test is passed, an error is thrown otherwise
