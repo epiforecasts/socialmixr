@@ -185,7 +185,7 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
 
     ## get number of participants in each age group
     survey.pop <- survey.pop[, list(population = sum(population)), by = lower.age.limit]
-    survey.pop[, survey := unname(table(survey$participants[, lower.age.limit]))]
+    survey.pop[, participants := unname(table(survey$participants[, lower.age.limit]))]
     if (all(is.na(survey.pop$population))) survey.pop[, population := NULL]
 
     survey$participants[, weight := 1]
@@ -307,6 +307,7 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
 
     if (exists("survey.year")) {
         survey.pop[, year := survey.year]
+        survey.pop <- survey.pop[, list(lower.age.limit, population, year, participants)]
     }
     if (length(ret) > 1)
         return_value <- list(matrices = ret)
