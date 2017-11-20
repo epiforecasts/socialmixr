@@ -12,4 +12,3 @@ list of surveys
 \description{
 List all surveys contained in the package
 }
-

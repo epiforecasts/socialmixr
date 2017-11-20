@@ -5,7 +5,7 @@
 ##' @importFrom data.table data.table setkeyv
 ##' @export
 ##' @param pop a data frame with columns indicating lower age limits and population sizes (see 'age.column' and 'pop.column')
-##' @param age.limits lower age limits to extract
+##' @param age.limits lower age limits of age groups to extract
 ##' @param pop.age.column column in the 'pop' data frame indicating the lower age group limit
 ##' @param pop.column column in the 'pop' data frame indicating the population size
 pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.column = "population")
@@ -19,7 +19,7 @@ pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.col
     pop <- data.table(pop)
     setkeyv(pop, pop.age.column)
 
-    if (!missing(age.limits))
+    if (!missing(age.limits) && !is.na(age.limits))
     {
         age.limits <- age.limits[order(age.limits)]
         max.age <- max(pop[, pop.age.column, with=FALSE])

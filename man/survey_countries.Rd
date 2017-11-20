@@ -17,4 +17,3 @@ list of countries
 \description{
 List all countries contained in a survey
 }
-

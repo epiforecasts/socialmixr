@@ -10,7 +10,7 @@ pop_age(pop, age.limits, pop.age.column = "lower.age.limit",
 \arguments{
 \item{pop}{a data frame with columns indicating lower age limits and population sizes (see 'age.column' and 'pop.column')}
 
-\item{age.limits}{lower age limits to extract}
+\item{age.limits}{lower age limits of age groups to extract}
 
 \item{pop.age.column}{column in the 'pop' data frame indicating the lower age group limit}
 
@@ -22,4 +22,3 @@ data frame of age-specific population data
 \description{
 This changes population data to have age groups with the given age.limits, extrapolating linearly between age groups (if more are requested than available) and summing populations (if fewer are requested than available)
 }
-

@@ -2,12 +2,12 @@ context("Generating contact matrices")
 
 participants_reduced <- polymod
 participants_reduced$participants$year <- NULL
-participants_reduced$participants$day_of_week <- NULL
+participants_reduced$participants$dayofweek <- NULL
 participants_reduced$participants$added_weight <- 0.5
 
 options <-
   list(test1 = list(survey = "POLYMOD", normalise = TRUE, split = TRUE),
-       test2 = list(n = 2, survey = participants_reduced, countries = c("Italy"), age.limits = c(0, 1), add.weights = "added_weight", normalise = TRUE, split = TRUE),
+       test2 = list(n = 2, survey = participants_reduced, countries = c("Italy"), age.limits = c(0, 1), weights = "added_weight", normalise = TRUE, split = TRUE),
        test3 = list(survey.pop="Australia", split=TRUE, normalise=TRUE))
 
 contacts <- lapply(options, function(x) {do.call(contact_matrix, x)})
@@ -47,13 +47,12 @@ test_that("survey argument is validated",
 
 test_that("error is thrown if no survey population can be generated",
 {
-  expect_error(contact_matrix(survey = "POLYMOD", country.column = "bogus"), "no country column")
-  expect_error(suppressWarnings(contact_matrix(survey = "POLYMOD", countries = "Zamonia"), "Could not construct survey population data"))
+  expect_error(suppressWarnings(contact_matrix(survey = "POLYMOD", countries = "Zamonia"), "No survey data available"))
 })
 
-test_that("warning is thrown if country is not found",
+test_that("error is thrown if country is not found",
 {
-  expect_warning(contact_matrix(survey = "POLYMOD", countries = c("Italy", "Zamonia")), "Could not find population data")
+  expect_error(contact_matrix(survey = "POLYMOD", countries = c("Italy", "Zamonia")), "data not found")
 })
 
 test_that("warning is thrown if n > 1 and bootstrap = FALSE",

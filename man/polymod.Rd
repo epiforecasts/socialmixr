@@ -26,4 +26,3 @@ K, Mikolajczyk R, et al. (2008) Social Contacts and Mixing Patterns Relevant
 to the Spread of Infectious Diseases. PLoS Med 5(3): e74.
 }
 \keyword{datasets}
-

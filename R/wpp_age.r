@@ -26,18 +26,20 @@ wpp_age <- function(countries, years)
         pop <- pop[country %in% countries]
     }
 
-    pop <- melt(pop, id.vars = c("country", "country_code", "age", "sex"), variable.name = "year")
-    pop <- data.table(dcast(pop, country + country_code + age + year ~ sex, value.var = "value"))
+    if (nrow(pop) > 0) {
+        pop <- melt(pop, id.vars = c("country", "country_code", "age", "sex"), variable.name = "year")
+        pop <- data.table(dcast(pop, country + country_code + age + year ~ sex, value.var = "value"))
 
-    pop[, year := as.integer(as.character(year))]
+        pop[, year := as.integer(as.character(year))]
 
-    if (!missing(years))
-    {
-        pop <- pop[year %in% years]
+        if (!missing(years))
+        {
+            pop <- pop[year %in% years]
+        }
+
+        pop <- pop[, lower.age.limit := as.integer(sub("[-+].*$", "", age))]
+        pop <- pop[, list(country, lower.age.limit, year, population = (female + male) * 1000)]
     }
-
-    pop <- pop[, lower.age.limit := as.integer(sub("[-+].*$", "", age))]
-    pop <- pop[, list(country, lower.age.limit, year, population = (female + male) * 1000)]
 
     return(as.data.frame(pop))
 }

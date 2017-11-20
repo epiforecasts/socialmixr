@@ -14,5 +14,5 @@ Description: Provides methods for sampling contact matrices from diary data and
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 Suggests: testthat

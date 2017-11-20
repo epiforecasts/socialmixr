@@ -17,4 +17,3 @@ citation as bibentry
 \description{
 Print citation for a survey
 }
-
