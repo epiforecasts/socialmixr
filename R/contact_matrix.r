@@ -49,7 +49,7 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
 
     ## check maximum age in the data
     max.age <- max(survey$participants[, part_age], na.rm = TRUE) + 1
-    if (missing(age.limits)) age.limits <- c(0, seq_len(max.age))
+    if (missing(age.limits)) age.limits <- c(0, seq_len(max.age-1))
 
     ## check if any filters have been requested
     if (nrow(survey$contacts) > 0 && !missing(filter)) {
@@ -73,7 +73,7 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
     ## possibly adjust age groups according to maximum age (so as not to have empty age groups)
     survey$participants[, lower.age.limit := reduce_agegroups(part_age, age.limits[age.limits < max.age])]
     present.lower.age.limits <-
-        survey$participants[, .N, by = lower.age.limit][N > 1]$lower.age.limit
+        survey$participants[, .N, by = lower.age.limit][N > 0]$lower.age.limit
     present.lower.age.limits <-
         present.lower.age.limits[order(present.lower.age.limits)]
 
@@ -160,7 +160,8 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
         }
 
         ## possibly adjust age groups according to maximum age (so as not to have empty age groups)
-        survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, present.lower.age.limits)]
+        survey.pop <- survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, present.lower.age.limits)]
+        survey.pop <- survey.pop[, list(population = sum(population)), by=lower.age.limit]
         setkey(survey.pop, lower.age.limit)
         ## re-assign lower age limits in participants
         survey$participants[, lower.age.limit :=
