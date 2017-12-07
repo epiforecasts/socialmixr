@@ -4,12 +4,14 @@
 \alias{contact_matrix}
 \title{Generate a contact matrix from diary survey data}
 \usage{
-contact_matrix(survey = "polymod", countries = c(), survey.pop, age.limits,
-  filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE,
-  split = FALSE, weigh.dayofweek = FALSE, weights = c(), quiet = FALSE)
+contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
+  n = 1, bootstrap, sample = "a", counts = FALSE, symmetric = FALSE,
+  split = FALSE, missing.participant.age = c("remove", "keep"),
+  missing.contact.age = c("sample", "remove", "keep"), weights = c(),
+  weigh.dayofweek = FALSE, quiet = FALSE, ...)
 }
 \arguments{
-\item{survey}{either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from}
+\item{survey}{a DOI (see \link{\cite{list_surveys}}) or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \link{\cite{surveys}}); if this is missing, the POLYMOD study will be used}
 
 \item{countries}{limit to one or more countries; if not given, will use all countries in the survey}
 
@@ -21,7 +23,7 @@ contact_matrix(survey = "polymod", countries = c(), survey.pop, age.limits,
 
 \item{n}{number of matrices to sample}
 
-\item{bootstrap}{whether to sample randomly using a bootstrap; by default, will use bootstrap if n > 1}
+\item{bootstrap}{whether to sample participants and contacts randomly using a bootstrap; by default, will use bootstrap if n > 1}
 
 \item{counts}{whether to return counts (instead of means)}
 
@@ -29,11 +31,17 @@ contact_matrix(survey = "polymod", countries = c(), survey.pop, age.limits,
 
 \item{split}{whether to split the number of contacts and assortativity}
 
-\item{weigh.dayofweek}{whether to weigh the day of the week (weight 5 for weekdays ans 2 for weekends)}
+\item{missing.participant.age}{if set to "remove", participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group}
+
+\item{missing.contact.age}{if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "remove", participants that that have contacts without age information are removed; if set to "keep", contacts with missing age are kept and treated as a separate age group}
 
 \item{weights}{columns that contain weights}
 
-\item{quiet}{if TRUE, suppress messages}
+\item{weigh.dayofweek}{whether to weigh the day of the week (weight 5 for weekdays ans 2 for weekends)}
+
+\item{quiet}{if set to TRUE, output is reduced}
+
+\item{...}{further arguments to pass to \link{\code{get_survey}}, \link{code{check}} and \link{\code{pop_age}} (e.g., column names)}
 }
 \value{
 a list of sampled contact matrices, and the underlying demography of the surveyed population
@@ -42,7 +50,7 @@ a list of sampled contact matrices, and the underlying demography of the surveye
 Samples a contact survey using a bootstrap
 }
 \examples{
-contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+contact_matrix(countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 }
 \author{
 Sebastian Funk

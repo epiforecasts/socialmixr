@@ -2,18 +2,25 @@
 % Please edit documentation in R/get_survey.r
 \name{get_survey}
 \alias{get_survey}
-\title{Get a survey from a variable, either from internal data or passed as an argument}
+\title{Get a survey, either from its Zenodo repository or from a survey variable.}
 \usage{
-get_survey(survey, quiet = FALSE)
+get_survey(survey, sample.contact.age = TRUE,
+  contact.age.column = "cnt_age", quiet = FALSE, ...)
 }
 \arguments{
-\item{survey}{either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from}
+\item{survey}{a DOI (see \link{\cite{list_surveys}}) or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \link{\cite{surveys}}); if this is missing, the POLYMOD study will be used}
+
+\item{sample.contact.age}{whether the contact age should be sampled if it does not exist in the data}
+
+\item{contact.age.column}{the name of the contact age column; if this does not exist, the function will try to construct it from "..._exact", "..._est_min" and "..._est_max" (unless \code{sample.contact.age} is set to FALSE)}
 
 \item{quiet}{if TRUE, suppress messages}
+
+\item{...}{ignored}
 }
 \value{
 a survey in the correct format
 }
 \description{
-Get a survey from a variable, either from internal data or passed as an argument
+Get a survey, either from its Zenodo repository or from a survey variable.
 }

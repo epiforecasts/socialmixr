@@ -17,4 +17,4 @@ devtools::install_github("sbfnk/socialmixr")
 Documentation
 ======
 
-For information on how to use the socialmixr package, see the vignette.
+For information on how to use the socialmixr package, see the [vignette](http://sbfnk.github.io/socialmixr/).

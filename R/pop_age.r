@@ -8,7 +8,8 @@
 ##' @param age.limits lower age limits of age groups to extract
 ##' @param pop.age.column column in the 'pop' data frame indicating the lower age group limit
 ##' @param pop.column column in the 'pop' data frame indicating the population size
-pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.column = "population")
+##' @param ... ignored
+pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.column = "population", ...)
 {
     if(getRversion() >= "2.15.1")
     {

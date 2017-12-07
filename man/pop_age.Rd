@@ -5,7 +5,7 @@
 \title{Change age groups in population data}
 \usage{
 pop_age(pop, age.limits, pop.age.column = "lower.age.limit",
-  pop.column = "population")
+  pop.column = "population", ...)
 }
 \arguments{
 \item{pop}{a data frame with columns indicating lower age limits and population sizes (see 'age.column' and 'pop.column')}
@@ -15,6 +15,8 @@ pop_age(pop, age.limits, pop.age.column = "lower.age.limit",
 \item{pop.age.column}{column in the 'pop' data frame indicating the lower age group limit}
 
 \item{pop.column}{column in the 'pop' data frame indicating the population size}
+
+\item{...}{ignored}
 }
 \value{
 data frame of age-specific population data

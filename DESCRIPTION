@@ -7,8 +7,11 @@ Depends:
     R (>= 3.3.1)
 Imports:
     data.table,
-    wpp2015,
-    RefManageR
+    curl,
+    httr,
+    jsonlite,
+    oai,
+    wpp2015
 Description: Provides methods for sampling contact matrices from diary data and
     calculate simple epidemiological quantities from it.
 License: GPL-3
@@ -18,5 +21,7 @@ RoxygenNote: 6.0.1
 Suggests: testthat,
     knitr,
     rmarkdown,
-    ggplot2
+    ggplot2,
+    reshape2,
+    formatR
 VignetteBuilder: knitr
