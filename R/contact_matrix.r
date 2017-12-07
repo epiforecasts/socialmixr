@@ -306,14 +306,17 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
         survey.pop <- survey.pop[, list(lower.age.limit, population,
                                         proportion=population/sum(population), year)]
     }
+
     if (length(ret) > 1)
-        return_value[["matrices"]] <- list(matrices = ret)
+        return_value <- list(matrices = ret)
     else if (length(ret) == 1)
         return_value <- ret[[1]]
     else return_value <- NULL
 
-    if (need.survey.pop) return_value[["demography"]] <- survey.pop[]
-    return_value[["participants"]] <- part.pop[]
+    if (!is.null(return_value)) {
+        if (need.survey.pop) return_value[["demography"]] <- survey.pop[]
+        return_value[["participants"]] <- part.pop[]
+    }
 
     return(return_value)
 }
