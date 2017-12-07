@@ -25,6 +25,27 @@
 ##' @author Sebastian Funk
 contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, weigh.dayofweek = FALSE, weights = c(), quiet = FALSE)
 {
+    if(getRversion() >= "2.15.1")
+    {
+        ## circumvent R CMD CHECK errors by defining global variables
+        country <- NULL
+        part_age <- NULL
+        lower.age.limit <- NULL
+        upper.age.limit <- NULL
+        .N <- NULL
+        N <- NULL
+        year <- NULL
+        population <- NULL
+        agegroup <- NULL
+        proportion <- NULL
+        participants <- NULL
+        weight <- NULL
+        dayofweek.column <- NULL
+        dayofweek <- NULL
+        cnt_age_mean <- NULL
+        cnt.agegroup <- NULL
+    }
+
     ## get the survey
     survey <- get_survey(survey, quiet)
 

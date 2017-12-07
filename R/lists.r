@@ -30,6 +30,14 @@ survey_countries <- function(survey, country.column = "country")
 ##' @export
 wpp_countries <- function()
 {
+    if(getRversion() >= "2.15.1")
+    {
+        ## circumvent R CMD CHECK errors by defining global variables
+        popF <- NULL
+        popM <- NULL
+        country <- NULL
+    }
+
     data(popF, package = "wpp2015", envir = environment())
     data(popM, package = "wpp2015", envir = environment())
     pop <- data.table(rbind(popF, popM))

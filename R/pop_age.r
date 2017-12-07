@@ -10,6 +10,16 @@
 ##' @param pop.column column in the 'pop' data frame indicating the population size
 pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.column = "population")
 {
+    if(getRversion() >= "2.15.1")
+    {
+        ## circumvent R CMD CHECK errors by defining global variables
+        ..original.upper.age.limit <- NULL
+        ..original.lower.age.limit <- NULL
+        ..segment <- NULL
+        ..upper.age.limit <- NULL
+        population <- NULL
+    }
+
     if (!is.data.frame(pop) ||
         length(intersect(colnames(pop), c(pop.age.column, pop.column))) < 2)
     {
