@@ -6,9 +6,9 @@ participants_reduced$participants$dayofweek <- NULL
 participants_reduced$participants$added_weight <- 0.5
 
 options <-
-  list(test1 = list(survey = "POLYMOD", normalise = TRUE, split = TRUE),
-       test2 = list(n = 2, survey = participants_reduced, countries = c("Italy"), age.limits = c(0, 1), weights = "added_weight", normalise = TRUE, split = TRUE),
-       test3 = list(survey.pop="Australia", split=TRUE, normalise=TRUE))
+  list(test1 = list(survey = "POLYMOD", split = TRUE),
+       test2 = list(n = 2, survey = participants_reduced, countries = c("Italy"), age.limits = c(0, 1), weights = "added_weight", split = TRUE),
+       test3 = list(survey.pop="Australia", split=TRUE))
 
 contacts <- lapply(options, function(x) {do.call(contact_matrix, x)})
 
