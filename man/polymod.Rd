@@ -8,7 +8,7 @@
 \describe{
   \item{participants}{the study participant, with age, country, year and day
   of the week (starting with 1 = Monday)}
-  \item{contacts}{weight of the diamond, in carats}
+  \item{contacts}{reported contacts of the study participants}
   ...
 }}
 \source{
