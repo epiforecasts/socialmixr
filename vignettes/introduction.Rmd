@@ -88,7 +88,7 @@ Symmetric contact matrices
 
 Conceivably, contact matrices should be symmetric: the total number of contacts made by members of one age group with those of another should be the same as vice versa. Mathematically, if $c_{ij}$ is the mean number of contacts made by members of age group $i$ with members of age group $j$, and the total number of people in age group $i$ is $N_i$, then
 
-$$c_{ij} N_i = c_{ji}N_j$
+$$c_{ij} N_i = c_{ji}N_j$$
 
 Because of variation in the sample from which the contact matrix is obtained, this relationship is usually not fulfilled exactly. In order to obtain a symmetric contact matrix that fulfills it, one can use
 
@@ -99,7 +99,7 @@ To get this version of the contact matrix, use `symmetric = TRUE` when calling t
 Splitting contact matrices
 =======
 
-The `contact_matrix` contains a simple model for the elements of the contact matrix, by which it is split into a /global/ component, as well as three components representing /contacts/, /assortativity/ and /demography/. In other words, the elements $c_{ij}$ of the contact matrix are modelled as
+The `contact_matrix` contains a simple model for the elements of the contact matrix, by which it is split into a _global_ component, as well as three components representing _contacts_, _assortativity_ and _demography_. In other words, the elements $c_{ij}$ of the contact matrix are modelled as
 
 $$ c_{ij} = q d_i a_{ij} n_j $$
 
