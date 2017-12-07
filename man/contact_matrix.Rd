@@ -21,7 +21,7 @@ contact_matrix(survey = "polymod", countries = c(), survey.pop, age.limits,
 
 \item{n}{number of matrices to sample}
 
-\item{bootstrap}{whether to sample using a bootstrap; by default, will use bootstrap if n > 1}
+\item{bootstrap}{whether to sample randomly using a bootstrap; by default, will use bootstrap if n > 1}
 
 \item{counts}{whether to return counts (instead of means)}
 
@@ -42,10 +42,7 @@ a list of sampled contact matrices, and the underlying demography of the surveye
 Samples a contact survey using a bootstrap
 }
 \examples{
-m <- contact_matrix()
-m <- contact_matrix(n = 5)
-m <- contact_matrix(split = TRUE)
-m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 }
 \author{
 Sebastian Funk

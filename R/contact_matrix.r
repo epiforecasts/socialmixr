@@ -6,7 +6,7 @@
 ##' @param survey.pop survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the chosen countries, or all countries in the survey if \code{countries} is not given
 ##' @param filter any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered
 ##' @param n number of matrices to sample
-##' @param bootstrap whether to sample using a bootstrap; by default, will use bootstrap if n > 1
+##' @param bootstrap whether to sample randomly using a bootstrap; by default, will use bootstrap if n > 1
 ##' @param counts whether to return counts (instead of means)
 ##' @param symmetric whether to make matrix symmetric
 ##' @param split whether to split the number of contacts and assortativity
@@ -21,10 +21,7 @@
 ##' @inheritParams pop_age
 ##' @inheritParams check_survey
 ##' @examples
-##' m <- contact_matrix()
-##' m <- contact_matrix(n = 5)
-##' m <- contact_matrix(split = TRUE)
-##' m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+##' contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
 contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, weigh.dayofweek = FALSE, weights = c(), quiet = FALSE)
 {
