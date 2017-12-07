@@ -6,8 +6,7 @@
 \usage{
 contact_matrix(survey = "polymod", countries = c(), survey.pop, age.limits,
   filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE,
-  normalise = FALSE, split = FALSE, weigh.dayofweek = FALSE,
-  weights = c(), quiet = FALSE)
+  split = FALSE, weigh.dayofweek = FALSE, weights = c(), quiet = FALSE)
 }
 \arguments{
 \item{survey}{either a (case-insensitive) survey name ("POLYMOD") or a list of 'participants' and 'contacts' (both data frames) to sample from}
@@ -28,8 +27,6 @@ contact_matrix(survey = "polymod", countries = c(), survey.pop, age.limits,
 
 \item{symmetric}{whether to make matrix symmetric}
 
-\item{normalise}{whether to normalise to eigenvalue 1}
-
 \item{split}{whether to split the number of contacts and assortativity}
 
 \item{weigh.dayofweek}{whether to weigh the day of the week (weight 5 for weekdays ans 2 for weekends)}
@@ -47,8 +44,7 @@ Samples a contact survey using a bootstrap
 \examples{
 m <- contact_matrix()
 m <- contact_matrix(n = 5)
-m <- contact_matrix(normalise = TRUE)
-m <- contact_matrix(normalise = TRUE, split = TRUE)
+m <- contact_matrix(split = TRUE)
 m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 }
 \author{

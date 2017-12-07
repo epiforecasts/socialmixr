@@ -9,7 +9,6 @@
 ##' @param bootstrap whether to sample using a bootstrap; by default, will use bootstrap if n > 1
 ##' @param counts whether to return counts (instead of means)
 ##' @param symmetric whether to make matrix symmetric
-##' @param normalise whether to normalise to eigenvalue 1
 ##' @param split whether to split the number of contacts and assortativity
 ##' @param weigh.dayofweek whether to weigh the day of the week (weight 5 for weekdays ans 2 for weekends)
 ##' @param weights columns that contain weights
@@ -24,11 +23,10 @@
 ##' @examples
 ##' m <- contact_matrix()
 ##' m <- contact_matrix(n = 5)
-##' m <- contact_matrix(normalise = TRUE)
-##' m <- contact_matrix(normalise = TRUE, split = TRUE)
+##' m <- contact_matrix(split = TRUE)
 ##' m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, normalise = FALSE, split = FALSE, weigh.dayofweek = FALSE, weights = c(), quiet = FALSE)
+contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, weigh.dayofweek = FALSE, weights = c(), quiet = FALSE)
 {
     ## get the survey
     survey <- get_survey(survey, quiet)
@@ -79,115 +77,117 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
     present.lower.age.limits <-
         present.lower.age.limits[order(present.lower.age.limits)]
 
-    ## now, get demographic data (survey population)
-    ## check if survey population is either not given or given as a vector of countries
-    if (missing(survey.pop) || is.character(survey.pop))
+    ## if split or symmetric requested, get demographic data (survey population)
+    need.survey.pop <- split || symmetric
+    if (need.survey.pop)
     {
-        survey_representative=FALSE
-        if (!missing(survey.pop))
+        ## check if survey population is either not given or given as a vector of countries
+        if (missing(survey.pop) || is.character(survey.pop))
         {
-            ## survey population is given as vector of countries
-            survey.countries <- survey.pop
-        } else if (!missing(countries))
-        {
-            ## survey population not given but countries requested from survey - get population data from those countries
-            survey.countries <- countries
-        } else
-        {
-            ## neither survey population nor country names given - try to guess country or countries surveyed from participant data
-            if ("country" %in% names(survey$participants))
+            survey.representative=FALSE
+            if (!missing(survey.pop))
             {
-                survey.countries <- unique(survey$participants[, country])
+                ## survey population is given as vector of countries
+                survey.countries <- survey.pop
+            } else if (!missing(countries))
+            {
+                ## survey population not given but countries requested from survey - get population data from those countries
+                survey.countries <- countries
             } else
             {
-                warning("No 'survey.pop' or 'countries' given, and no 'country' column found in the data. I don't know which population this is from. Assuming the survey is representative")
-                survey_representative=TRUE
+                ## neither survey population nor country names given - try to guess country or countries surveyed from participant data
+                if ("country" %in% names(survey$participants))
+                {
+                    survey.countries <- unique(survey$participants[, country])
+                } else
+                {
+                    warning("No 'survey.pop' or 'countries' given, and no 'country' column found in the data. I don't know which population this is from. Assuming the survey is representative")
+                    survey.representative=TRUE
+                }
             }
-        }
 
-        if (!survey_representative) {
-            ## get population data for countries from 'wpp' package
-            country.pop <- data.table(wpp_age(survey.countries))
+            if (!survey.representative) {
+                ## get population data for countries from 'wpp' package
+                country.pop <- data.table(wpp_age(survey.countries))
 
-            ## check if survey data are from a specific year - in that case use demographic data from that year, otherwise latest
-            if ("year" %in% colnames(survey$participants))
-            {
+                ## check if survey data are from a specific year - in that case use demographic data from that year, otherwise latest
+                if ("year" %in% colnames(survey$participants))
+                {
+                    survey.year <- survey$participants[, median(year, na.rm=TRUE)]
+                } else
+                {
+                    survey.year <- country.pop[, max(year, na.rm=TRUE)]
+                    warning("No 'year' column found in the data. Will use ", survey.year, " population data.")
+                }
+
+                ## check if any survey countries are not in wpp
+                missing.countries <- setdiff(survey.countries, unique(country.pop$country))
+                if (length(missing.countries) > 0)
+                {
+                    warning("Could not find population data for ", paste(missing.countries, collapse = ", "), ". ",
+                            " Use wpp_countries() to get a list of country names.")
+                }
+
+                if (length(missing.countries) == length(survey.countries)) {
+                    warning("No survey data available for any of the requested data. I don't know which population this is from. Assuming the survey is representative")
+                    survey.representative <- TRUE
+                } else {
+                    ## get demographic data closest to survey year
+                    country.pop.year <- unique(country.pop[, year])
+                    survey.year <- min(country.pop.year[which.min(abs(survey.year - country.pop.year))])
+                    survey.pop <- country.pop[year == survey.year][, list(population = sum(population)), by = "lower.age.limit"]
+                }
+            }
+
+            if (survey.representative) {
+                survey.pop <- survey$participants[, lower.age.limit := reduce_agegroups(part_age, age.limits)]
+                survey.pop <- survey.pop[, list(population=.N), by=lower.age.limit]
+                survey.pop <- survey.pop[!is.na(lower.age.limit)]
+                if ("year" %in% colnames(survey$participants))
+                {
+                    survey.year <- survey$participants[, median(year, na.rm=TRUE)]
+                }
                 survey.year <- survey$participants[, median(year, na.rm=TRUE)]
-            } else
-            {
-                survey.year <- country.pop[, max(year, na.rm=TRUE)]
-                warning("No 'year' column found in the data. Will use ", survey.year, " population data.")
-            }
-
-            ## check if any survey countries are not in wpp
-            missing.countries <- setdiff(survey.countries, unique(country.pop$country))
-            if (length(missing.countries) > 0)
-            {
-                warning("Could not find population data for ", paste(missing.countries, collapse = ", "), ". ",
-                        " Use wpp_countries() to get a list of country names.")
-            }
-
-            if (length(missing.countries) == length(survey.countries)) {
-                warning("No survey data available for any of the requested data. I don't know which population this is from. Assuming the survey is representative")
-                survey_representative <- TRUE
-            } else {
-                ## get demographic data closest to survey year
-                country.pop.year <- unique(country.pop[, year])
-                survey.year <- min(country.pop.year[which.min(abs(survey.year - country.pop.year))])
-                survey.pop <- country.pop[year == survey.year][, list(population = sum(population)), by = "lower.age.limit"]
             }
         }
+        ## adjust age groups by interpolating, in case they don't match between demographic and survey data
+        survey.pop <- data.table(pop_age(survey.pop, age.limits))
 
-        if (survey_representative) {
-            survey.pop <- survey$participants[, lower.age.limit := reduce_agegroups(part_age, age.limits)]
-            survey.pop <- survey.pop[, list(population=.N), by=lower.age.limit]
-            survey.pop <- survey.pop[!is.na(lower.age.limit)]
-            if ("year" %in% colnames(survey$participants))
-            {
-                survey.year <- survey$participants[, median(year, na.rm=TRUE)]
-            }
-            survey.year <- survey$participants[, median(year, na.rm=TRUE)]
+        if (nrow(survey.pop) == 0)
+        {
+            warning("Could not construct survey population data.")
+            survey.pop <- data.table(lower.age.limit=age.limits, population=NA_integer_)
         }
+
+        ## possibly adjust age groups according to maximum age (so as not to have empty age groups)
+        survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, present.lower.age.limits)]
+        setkey(survey.pop, lower.age.limit)
+        ## re-assign lower age limits in participants
+        survey$participants[, lower.age.limit :=
+                                  reduce_agegroups(part_age, survey.pop$lower.age.limit)]
+        present.lower.age.limits <- unique(survey.pop$lower.age.limit)
+        present.lower.age.limits <-
+            present.lower.age.limits[order(present.lower.age.limits)]
+
+        ## set upper age limits
+        survey.pop[, upper.age.limit := c(survey.pop$lower.age.limit[-1], max.age)]
+
+        lower.upper.age.limits <-
+            data.table(lower.age.limit = present.lower.age.limits,
+                       upper.age.limit = c(present.lower.age.limits[-1], max.age))
+        ## set upper age limits and construct age groups
+        survey$participants <- merge(survey$participants, lower.upper.age.limits)
+        if (all(is.na(survey.pop$population))) survey.pop[, population := NULL]
     }
 
-    ## adjust age groups by interpolating, in case they don't match between demographic and survey data
-    survey.pop <- data.table(pop_age(survey.pop, age.limits))
-
-    if (nrow(survey.pop) == 0)
-    {
-        warning("Could not construct survey population data.")
-        survey.pop <- data.table(lower.age.limit=age.limits, population=NA_integer_)
-    }
-
-    ret <- list()
-
-    ## possibly adjust age groups according to maximum age (so as not to have empty age groups)
-    survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, present.lower.age.limits)]
-    setkey(survey.pop, lower.age.limit)
-
-    ## re-assign lower age limits in participants
-    survey$participants[, lower.age.limit :=
-                              reduce_agegroups(part_age, survey.pop$lower.age.limit)]
-    present.lower.age.limits <- unique(survey.pop$lower.age.limit)
-    present.lower.age.limits <-
-        present.lower.age.limits[order(present.lower.age.limits)]
-
-    ## set upper age limits
-    survey.pop[, upper.age.limit := c(survey.pop$lower.age.limit[-1], max.age)]
-
-    lower.upper.age.limits <-
-        data.table(lower.age.limit = present.lower.age.limits,
-                   upper.age.limit = c(present.lower.age.limits[-1], max.age))
-    ## set upper age limits and construct age groups
-    survey$participants <- merge(survey$participants, lower.upper.age.limits)
     survey$participants[, agegroup := cut(survey$participants[, part_age],
-                                   breaks = union(present.lower.age.limits, max.age),
-                                   right = FALSE)]
+                                          breaks = union(survey$participants$lower.age.limit, max.age),
+                                          right = FALSE)]
 
     ## get number of participants in each age group
-    survey.pop <- survey.pop[, list(population = sum(population)), by = lower.age.limit]
-    survey.pop[, participants := unname(table(survey$participants[, lower.age.limit]))]
-    if (all(is.na(survey.pop$population))) survey.pop[, population := NULL]
+    part.pop <- data.table(table(survey$participants[, lower.age.limit]))
+    setnames(part.pop, c("lower.age.limit", "participants"))
+    part.pop[, proportion := participants / sum(participants)]
 
     survey$participants[, weight := 1]
     ## assign weights to participants, to account for weekend/weekday variation
@@ -211,6 +211,7 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
         }
     }
 
+        ret <- list()
     for (i in seq_len(n))
     {
         if (bootstrap)
@@ -257,49 +258,40 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
 
         ## calculate weighted contact matrix
         weighted.matrix <- xtabs(data = contacts.sample,
-                                 formula = weight ~ cnt.agegroup + agegroup)
-        if (!counts) {
+                                 formula = weight ~ agegroup + cnt.agegroup)
+
+        if (symmetric & prod(dim(as.matrix(weighted.matrix))) > 1) {
+            weighted.matrix <- 0.5 * (weighted.matrix + t(weighted.matrix))
+        }
+
+         if (!counts) { ## normalise to give mean number of contacts
             ## calculate normalisation vector
             norm.vector <- xtabs(data = part.sample, formula = weight ~ agegroup)
 
             ## normalise contact matrix
-            weighted.matrix <- t(apply(weighted.matrix, 1, function(x) { x / norm.vector} ))
+            weighted.matrix <- apply(weighted.matrix, 2, function(x) {x/norm.vector})
         }
+
         ## get rid of name but preserve row and column names
         cols <- rownames(weighted.matrix)
         weighted.matrix <- unname(weighted.matrix)
 
-        if (symmetric & prod(dim(as.matrix(weighted.matrix))) > 1) {
-            ## set C_{ij} N_j and C_{ji} N_i (which should both be equal) to
-            ## 0.5 * their sum; then C_{ij} is that sum / N_j
-            normalised.weighted.matrix <- weighted.matrix %*% diag(survey.pop$population)
-            weighted.matrix <- t(apply(0.5 * (normalised.weighted.matrix +
-                                              t(normalised.weighted.matrix)),
-                                       1, function(x) { x / survey.pop$population }))
-        }
-
         ret[[i]] <- list()
 
-        if (normalise)
-        {
-            if (!any(is.na(weighted.matrix)))
-            {
-                spectrum <- as.numeric(eigen(weighted.matrix, only.values = TRUE)$values[1])
-                weighted.matrix <- weighted.matrix / spectrum
-                ret[[i]][["normalisation"]] <- spectrum
-            } else
-            {
-                ret[[i]][["normalisation"]] <- NA_real_
-            }
-        }
 
         if (split)
         {
-            nb_contacts <- apply(weighted.matrix, 2, sum)
-            age_proportions <- survey.pop$population / sum(survey.pop$population)
+            nb.contacts <- apply(weighted.matrix, 1, sum)
+            spectrum.matrix <- weighted.matrix
+            spectrum.matrix[is.na(spectrum.matrix)] <- 0
+            spectrum <- as.numeric(eigen(spectrum.matrix, only.values = TRUE)$values[1])
+            ret[[i]][["normalisation"]] <- spectrum
+
+            age.proportions <- survey.pop$population / sum(survey.pop$population)
             weighted.matrix <-
-                diag(1 / age_proportions) %*% weighted.matrix %*% diag(1 / nb_contacts)
-            ret[[i]][["contacts"]] <- nb_contacts
+                diag(1 / nb.contacts) %*% weighted.matrix %*% diag(1 / age.proportions)
+            nb.contacts <- nb.contacts / spectrum
+            ret[[i]][["contacts"]] <- nb.contacts
         }
 
         rownames(weighted.matrix) <- cols
@@ -310,15 +302,17 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
 
     if (exists("survey.year")) {
         survey.pop[, year := survey.year]
-        survey.pop <- survey.pop[, list(lower.age.limit, population, year, participants)]
+        survey.pop <- survey.pop[, list(lower.age.limit, population,
+                                        proportion=population/sum(population), year)]
     }
     if (length(ret) > 1)
-        return_value <- list(matrices = ret)
+        return_value[["matrices"]] <- list(matrices = ret)
     else if (length(ret) == 1)
         return_value <- ret[[1]]
     else return_value <- NULL
 
-    return_value[["demography"]] <- survey.pop[]
+    if (need.survey.pop) return_value[["demography"]] <- survey.pop[]
+    return_value[["participants"]] <- part.pop[]
 
     return(return_value)
 }
