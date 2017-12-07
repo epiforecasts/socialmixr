@@ -258,16 +258,23 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
         weighted.matrix <- xtabs(data = contacts.sample,
                                  formula = weight ~ agegroup + cnt.agegroup)
 
-        if (symmetric & prod(dim(as.matrix(weighted.matrix))) > 1) {
-            weighted.matrix <- 0.5 * (weighted.matrix + t(weighted.matrix))
-        }
-
-         if (!counts) { ## normalise to give mean number of contacts
+        if (!counts) { ## normalise to give mean number of contacts
             ## calculate normalisation vector
             norm.vector <- xtabs(data = part.sample, formula = weight ~ agegroup)
 
             ## normalise contact matrix
             weighted.matrix <- apply(weighted.matrix, 2, function(x) {x/norm.vector})
+        }
+
+        if (symmetric & prod(dim(as.matrix(weighted.matrix))) > 1) {
+            if (counts) {
+                warning("'symmetric=TRUE' does not make sense with 'counts=TRUE'; will not make matrix symmetric.")
+            }
+            ## set c_{ij} N_j and c_{ji} N_i (which should both be equal) to
+            ## 0.5 * their sum; then c_{ij} is that sum / N_i
+            normalised.weighted.matrix <- diag(survey.pop$population) %*% weighted.matrix
+            weighted.matrix <- 0.5 * diag(1/survey.pop$population) %*%
+                (normalised.weighted.matrix + t(normalised.weighted.matrix))
         }
 
         ## get rid of name but preserve row and column names
