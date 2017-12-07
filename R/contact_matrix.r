@@ -83,7 +83,7 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
     }
 
     if (nrow(survey$participants[is.na(part_age)]) > 0) {
-        warning("removing participants without age information")
+        if (!quiet) message("removing participants without age information")
         survey$participants <- survey$participants[!is.na(part_age)]
     }
 

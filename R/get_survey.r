@@ -15,7 +15,8 @@ get_survey <- function(survey, quiet=FALSE)
             if (!quiet)
             {
               message("Using survey ", sQuote(survey_name),
-                      ". To cite this in a publication, use the output of survey_citation('", survey_name, "'). To suppress this message, use 'quiet = TRUE'")
+                      ". To cite this in a publication, use the output of survey_citation('",
+                      survey_name, "').\nTo suppress this message, use 'quiet = TRUE'")
 
             }
         }, error = function(e)
