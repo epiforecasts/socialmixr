@@ -1,0 +1,108 @@
+---
+title: "Introduction to socialmixr"
+author: "Sebastian Funk"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+[socialmixr](https://github.com/sbfnk/socialmixr) is an `R` package to derive social mixing matrices from survey data. These are particularly useful for age-structured [infectious disease models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease). For background on age-specific mixing matrices and what data inform them, see, for example, the paper on by [Mossong et al](https://doi.org/10.1371/journal.pmed.0050074).
+
+Usage
+======
+
+At the heart of the `socialmixr` package is the `contact_matrix` function. This extracts a contact matrix from survey data. You can use the `R` help to find out about usage of the `contact_matrix` function, including a list of examples:
+
+```r
+library('socialmixr')
+?contact_matrix
+```
+
+An example use would be
+
+```r
+contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+```
+
+This generates a contact matrix from the UK part of the POLOYMOD study, with age groups 0-1, 1-5, 5-15 and 15+. This contains the mean number of contacts that each member of an age group (row) has reported with members of the same or another age group (column).
+
+Methodology
+==============
+
+The `contact_matrix` function requires a survey given as a list of two elements, both given as data.frames: `participants` and `contacts`. They must be linked by an ID column that refers to the identity of the queried participants (by default `global_id`, but this can be changed using the `id.column` argument). The `participants` data frame, as a minimum, must have the ID column and a column denoting participant age (which can be set by the `part.age.column` argument, by default `participant_age`). The `contacts` data frame, similarly, must have the ID column and a column denoting age (which can be set by the `contat.age.column` argument, by default `cnt_age_mean`).
+
+The function then either randomly samples participants (if `bootstrap` is set to `TRUE`) or takes all participants in the survey and determines the mean number of contacts in each age group given the age group of the participant. The age groups can be set using the `age.limits` argument, which should be set to the lower limits of the age groups (e.g., `age.limits=c(0, 5, 10)` for age groups 0-5, 5-10, 10+). If these are not given, the narrowest age groups possible given survey and demographic data are used.
+
+Bootstrapping
+=======
+
+To get an idea of uncertainty of the contact matrices, a bootstrap can be used. If an argument `n` greater than 1 is passed to `contact_matrix`, multiple samples of contact matrices are generated. For each sample, participants are sampled (with replacement, to get the same number of participants of the original study), and contacts are sampled from the set of all the contacts of all the participants (again, with replacement). The resulting contact matrices are returned, from which derived quantities can be obtained, for example the mean
+
+```r
+m <- contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+Reduce("+", lapply(m$matrices, function(x) {x$matrix})) / length(m$matrices)
+```
+
+Surveys
+=======
+
+The key argument to the `contact_matrix` function is the `survey` that it supposed to use. By default, this is `POLYMOD`. To get a list of all surveys included in the package, use the `surveys` function:
+
+```r
+surveys()
+```
+
+Some surveys may contain data from multiple countries. To check this, use the `survey_countries` function:
+
+```r
+survey_countries("polymod")
+```
+
+If one wishes to get a contact matrix for one or more specific countries, a `countries` argument can be passed to `contact_matrix`. If this is not done, the different surveys contained in a dataset are combined as if they were one single sample (i.e., not applying any population-weighting by country or other correction).
+
+By default, socialmixr uses the POLYMOD survey. A reference for any given survey can be obtained using `survey_citation, e.g.
+
+```r
+survey_citation("polymod")
+```
+
+Demography
+=======
+
+Obtaining symmetric contact matrices or splitting out their components (see below) requires information about the underlying demographic composition of the survey population. This can be passed to `contact_matrix as the `survey.pop` argument, a `data.frame` with two columns, `lower.age.limit` (denoting the lower end of the age groups) and `population` (denoting the number of people in each age group). If no `survey.pop` is not given, `contact_matrix` will try to obtain the age structure of the population (as per the `countries` argument) from the [World Population Prospects](https://esa.un.org/unpd/wpp/) of the United Nations, using estimates from the year that closest matches the year in which the contact survey was conducted.
+
+If demographic information is used, this is returned by `contact_matrix` as the `demography` field in the results list.
+
+Symmetric contact matrices
+=======
+
+Conceivably, contact matrices should be symmetric: the total number of contacts made by members of one age group with those of another should be the same as vice versa. Mathematically, if $c_{ij}$ is the mean number of contacts made by members of age group $i$ with members of age group $j$, and the total number of people in age group $i$ is $N_i$, then
+
+$$c_{ij} N_i = c_{ji}N_j$
+
+Because of variation in the sample from which the contact matrix is obtained, this relationship is usually not fulfilled exactly. In order to obtain a symmetric contact matrix that fulfills it, one can use
+
+$$c'_{ij} = \frac{1}{2N_i} (c_ij N_i + c_ji N_j)$$
+
+To get this version of the contact matrix, use `symmetric = TRUE` when calling the `contact_matrix` function.
+
+Splitting contact matrices
+=======
+
+The `contact_matrix` contains a simple model for the elements of the contact matrix, by which it is split into a /global/ component, as well as three components representing /contacts/, /assortativity/ and /demography/. In other words, the elements $c_{ij}$ of the contact matrix are modelled as
+
+$$ c_{ij} = q d_i a_{ij} n_j $$
+
+where $q d_i$ is the number of contacts that a member of group $i$ makes across age groups, $n_j$ is the proportion of the surveyed population in age group $j$. The constant $q$ is set to the value of the largest eigenvalue of $c_{ij}$; if used in an infectious disease model, it can be replaced by the basic reproduction number $R_0$.
+
+To model the contact matrix in this way with the `contact_matrix` function, set `split = TRUE`. The components of the matrix are returned as elements `normalisation` ($q$), `contacts` ($d_i$), `matrix` ($a_{ij}) and `demography` ($n_j$) of the resulting list.
