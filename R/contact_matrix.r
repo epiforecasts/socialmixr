@@ -14,8 +14,8 @@
 ##' @param weights columns that contain weights
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
 ##' @importFrom stats xtabs runif median
-##' @importFrom utils data
-##' @importFrom data.table data.table setnames copy
+##' @importFrom utils data globalVariables
+##' @import data.table
 ##' @export
 ##' @inheritParams get_survey
 ##' @inheritParams pop_age
