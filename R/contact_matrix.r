@@ -38,7 +38,7 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
     if (missing(bootstrap)) bootstrap <- (n > 1)
 
     ## check if specific countries are requested (if a survey contains data from multiple countries)
-    if (length(countries) > 0 & "country" %in% colnames(survey$participants))
+    if (length(countries) > 0 && "country" %in% colnames(survey$participants))
     {
         missing_countries <- setdiff(countries, survey$participants$country)
         if (length(missing_countries) > 0) {
@@ -65,7 +65,7 @@ contact_matrix <- function(survey="polymod", countries=c(), survey.pop, age.limi
     }
 
     if (nrow(survey$participants[is.na(part_age)]) > 0) {
-        warning("removing participants with no age recorded")
+        warning("removing participants without age information")
         survey$participants <- survey$participants[!is.na(part_age)]
     }
 
