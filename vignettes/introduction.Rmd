@@ -34,7 +34,7 @@ An example use would be
 contact_matrix(survey = "POLYMOD", countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ```
 
-This generates a contact matrix from the UK part of the POLOYMOD study, with age groups 0-1, 1-5, 5-15 and 15+. This contains the mean number of contacts that each member of an age group (row) has reported with members of the same or another age group (column).
+This generates a contact matrix from the UK part of the POLOYMOD study, with age groups 0-1, 1-5, 5-15 and 15+ years. It contains the mean number of contacts that each member of an age group (row) has reported with members of the same or another age group (column).
 
 Methodology
 ==============
@@ -70,7 +70,7 @@ survey_countries("polymod")
 
 If one wishes to get a contact matrix for one or more specific countries, a `countries` argument can be passed to `contact_matrix`. If this is not done, the different surveys contained in a dataset are combined as if they were one single sample (i.e., not applying any population-weighting by country or other correction).
 
-By default, socialmixr uses the POLYMOD survey. A reference for any given survey can be obtained using `survey_citation, e.g.
+By default, socialmixr uses the POLYMOD survey. A reference for any given survey can be obtained using `survey_citation`, e.g.
 
 ```r
 survey_citation("polymod")
@@ -79,7 +79,7 @@ survey_citation("polymod")
 Demography
 =======
 
-Obtaining symmetric contact matrices or splitting out their components (see below) requires information about the underlying demographic composition of the survey population. This can be passed to `contact_matrix as the `survey.pop` argument, a `data.frame` with two columns, `lower.age.limit` (denoting the lower end of the age groups) and `population` (denoting the number of people in each age group). If no `survey.pop` is not given, `contact_matrix` will try to obtain the age structure of the population (as per the `countries` argument) from the [World Population Prospects](https://esa.un.org/unpd/wpp/) of the United Nations, using estimates from the year that closest matches the year in which the contact survey was conducted.
+Obtaining symmetric contact matrices or splitting out their components (see below) requires information about the underlying demographic composition of the survey population. This can be passed to `contact_matrix` as the `survey.pop` argument, a `data.frame` with two columns, `lower.age.limit` (denoting the lower end of the age groups) and `population` (denoting the number of people in each age group). If no `survey.pop` is not given, `contact_matrix` will try to obtain the age structure of the population (as per the `countries` argument) from the [World Population Prospects](https://esa.un.org/unpd/wpp/) of the United Nations, using estimates from the year that closest matches the year in which the contact survey was conducted.
 
 If demographic information is used, this is returned by `contact_matrix` as the `demography` field in the results list.
 
