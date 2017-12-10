@@ -1,21 +1,26 @@
 #' @export
 cite <- function(x, ...) UseMethod("cite")
-##' Print citation for a survey
+##' @name cite
+##' @rdname cite
+##' @title Citation for a survey
 ##'
-##' @param survey a character vector of surveys to cite
+##' @description Gets a full citation for a \code{\link{survey}}. If quiet is FALSE (default)
+##'
+##' @param x a character vector of surveys to cite
 ##' @param quiet if set to TRUE, do not print entry, just return bibentry object
+##' @param ... ignored
 ##' @return citation as bibentry
 ##' @importFrom utils bibentry
 ##' @importFrom httr GET content
 ##' @export
-cite.survey <- function(survey, quiet = FALSE, ...)
+cite.survey <- function(x, quiet = FALSE, ...)
 {
-    survey <- get_survey(survey)
-    if (is.null(survey$reference)) stop("No citation defined for ", survey$name)
+    survey <- get_survey(x)
+    if (is.null(x$reference)) stop("No citation defined for ", x$name)
 
     ref <-
-        c(list(header = gettextf("To cite %s in publications use:", survey$ref$title)),
-               survey$reference)
+        c(list(header = gettextf("To cite %s in publications use:", x$ref$title)),
+               x$reference)
 
     bref <- do.call(bibentry, ref)
     if (!quiet) print(bref, style = "citation")

@@ -14,7 +14,6 @@ pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.col
     if(getRversion() >= "2.15.1")
     {
         ## circumvent R CMD CHECK errors by defining global variables
-        ..original.upper.age.limit <- NULL
         ..original.lower.age.limit <- NULL
         ..segment <- NULL
         ..upper.age.limit <- NULL
@@ -37,7 +36,8 @@ pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.col
         missing.ages <- setdiff(age.limits[age.limits <= max.age],
                                 pop[[pop.age.column]])
         if (length(missing.ages) > 0) {
-            warning("Not all age groups represented in population data (5-year age band). Linearly estimating age group sizes from the 5-year bands.")
+            warning("Not all age groups represented in population data (5-year age band).\n  Linearly estimating age group sizes from the 5-year bands.")
+            ..original.upper.age.limit <- NULL
             pop <- pop[, ..original.upper.age.limit := c(pop[[pop.age.column]][-1], NA)]
             pop <- pop[, ..original.lower.age.limit := get(pop.age.column)]
             all.ages <- data.frame(age.limits[age.limits <= max(pop[[pop.age.column]])])

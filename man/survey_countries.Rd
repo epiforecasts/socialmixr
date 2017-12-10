@@ -4,14 +4,14 @@
 \alias{survey_countries}
 \title{List all countries contained in a survey}
 \usage{
-survey_countries(country.column = "country", ...)
+survey_countries(survey, country.column = "country", ...)
 }
 \arguments{
+\item{survey}{a DOI (see \code{\link{list_surveys}}) or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \code{\link{list_surveys}})}
+
 \item{country.column}{column in the survey indicating the country}
 
-\item{...}{arguments for \link{\code{get_survey}}, especially \code{survey}}
-
-\item{survey}{survey to list countries from ("POLYMOD")}
+\item{...}{further arguments for \code{\link{get_survey}}}
 }
 \value{
 list of countries

@@ -8,7 +8,7 @@ get_survey(survey, sample.contact.age = TRUE,
   contact.age.column = "cnt_age", quiet = FALSE, ...)
 }
 \arguments{
-\item{survey}{a DOI (see \link{\cite{list_surveys}}) or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \link{\cite{surveys}}); if this is missing, the POLYMOD study will be used}
+\item{survey}{a DOI (see \code{\link{list_surveys}}) or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \code{\link{list_surveys}})}
 
 \item{sample.contact.age}{whether the contact age should be sampled if it does not exist in the data}
 

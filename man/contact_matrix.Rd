@@ -5,13 +5,13 @@
 \title{Generate a contact matrix from diary survey data}
 \usage{
 contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
-  n = 1, bootstrap, sample = "a", counts = FALSE, symmetric = FALSE,
-  split = FALSE, missing.participant.age = c("remove", "keep"),
+  n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE,
+  missing.participant.age = c("remove", "keep"),
   missing.contact.age = c("sample", "remove", "keep"), weights = c(),
   weigh.dayofweek = FALSE, quiet = FALSE, ...)
 }
 \arguments{
-\item{survey}{a DOI (see \link{\cite{list_surveys}}) or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \link{\cite{surveys}}); if this is missing, the POLYMOD study will be used}
+\item{survey}{a DOI (see \code{\link{list_surveys}}) or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \code{\link{list_surveys}})}
 
 \item{countries}{limit to one or more countries; if not given, will use all countries in the survey}
 
@@ -41,7 +41,7 @@ contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
 
 \item{quiet}{if set to TRUE, output is reduced}
 
-\item{...}{further arguments to pass to \link{\code{get_survey}}, \link{code{check}} and \link{\code{pop_age}} (e.g., column names)}
+\item{...}{further arguments to pass to \code{\link{get_survey}}, \code{\link{check}} and \code{\link{pop_age}} (e.g., column names)}
 }
 \value{
 a list of sampled contact matrices, and the underlying demography of the surveyed population
@@ -50,7 +50,8 @@ a list of sampled contact matrices, and the underlying demography of the surveye
 Samples a contact survey using a bootstrap
 }
 \examples{
-contact_matrix(countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+data(polymod)
+contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 }
 \author{
 Sebastian Funk

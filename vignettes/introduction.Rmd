@@ -33,10 +33,16 @@ At the heart of the `socialmixr` package is the `contact_matrix` function. This 
 ?contact_matrix
 ```
 
+The POLYMOD data are included with the package and can be loaded using
+
+```{r}
+data(polymod)
+```
+
 An example use would be
 
 ```{r}
-contact_matrix(countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ```
 
 This generates a contact matrix from the UK part of the POLYMOD study, with age groups 0-1, 1-5, 5-15 and 15+ years. It contains the mean number of contacts that each member of an age group (row) has reported with members of the same or another age group (column).
@@ -72,15 +78,15 @@ peru <- readRDS("peru.rds")
 Some surveys may contain data from multiple countries. To check this, use the `survey_countries` function (with no argument, it will list countries in the default POLYMOD study):
 
 ```{r}
-survey_countries()
+survey_countries(polymod)
 ```
 
 If one wishes to get a contact matrix for one or more specific countries, a `countries` argument can be passed to `contact_matrix`. If this is not done, the different surveys contained in a dataset are combined as if they were one single sample (i.e., not applying any population-weighting by country or other correction).
 
 By default, socialmixr uses the POLYMOD survey. A reference for any given survey can be obtained using `cite`, e.g.
 
-```{r eval=FALSE}
-cite(peru)
+```{r}
+cite(polymod)
 ```
 
 Bootstrapping
@@ -89,7 +95,7 @@ Bootstrapping
 To get an idea of uncertainty of the contact matrices, a bootstrap can be used. If an argument `n` greater than 1 is passed to `contact_matrix`, multiple samples of contact matrices are generated. For each sample, participants are sampled (with replacement, to get the same number of participants of the original study), and contacts are sampled from the set of all the contacts of all the participants (again, with replacement). All resulting contact matrices are returned as `matrices` field in the returned list. From these, derived quantities can be obtained, for example the mean
 
 ```{r}
-m <- contact_matrix(countries = "United Kingdom", age.limits = c(0, 1, 5, 15), n=5)
+m <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), n=5)
 length(m$matrices)
 mr <- Reduce("+", lapply(m$matrices, function(x) {x$matrix})) / length(m$matrices)
 mr
@@ -116,7 +122,7 @@ $$c'_{ij} = \frac{1}{2N_i} (c_ij N_i + c_ji N_j)$$
 To get this version of the contact matrix, use `symmetric = TRUE` when calling the `contact_matrix` function.
 
 ```{r}
-contact_matrix(countries = "United Kingdom", age.limits = c(0, 1, 5, 15), symmetric = TRUE)
+contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), symmetric = TRUE)
 ```
 
 Splitting contact matrices
@@ -131,7 +137,7 @@ where $q d_i$ is the number of contacts that a member of group $i$ makes across 
 To model the contact matrix in this way with the `contact_matrix` function, set `split = TRUE`. The components of the matrix are returned as elements `normalisation` ($q$), `contacts` ($d_i$), `matrix` ($a_{ij}$) and `demography` ($n_j$) of the resulting list.
 
 ```{r}
-contact_matrix(countries = "United Kingdom", age.limits = c(0, 1, 5, 15), split = TRUE)
+contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), split = TRUE)
 ```
 
 Plotting

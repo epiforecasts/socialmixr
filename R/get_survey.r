@@ -1,6 +1,6 @@
 ##' Get a survey, either from its Zenodo repository or from a survey variable.
 ##'
-##' @param survey a DOI (see \link{\cite{list_surveys}}) or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \link{\cite{surveys}}); if this is missing, the POLYMOD study will be used
+##' @param survey a DOI (see \code{\link{list_surveys}}) or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \code{\link{list_surveys}})
 ##' @param sample.contact.age whether the contact age should be sampled if it does not exist in the data
 ##' @param contact.age.column the name of the contact age column; if this does not exist, the function will try to construct it from "..._exact", "..._est_min" and "..._est_max" (unless \code{sample.contact.age} is set to FALSE)
 ##' @param quiet if TRUE, suppress messages
@@ -8,13 +8,17 @@
 ##' @importFrom httr GET add_headers content
 ##' @importFrom jsonlite fromJSON
 ##' @importFrom curl curl_download
+##' @importFrom utils as.person read.csv
 ##' @return a survey in the correct format
 get_survey <- function(survey, sample.contact.age=TRUE, contact.age.column="cnt_age", quiet=FALSE, ...)
 {
-    if (missing(survey))
-    {
-        new_survey <- polymod
-    } else if ("survey" %in% class(survey))
+    ## circumvent R CMD CHECK errors by defining global variables
+    id <- NULL
+    literal <- NULL
+    given <- NULL
+    family <- NULL
+
+    if ("survey" %in% class(survey))
     {
         new_survey <- survey
     } else

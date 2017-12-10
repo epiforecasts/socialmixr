@@ -13,6 +13,8 @@ wpp_age <- function(countries, years)
     if(getRversion() >= "2.15.1")
     {
         ## circumvent R CMD CHECK errors by defining global variables
+        popF <- NULL
+        popM <- NULL
         sex <- NULL
         country <- NULL
         lower.age.limit <- NULL

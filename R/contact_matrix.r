@@ -15,7 +15,7 @@
 ##' @param weights columns that contain weights
 ##' @param weigh.dayofweek whether to weigh the day of the week (weight 5 for weekdays ans 2 for weekends)
 ##' @param quiet if set to TRUE, output is reduced
-##' @param ... further arguments to pass to \link{\code{get_survey}}, \link{code{check}} and \link{\code{pop_age}} (e.g., column names)
+##' @param ... further arguments to pass to \code{\link{get_survey}}, \code{\link{check}} and \code{\link{pop_age}} (e.g., column names)
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
 ##' @importFrom stats xtabs runif median
 ##' @importFrom utils data globalVariables
@@ -24,25 +24,21 @@
 ##' @inheritParams get_survey
 ##' @inheritParams pop_age
 ##' @examples
-##' contact_matrix(countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+##' data(polymod)
+##' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, sample="a", counts = FALSE, symmetric = FALSE, split = FALSE, missing.participant.age = c("remove", "keep"), missing.contact.age = c("sample", "remove", "keep"), weights = c(), weigh.dayofweek = FALSE, quiet = FALSE, ...)
+contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, missing.participant.age = c("remove", "keep"), missing.contact.age = c("sample", "remove", "keep"), weights = c(), weigh.dayofweek = FALSE, quiet = FALSE, ...)
 {
-    if(getRversion() >= "2.15.1")
-    {
-        ## circumvent R CMD CHECK errors by defining global variables
-        lower.age.limit <- NULL
-        upper.age.limit <- NULL
-        .N <- NULL
-        N <- NULL
-        population <- NULL
-        agegroup <- NULL
-        proportion <- NULL
-        participants <- NULL
-        weight <- NULL
-        dayofweek <- NULL
-        cnt.agegroup <- NULL
-    }
+    ## circumvent R CMD CHECK errors by defining global variables
+    lower.age.limit <- NULL
+    N <- NULL
+    population <- NULL
+    upper.age.limit <- NULL
+    agegroup <- NULL
+    weight <- NULL
+    dayofweek <- NULL
+    cnt.agegroup <- NULL
+    proportion <- NULL
 
     ## record if 'missing.participant.age' and 'missing.contact.age' are set, for later
     missing.participant.age.set <- !missing(missing.participant.age)
@@ -344,13 +340,13 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
             }
         }
 
-        if (any(is.na(contacts.sample$agegroup)))
-            contacts.sample[, cnt.agegroup := addNA(cnt.agegroup)]
-        if (any(is.na(contacts.sample$cnt.agegroup)))
-        {
-            part.sample[, agegroup := addNA(agegroup)]
-            contacts.sample[, agegroup := addNA(agegroup)]
-        }
+        ## if (any(is.na(contacts.sample$agegroup)))
+        ##     contacts.sample[, cnt.agegroup := addNA(cnt.agegroup)]
+        ## if (any(is.na(contacts.sample$cnt.agegroup)))
+        ## {
+        ##     part.sample[, agegroup := addNA(agegroup)]
+        ##     contacts.sample[, agegroup := addNA(agegroup)]
+        ## }
         ## calculate weighted contact matrix
         weighted.matrix <- xtabs(data = contacts.sample,
                                  formula = weight ~ agegroup + cnt.agegroup,

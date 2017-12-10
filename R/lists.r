@@ -5,6 +5,14 @@
 ##' @export
 list_surveys <- function()
 {
+    ## circumvent R CMD CHECK errors by defining global variables
+    id <- NULL
+    relation.1 <- NULL
+    datestamp <- NULL
+    identifier.1 <- NULL
+    title <- NULL
+    creator <- NULL
+
     record_list <-
         data.table(list_records("https://zenodo.org/oai2d",
                                 metadataPrefix="oai_datacite",
@@ -23,13 +31,13 @@ list_surveys <- function()
 ##' List all countries contained in a survey
 ##'
 ##' @param country.column column in the survey indicating the country
-##' @param ... arguments for \link{\code{get_survey}}, especially \code{survey}
-##' @param survey survey to list countries from ("POLYMOD")
+##' @param ... further arguments for \code{\link{get_survey}}
 ##' @return list of countries
+##' @inheritParams get_survey
 ##' @export
-survey_countries <- function(country.column = "country", ...)
+survey_countries <- function(survey, country.column = "country", ...)
 {
-    survey <- get_survey(...)
+    survey <- get_survey(survey, ...)
     return(as.character(unique(survey[["participants"]][[country.column]])))
 }
 
@@ -43,18 +51,14 @@ survey_countries <- function(country.column = "country", ...)
 ##' @export
 wpp_countries <- function()
 {
-    if(getRversion() >= "2.15.1")
-    {
-        ## circumvent R CMD CHECK errors by defining global variables
-        popF <- NULL
-        popM <- NULL
-        country <- NULL
-    }
+    ## circumvent R CMD CHECK errors by defining global variables
+    popF <- NULL
+    popM <- NULL
 
     data(popF, package = "wpp2015", envir = environment())
     data(popM, package = "wpp2015", envir = environment())
     pop <- data.table(rbind(popF, popM))
-    setkey(pop, country)
+    setkeyv(pop, "country")
     return(as.character(unique(pop$country))
 )}
 

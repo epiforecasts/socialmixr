@@ -7,7 +7,7 @@ test_that("list of surveys is not empty",
 
 test_that("surveys can be cited",
 {
-  expect_true(class(cite.survey()) == "bibentry")
+  expect_true(class(cite(polymod)) == "bibentry")
 })
 
 test_that("missing surveys can't' be cited",
