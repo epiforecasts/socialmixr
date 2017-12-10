@@ -75,7 +75,7 @@ This way, the `peru` data set can be loaded in the future without the need for a
 peru <- readRDS("peru.rds")
 ```
 
-Some surveys may contain data from multiple countries. To check this, use the `survey_countries` function (with no argument, it will list countries in the default POLYMOD study):
+Some surveys may contain data from multiple countries. To check this, use the `survey_countries` function
 
 ```{r}
 survey_countries(polymod)
