@@ -1,14 +1,14 @@
 context("Generating contact matrices")
 
-participants_reduced <- polymod
+participants_reduced <- survey(polymod$participants, polymod$contacts, polymod$reference)
 participants_reduced$participants$year <- NULL
 participants_reduced$participants$dayofweek <- NULL
 participants_reduced$participants$added_weight <- 0.5
 
 options <-
-  list(test1 = list(survey=polymod, split = TRUE),
-       test2 = list(n = 2, survey = participants_reduced, countries = c("Italy"), age.limits = c(0, 1), weights = "added_weight", split = TRUE),
-       test3 = list(survey=polymod, survey.pop="Australia", split=TRUE))
+  list(test1 = list(survey = polymod, counts = TRUE),
+       test2 = list(n = 2, survey = participants_reduced, countries = c("Italy"), age.limits = c(0, 1), weights = "added_weight", symmetric = TRUE, weigh.dayofweek=TRUE),
+       test3 = list(survey = polymod, survey.pop="Australia", split=TRUE, filter = c(country = "Germany"), age.limits=c(0, 5, 10), missing.contact.age = "remove"))
 
 contacts <- lapply(options, function(x) {do.call(contact_matrix, x)})
 
@@ -22,21 +22,18 @@ test_that("contact matrix is numeric",
 {
   expect_true(all(sapply(contacts, function(x) {is.numeric(x[["matrix"]])})))
   expect_false(any(is.na(sapply(contacts, function(x) {is.numeric(x[["matrix"]])}))))
-  expect_true(all(sapply(contacts, function(x) {is.numeric(x[["contacts"]])})))
-  expect_false(any(is.na(sapply(contacts, function(x) {is.numeric(x[["contacts"]])}))))
-  expect_true(all(sapply(contacts, function(x) {is.numeric(x[["normalisation"]])})))
-  expect_false(any(is.na(sapply(contacts, function(x) {is.numeric(x[["normalisation"]])}))))
+  expect_true(is.numeric(contacts[[3]]$contacts))
+  expect_true(is.numeric(contacts[[3]]$normalisation))
 })
 
 test_that("demography has been returned",
 {
-  expect_true(all(nrow(sapply(contacts, function(x) {nrow(x[["demography"]])})) > 0))
+  expect_true(nrow(contacts[[3]]$demography) > 0)
 })
 
 test_that("demography is numeric",
 {
-  expect_true(all(sapply(contacts, function(x) {is.numeric(x[["demography"]]$population)})))
-  expect_false(any(is.na(sapply(contacts, function(x) {is.numeric(x[["demography"]]$population)}))))
+  expect_true(is.numeric(contacts[[3]]$demography$population))
 })
 
 test_that("survey argument is validated",
@@ -58,4 +55,10 @@ test_that("error is thrown if country is not found",
 test_that("warning is thrown if n > 1 and bootstrap = FALSE",
 {
   expect_warning(contact_matrix(survey=polymod, n = 2, bootstrap = FALSE), "n > 1 does not make sense if not bootstrapping")
+})
+
+test_that("warning is thrown if missing data exist",
+{
+  expect_warning(contact_matrix(survey=polymod, missing.contact.age = "keep", symmetric = TRUE), "missing.contact.age")
+  expect_warning(contact_matrix(survey=polymod, split = TRUE), "age limits")
 })
