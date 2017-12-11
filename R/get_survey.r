@@ -10,6 +10,7 @@
 ##' @importFrom curl curl_download
 ##' @importFrom utils as.person read.csv
 ##' @return a survey in the correct format
+##' @export
 get_survey <- function(survey, sample.contact.age=TRUE, contact.age.column="cnt_age", quiet=FALSE, ...)
 {
     ## circumvent R CMD CHECK errors by defining global variables
