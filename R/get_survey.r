@@ -9,6 +9,7 @@
 ##' @importFrom jsonlite fromJSON
 ##' @importFrom curl curl_download
 ##' @importFrom utils as.person read.csv
+##' @importFrom stringr str_extract_all
 ##' @return a survey in the correct format
 get_survey <- function(survey, sample.contact.age=TRUE, contact.age.column="cnt_age", quiet=FALSE, ...)
 {
@@ -46,21 +47,62 @@ get_survey <- function(survey, sample.contact.age=TRUE, contact.age.column="cnt_
         parsed_body <- content(temp_body, as = "text", encoding = "UTF-8")
         parsed_cite <- fromJSON(content(temp_cite, as = "text", encoding = "UTF-8"))
 
-        participant_file <-
-            sub(".*(\\/record\\/[0-9]*\\/files\\/[0-9A-Za-z_]*_participant_common.csv).*$", "\\1",
-                parsed_body)
-        contact_file <-
-            sub(".*(\\/record\\/[0-9]*\\/files\\/[0-9A-Za-z_]*_contact_common.csv).*$", "\\1",
-                parsed_body)
+        file_names <-
+          unique(unlist(str_extract_all(parsed_body, "/record/[0-9]*/files/[0-9A-Za-z_]*.csv")))
 
-        part_temp <- tempfile(fileext=".csv")
-        cont_temp <- tempfile(fileext=".csv")
+        message("Downloading ", parsed_cite$title, ".")
 
-        curl_download(paste0("http://zenodo.org", participant_file), part_temp)
-        curl_download(paste0("http://zenodo.org", contact_file), cont_temp)
+        contact_data <- lapply(file_names, function(x)
+        {
+          temp <- tempfile(fileext=".csv")
+          url <- paste0("http://zenodo.org", x)
+          message("Downloading ", url)
+          curl_download(url, temp)
+          return(data.table(read.csv(temp)))
+        })
 
-        participants <- data.table(read.csv(part_temp))
-        contacts <- data.table(read.csv(cont_temp))
+        main_types <- c("participant", "contact")
+        main_surveys <- list()
+        main_files <- c()
+
+        for (type in main_types)
+        {
+          main_files[type] <- grep(paste0("_", type,"_common\\.csv$"), file_names)
+          main_surveys[[type]] <- contact_data[[main_files[type]]]
+        }
+
+        file_id_cols <- lapply(seq_along(file_names), function(x)
+        {
+          grep("_id$", colnames(contact_data[[x]]), value=TRUE)
+        })
+
+        merge_files <- setdiff(seq_along(file_names), main_files)
+        for (type in main_types)
+        {
+          common_id <- lapply(merge_files, function(x)
+          {
+            intersect(file_id_cols[[main_files[type]]], file_id_cols[[x]])
+          })
+          while (length(unlist(common_id)) > 0)
+          {
+            merged_files <- c()
+            for (file in seq_along(merge_files))
+            {
+              if (length(common_id[[file]]) > 0)
+              {
+                main_surveys[[type]] <-
+                  merge(main_surveys[[type]], contact_data[[merge_files[file]]],
+                        by=common_id[[file]])
+                merged_files <- c(merged_files, merge_files[file])
+              }
+            }
+            merge_files <- setdiff(merge_files, merged_files)
+            common_id <- lapply(merge_files, function(x)
+            {
+              intersect(file_id_cols[[main_files[type]]], file_id_cols[[x]])
+            })
+          }
+        }
 
         authors.table <- data.table(parsed_cite$author)
         authors.table <- authors.table[is.na(literal), literal := paste(given, family)]
@@ -74,8 +116,8 @@ get_survey <- function(survey, sample.contact.age=TRUE, contact.age.column="cnt_
                           note=paste("Version", parsed_cite$version),
                           year=parsed_cite$issued$`date-parts`[1,1])
 
-        new_survey <- survey(participants=participants,
-                             contacts=contacts,
+        new_survey <- survey(participants=main_surveys[["participant"]],
+                             contacts=main_surveys[["contact"]],
                              reference=reference)
     }
 
