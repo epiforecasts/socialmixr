@@ -306,11 +306,15 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                                                replace = TRUE)]
                 } else {
                     ## no contacts in the age group have an age, sample uniformly between limits
-                    contacts.sample[is.na(get(columns[["contact.age"]])) &
+                  min.contact.age <-
+                    contacts.sample[, min(get(columns[["contact.age"]]), na.rm=TRUE)]
+                  max.contact.age <-
+                    contacts.sample[, max(get(columns[["contact.age"]]), na.rm=TRUE)]
+                  contacts.sample[is.na(get(columns[["contact.age"]])) &
                                     agegroup == this.agegroup,
                                     paste(columns[["contact.age"]]) :=
-                                        runif(.N, min = lower.age.limit,
-                                              max = upper.age.limit - 1)]
+                                      as.integer(floor(runif(.N, min = min.contact.age,
+                                                             max = max.contact.age + 1)))]
                 }
             }
         }
