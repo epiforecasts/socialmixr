@@ -25,7 +25,7 @@ list_surveys <- function()
     record_list <- rbind(record_list[is.na(relation.1)], multiple_records)
     setkey(record_list, id)
     record_list <- record_list[, id := seq_len(nrow(record_list))]
-    return(record_list[, list(id, doi = identifier.1, title, creator)])
+    return(record_list[, list(id, doi = identifier.1, title, creator, url=identifier.3)])
 }
 
 ##' List all countries contained in a survey
