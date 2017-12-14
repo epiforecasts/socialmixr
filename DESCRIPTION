@@ -3,27 +3,18 @@ Version: 0.0.0.9000
 Date: 2016-11-21
 Title: Social Mixing Matrices for Infectious Disease Modelling
 Authors@R: person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre"))
-Depends:
-    R (>= 3.3.1)
-Imports:
-    data.table,
-    curl,
-    httr,
-    jsonlite,
-    oai,
-    wpp2015,
-    countrycode,
-    stringr
+Depends: R (>= 3.3.1)
+Imports: data.table, curl, httr, jsonlite, oai, wpp2015, countrycode,
+        stringr
 Description: Provides methods for sampling contact matrices from diary data and
     calculate simple epidemiological quantities from it.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
-Suggests: testthat,
-    knitr,
-    rmarkdown,
-    ggplot2,
-    reshape2,
-    formatR
+Suggests: testthat, knitr, rmarkdown, ggplot2, reshape2, formatR
 VignetteBuilder: knitr
+NeedsCompilation: no
+Packaged: 2017-12-14 14:02:28 UTC; seb
+Author: Sebastian Funk [aut, cre]
+Maintainer: Sebastian Funk <sebastian.funk@lshtm.ac.uk>

@@ -18,6 +18,8 @@
 
 \item{country.column}{the name of the country denoting the country in which the survey participant was interviewed}
 
+\item{quiet}{if TRUE,  will suppress output}
+
 \item{...}{ignored}
 }
 \value{

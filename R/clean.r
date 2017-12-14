@@ -10,6 +10,7 @@ clean <- function(x, ...) UseMethod("clean")
 ##' @param sample.contact.age whether the contact age should be sampled if it does not exist in the data
 ##' @param contact.age.column the name of the contact age column; if this does not exist, the function will try to construct it from "..._exact", "..._est_min" and "..._est_max" (unless \code{sample.contact.age} is set to FALSE)
 ##' @param country.column the name of the country denoting the country in which the survey participant was interviewed
+##' @param quiet if TRUE,  will suppress output
 ##' @param ... ignored
 ##' @return invisibly returns a character vector of the relevant columns
 ##' @importFrom countrycode countrycode
