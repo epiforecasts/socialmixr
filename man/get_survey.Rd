@@ -2,28 +2,20 @@
 % Please edit documentation in R/get_survey.r
 \name{get_survey}
 \alias{get_survey}
-\title{Get a survey, either from its Zenodo repository or from a survey variable.}
+\title{Get a survey, either from its Zenodo repository, a set of files, or a survey variable}
 \usage{
-get_survey(survey, sample.contact.age = TRUE,
-  contact.age.column = "cnt_age", country.column = "country",
-  quiet = FALSE, ...)
+get_survey(survey, quiet = FALSE, ...)
 }
 \arguments{
-\item{survey}{a DOI (see \code{\link{list_surveys}}) or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \code{\link{list_surveys}})}
-
-\item{sample.contact.age}{whether the contact age should be sampled if it does not exist in the data}
-
-\item{contact.age.column}{the name of the contact age column; if this does not exist, the function will try to construct it from "..._exact", "..._est_min" and "..._est_max" (unless \code{sample.contact.age} is set to FALSE)}
-
-\item{country.column}{the name of the country denoting the country in which the survey participant was interviewed}
+\item{survey}{a DOI (see \code{\link{list_surveys}}), or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \code{\link{list_surveys}}), or a character vector of file names, or a \code{\link{survey}} object (in which case only cleaning is done).}
 
 \item{quiet}{if TRUE, suppress messages}
 
-\item{...}{ignored}
+\item{...}{parameters passed to \code{\link{clean.survey}}}
 }
 \value{
 a survey in the correct format
 }
 \description{
-Get a survey, either from its Zenodo repository or from a survey variable.
+Downloads survey data, or extracts them from files, and returns a clean data set.
 }

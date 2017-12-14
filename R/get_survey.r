@@ -1,11 +1,9 @@
-##' Get a survey, either from its Zenodo repository or from a survey variable.
+##' Get a survey, either from its Zenodo repository, a set of files, or a survey variable
 ##'
-##' @param survey a DOI (see \code{\link{list_surveys}}) or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \code{\link{list_surveys}})
-##' @param sample.contact.age whether the contact age should be sampled if it does not exist in the data
-##' @param contact.age.column the name of the contact age column; if this does not exist, the function will try to construct it from "..._exact", "..._est_min" and "..._est_max" (unless \code{sample.contact.age} is set to FALSE)
-##' @param country.column the name of the country denoting the country in which the survey participant was interviewed
+##' @description Downloads survey data, or extracts them from files, and returns a clean data set.
+##' @param survey a DOI (see \code{\link{list_surveys}}), or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \code{\link{list_surveys}}), or a character vector of file names, or a \code{\link{survey}} object (in which case only cleaning is done).
 ##' @param quiet if TRUE, suppress messages
-##' @param ... ignored
+##' @param ... parameters passed to \code{\link{clean.survey}}
 ##' @importFrom httr GET add_headers content
 ##' @importFrom jsonlite fromJSON
 ##' @importFrom curl curl_download
@@ -13,7 +11,7 @@
 ##' @importFrom stringr str_extract_all
 ##' @importFrom countrycode countrycode
 ##' @return a survey in the correct format
-get_survey <- function(survey, sample.contact.age=TRUE, contact.age.column="cnt_age", country.column="country", quiet=FALSE, ...)
+get_survey <- function(survey, quiet=FALSE, ...)
 {
     ## circumvent R CMD CHECK errors by defining global variables
     id <- NULL
@@ -36,32 +34,50 @@ get_survey <- function(survey, sample.contact.age=TRUE, contact.age.column="cnt_
 
         if (is.character(survey))
         {
-            if (length(survey) > 1)
-                stop("if 'survey' is a character string, it must be of length 1")
+            is.doi <- all(grepl("^10.[0-9.]{4,}/[-._;()/:A-z0-9]+$", survey))
+            if (is.doi && length(survey) > 1)
+                stop("if 'survey' is a DOI, it must be of length 1")
         } else stop("'survey' must be an 'survey' object, integer or character")
 
-        doi_url <- paste0("http://dx.doi.org/", survey)
-        temp_body <- GET(doi_url, config = list(followlocation = TRUE))
-        if (temp_body$status_code == 404) stop("DOI '", survey, "' not found")
-        temp_cite <- GET(doi_url, config = list(followlocation = TRUE),
-                         add_headers(Accept = "application/vnd.citationstyles.csl+json"))
-
-        parsed_body <- content(temp_body, as = "text", encoding = "UTF-8")
-        parsed_cite <- fromJSON(content(temp_cite, as = "text", encoding = "UTF-8"))
-
-        file_names <-
-          unique(unlist(str_extract_all(parsed_body, "/record/[0-9]*/files/[0-9A-Za-z_]*.csv")))
-
-        message("Getting ", parsed_cite$title, ".")
-
-        contact_data <- lapply(file_names, function(x)
+        if (is.doi)
         {
-          temp <- tempfile(fileext=".csv")
-          url <- paste0("http://zenodo.org", x)
-          message("Downloading ", url)
-          curl_download(url, temp)
-          return(data.table(read.csv(temp)))
-        })
+            doi_url <- paste0("http://dx.doi.org/", survey)
+            temp_body <- GET(doi_url, config = list(followlocation = TRUE))
+            if (temp_body$status_code == 404) stop("DOI '", survey, "' not found")
+            temp_cite <- GET(doi_url, config = list(followlocation = TRUE),
+                             add_headers(Accept = "application/vnd.citationstyles.csl+json"))
+
+            parsed_body <- content(temp_body, as = "text", encoding = "UTF-8")
+            parsed_cite <- fromJSON(content(temp_cite, as = "text", encoding = "UTF-8"))
+
+            urls <-
+                unique(unlist(str_extract_all(parsed_body,
+                                              "/record/[0-9]*/files/[0-9A-Za-z_]*.csv")))
+
+            message("Getting ", parsed_cite$title, ".")
+
+            dir <- tempdir()
+            files <- vapply(urls, function(x)
+            {
+                temp <- paste(dir, basename(x), sep="/")
+                url <- paste0("http://zenodo.org", x)
+                message("Downloading ", url)
+                dl <- curl_download(url, temp)
+                return(temp)
+            }, "")
+        } else
+        {
+            exist <- vapply(survey, file.exists, TRUE)
+            missing <- survey[!exist]
+            if (lengths(missing) > 0)
+            {
+                stop("File ", ifelse(length(missing) > 1, "s", ""),
+                     paste(paste0("'", missing, "'", collapse=""), sep=", "), " not found.")
+            }
+            files <- survey
+        }
+
+        contact_data <- lapply(files, function(x) {data.table(read.csv(x))})
 
         main_types <- c("participant", "contact")
         main_surveys <- list()
@@ -69,16 +85,21 @@ get_survey <- function(survey, sample.contact.age=TRUE, contact.age.column="cnt_
 
         for (type in main_types)
         {
-          main_files[type] <- grep(paste0("_", type,"_common\\.csv$"), file_names)
+          main_files[type] <- grep(paste0("_", type,"_common\\.csv$"), files)
+          if (length(main_files[[type]]) == 0)
+          {
+              stop("Need a file ending ", paste0("_", type,"_common\\.csv$"),
+                   ", but no such file found.")
+          }
           main_surveys[[type]] <- contact_data[[main_files[type]]]
         }
 
-        file_id_cols <- lapply(seq_along(file_names), function(x)
+        file_id_cols <- lapply(seq_along(files), function(x)
         {
           grep("_id$", colnames(contact_data[[x]]), value=TRUE)
         })
 
-        merge_files <- setdiff(seq_along(file_names), main_files)
+        merge_files <- setdiff(seq_along(files), main_files)
         for (type in main_types)
         {
           common_id <- lapply(merge_files, function(x)
@@ -101,13 +122,13 @@ get_survey <- function(survey, sample.contact.age=TRUE, contact.age.column="cnt_
 
                 if (nrow(id_overlap) < max_rows)
                 {
-                  warning(ifelse(nrow(id_overlap) == 0, "No",
+                    warning(ifelse(nrow(id_overlap) == 0, "No",
                                  paste0("Only ", nrow(id_overlap) ," matching value",
                                         ifelse(nrow(id_overlap) > 1, "s", ""))), " in ",
                           paste(paste0("'", common_id[[file]], "'", collapse=""), sep=", "),
                           " column", ifelse(length(common_id[[file]]) > 1, "s", ""),
                           " when pulling in ",
-                          basename(file_names[merge_files[file]]), ".")
+                          basename(files[merge_files[file]]), ".")
                 }
 
                 duplicate_columns <-
@@ -117,10 +138,10 @@ get_survey <- function(survey, sample.contact.age=TRUE, contact.age.column="cnt_
 
                 if (length(duplicate_columns) > 0)
                 {
-                  warning("Ignoring duplicate column",
+                    warning("Ignoring duplicate column",
                           ifelse(nrow(duplicate_columns) > 1, "s", ""),
                           " when pulling in ",
-                          basename(file_names[merge_files[file]]), ": ",
+                          basename(files[merge_files[file]]), ": ",
                           paste(paste0("'", duplicate_columns, "'", collapse=""), sep=", "),
                           ".")
                   for (column in duplicate_columns)
@@ -160,41 +181,9 @@ get_survey <- function(survey, sample.contact.age=TRUE, contact.age.column="cnt_
                              reference=reference)
     }
 
-    ## sample contact age
-    if (sample.contact.age &&
-        !(contact.age.column %in% colnames(new_survey$contacts)))
-    {
-        exact.column <- paste(contact.age.column, "exact", sep="_")
-        min.column <- paste(contact.age.column, "est_min", sep="_")
-        max.column <- paste(contact.age.column, "est_max", sep="_")
+    new_survey <- clean(new_survey)
 
-        if (exact.column %in% colnames(new_survey$contacts))
-        {
-            new_survey$contacts[, paste(contact.age.column) := get(exact.column)]
-        }
-        if (min.column %in% colnames(new_survey$contacts) &&
-            max.column %in% colnames(new_survey$contacts))
-        {
-            new_survey$contacts[is.na(get(contact.age.column)) & !is.na(get(min.column)) &
-                                !is.na(get(max.column)),
-                                paste(contact.age.column) :=
-                                    as.integer(floor(runif(.N, get(min.column),
-                                                           get(max.column)+1)))]
-        }
-    }
-
-    ## update country names
-    if (country.column %in% colnames(new_survey$participants))
-    {
-      if (all(nchar(as.character(new_survey$participants[[country.column]])) == 2))
-      {
-        new_survey$participants[, paste(country.column) :=
-                                    factor(countrycode(get(country.column),
-                                                       "iso2c", "country.name"))]
-      }
-    }
-
-   if (!quiet)
+    if (!quiet)
     {
         message("Using ", new_survey$reference$title,
                 ". To cite this in a publication, use the 'cite' function")

@@ -2,10 +2,11 @@
 
 S3method(check,survey)
 S3method(cite,survey)
+S3method(clean,survey)
 export(check)
 export(cite)
+export(clean)
 export(contact_matrix)
-export(get_survey)
 export(limits_to_agegroups)
 export(list_surveys)
 export(pop_age)
