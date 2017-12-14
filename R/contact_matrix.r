@@ -79,6 +79,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         {
             stop("Survey data not found for ", paste(missing_countries, sep=", "), ".")
         }
+        countries <- corrected_countries
         participants <- participants[get(columns[["country"]]) %in% countries]
         if (nrow(participants) == 0)
         {
