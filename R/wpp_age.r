@@ -5,6 +5,7 @@
 ##' @return data frame of age-specific population data
 ##' @import wpp2015
 ##' @importFrom data.table data.table dcast melt
+##' @importFrom countrycode countrycode
 ##' @export
 ##' @param countries countries, will return all if not given
 ##' @param years years, will return all if not given
@@ -36,7 +37,8 @@ wpp_age <- function(countries, years)
 
     if (!missing(countries))
     {
-        pop <- pop[country %in% countries]
+        ## match by UN country code
+        pop <- pop[country_code %in% countrycode(countries, "country.name", "un")]
     }
 
     if (nrow(pop) > 0) {
@@ -52,6 +54,8 @@ wpp_age <- function(countries, years)
 
         pop <- pop[, lower.age.limit := as.integer(sub("[-+].*$", "", age))]
         pop <- pop[, list(country, lower.age.limit, year, population = (female + male) * 1000)]
+        ## convert to standardised country name
+        pop <- pop[, country := countrycode(country, "country.name", "country.name")]
     }
 
     return(as.data.frame(pop))

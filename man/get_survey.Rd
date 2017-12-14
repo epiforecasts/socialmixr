@@ -5,7 +5,8 @@
 \title{Get a survey, either from its Zenodo repository or from a survey variable.}
 \usage{
 get_survey(survey, sample.contact.age = TRUE,
-  contact.age.column = "cnt_age", quiet = FALSE, ...)
+  contact.age.column = "cnt_age", country.column = "country",
+  quiet = FALSE, ...)
 }
 \arguments{
 \item{survey}{a DOI (see \code{\link{list_surveys}}) or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \code{\link{list_surveys}})}
@@ -13,6 +14,8 @@ get_survey(survey, sample.contact.age = TRUE,
 \item{sample.contact.age}{whether the contact age should be sampled if it does not exist in the data}
 
 \item{contact.age.column}{the name of the contact age column; if this does not exist, the function will try to construct it from "..._exact", "..._est_min" and "..._est_max" (unless \code{sample.contact.age} is set to FALSE)}
+
+\item{country.column}{the name of the country denoting the country in which the survey participant was interviewed}
 
 \item{quiet}{if TRUE, suppress messages}
 

@@ -11,7 +11,8 @@ Imports:
     httr,
     jsonlite,
     oai,
-    wpp2015
+    wpp2015,
+    countrycode
 Description: Provides methods for sampling contact matrices from diary data and
     calculate simple epidemiological quantities from it.
 License: GPL-3

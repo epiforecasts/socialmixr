@@ -2,7 +2,7 @@
 ##'
 ##' Samples a contact survey using a bootstrap
 ##'
-##' @param countries limit to one or more countries; if not given, will use all countries in the survey
+##' @param countries limit to one or more countries; if not given, will use all countries in the survey; these can be given as country names or 2-letter (ISO Alpha-2) country codes
 ##' @param survey.pop survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the chosen countries, or all countries in the survey if \code{countries} is not given
 ##' @param filter any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered
 ##' @param n number of matrices to sample
@@ -19,6 +19,7 @@
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
 ##' @importFrom stats xtabs runif median
 ##' @importFrom utils data globalVariables
+##' @importFrom countrycode countrycode
 ##' @import data.table
 ##' @export
 ##' @inheritParams get_survey
@@ -63,11 +64,26 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     ## check if specific countries are requested (if a survey contains data from multiple countries)
     if (length(countries) > 0 && columns[["country"]] %in% colnames(participants))
     {
-        missing_countries <- setdiff(countries, participants[[columns[["country"]]]])
-        if (length(missing_countries) > 0) {
-            stop("Survey data not found for ", paste(missing_countries, sep=","), ".")
+        if (all(nchar(countries) == 2))
+        {
+            suppressingsWarnings(corrected_countries <-
+                                     countrycode(countries, "iso2c", "country.name"))
+        } else
+        {
+            suppressWarnings(corrected_countries <-
+                                 countrycode(countries, "country.name", "country.name"))
+        }
+        present_countries <- unique(as.character(participants[[columns[["country"]]]]))
+        missing_countries <- countries[which(is.na(corrected_countries))]
+        if (length(missing_countries) > 0)
+        {
+            stop("Survey data not found for ", paste(missing_countries, sep=", "), ".")
         }
         participants <- participants[get(columns[["country"]]) %in% countries]
+        if (nrow(participants) == 0)
+        {
+            stop("No participants left after selecting countries.")
+        }
     }
 
     ## check maximum age in the data
@@ -222,7 +238,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
             data.table(lower.age.limit = present.lower.age.limits,
                        upper.age.limit = c(present.lower.age.limits[-1], max.age))
         ## set upper age limits and construct age groups
-        participants <- merge(participants, lower.upper.age.limits)
+        participants <- merge(participants, lower.upper.age.limits, by="lower.age.limit")
         if (all(is.na(survey.pop$population))) survey.pop[, population := NULL]
     }
 
