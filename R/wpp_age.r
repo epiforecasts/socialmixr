@@ -11,18 +11,16 @@
 ##' @param years years, will return all if not given
 wpp_age <- function(countries, years)
 {
-    if(getRversion() >= "2.15.1")
-    {
-        ## circumvent R CMD CHECK errors by defining global variables
-        popF <- NULL
-        popM <- NULL
-        sex <- NULL
-        country <- NULL
-        lower.age.limit <- NULL
-        age <- NULL
-        female <- NULL
-        male <- NULL
-    }
+    ## circumvent R CMD CHECK errors by defining global variables
+    popF <- NULL
+    popM <- NULL
+    sex <- NULL
+    country <- NULL
+    lower.age.limit <- NULL
+    age <- NULL
+    female <- NULL
+    male <- NULL
+    country_code <- NULL
 
     data(popF, package = "wpp2015", envir = environment())
     data(popM, package = "wpp2015", envir = environment())

@@ -10,6 +10,7 @@ list_surveys <- function()
     relation.1 <- NULL
     datestamp <- NULL
     identifier.1 <- NULL
+    identifier.3 <- NULL
     title <- NULL
     creator <- NULL
 
