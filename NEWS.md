@@ -1,3 +1,3 @@
-# socialmixr 0.0.0.9000
+# socialmixr 0.1.0
 
-* initial version
+* initial release
