@@ -12,7 +12,7 @@ reduce_agegroups(x, limits)
 \item{limits}{new limits}
 }
 \value{
-vector with the new agegroups
+vector with the new age groups
 }
 \description{
 Operates on lower limits
