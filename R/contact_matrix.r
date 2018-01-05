@@ -66,7 +66,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     {
         if (all(nchar(countries) == 2))
         {
-            suppressingsWarnings(corrected_countries <-
+            suppressWarnings(corrected_countries <-
                                      countrycode(countries, "iso2c", "country.name"))
         } else
         {
