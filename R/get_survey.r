@@ -54,6 +54,19 @@ get_survey <- function(survey, quiet=FALSE, ...)
             parsed_body <- content(temp_body, as = "text", encoding = "UTF-8")
             parsed_cite <- fromJSON(content(temp_cite, as = "text", encoding = "UTF-8"))
 
+            authors.table <- data.table(parsed_cite$author)
+            if (!("literal" %in% colnames(authors.table))) authors.table[, literal := NA_character_]
+            authors.table <- authors.table[is.na(literal), literal := paste(given, family)]
+            authors <- as.person(paste(authors.table$literal, sep=","))
+
+            reference <- list(title=parsed_cite$title,
+                              bibtype="Misc",
+                              author=authors,
+                              doi=parsed_cite$DOI,
+                              publisher=parsed_cite$publisher,
+                              note=paste("Version", parsed_cite$version),
+                              year=parsed_cite$issued$`date-parts`[1,1])
+
             urls <-
                 unique(unlist(str_extract_all(parsed_body,
                                               "/record/[0-9]*/files/[0-9A-Za-z_]*.csv")))
@@ -79,6 +92,7 @@ get_survey <- function(survey, quiet=FALSE, ...)
                      paste(paste0("'", missing, "'", collapse=""), sep=", "), " not found.")
             }
             files <- survey
+            reference <- NULL
         }
 
         contact_data <- lapply(files, function(x) {data.table(read.csv(x))})
@@ -190,19 +204,6 @@ get_survey <- function(survey, quiet=FALSE, ...)
           }
         }
 
-        authors.table <- data.table(parsed_cite$author)
-        if (!("literal" %in% colnames(authors.table))) authors.table[, literal := NA_character_]
-        authors.table <- authors.table[is.na(literal), literal := paste(given, family)]
-        authors <- as.person(paste(authors.table$literal, sep=","))
-
-        reference <- list(title=parsed_cite$title,
-                          bibtype="Misc",
-                          author=authors,
-                          doi=parsed_cite$DOI,
-                          publisher=parsed_cite$publisher,
-                          note=paste("Version", parsed_cite$version),
-                          year=parsed_cite$issued$`date-parts`[1,1])
-
         new_survey <- survey(participants=main_surveys[["participant"]],
                              contacts=main_surveys[["contact"]],
                              reference=reference)
@@ -210,7 +211,7 @@ get_survey <- function(survey, quiet=FALSE, ...)
 
     new_survey <- clean(new_survey)
 
-    if (!quiet)
+    if (!quiet && !is.null(new_survey$reference))
     {
         message("Using ", new_survey$reference$title,
                 ". To cite this in a publication, use the 'cite' function")
