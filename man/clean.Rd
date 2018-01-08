@@ -30,3 +30,7 @@ a cleaned survey in the correct format
 \description{
 Cleans survey data to work with the 'contact_matrix' function
 }
+\examples{
+data(polymod)
+cleaneed <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
+}

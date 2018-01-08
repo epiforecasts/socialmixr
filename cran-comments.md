@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have
+* added a reference to the DESCRIPTION file
+* added examples to all functions called by the user
+
 ## Test environments
 * local macOS install (10.13.2), R 3.4.3
 * local linux install (Ubuntu 16.04), R 3.4.3

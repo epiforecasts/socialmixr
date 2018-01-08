@@ -12,3 +12,6 @@ character vector of surveys
 \description{
 List all surveys available for download
 }
+\examples{
+list_surveys()
+}

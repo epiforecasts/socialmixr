@@ -17,3 +17,6 @@ Age groups (limits separated by dashes)
 \description{
 Mostly used for plot labelling
 }
+\examples{
+limits_to_agegroups(c(0, 5, 10))
+}

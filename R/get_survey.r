@@ -10,7 +10,11 @@
 ##' @importFrom utils as.person read.csv
 ##' @importFrom stringr str_extract_all
 ##' @importFrom countrycode countrycode
+##' @examples
+##' list_surveys()
+##' peru_survey <- get_survey(1)
 ##' @return a survey in the correct format
+##' @export
 get_survey <- function(survey, quiet=FALSE, ...)
 {
     ## circumvent R CMD CHECK errors by defining global variables

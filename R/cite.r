@@ -12,6 +12,9 @@ cite <- function(x, ...) UseMethod("cite")
 ##' @return citation as bibentry
 ##' @importFrom utils bibentry
 ##' @importFrom httr GET content
+##' @examples
+##' data(polymod)
+##' cite(polymod)
 ##' @export
 cite.survey <- function(x, quiet = FALSE, ...)
 {

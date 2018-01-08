@@ -18,3 +18,6 @@ data frame of age-specific population data
 This uses data from the \code{wpp2015} package but combines male and female,
 and converts age groups to lower age limits
 }
+\examples{
+wpp_age("Italy", c(1990, 2000))
+}

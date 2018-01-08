@@ -17,6 +17,9 @@ check <- function(x, ...) UseMethod("check")
 ##' @param contact.age.column the column in the \code{contacts} data frame containing contacts' age
 ##' @param ... ignored
 ##' @return invisibly returns a character vector of the relevant columns
+##' @examples
+##' data(polymod)
+##' check(polymod)
 ##' @export
 check.survey <- function(x, columns=FALSE, quiet=FALSE, error=FALSE, id.column="part_id", participant.age.column="part_age", country.column="country", year.column="year", contact.age.column="cnt_age", ...)
 {

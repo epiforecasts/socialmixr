@@ -6,9 +6,11 @@
 ##' @import wpp2015
 ##' @importFrom data.table data.table dcast melt
 ##' @importFrom countrycode countrycode
-##' @export
 ##' @param countries countries, will return all if not given
 ##' @param years years, will return all if not given
+##' @examples
+##' wpp_age("Italy", c(1990, 2000))
+##' @export
 wpp_age <- function(countries, years)
 {
     ## circumvent R CMD CHECK errors by defining global variables

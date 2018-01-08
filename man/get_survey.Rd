@@ -19,3 +19,7 @@ a survey in the correct format
 \description{
 Downloads survey data, or extracts them from files, and returns a clean data set.
 }
+\examples{
+list_surveys()
+peru_survey <- get_survey(1)
+}

@@ -17,3 +17,6 @@ vector with the new age groups
 \description{
 Operates on lower limits
 }
+\examples{
+reduce_agegroups(seq_len(20), c(0, 5, 10))
+}
