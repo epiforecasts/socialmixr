@@ -43,6 +43,13 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     contact.age.group <- NULL
     proportion <- NULL
 
+    dot.args <- list(...)
+    unknown.args <- setdiff(names(dot.args), union(names(formals(check.survey)), names(formals(pop_age))))
+    if (length(unknown.args) > 0)
+    {
+        stop("Unknown argument(s): ", paste(unknown.args, sep=", "), ".")
+    }
+
     ## record if 'missing.participant.age' and 'missing.contact.age' are set, for later
     missing.participant.age.set <- !missing(missing.participant.age)
     missing.contact.age.set <- !missing(missing.contact.age)
