@@ -11,13 +11,13 @@ contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
   weigh.dayofweek = FALSE, quiet = FALSE, ...)
 }
 \arguments{
-\item{survey}{a DOI (see \code{\link{list_surveys}}), or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \code{\link{list_surveys}}), or a character vector of file names, or a \code{\link{survey}} object (in which case only cleaning is done).}
+\item{survey}{a \code{\link{survey}} object}
 
 \item{countries}{limit to one or more countries; if not given, will use all countries in the survey; these can be given as country names or 2-letter (ISO Alpha-2) country codes}
 
 \item{survey.pop}{survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the chosen countries, or all countries in the survey if \code{countries} is not given}
 
-\item{age.limits}{lower age limits of age groups to extract}
+\item{age.limits}{lower limits of the age groups over which to construct the matrix}
 
 \item{filter}{any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered}
 
@@ -41,7 +41,7 @@ contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
 
 \item{quiet}{if set to TRUE, output is reduced}
 
-\item{...}{further arguments to pass to \code{\link{get_survey}}, \code{\link{check}} and \code{\link{pop_age}} (e.g., column names)}
+\item{...}{further arguments to pass to, \code{\link{check}} and \code{\link{pop_age}} (especially column names)}
 }
 \value{
 a list of sampled contact matrices, and the underlying demography of the surveyed population

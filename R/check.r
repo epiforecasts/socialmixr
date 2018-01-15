@@ -33,7 +33,7 @@ check.survey <- function(x, columns=FALSE, quiet=FALSE, error=FALSE, id.column="
         if (!(id.column %in% colnames(x$participants) &&
               id.column %in% colnames(x$contacts)))
         {
-            error_func("Error: columns$id '", columns$id, "' does not exist in both the ",
+            error_func("Error: id.columns '", id.column, "' does not exist in both the ",
                  "participants and contacts data frames")
             success <- FALSE
         }

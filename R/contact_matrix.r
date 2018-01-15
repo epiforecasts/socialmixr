@@ -2,8 +2,10 @@
 ##'
 ##' Samples a contact survey using a bootstrap
 ##'
+##' @param survey a \code{\link{survey}} object
 ##' @param countries limit to one or more countries; if not given, will use all countries in the survey; these can be given as country names or 2-letter (ISO Alpha-2) country codes
 ##' @param survey.pop survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the chosen countries, or all countries in the survey if \code{countries} is not given
+##' @param age.limits lower limits of the age groups over which to construct the matrix
 ##' @param filter any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered
 ##' @param n number of matrices to sample
 ##' @param bootstrap whether to sample participants and contacts randomly using a bootstrap; by default, will use bootstrap if n > 1
@@ -15,7 +17,7 @@
 ##' @param weights columns that contain weights
 ##' @param weigh.dayofweek whether to weigh the day of the week (weight 5 for weekdays ans 2 for weekends)
 ##' @param quiet if set to TRUE, output is reduced
-##' @param ... further arguments to pass to \code{\link{get_survey}}, \code{\link{check}} and \code{\link{pop_age}} (e.g., column names)
+##' @param ... further arguments to pass to, \code{\link{check}} and \code{\link{pop_age}} (especially column names)
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
 ##' @importFrom stats xtabs runif median
 ##' @importFrom utils data globalVariables
@@ -50,7 +52,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     missing.contact.age <- match.arg(missing.contact.age)
 
     ## get the survey
-    survey <- get_survey(survey, quiet, ...)
+    survey <- get_survey(survey, quiet)
     ## check and get columns
     columns <- check(survey, columns=TRUE, quiet=TRUE, ...)
 

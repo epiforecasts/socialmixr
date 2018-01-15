@@ -22,10 +22,12 @@ knitr::opts_chunk$set(
 Usage
 ======
 
-The latest version of the `socialmixr` package is installed via
+The latest stable version of the `socialmixr` package is installed via
+```{r eval=FALSE}
+install.packages('socialmixr')
+```
 
-
-To load the package, use
+The latest development version of the `socialmixr` package can be installed via
 ```{r eval=FALSE}
 devtools::install_github('sbfnk/socialmixr')
 ```
