@@ -98,7 +98,15 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
 
     ## check maximum age in the data
     max.age <- max(participants[, get(columns[["participant.age"]])], na.rm = TRUE) + 1
-    if (missing(age.limits)) age.limits <- c(0, seq_len(max.age-1))
+    if (missing(age.limits))
+    {
+        age.limits <- c(0, seq_len(max.age-1))
+    }
+    age.limits <- as.integer(age.limits)
+    if (any(is.na(age.limits)) || any(diff(age.limits) <= 0))
+    {
+        stop("'age.limits' must be an increasing integer vector of lower age limits.")
+    }
 
     ## check if any filters have been requested
     if (nrow(contacts) > 0 && !missing(filter)) {
