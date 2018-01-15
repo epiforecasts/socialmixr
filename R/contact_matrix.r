@@ -224,7 +224,6 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 {
                     survey.year <- participants[, median(get(columns[["year"]]), na.rm=TRUE)]
                 }
-                survey.year <- participants[, median(get(columns[["year"]]), na.rm=TRUE)]
             }
         }
         ## adjust age groups by interpolating, in case they don't match between
