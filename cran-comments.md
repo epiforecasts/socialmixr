@@ -1,7 +1,5 @@
 ## Resubmission
-This is a resubmission. In this version I have
-* added a reference to the DESCRIPTION file
-* added examples to all functions called by the user
+This is a patch release, submitted upon request as the previous release failed under R-oldrelease.
 
 ## Test environments
 * local macOS install (10.13.2), R 3.4.3
@@ -9,7 +7,9 @@ This is a resubmission. In this version I have
 * Ubuntu (Trusty) on travis-ci
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. There was a NOTE that this was a new submission
+There were no ERRORs or WARNINGs. 
+
+There was a note about a potential mis-spelling in the DESCRIPTION (an author name, which is spelled correctly, and "et al."). A second note about a non-ASCII string in a data set refers, again, to an author name in a reference that comes with the data set.
 
 ## Downstream dependencies
 0 packages with problems.

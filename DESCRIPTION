@@ -1,5 +1,5 @@
 Package: socialmixr
-Version: 0.1.0
+Version: 0.1.1
 Date: 2018-01-15
 Title: Social Mixing Matrices for Infectious Disease Modelling
 Authors@R: person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre"))
