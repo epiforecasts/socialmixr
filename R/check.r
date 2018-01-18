@@ -35,28 +35,28 @@ check.survey <- function(x, columns=FALSE, quiet=FALSE, error=FALSE, id.column="
         if (!(id.column %in% colnames(x$participants) &&
               id.column %in% colnames(x$contacts)))
         {
-            error_func("Error: id.columns '", id.column, "' does not exist in both the ",
+            error_func("id.columns '", id.column, "' does not exist in both the ",
                  "participants and contacts data frames")
             success <- FALSE
         }
 
         if (!(participant.age.column %in% colnames(x$participants)))
         {
-            error_func("Error: participant age column '", participant.age.column, "' does not exist ",
+            error_func("participant age column '", participant.age.column, "' does not exist ",
                  "in the participant data frame")
             success <- FALSE
         }
 
         if (!(contact.age.column %in% colnames(x$contacts)))
         {
-            error_func("Error: contact age column '", contact.age.column, "' does not exist ",
-                 "in the contact data frame")
+            error_func("contact age column '", contact.age.column,
+                       "' does not exist in the contact data frame")
             success <- FALSE
         }
 
         if (!(country.column %in% colnames(x$participants)))
         {
-            error_func("Error: country column '", country.column, "' does not exist ",
+            error_func("country column '", country.column, "' does not exist ",
                  "in the participant data frame")
             success <- FALSE
         } else
