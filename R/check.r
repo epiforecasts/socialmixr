@@ -50,6 +50,22 @@ check.survey <- function(x, columns=FALSE, quiet=FALSE, error=FALSE, id.column="
                  "in the contact data frame")
             success <- FALSE
         }
+
+        if (!(country.column %in% colnames(x$participants)))
+        {
+            error_func("Error: country column '", country.column, "' does not exist ",
+                 "in the participant data frame")
+            success <- FALSE
+        } else
+        {
+          suppressWarnings(corrected_countries <-
+                             countrycode(countries, "country.name", "country.name"))
+          failed_countries <- countries[which(is.na(corrected_countries))]
+          if (length(failed_countries) > 0)
+          {
+            stop("Mis-spelled countries: could not find ", paste(failed_countries, sep=", "), ".")
+          }
+         }
     }
 
     if (!quiet) {
