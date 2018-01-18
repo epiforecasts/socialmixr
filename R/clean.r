@@ -19,7 +19,7 @@ clean <- function(x, ...) UseMethod("clean")
 ##' data(polymod)
 ##' cleaneed <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
 ##' @export
-clean.survey <- function(x, sample.contact.age=TRUE, contact.age.column="cnt_age", country.column="country", quiet=FALSE, ...)
+clean.survey <- function(x, sample.contact.age=FALSE, contact.age.column="cnt_age", country.column="country", quiet=FALSE, ...)
 {
     x <- survey(x$participants, x$contacts, x$reference)
 
