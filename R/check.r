@@ -28,7 +28,7 @@ check.survey <- function(x, columns=FALSE, quiet=FALSE, error=FALSE, id.column="
     if (!is.data.frame(x$participants) || !is.data.frame(x$contacts))
         stop("The 'participants' and 'contacts' elements of 'x' must be data.frames")
 
-    x <- clean(x)
+    x <- clean(x, sample.contact.age = TRUE)
 
     success <- TRUE
     if (!missing(columns)) {
