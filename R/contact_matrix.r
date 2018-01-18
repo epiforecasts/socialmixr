@@ -13,6 +13,7 @@
 ##' @param symmetric whether to make matrix symmetric
 ##' @param split whether to split the number of contacts and assortativity
 ##' @param missing.participant.age if set to "remove", participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group
+##' @param sample.contact.age  if set to TRUE, any missing contact ages that have a span given will be sampled from the span
 ##' @param missing.contact.age if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "remove", participants that that have contacts without age information are removed; if set to "keep", contacts with missing age are kept and treated as a separate age group
 ##' @param weights columns that contain weights
 ##' @param weigh.dayofweek whether to weigh the day of the week (weight 5 for weekdays ans 2 for weekends)
@@ -30,7 +31,7 @@
 ##' data(polymod)
 ##' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, missing.participant.age = c("remove", "keep"), missing.contact.age = c("sample", "remove", "keep"), weights = c(), weigh.dayofweek = FALSE, quiet = FALSE, ...)
+contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, missing.participant.age = c("remove", "keep"), sample.contact.age = TRUE, missing.contact.age = c("sample", "remove", "keep"), weights = c(), weigh.dayofweek = FALSE, quiet = FALSE, ...)
 {
     ## circumvent R CMD CHECK errors by defining global variables
     lower.age.limit <- NULL
@@ -59,7 +60,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     missing.contact.age <- match.arg(missing.contact.age)
 
     ## get the survey
-    survey <- get_survey(survey, quiet)
+    survey <- get_survey(survey, quiet, sample.contact.age = sample.contact.age)
     ## check and get columns
     columns <- check(survey, columns=TRUE, quiet=TRUE, ...)
 

@@ -3,6 +3,7 @@
 ##' @description Downloads survey data, or extracts them from files, and returns a clean data set.
 ##' @param survey a DOI (see \code{\link{list_surveys}}), or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \code{\link{list_surveys}}), or a character vector of file names, or a \code{\link{survey}} object (in which case only cleaning is done).
 ##' @param quiet if TRUE, suppress messages
+##' @param ... options for clean.survey, which is called at the end of this
 ##' @importFrom httr GET add_headers content
 ##' @importFrom jsonlite fromJSON
 ##' @importFrom curl curl_download
@@ -14,7 +15,7 @@
 ##' peru_survey <- get_survey(1)
 ##' @return a survey in the correct format
 ##' @export
-get_survey <- function(survey, quiet=FALSE)
+get_survey <- function(survey, quiet=FALSE, ...)
 {
     ## circumvent R CMD CHECK errors by defining global variables
     id <- NULL
@@ -208,7 +209,7 @@ get_survey <- function(survey, quiet=FALSE)
                              reference=reference)
     }
 
-    new_survey <- clean(new_survey)
+    new_survey <- clean(new_survey, ...)
 
     if (!quiet && !is.null(new_survey$reference))
     {
