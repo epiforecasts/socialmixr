@@ -5,6 +5,10 @@
 ##' @param reference a \code{list} containing information needed to reference the survey, in particular it can contain$a "title", "bibtype", "author", "doi", "publisher", "note", "year"
 ##' @return a new survey object
 ##' @author Sebastian Funk
+##' @export
+##' @examples
+##' data(polymod)
+##' new_survey <- survey(polymod$participants, polymod$contacts)
 survey <- function(participants, contacts, reference=NULL)
 {
     new_obj <-

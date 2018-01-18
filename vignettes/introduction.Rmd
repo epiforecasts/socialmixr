@@ -22,10 +22,24 @@ knitr::opts_chunk$set(
 Usage
 ======
 
+The latest stable version of the `socialmixr` package is installed via
+```{r eval=FALSE}
+install.packages('socialmixr')
+```
+
+The latest development version of the `socialmixr` package can be installed via
+```{r eval=FALSE}
+devtools::install_github('sbfnk/socialmixr')
+```
+
 To load the package, use
-```{r}
+```{r eval=FALSE}
 library('socialmixr')
 ```
+```{r echo=FALSE}
+suppressWarnings(library('socialmixr'))
+```
+
 
 At the heart of the `socialmixr` package is the `contact_matrix` function. This extracts a contact matrix from survey data. You can use the `R` help to find out about usage of the `contact_matrix` function, including a list of examples:
 

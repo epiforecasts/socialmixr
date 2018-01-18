@@ -15,6 +15,9 @@ clean <- function(x, ...) UseMethod("clean")
 ##' @return invisibly returns a character vector of the relevant columns
 ##' @importFrom countrycode countrycode
 ##' @return a cleaned survey in the correct format
+##' @examples
+##' data(polymod)
+##' cleaneed <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
 ##' @export
 clean.survey <- function(x, sample.contact.age=TRUE, contact.age.column="cnt_age", country.column="country", quiet=FALSE, ...)
 {

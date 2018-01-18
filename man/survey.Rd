@@ -19,6 +19,10 @@ a new survey object
 \description{
 A \code{survey} object contains the results of a contact survey. In particular, it contains two data frames called \code{participants} and \code{contacts} that are linked by a column specified as \code{id.column}
 }
+\examples{
+data(polymod)
+new_survey <- survey(polymod$participants, polymod$contacts)
+}
 \author{
 Sebastian Funk
 }

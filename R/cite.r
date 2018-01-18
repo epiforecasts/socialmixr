@@ -12,11 +12,14 @@ cite <- function(x, ...) UseMethod("cite")
 ##' @return citation as bibentry
 ##' @importFrom utils bibentry
 ##' @importFrom httr GET content
+##' @examples
+##' data(polymod)
+##' cite(polymod)
 ##' @export
 cite.survey <- function(x, quiet = FALSE, ...)
 {
     survey <- get_survey(x)
-    if (is.null(x$reference)) stop("No citation defined for ", x$name)
+    if (is.null(x$reference)) stop("No citation defined for ", ifelse(is.null(x$name), "survey", x$name))
 
     ref <-
         c(list(header = gettextf("To cite %s in publications use:", x$ref$title)),

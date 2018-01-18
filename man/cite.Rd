@@ -20,3 +20,7 @@ citation as bibentry
 \description{
 Gets a full citation for a \code{\link{survey}}. If quiet is FALSE (default)
 }
+\examples{
+data(polymod)
+cite(polymod)
+}

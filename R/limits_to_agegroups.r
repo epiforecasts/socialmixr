@@ -4,6 +4,8 @@
 ##' @param x age limits to transform
 ##' @param limits lower age limits; if not given, will use all limits in \code{x}
 ##' @return Age groups (limits separated by dashes)
+##' @examples
+##' limits_to_agegroups(c(0, 5, 10))
 ##' @export
 limits_to_agegroups <- function(x, limits) {
   if (missing(limits)) limits <- unique(x)[order(unique(x))]

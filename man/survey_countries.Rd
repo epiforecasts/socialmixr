@@ -19,3 +19,7 @@ list of countries
 \description{
 List all countries contained in a survey
 }
+\examples{
+data(polymod)
+survey_countries(polymod)
+}

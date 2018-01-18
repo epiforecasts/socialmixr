@@ -2,6 +2,8 @@
 ##'
 ##' @return character vector of surveys
 ##' @importFrom oai list_records
+##' @examples
+##' list_surveys()
 ##' @export
 list_surveys <- function()
 {
@@ -35,6 +37,9 @@ list_surveys <- function()
 ##' @param ... further arguments for \code{\link{get_survey}}
 ##' @return list of countries
 ##' @inheritParams get_survey
+##' @examples
+##' data(polymod)
+##' survey_countries(polymod)
 ##' @export
 survey_countries <- function(survey, country.column = "country", ...)
 {
@@ -49,6 +54,8 @@ survey_countries <- function(survey, country.column = "country", ...)
 ##' @import wpp2015
 ##' @importFrom data.table data.table setkey
 ##' @importFrom utils data
+##' @examples
+##' wpp_countries()
 ##' @export
 wpp_countries <- function()
 {
