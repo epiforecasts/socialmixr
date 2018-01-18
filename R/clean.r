@@ -38,8 +38,8 @@ clean.survey <- function(x, sample.contact.age=TRUE, contact.age.column="cnt_age
             x$contacts[is.na(get(contact.age.column)) & !is.na(get(min.column)) &
                                 !is.na(get(max.column)),
                                 paste(contact.age.column) :=
-                                    as.integer(floor(runif(.N, get(min.column),
-                                                           get(max.column)+1)))]
+                                    as.integer(floor(runif(.N, as.integer(get(min.column)),
+                                                           as.integer(get(max.column))+1)))]
         }
     }
 
