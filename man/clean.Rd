@@ -5,7 +5,7 @@
 \alias{clean.survey}
 \title{Clean contact survey data}
 \usage{
-\method{clean}{survey}(x, sample.contact.age = TRUE,
+\method{clean}{survey}(x, sample.contact.age = FALSE,
   contact.age.column = "cnt_age", country.column = "country",
   quiet = FALSE, ...)
 }
