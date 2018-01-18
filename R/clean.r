@@ -18,6 +18,8 @@ clean <- function(x, ...) UseMethod("clean")
 ##' @export
 clean.survey <- function(x, sample.contact.age=TRUE, contact.age.column="cnt_age", country.column="country", quiet=FALSE, ...)
 {
+    x <- survey(x$participants, x$contacts, x$reference)
+
     ## sample contact age
     if (sample.contact.age &&
         !(contact.age.column %in% colnames(x$contacts)))
