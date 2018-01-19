@@ -61,8 +61,9 @@ check.survey <- function(x, columns=FALSE, quiet=FALSE, error=FALSE, id.column="
             success <- FALSE
         } else
         {
-          suppressWarnings(corrected_countries <-
-                             countrycode(countries, "country.name", "country.name"))
+            suppressWarnings(corrected_countries <-
+                               countrycode(x$participants[, get(country.column)],
+                                           "country.name", "country.name"))
           failed_countries <- countries[which(is.na(corrected_countries))]
           if (length(failed_countries) > 0)
           {
