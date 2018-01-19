@@ -5,22 +5,24 @@
 \alias{clean.survey}
 \title{Clean contact survey data}
 \usage{
-\method{clean}{survey}(x, sample.contact.age = FALSE,
+\method{clean}{survey}(x, estimate.age = c("mean", "sample", "missing"),
   contact.age.column = "cnt_age", country.column = "country",
   quiet = FALSE, ...)
 }
 \arguments{
 \item{x}{A \code{\link{survey}} object}
 
-\item{sample.contact.age}{whether the contact age should be sampled if it does not exist in the data}
+\item{estimate.age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
 
-\item{contact.age.column}{the name of the contact age column; if this does not exist, the function will try to construct it from "..._exact", "..._est_min" and "..._est_max" (unless \code{sample.contact.age} is set to FALSE)}
+\item{contact.age.column}{the name of the contact age column; if this does not exist, the function will try to construct it from "..._exact", "..._est_min" and "..._est_max" (see the \code{estimate.age} option)}
 
 \item{country.column}{the name of the country denoting the country in which the survey participant was interviewed}
 
 \item{quiet}{if TRUE,  will suppress output}
 
 \item{...}{ignored}
+
+\item{sample.contact.age}{whether the contact age should be sampled if it does not exist in the data}
 }
 \value{
 invisibly returns a character vector of the relevant columns
@@ -32,5 +34,5 @@ Cleans survey data to work with the 'contact_matrix' function
 }
 \examples{
 data(polymod)
-cleaneed <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
+cleaned <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
 }

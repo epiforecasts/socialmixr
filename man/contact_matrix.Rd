@@ -6,8 +6,8 @@
 \usage{
 contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
   n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE,
-  missing.participant.age = c("remove", "keep"), sample.contact.age = TRUE,
-  missing.contact.age = c("sample", "remove", "keep"), weights = c(),
+  missing.participant.age = c("remove", "keep"), estimate.age,
+  missing.contact.age = c("remove", "sample", "keep"), weights = c(),
   weigh.dayofweek = FALSE, quiet = FALSE, ...)
 }
 \arguments{
@@ -31,11 +31,9 @@ contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
 
 \item{split}{whether to split the number of contacts and assortativity}
 
-\item{missing.participant.age}{if set to "remove", participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group}
+\item{missing.participant.age}{if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group}
 
-\item{sample.contact.age}{if set to TRUE, any missing contact ages that have a span given will be sampled from the span}
-
-\item{missing.contact.age}{if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "remove", participants that that have contacts without age information are removed; if set to "keep", contacts with missing age are kept and treated as a separate age group}
+\item{missing.contact.age}{if set to "remove" (default), participants that that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group}
 
 \item{weights}{columns that contain weights}
 

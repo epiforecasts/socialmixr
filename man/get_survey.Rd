@@ -11,7 +11,7 @@ get_survey(survey, quiet = FALSE, ...)
 
 \item{quiet}{if TRUE, suppress messages}
 
-\item{...}{options for clean.survey, which is called at the end of this}
+\item{...}{options for \code{\link{clean.survey}}, which is called at the end of this}
 }
 \value{
 a survey in the correct format
