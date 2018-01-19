@@ -64,7 +64,7 @@ check.survey <- function(x, columns=FALSE, quiet=FALSE, error=FALSE, id.column="
             suppressWarnings(corrected_countries <-
                                countrycode(x$participants[, get(country.column)],
                                            "country.name", "country.name"))
-          failed_countries <- countries[which(is.na(corrected_countries))]
+          failed_countries <- corrected_countries[is.na(corrected_countries)]
           if (length(failed_countries) > 0)
           {
             stop("Mis-spelled countries: could not find ", paste(failed_countries, sep=", "), ".")
