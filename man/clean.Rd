@@ -21,8 +21,6 @@
 \item{quiet}{if TRUE,  will suppress output}
 
 \item{...}{ignored}
-
-\item{sample.contact.age}{whether the contact age should be sampled if it does not exist in the data}
 }
 \value{
 invisibly returns a character vector of the relevant columns

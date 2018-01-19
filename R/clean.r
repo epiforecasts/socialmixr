@@ -12,7 +12,6 @@ clean <- function(x, ...) UseMethod("clean")
 ##' @param country.column the name of the country denoting the country in which the survey participant was interviewed
 ##' @param quiet if TRUE,  will suppress output
 ##' @param ... ignored
-##' @param sample.contact.age whether the contact age should be sampled if it does not exist in the data
 ##' @return invisibly returns a character vector of the relevant columns
 ##' @importFrom countrycode countrycode
 ##' @return a cleaned survey in the correct format

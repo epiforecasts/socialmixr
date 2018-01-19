@@ -33,6 +33,8 @@ contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
 
 \item{missing.participant.age}{if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group}
 
+\item{estimate.age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
+
 \item{missing.contact.age}{if set to "remove" (default), participants that that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group}
 
 \item{weights}{columns that contain weights}

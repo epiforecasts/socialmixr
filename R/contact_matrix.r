@@ -24,7 +24,7 @@
 ##' @importFrom countrycode countrycode
 ##' @import data.table
 ##' @export
-##' @inheritParams clean.survey
+##' @inheritParams clean
 ##' @inheritParams get_survey
 ##' @inheritParams pop_age
 ##' @examples
