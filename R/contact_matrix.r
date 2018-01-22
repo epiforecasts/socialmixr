@@ -12,26 +12,26 @@
 ##' @param counts whether to return counts (instead of means)
 ##' @param symmetric whether to make matrix symmetric
 ##' @param split whether to split the number of contacts and assortativity
+##' @param estimated.contact.age if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
 ##' @param missing.participant.age if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group
 ##' @param missing.contact.age if set to "remove" (default), participants that that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group
 ##' @param weights columns that contain weights
 ##' @param weigh.dayofweek whether to weigh the day of the week (weight 5 for weekdays ans 2 for weekends)
 ##' @param quiet if set to TRUE, output is reduced
-##' @param ... further arguments to pass to, \code{\link{check}} and \code{\link{pop_age}} (especially column names)
+##' @param ... further arguments to pass to \code{\link{get_survey}}, \code{\link{check}} and \code{\link{pop_age}} (especially column names)
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
 ##' @importFrom stats xtabs runif median
 ##' @importFrom utils data globalVariables
 ##' @importFrom countrycode countrycode
 ##' @import data.table
 ##' @export
-##' @inheritParams clean
 ##' @inheritParams get_survey
 ##' @inheritParams pop_age
 ##' @examples
 ##' data(polymod)
 ##' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, missing.participant.age = c("remove", "keep"), estimate.age, missing.contact.age = c("remove", "sample", "keep"), weights = c(), weigh.dayofweek = FALSE, quiet = FALSE, ...)
+contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, estimated.contact.age=c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep"), weights = c(), weigh.dayofweek = FALSE, quiet = FALSE, ...)
 {
     ## circumvent R CMD CHECK errors by defining global variables
     lower.age.limit <- NULL
@@ -56,13 +56,12 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     missing.contact.age.set <- !missing(missing.contact.age)
 
     ## read arguments
+    estimated.contact.age <- match.arg(estimated.contact.age)
     missing.participant.age <- match.arg(missing.participant.age)
     missing.contact.age <- match.arg(missing.contact.age)
 
     ## get the survey
-    get_survey_options <- list(survey, quiet)
-    if (!missing(estimate.age)) get_survey_options[["estimate.age"]] <- estimate.age
-    survey <- do.call(get_survey, get_survey_options)
+    survey <- get_survey(survey, quiet)
     ## check and get columns
     columns <- check(survey, columns=TRUE, quiet=TRUE, ...)
 
@@ -99,7 +98,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         }
     }
 
-    ## check maximum age in the data
+    ## check maximum participant age in the data
     max.age <- max(participants[, get(columns[["participant.age"]])], na.rm = TRUE) + 1
     if (missing(age.limits))
     {
@@ -133,6 +132,39 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                     "To change this behaviour, set the 'missing.participant.age' option")
         }
         participants <- participants[!is.na(get(columns[["participant.age"]]))]
+    }
+
+    ## sample contact age
+    if (!(columns[["contact.age"]] %in% colnames(contacts)))
+    {
+        contacts[, paste(columns[["contact.age"]]) := NA_integer_]
+
+        exact.column <- paste(columns[["contact.age"]], "exact", sep="_")
+        min.column <- paste(columns[["contact.age"]], "est_min", sep="_")
+        max.column <- paste(columns[["contact.age"]], "est_max", sep="_")
+
+        if (exact.column %in% colnames(contacts))
+        {
+            contacts[, paste(columns[["contact.age"]]) := get(exact.column)]
+        }
+        if (min.column %in% colnames(contacts) &&
+            max.column %in% colnames(contacts))
+        {
+            if (estimated.contact.age == "mean")
+            {
+                contacts[is.na(get(columns[["contact.age"]])) & !is.na(get(min.column)) &
+                         !is.na(get(max.column)),
+                         paste(columns[["contact.age"]]) := as.integer(rowMeans(.SD)),
+                         .SDcols=c(min.column, max.column)]
+            } else if (estimated.contact.age == "sample")
+            {
+                contacts[is.na(get(columns[["contact.age"]])) & !is.na(get(min.column)) &
+                         !is.na(get(max.column)),
+                         paste(columns[["contact.age"]]) :=
+                             as.integer(runif(.N, as.integer(get(min.column)),
+                                              as.integer(get(max.column))+1))]
+            }
+        }
     }
 
     if (missing.contact.age == "remove" &&
@@ -268,7 +300,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                                           breaks = union(age.limits, max.age),
                                           right = FALSE)]
     age.groups <- participants[, levels(age.group)]
-    age.groups[length(age.groups)] <- paste0(max(participants$lower.age.limit), "+")
+    age.groups[length(age.groups)] <- paste0(max(participants$lower.age.limit, na.rm=TRUE), "+")
     participants[, age.group := factor(age.group, levels=levels(age.group), labels=age.groups)]
 
     participants[, weight := 1]
@@ -306,7 +338,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         } else
         {
             ## just use all participants
-            part.sample <- copy(participants)
+            part.sample <- participants
         }
 
         ## gather contacts for sampled participants
@@ -489,7 +521,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     }
 
     ## get number of participants in each age group
-    if (any(is.na(levels(part.sample$age.group)))) {
+    if (any(is.na(part.sample$age.group))) {
         useNA <- "always"
     } else {
         useNA <- "no"
@@ -511,4 +543,3 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
 
     return(return_value)
 }
-
