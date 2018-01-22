@@ -6,7 +6,8 @@
 \usage{
 contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
   n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE,
-  missing.participant.age = c("remove", "keep"), estimate.age,
+  estimated.contact.age = c("mean", "sample", "missing"),
+  missing.participant.age = c("remove", "keep"),
   missing.contact.age = c("remove", "sample", "keep"), weights = c(),
   weigh.dayofweek = FALSE, quiet = FALSE, ...)
 }
@@ -31,9 +32,9 @@ contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
 
 \item{split}{whether to split the number of contacts and assortativity}
 
-\item{missing.participant.age}{if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group}
+\item{estimated.contact.age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
 
-\item{estimate.age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
+\item{missing.participant.age}{if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group}
 
 \item{missing.contact.age}{if set to "remove" (default), participants that that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group}
 
@@ -43,7 +44,7 @@ contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
 
 \item{quiet}{if set to TRUE, output is reduced}
 
-\item{...}{further arguments to pass to, \code{\link{check}} and \code{\link{pop_age}} (especially column names)}
+\item{...}{further arguments to pass to \code{\link{get_survey}}, \code{\link{check}} and \code{\link{pop_age}} (especially column names)}
 }
 \value{
 a list of sampled contact matrices, and the underlying demography of the surveyed population

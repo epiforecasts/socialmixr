@@ -18,14 +18,13 @@
 ##' @param weights columns that contain weights
 ##' @param weigh.dayofweek whether to weigh the day of the week (weight 5 for weekdays ans 2 for weekends)
 ##' @param quiet if set to TRUE, output is reduced
-##' @param ... further arguments to pass to, \code{\link{check}} and \code{\link{pop_age}} (especially column names)
+##' @param ... further arguments to pass to \code{\link{get_survey}}, \code{\link{check}} and \code{\link{pop_age}} (especially column names)
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
 ##' @importFrom stats xtabs runif median
 ##' @importFrom utils data globalVariables
 ##' @importFrom countrycode countrycode
 ##' @import data.table
 ##' @export
-##' @inheritParams clean
 ##' @inheritParams get_survey
 ##' @inheritParams pop_age
 ##' @examples
@@ -544,4 +543,3 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
 
     return(return_value)
 }
-
