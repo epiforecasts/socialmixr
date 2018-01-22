@@ -42,7 +42,7 @@ clean.survey <- function(x, estimate.age=c("mean", "sample", "missing"), contact
             {
                 x$contacts[is.na(get(contact.age.column)) & !is.na(get(min.column)) &
                            !is.na(get(max.column)),
-                           paste(contact.age.column) := as.integer(round(rowMeans(.SD))),
+                           paste(contact.age.column) := as.integer(rowMeans(.SD)),
                            .SDcols=c(min.column, max.column)]
             } else if (estimate.age == "sample")
             {
