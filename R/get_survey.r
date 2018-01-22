@@ -9,6 +9,7 @@
 ##' @importFrom curl curl_download
 ##' @importFrom utils as.person read.csv
 ##' @importFrom stringr str_extract_all
+##' @importFrom XML xpathSApply htmlParse
 ##' @importFrom countrycode countrycode
 ##' @examples
 ##' list_surveys()
@@ -48,38 +49,33 @@ get_survey <- function(survey, quiet=FALSE, ...)
             doi_url <- paste0("http://dx.doi.org/", survey)
             temp_body <- GET(doi_url, config = list(followlocation = TRUE))
             if (temp_body$status_code == 404) stop("DOI '", survey, "' not found")
-            temp_cite <- GET(doi_url, config = list(followlocation = TRUE),
-                             add_headers(Accept = "application/vnd.citationstyles.csl+json"))
 
             parsed_body <- content(temp_body, as = "text", encoding = "UTF-8")
-            parsed_cite <- fromJSON(content(temp_cite, as = "text", encoding = "UTF-8"))
+            parsed_cite <-
+                fromJSON(xmlValue(xpathSApply(htmlParse(temp_body),
+                                              '//script[@type="application/ld+json"]')[[1]]))
 
-            authors.table <- data.table(parsed_cite$author)
-            if (!("literal" %in% colnames(authors.table))) authors.table[, literal := NA_character_]
-            authors.table <- authors.table[is.na(literal), literal := paste(given, family)]
-            authors <- as.person(paste(authors.table$literal, sep=","))
+            authors <- as.person(paste(parsed_cite$creator$name, sep =","))
 
-            reference <- list(title=parsed_cite$title,
+            reference <- list(title=parsed_cite$name,
                               bibtype="Misc",
                               author=authors,
-                              doi=parsed_cite$DOI,
-                              publisher=parsed_cite$publisher,
+                              doi=parsed_cite$identifier,
                               note=paste("Version", parsed_cite$version),
-                              year=parsed_cite$issued$`date-parts`[1,1])
+                              year=as.integer(substr(parsed_cite$datePublished, 1, 4)))
 
-            urls <-
-                unique(unlist(str_extract_all(parsed_body,
-                                              "/record/[0-9]*/files/[0-9A-Za-z_]*.csv")))
+            data <- data.table(parsed_cite$distribution)
 
-            message("Getting ", parsed_cite$title, ".")
+            urls <- data[fileFormat == "csv", contentUrl]
+
+            message("Getting ", parsed_cite$name, ".")
 
             dir <- tempdir()
             files <- vapply(urls, function(x)
             {
                 temp <- paste(dir, basename(x), sep="/")
-                url <- paste0("http://zenodo.org", x)
-                message("Downloading ", url)
-                dl <- curl_download(url, temp)
+                message("Downloading ", x)
+                dl <- curl_download(x, temp)
                 return(temp)
             }, "")
         } else

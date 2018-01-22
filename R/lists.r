@@ -69,8 +69,8 @@ wpp_countries <- function()
     setkeyv(pop, "country")
     countries <- as.character(unique(pop$country))
     found_countries <-
-        suppressWarnings(countrycode(wpp_countries(), "country.name", "country.name"))
+        suppressWarnings(countrycode(countries, "country.name", "country.name"))
     found_countries <- found_countries[!is.na(found_countries)]
-    return()
+    return(found_countries)
 }
 
