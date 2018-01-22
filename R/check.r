@@ -14,7 +14,7 @@ check <- function(x, ...) UseMethod("check")
 ##' @param participant.age.column the column in the \code{participants} data frame containing participants' age
 ##' @param country.column the column in the \code{participants} data frame containing the country in which the participant was queried
 ##' @param year.column the column in the \code{participants} data frame containing the year in which the participant was queried
-##' @param contact.age.column the column in the \code{contacts} data frame containing contacts' age
+##' @param contact.age.column the column in the \code{contacts} data frame containing the age of contacts; if this does not exist, at least columns "..._exact", "..._est_min" and "..._est_max" must (see the \code{estimated.contact.age} option in \code{\link{contact_matrix}})
 ##' @param ... ignored
 ##' @return invisibly returns a character vector of the relevant columns
 ##' @examples
@@ -49,8 +49,17 @@ check.survey <- function(x, columns=FALSE, quiet=FALSE, error=FALSE, id.column="
 
         if (!(contact.age.column %in% colnames(x$contacts)))
         {
-            error_func("contact age column '", contact.age.column,
-                       "' does not exist in the contact data frame")
+            exact.column <- paste(contact.age.column, "exact", sep="_")
+            min.column <- paste(contact.age.column, "est_min", sep="_")
+            max.column <- paste(contact.age.column, "est_max", sep="_")
+
+            if (!((exact.column %in% colnames(x$contacts)) ||
+                  (min.column %in% colnames(x$contacts) && max.column %in% colnames(x$contacts))))
+            {
+                error_func("contact age column '", contact.age.column,
+                           "' or columsn to estimate contact age ('", exact.column, "' or '",
+                           min.column, "' and '", max.column, "') do not exist in the contact data frame")
+            }
             success <- FALSE
         }
 
