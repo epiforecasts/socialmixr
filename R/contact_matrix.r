@@ -268,7 +268,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                                           breaks = union(age.limits, max.age),
                                           right = FALSE)]
     age.groups <- participants[, levels(age.group)]
-    age.groups[length(age.groups)] <- paste0(max(participants$lower.age.limit), "+")
+    age.groups[length(age.groups)] <- paste0(max(participants$lower.age.limit, na.rm=TRUE), "+")
     participants[, age.group := factor(age.group, levels=levels(age.group), labels=age.groups)]
 
     participants[, weight := 1]
