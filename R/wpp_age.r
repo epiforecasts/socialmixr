@@ -38,7 +38,7 @@ wpp_age <- function(countries, years)
     if (!missing(countries))
     {
         ## match by UN country code
-        pop <- pop[country_code %in% countrycode(countries, "country.name", "un")]
+        pop <- pop[country_code %in% countrycode(countries, "country.name", "iso3n")]
     }
 
     if (nrow(pop) > 0) {
