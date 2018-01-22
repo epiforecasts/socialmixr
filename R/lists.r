@@ -67,6 +67,10 @@ wpp_countries <- function()
     data(popM, package = "wpp2015", envir = environment())
     pop <- data.table(rbind(popF, popM))
     setkeyv(pop, "country")
-    return(as.character(unique(pop$country))
-)}
+    countries <- as.character(unique(pop$country))
+    found_countries <-
+        suppressWarnings(countrycode(wpp_countries(), "country.name", "country.name"))
+    found_countries <- found_countries[!is.na(found_countries)]
+    return()
+}
 
