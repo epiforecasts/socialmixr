@@ -9,7 +9,7 @@
 ##' @importFrom curl curl_download
 ##' @importFrom utils as.person read.csv
 ##' @importFrom stringr str_extract_all
-##' @importFrom XML xpathSApply htmlParse
+##' @importFrom XML xpathSApply htmlParse xmlValue
 ##' @importFrom countrycode countrycode
 ##' @examples
 ##' list_surveys()
