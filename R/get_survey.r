@@ -23,6 +23,8 @@ get_survey <- function(survey, quiet=FALSE, ...)
     literal <- NULL
     given <- NULL
     family <- NULL
+    fileFormat <- NULL
+    contentUrl <- NULL
 
     if ("survey" %in% class(survey))
     {
