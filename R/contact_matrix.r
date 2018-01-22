@@ -339,7 +339,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         } else
         {
             ## just use all participants
-            part.sample <- copy(participants)
+            part.sample <- participants
         }
 
         ## gather contacts for sampled participants
