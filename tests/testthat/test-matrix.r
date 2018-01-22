@@ -9,7 +9,7 @@ participants_reduced$participants$country <- NULL
 options <-
   list(test1 = list(survey = polymod, countries = "United Kingdom", counts = TRUE, weigh.dayofweek = TRUE, missing.contact.age = "sample"),
        test2 = list(n = 2, survey = participants_reduced, age.limits = c(0, 1), weights = "added_weight", symmetric = TRUE, weigh.dayofweek = TRUE),
-       test3 = list(survey = polymod, survey.pop="Australia", split=TRUE, filter = c(cnt_home = 1), age.limits=c(0, 5, 10), missing.contact.age = "remove"))
+       test3 = list(survey = polymod, survey.pop="Australia", split=TRUE, filter = c(cnt_home = 1), age.limits=c(0, 5, 10), missing.contact.age = "remove", estimated.contact.age = "sample"))
 
 contacts <- lapply(options, function(x) {do.call(contact_matrix, x)})
 
