@@ -134,7 +134,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         participants <- participants[!is.na(get(columns[["participant.age"]]))]
     }
 
-    ## sample contact age
+    ## set contact age if it's not in the data
     if (!(columns[["contact.age"]] %in% colnames(contacts)))
     {
         contacts[, paste(columns[["contact.age"]]) := NA_integer_]
@@ -148,22 +148,13 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
             contacts[, paste(columns[["contact.age"]]) := get(exact.column)]
         }
         if (min.column %in% colnames(contacts) &&
-            max.column %in% colnames(contacts))
+            max.column %in% colnames(contacts) &&
+            estimated.contact.age != "missing")
         {
-            if (estimated.contact.age == "mean")
-            {
-                contacts[is.na(get(columns[["contact.age"]])) & !is.na(get(min.column)) &
-                         !is.na(get(max.column)),
-                         paste(columns[["contact.age"]]) := as.integer(rowMeans(.SD)),
-                         .SDcols=c(min.column, max.column)]
-            } else if (estimated.contact.age == "sample")
-            {
-                contacts[is.na(get(columns[["contact.age"]])) & !is.na(get(min.column)) &
-                         !is.na(get(max.column)),
-                         paste(columns[["contact.age"]]) :=
-                             as.integer(runif(.N, as.integer(get(min.column)),
-                                              as.integer(get(max.column))+1))]
-            }
+            contacts[is.na(get(columns[["contact.age"]])) & !is.na(get(min.column)) &
+                     !is.na(get(max.column)),
+                     paste(columns[["contact.age"]]) := as.integer(rowMeans(.SD)),
+                     .SDcols=c(min.column, max.column)]
         }
     }
 
@@ -339,6 +330,15 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         {
             ## just use all participants
             part.sample <- participants
+        }
+
+        ## sample estimated contact ages
+        if (estimated.contact.age == "sample")
+        {
+            contacts[!is.na(get(min.column)) & !is.na(get(max.column)),
+                     paste(columns[["contact.age"]]) :=
+                         as.integer(runif(.N, as.integer(get(min.column)),
+                                          as.integer(get(max.column))+1))]
         }
 
         ## gather contacts for sampled participants
