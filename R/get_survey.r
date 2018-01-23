@@ -151,7 +151,8 @@ get_survey <- function(survey, quiet=FALSE, ...)
             merged_files <- c()
             for (file in merge_files)
             {
-              max_rows <- max(nrow(main_surveys[[type]]), nrow(contact_data[[file]]))
+              do_merge <- TRUE
+              max_rows <- nrow(main_surveys[[type]])
 
               common_id <- intersect(file_id_cols[[file]], colnames(main_surveys[[type]]))
 
@@ -167,30 +168,38 @@ get_survey <- function(survey, quiet=FALSE, ...)
                         paste0("'", common_id, "'", collapse=", "),
                         " column", ifelse(length(common_id) > 1, "s", ""),
                         " when pulling ", basename(file), " into '", type, "' survey.")
-              }
-
-              duplicate_columns <-
-                setdiff(intersect(colnames(main_surveys[[type]]),
-                                  colnames(contact_data[[file]])),
-                        common_id)
-
-              if (length(duplicate_columns) > 0)
+              } else if (nrow(id_overlap) > max_rows)
               {
-                warning("Ignoring duplicate column",
-                        ifelse(nrow(duplicate_columns) > 1, "s", ""),
-                        " when pulling in ",
-                        basename(file), ": ",
-                        paste(paste0("'", duplicate_columns, "'", collapse=""), sep=", "),
-                        ".")
-                for (column in duplicate_columns)
-                {
-                  contact_data[[file]][, paste(column) := NULL]
-                }
+                warning("Skipping ", basename(file), " as it has too many entries to merge ",
+                        "into '", type, "' survey.")
+                do_merge <- FALSE
               }
 
-              main_surveys[[type]] <-
-                merge(main_surveys[[type]], contact_data[[file]],
-                      by=common_id, all.x=TRUE)
+              if (do_merge)
+              {
+                duplicate_columns <-
+                  setdiff(intersect(colnames(main_surveys[[type]]),
+                                    colnames(contact_data[[file]])),
+                          common_id)
+
+                if (length(duplicate_columns) > 0)
+                {
+                  warning("Ignoring duplicate column",
+                          ifelse(nrow(duplicate_columns) > 1, "s", ""),
+                          " when pulling in ",
+                          basename(file), ": ",
+                          paste(paste0("'", duplicate_columns, "'", collapse=""), sep=", "),
+                          ".")
+                  for (column in duplicate_columns)
+                  {
+                    contact_data[[file]][, paste(column) := NULL]
+                  }
+                }
+
+                main_surveys[[type]] <-
+                  merge(main_surveys[[type]], contact_data[[file]],
+                        by=common_id, all.x=TRUE)
+              }
               merged_files <- c(merged_files, file)
             }
             files <- setdiff(files, merged_files)
