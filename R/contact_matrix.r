@@ -337,8 +337,9 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         {
             contacts[!is.na(get(min.column)) & !is.na(get(max.column)),
                      paste(columns[["contact.age"]]) :=
-                         as.integer(runif(.N, as.integer(get(min.column)),
-                                          as.integer(get(max.column))+1))]
+                         as.integer(runif(.N,
+                                          as.integer(min(get(min.column), get(max.column))),
+                                          as.integer(max(get(min.column), get(max.column)))))]
         }
 
         ## gather contacts for sampled participants
@@ -479,11 +480,11 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         {
             if (counts) {
                 warning("'split=TRUE' does not make sense with 'counts=TRUE'; ",
-                        "will not make matrix symmetric.")
+                        "will not split the contact matrix.")
             } else if (na.present)
             {
                 warning("'split=TRUE' does not work with missing data; ",
-                        "will not make matrix symmetric\n",
+                        "will not split contact.matrix.\n",
                         warning.suggestion)
             } else
             {
