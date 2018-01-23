@@ -124,12 +124,11 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                     }
                 }
             }
-            missing_all <-
-                intersect(missing_columns[["participants"]], missing_columns[["contacts"]])
-            if (length(missing_all) > 0) {
-                warning("filter column(s) ", paste(missing_all), " not found")
-            }
-         }
+        }
+        missing_all <- do.call(intersect, missing_columns)
+        if (length(missing_all) > 0) {
+            warning("filter column(s) ", paste(missing_all), " not found")
+        }
     }
 
     if (missing.participant.age == "remove" &&
