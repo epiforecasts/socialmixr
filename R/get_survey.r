@@ -164,22 +164,33 @@ get_survey <- function(survey, quiet=FALSE, ...)
 
               unique_main_survey_ids <- unique(main_surveys[[type]][, common_id, with=FALSE])
               unique_additional_survey_ids <- unique(contact_data[[file]][, common_id, with=FALSE])
-              max_rows <- nrow(unique_main_survey_ids)
 
-              id_overlap <- merge(unique_main_survey_ids, unique_additional_survey_ids, all.x=TRUE)
-
-              if (nrow(id_overlap) < max_rows)
+              if (nrow(unique_main_survey_ids) < nrow(main_surveys[[type]]) &&
+                    nrow(unique_additional_survey_ids) <
+                    nrow(contact_data[[file]]))
               {
-                warning(ifelse(nrow(id_overlap) == 0, "No matching value",
-                               paste0("Only ", nrow(id_overlap) ," matching value",
-                                      ifelse(nrow(id_overlap) > 1, "s", ""))), " in ",
-                        paste0("'", common_id, "'", collapse=", "),
-                        " column", ifelse(length(common_id) > 1, "s", ""),
-                        " when pulling ", basename(file), " into '", type, "' survey.")
+                warning("Cannot merge ", basename(file), " into '", type, "' survey",
+                        " because the ID column", ifelse(length(common_id) > 1, "s", ""),
+                        " ", paste0("'", common_id, "'", collapse=", "),
+                        " cannot be uniquely matched.")
+                do_merge <- FALSE
               }
 
               if (do_merge)
               {
+                id_overlap <- merge(unique_main_survey_ids,
+                                    unique_additional_survey_ids, all.x=TRUE, by=common_id)
+
+                if (nrow(id_overlap) < nrow(unique_main_survey_ids))
+                {
+                  warning(ifelse(nrow(id_overlap) == 0, "No matching value",
+                                 paste0("Only ", nrow(id_overlap) ," matching value",
+                                        ifelse(nrow(id_overlap) > 1, "s", ""))), " in ",
+                          paste0("'", common_id, "'", collapse=", "),
+                          " column", ifelse(length(common_id) > 1, "s", ""),
+                          " when pulling ", basename(file), " into '", type, "' survey.")
+                }
+
                 duplicate_columns <-
                   setdiff(intersect(colnames(main_surveys[[type]]),
                                     colnames(contact_data[[file]])),
