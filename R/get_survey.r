@@ -36,11 +36,12 @@ get_survey <- function(survey, quiet=FALSE, ...)
         {
             if (length(survey) > 1) stop("if 'survey' is a number, it must be of length 1")
             ls <- list_surveys()
-            survey <- ls[id == survey]$doi
+            survey <- ls[id == survey]$url
         }
 
         if (is.character(survey))
         {
+            survey <- sub("^(https?:\\/\\/(dx\\.)?doi\\.org\\/|doi:)", "", survey)
             is.doi <- (length(survey) > 0) && all(grepl("^10.[0-9.]{4,}/[-._;()/:A-z0-9]+$", survey))
             if (is.doi && length(survey) > 1)
                 stop("if 'survey' is a DOI, it must be of length 1")
@@ -48,7 +49,7 @@ get_survey <- function(survey, quiet=FALSE, ...)
 
         if (is.doi)
         {
-            doi_url <- paste0("http://dx.doi.org/", survey)
+            doi_url <- paste0("https://doi.org/", survey)
             temp_body <- GET(doi_url, config = list(followlocation = TRUE))
             if (temp_body$status_code == 404) stop("DOI '", survey, "' not found")
 
