@@ -101,9 +101,15 @@ get_survey <- function(survey, quiet=FALSE, ...)
         main_surveys <- list()
         main_file <- c()
 
+        ## we have to fiddle the ID columns a bit -- most ID columns on Zenodo
+        ## end on _id, but 'sday' is an exception: "sday_id" is not an ID column
+        ## across multiple tables, but "sday_part_number" and "wave" are instead 
+        additional_id_identifiers <- c("sday_part_number", "wave")
+        non_id_identifiers <- "sday_id"
+        id_regex <- paste0("^(", paste(additional_id_identifiers, collapse="|"), "|.*_id)$")
         file_id_cols <- lapply(seq_along(files), function(x)
         {
-          grep("_id$", colnames(contact_data[[x]]), value=TRUE)
+            setdiff(grep(id_regex, colnames(contact_data[[x]]), value=TRUE), non_id_identifiers)
         })
         names(file_id_cols) <- files
 
@@ -153,13 +159,14 @@ get_survey <- function(survey, quiet=FALSE, ...)
             for (file in merge_files)
             {
               do_merge <- TRUE
-              max_rows <- nrow(main_surveys[[type]])
 
               common_id <- intersect(file_id_cols[[file]], colnames(main_surveys[[type]]))
 
-              id_overlap <-
-                  merge(main_surveys[[type]][, common_id, with=FALSE],
-                        contact_data[[file]][, common_id, with=FALSE])
+              unique_main_survey_ids <- unique(main_surveys[[type]][, common_id, with=FALSE])
+              unique_additional_survey_ids <- unique(contact_data[[file]][, common_id, with=FALSE])
+              max_rows <- nrow(unique_main_survey_ids)
+
+              id_overlap <- merge(unique_main_survey_ids, unique_additional_survey_ids, all.x=TRUE)
 
               if (nrow(id_overlap) < max_rows)
               {
@@ -169,11 +176,6 @@ get_survey <- function(survey, quiet=FALSE, ...)
                         paste0("'", common_id, "'", collapse=", "),
                         " column", ifelse(length(common_id) > 1, "s", ""),
                         " when pulling ", basename(file), " into '", type, "' survey.")
-              } else if (nrow(id_overlap) > max_rows)
-              {
-                warning("Skipping ", basename(file), " as it has too many entries to merge ",
-                        "into '", type, "' survey.")
-                do_merge <- FALSE
               }
 
               if (do_merge)
