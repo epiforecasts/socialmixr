@@ -44,6 +44,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     contact.age.group <- NULL
     proportion <- NULL
 
+    surveys <- c("participants", "contacts")
+
     dot.args <- list(...)
     unknown.args <- setdiff(names(dot.args), union(names(formals(check.survey)), names(formals(pop_age))))
     if (length(unknown.args) > 0)
@@ -109,7 +111,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     ## check if any filters have been requested
     if (!missing(filter)) {
         missing_columns <- list()
-        for (table in c("participants", "contacts"))
+        for (table in surveys)
         {
             if (nrow(survey[[table]]) > 0)
             {
@@ -311,15 +313,20 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                               factor(age.group, levels=levels(age.group), labels=age.groups)]
 
     survey$participants[, weight := 1]
+    survey$contacts[, weight := 1]
     ## assign weights to participants, to account for weekend/weekday variation
     if (weigh.dayofweek) {
-        if ("dayofweek" %in% colnames(survey$participants))
+        found.dayofweek <- FALSE
+        for (table in surveys)
         {
-            survey$participants[dayofweek %in% 1:5,
-                         weight := 5 / nrow(survey$participants[dayofweek %in% 1:5])]
-            survey$participants[!(dayofweek %in% 1:5),
-                         weight := 2 / nrow(survey$participants[!(dayofweek %in% 1:5)])]
-        } else
+            if ("dayofweek" %in% colnames(survey[[table]]))
+            {
+                survey[[table]][dayofweek %in% 1:5, weight := 5]
+                survey[[table]][!(dayofweek %in% 1:5), weight := 2]
+                found.dayofweek <- TRUE
+            }
+        }
+        if (!found.dayofweek)
         {
             warning("'weigh.dayofweek' is TRUE, but no 'dayofweek' column in the data. ",
                     "Will ignore.")
@@ -363,7 +370,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         ## gather contacts for sampled participants
         contacts.sample <-
             data.table(merge(survey$contacts, part.sample, by = columns[["id"]], all = F,
-                             allow.cartesian = T))
+                             allow.cartesian = T, suffixes=c(".cont", ".part")))
+        contacts.sample[, weight := weight.cont * weight.part]
 
         ## sample contacts
         if (missing.contact.age == "sample" &&
@@ -419,6 +427,10 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 contacts.sample[, weight := weight * get(weights[i])]
             }
         }
+        ## normalise weights
+        contacts.sample[, weight := weight / sum(weight) * nrow(contacts.sample)]
+
+        ## normalise weights
 
         ## calculate weighted contact matrix
         weighted.matrix <- xtabs(data = contacts.sample,
