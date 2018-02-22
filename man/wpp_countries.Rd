@@ -13,5 +13,5 @@ list of countries
 Uses the World Population Prospects data from the \code{wpp2015} package
 }
 \examples{
-wpp_countries()
+\dontrun{wpp_countries()}
 }
