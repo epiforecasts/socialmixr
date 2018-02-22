@@ -43,6 +43,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     dayofweek <- NULL
     contact.age.group <- NULL
     proportion <- NULL
+    participants <- NULL
 
     dot.args <- list(...)
     unknown.args <- setdiff(names(dot.args), union(names(formals(check.survey)), names(formals(pop_age))))
