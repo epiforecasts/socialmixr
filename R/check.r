@@ -57,7 +57,7 @@ check.survey <- function(x, columns=FALSE, quiet=FALSE, error=FALSE, id.column="
                   (min.column %in% colnames(x$contacts) && max.column %in% colnames(x$contacts))))
             {
                 error_func("contact age column '", contact.age.column,
-                           "' or columsn to estimate contact age ('", exact.column, "' or '",
+                           "' or columns to estimate contact age ('", exact.column, "' or '",
                            min.column, "' and '", max.column, "') do not exist in the contact data frame")
             }
             success <- FALSE

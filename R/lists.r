@@ -21,14 +21,14 @@ list_surveys <- function()
                                 metadataPrefix="oai_datacite",
                                 set="user-social_contact_data"))
 
+    relations <- grep("^relation(\\.|$)", colnames(record_list), value=TRUE)
+    DOIs <- apply(record_list, 1, function(x) grep("^doi:", x[relations], value=TRUE)[1])
+    record_list <- record_list[, doi := sub("^doi:", "", DOIs)]
+    record_list <-
+      record_list[record_list[, .I[datestamp == max(datestamp)], by=doi]$V1]
     record_list <- record_list[, id := seq_len(nrow(record_list))]
-    multiple_records <- record_list[!is.na(relation.1)]
-    multiple_records <-
-      multiple_records[multiple_records[, .I[datestamp == max(datestamp)], by=relation.1]$V1]
-    record_list <- rbind(record_list[is.na(relation.1)], multiple_records)
     setkey(record_list, id)
-    record_list <- record_list[, id := seq_len(nrow(record_list))]
-    return(record_list[, list(id, doi = identifier.1, title, creator, url=identifier.3)])
+    return(record_list[, list(id, date, title, creator, url=paste0("https://doi.org/", doi))])
 }
 
 ##' List all countries contained in a survey
