@@ -10,7 +10,6 @@
 ##' @importFrom utils as.person read.csv
 ##' @importFrom stringr str_extract_all
 ##' @importFrom XML xpathSApply htmlParse xmlValue
-##' @importFrom countrycode countrycode
 ##' @examples
 ##' list_surveys()
 ##' peru_survey <- get_survey(1)

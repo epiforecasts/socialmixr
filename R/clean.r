@@ -28,6 +28,11 @@ clean.survey <- function(x, country.column="country", ...)
         x$participants[, paste(country.column) :=
                                     factor(countrycode(get(country.column),
                                                        "iso2c", "country.name"))]
+      } else
+      {
+        x$participants[, paste(country.column) :=
+                           factor(countrycode(get(country.column),
+                                              "country.name", "country.name"))]
       }
     }
 
