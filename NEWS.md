@@ -1,3 +1,8 @@
+# socialmixr 0.1.9999
+
+* improved handling of DOIs
+* fixed usage of weights
+ 
 # socialmixr 0.1.2
 
 * improved downloading form Zenodo; only a single download is used now
