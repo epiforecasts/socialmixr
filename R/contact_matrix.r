@@ -431,6 +431,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         ## normalise weights
         contacts.sample[, weight := weight / sum(weight) * nrow(contacts.sample)]
 
+
         ## normalise weights
 
         ## calculate weighted contact matrix
@@ -496,7 +497,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                         warning.suggestion)
             } else
             {
-                ## set c_{ij} N_j and c_{ji} N_i (which should both be equal) to
+                ## set c_{ij} N_i and c_{ji} N_j (which should both be equal) to
                 ## 0.5 * their sum; then c_{ij} is that sum / N_i
                 normalised.weighted.matrix <- diag(survey.pop$population) %*% weighted.matrix
                 weighted.matrix <- 0.5 * diag(1/survey.pop$population) %*%
@@ -509,7 +510,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
 
         if (split)
         {
-            if (counts) {
+            if (counts)
+            {
                 warning("'split=TRUE' does not make sense with 'counts=TRUE'; ",
                         "will not split the contact matrix.")
             } else if (na.present)
@@ -522,23 +524,20 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 ## get rid of name but preserve row and column names
                 weighted.matrix <- unname(weighted.matrix)
 
-                if (counts) {
-                    warning("'split=TRUE' does not make sense with 'counts=TRUE'; ",
-                            "will not make matrix symmetric.")
-                } else
-                {
-                    nb.contacts <- apply(weighted.matrix, 1, sum)
-                    spectrum.matrix <- weighted.matrix
-                    spectrum.matrix[is.na(spectrum.matrix)] <- 0
-                    spectrum <- as.numeric(eigen(spectrum.matrix, only.values = TRUE)$values[1])
-                    ret[[i]][["normalisation"]] <- spectrum
+                norm.vector <- xtabs(data = part.sample, formula = weight ~ age.group, addNA = TRUE)
+                nb.contacts <- apply(weighted.matrix, 1, sum)
+                mean.contacts <- sum(norm.vector*nb.contacts)/sum(norm.vector)
+                spectrum.matrix <- weighted.matrix
+                spectrum.matrix[is.na(spectrum.matrix)] <- 0
+                spectrum <- as.numeric(eigen(spectrum.matrix, only.values = TRUE)$values[1])
+                ret[[i]][["mean.contacts"]] <- mean.contacts
+                ret[[i]][["normalisation"]] <- spectrum/mean.contacts
 
-                    age.proportions <- survey.pop$population / sum(survey.pop$population)
-                    weighted.matrix <-
-                        diag(1 / nb.contacts) %*% weighted.matrix %*% diag(1 / age.proportions)
-                    nb.contacts <- nb.contacts / spectrum
-                    ret[[i]][["contacts"]] <- nb.contacts
-                }
+                age.proportions <- survey.pop$population / sum(survey.pop$population)
+                weighted.matrix <-
+                    diag(1 / nb.contacts) %*% weighted.matrix %*% diag(1 / age.proportions)
+                nb.contacts <- nb.contacts / spectrum
+                ret[[i]][["contacts"]] <- nb.contacts
             }
         }
 
@@ -562,10 +561,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     setnames(part.pop, c("lower.age.limit", "participants"))
     part.pop[, proportion := participants / sum(participants)]
 
-    if (length(ret) > 1)
-        return_value <- list(matrices = ret)
-    else if (length(ret) == 1)
-        return_value <- ret[[1]]
+    if (length(ret) > 1) return_value <- list(matrices = ret)
+    else if (length(ret) == 1) return_value <- ret[[1]]
     else return_value <- NULL
 
     if (!is.null(return_value)) {
