@@ -519,6 +519,9 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 warning("'split=TRUE' does not work with missing data; ",
                         "will not split contact.matrix.\n",
                         warning.suggestion)
+                ret[[i]][["mean.contacts"]] <- NA
+                ret[[i]][["normalisation"]] <- NA
+                ret[[i]][["contacts"]] <- rep(NA, nrow(weighted.matrix))
             } else
             {
                 ## get rid of name but preserve row and column names
