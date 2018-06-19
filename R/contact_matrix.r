@@ -144,7 +144,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         }
         survey$participants <-
             survey$participants[!is.na(get(columns[["participant.age"]])) &
-                                columns[["participant.age"]] >=  min(age.limits)]
+                                get(columns[["participant.age"]]) >=  min(age.limits)]
     }
 
     ## set contact age if it's not in the data
@@ -176,7 +176,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     {
         missing.age.id <-
             survey$contacts[is.na(get(columns[["contact.age"]])) |
-                            columns[["contact.age"]] < min(age.limits),
+                            get(columns[["contact.age"]]) < min(age.limits),
                             get(columns[["id"]])]
         survey$participants <- survey$participants[!(get(columns[["id"]]) %in% missing.age.id)]
     }
