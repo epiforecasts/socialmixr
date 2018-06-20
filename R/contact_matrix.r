@@ -142,7 +142,9 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
             message("Removing participants without age information. ",
                     "To change this behaviour, set the 'missing.participant.age' option")
         }
-        survey$participants <- survey$participants[!is.na(get(columns[["participant.age"]]))]
+        survey$participants <-
+            survey$participants[!is.na(get(columns[["participant.age"]])) &
+                                get(columns[["participant.age"]]) >=  min(age.limits)]
     }
 
     ## set contact age if it's not in the data
@@ -173,7 +175,9 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         nrow(survey$contacts[is.na(get(columns[["contact.age"]]))]) > 0)
     {
         missing.age.id <-
-            survey$contacts[is.na(get(columns[["contact.age"]])), get(columns[["id"]])]
+            survey$contacts[is.na(get(columns[["contact.age"]])) |
+                            get(columns[["contact.age"]]) < min(age.limits),
+                            get(columns[["id"]])]
         survey$participants <- survey$participants[!(get(columns[["id"]]) %in% missing.age.id)]
     }
 
@@ -432,6 +436,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         contacts.sample[, weight := weight / sum(weight) * nrow(contacts.sample)]
         part.sample[, weight := weight / sum(weight) * nrow(part.sample)]
 
+
         ## normalise weights
 
         ## calculate weighted contact matrix
@@ -497,7 +502,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                         warning.suggestion)
             } else
             {
-                ## set c_{ij} N_j and c_{ji} N_i (which should both be equal) to
+                ## set c_{ij} N_i and c_{ji} N_j (which should both be equal) to
                 ## 0.5 * their sum; then c_{ij} is that sum / N_i
                 normalised.weighted.matrix <- diag(survey.pop$population) %*% weighted.matrix
                 weighted.matrix <- 0.5 * diag(1/survey.pop$population) %*%
