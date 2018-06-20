@@ -53,6 +53,7 @@ pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.col
             pop <- pop[, c(pop.age.column, pop.column), with=FALSE]
         }
 
+        pop <- pop[get(pop.age.column) >=  min(age.limits)]
         pop <- pop[, paste(pop.age.column) := reduce_agegroups(get(pop.age.column), age.limits)]
         pop <- pop[, list(..population = sum(get(pop.column))), by = pop.age.column]
         setnames(pop, "..population", pop.column)
