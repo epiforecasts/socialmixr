@@ -135,7 +135,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     }
 
     if (missing.participant.age == "remove" &&
-        nrow(survey$participants[is.na(get(columns[["participant.age"]]))]) > 0)
+        nrow(survey$participants[is.na(get(columns[["participant.age"]])) |
+                                 get(columns[["participant.age"]]) <  min(age.limits)]) > 0)
     {
         if (!quiet && !missing.participant.age.set)
         {
@@ -172,7 +173,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     }
 
     if (missing.contact.age == "remove" &&
-        nrow(survey$contacts[is.na(get(columns[["contact.age"]]))]) > 0)
+        nrow(survey$contacts[is.na(get(columns[["contact.age"]])) |
+                             get(columns[["contact.age"]]) < min(age.limits)]) > 0)
     {
         missing.age.id <-
             survey$contacts[is.na(get(columns[["contact.age"]])) |
