@@ -9,7 +9,8 @@ contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
   estimated.contact.age = c("mean", "sample", "missing"),
   missing.participant.age = c("remove", "keep"),
   missing.contact.age = c("remove", "sample", "keep"), weights = c(),
-  weigh.dayofweek = FALSE, quiet = FALSE, ...)
+  weigh.dayofweek = FALSE, sample.all.age.groups = FALSE, quiet = FALSE,
+  ...)
 }
 \arguments{
 \item{survey}{a \code{\link{survey}} object}
@@ -41,6 +42,8 @@ contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
 \item{weights}{columns that contain weights}
 
 \item{weigh.dayofweek}{whether to weigh the day of the week (weight 5 for weekdays ans 2 for weekends)}
+
+\item{sample.all.age.groups}{what to do if bootstrapping fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead}
 
 \item{quiet}{if set to TRUE, output is reduced}
 
