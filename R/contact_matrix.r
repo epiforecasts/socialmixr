@@ -172,7 +172,59 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         }
     }
 
-    if (missing.contact.age == "remove" &&
+    ## sample estimated contact ages
+    if (estimated.contact.age == "sample")
+    {
+        survey$contacts[is.na(get(columns[["contact.age"]])) &
+                 !is.na(get(min.column)) & !is.na(get(max.column)),
+                 paste(columns[["contact.age"]]) :=
+                     as.integer(runif(.N,
+                                      as.integer(min(get(min.column),
+                                                     get(max.column))),
+                                      as.integer(max(get(min.column),
+                                                     get(max.column)))))]
+    }
+
+    ## sample contacts
+    if (missing.contact.age == "sample" &&
+        nrow(survey$contacts[is.na(get(columns[["contact.age"]]))]) > 0)
+    {
+        if (!quiet && n == 1 && !missing.contact.age.set)
+        {
+            message("Sampling the age of contacts with missing age from other ",
+                    "participants of the same age group.\n  To change this behaviour, set the ",
+                    "'missing.contact.age' option")
+        }
+        for (this.age.group in
+             unique(survey$contacts[is.na(get(columns[["contact.age"]])), age.group]))
+        {
+            ## first, deal with missing age
+            if (nrow(survey$contacts[!is.na(get(columns[["contact.age"]])) &
+                              age.group == this.age.group]) > 0)
+            {
+                ## some contacts in the age group have an age, sample from these
+                survey$contacts[is.na(get(columns[["contact.age"]])) &
+                         age.group == this.age.group,
+                         paste(columns[["contact.age"]]) :=
+                             sample(survey$contacts[!is.na(get(columns[["contact.age"]])) &
+                                             age.group == this.age.group,
+                                             get(columns[["contact.age"]])],
+                                    size = .N,
+                                    replace = TRUE)]
+            } else {
+                ## no contacts in the age group have an age, sample uniformly between limits
+                min.contact.age <-
+                    survey$contacts[, min(get(columns[["contact.age"]]), na.rm=TRUE)]
+                max.contact.age <-
+                    survey$contacts[, max(get(columns[["contact.age"]]), na.rm=TRUE)]
+                survey$contacts[is.na(get(columns[["contact.age"]])) &
+                         age.group == this.age.group,
+                         paste(columns[["contact.age"]]) :=
+                             as.integer(floor(runif(.N, min = min.contact.age,
+                                                    max = max.contact.age + 1)))]
+            }
+        }
+    } else if (missing.contact.age == "remove" &&
         nrow(survey$contacts[is.na(get(columns[["contact.age"]])) |
                              get(columns[["contact.age"]]) < min(age.limits)]) > 0)
     {
@@ -319,6 +371,15 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     survey$participants[, age.group :=
                               factor(age.group, levels=levels(age.group), labels=age.groups)]
 
+    ## set contact age groups
+    max.contact.age <-
+        survey$contacts[, max(get(columns[["contact.age"]]), na.rm = TRUE) + 1]
+    survey$contacts[, contact.age.group :=
+                          cut(get(columns[["contact.age"]]),
+                              breaks = union(age.limits, max.contact.age),
+                              labels = age.groups,
+                              right = FALSE)]
+
     survey$participants[, weight := 1]
     survey$contacts[, weight := 1]
     ## assign weights to participants, to account for weekend/weekday variation
@@ -372,67 +433,6 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     contacts[, weight := weight.cont * weight.part]
     contacts[, weight := weight / sum(weight) * .N]
     setkeyv(contacts, columns[["id"]])
-
-    ## sample estimated contact ages
-    if (estimated.contact.age == "sample")
-    {
-        contacts[!is.na(get(min.column)) & !is.na(get(max.column)),
-                 paste(columns[["contact.age"]]) :=
-                     as.integer(runif(.N,
-                                      as.integer(min(get(min.column),
-                                                     get(max.column))),
-                                      as.integer(max(get(min.column),
-                                                     get(max.column)))))]
-    }
-
-    ## sample contacts
-    if (missing.contact.age == "sample" &&
-        nrow(contacts[is.na(get(columns[["contact.age"]]))]) > 0)
-    {
-        if (!quiet && n == 1 && !missing.contact.age.set)
-        {
-            message("Sampling the age of contacts with missing age from other ",
-                    "participants of the same age group.\n  To change this behaviour, set the ",
-                    "'missing.contact.age' option")
-        }
-        for (this.age.group in
-             unique(contacts[is.na(get(columns[["contact.age"]])), age.group]))
-        {
-            ## first, deal with missing age
-            if (nrow(contacts[!is.na(get(columns[["contact.age"]])) &
-                              age.group == this.age.group]) > 0)
-            {
-                ## some contacts in the age group have an age, sample from these
-                contacts[is.na(get(columns[["contact.age"]])) &
-                         age.group == this.age.group,
-                         paste(columns[["contact.age"]]) :=
-                             sample(contacts[!is.na(get(columns[["contact.age"]])) &
-                                             age.group == this.age.group,
-                                             get(columns[["contact.age"]])],
-                                    size = .N,
-                                    replace = TRUE)]
-            } else {
-                ## no contacts in the age group have an age, sample uniformly between limits
-                min.contact.age <-
-                    contacts[, min(get(columns[["contact.age"]]), na.rm=TRUE)]
-                max.contact.age <-
-                    contacts[, max(get(columns[["contact.age"]]), na.rm=TRUE)]
-                contacts[is.na(get(columns[["contact.age"]])) &
-                         age.group == this.age.group,
-                         paste(columns[["contact.age"]]) :=
-                             as.integer(floor(runif(.N, min = min.contact.age,
-                                                    max = max.contact.age + 1)))]
-            }
-        }
-    }
-
-    ## set contact age groups
-    max.contact.age <- contacts[, max(get(columns[["contact.age"]]), na.rm = TRUE) + 1]
-    contacts[, contact.age.group :=
-                   cut(get(columns[["contact.age"]]),
-                       breaks = union(age.limits, max.contact.age),
-                       labels = age.groups,
-                       right = FALSE)]
 
     ret <- list()
     for (i in seq_len(n))
