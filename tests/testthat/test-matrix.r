@@ -15,14 +15,18 @@ contacts <- lapply(options, function(x) {do.call(contact_matrix, x)})
 
 test_that("contact matrix exists and is square",
 {
-  expect_true(all(sapply(contacts, function(x) {length(unique(dim(x[["matrix"]]))) == 1})))
-  expect_true(all(sapply(contacts, function(x) {prod(dim(x[["matrix"]])) > 0})))
+  expect_true(all(sapply(contacts[c(1, 3)], function(x) {length(unique(dim(x[["matrix"]]))) == 1})))
+  expect_true(all(sapply(contacts[c(2)], function(x) {length(unique(dim(x[["matrices"]][[1]][["matrix"]]))) == 1})))
+  expect_true(all(sapply(contacts[c(1, 3)], function(x) {prod(dim(x[["matrix"]])) > 0})))
+  expect_true(all(sapply(contacts[c(2)], function(x) {prod(dim(x[["matrices"]][[1]][["matrix"]])) > 0})))
 })
 
 test_that("contact matrix is numeric",
 {
-  expect_true(all(sapply(contacts, function(x) {is.numeric(x[["matrix"]])})))
-  expect_false(any(is.na(sapply(contacts, function(x) {is.numeric(x[["matrix"]])}))))
+  expect_true(all(sapply(contacts[c(1, 3)], function(x) {is.numeric(x[["matrix"]])})))
+  expect_true(all(sapply(contacts[c(2)], function(x) {is.numeric(x[["matrices"]][[1]][["matrix"]])})))
+  expect_false(any(is.na(sapply(contacts[c(1, 3)], function(x) {is.numeric(x[["matrix"]])}))))
+  expect_false(any(is.na(sapply(contacts[c(2)], function(x) {is.numeric(x[["matrices"]][[1]][["matrix"]])}))))
   expect_true(is.numeric(contacts[[3]]$contacts))
   expect_true(is.numeric(contacts[[3]]$normalisation))
 })
