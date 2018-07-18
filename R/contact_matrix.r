@@ -340,19 +340,24 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         }
     }
 
+    ## further weigh contacts if columns are specified
+    if (length(weights) > 0) {
+        for (i in 1:length(weights)) {
+            for (table in surveys) {
+                if (weights[i] %in% colnames(survey[[table]]))
+                {
+                    survey[[table]][, weight := weight * get(weights[i])]
+                }
+            }
+        }
+    }
+
     if (n > 1)
     {
         if (!bootstrap)
         {
             warning("n > 1 does not make sense if not bootstrapping. Will return just one sample.")
             n <- 1
-        }
-    }
-
-    ## further weigh contacts if columns are specified
-    if (length(weights) > 0) {
-        for (i in 1:length(weights)) {
-            survey$contacts[, weight := weight * get(weights[i])]
         }
     }
 
