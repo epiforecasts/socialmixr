@@ -354,7 +354,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         merge(survey$contacts, survey$participants, by = columns[["id"]], all = F,
               allow.cartesian = T, suffixes=c(".cont", ".part"))
     contacts[, weight := weight.cont * weight.part]
-    participant_ids <- unique(contacts$part_id)
+    participant_ids <- unique(contacts[[columns[["id"]]]])
 
     ## sample estimated contact ages
     if (estimated.contact.age == "sample")
@@ -427,8 +427,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     ret <- list()
     for (i in seq_len(n))
     {
-        contacts[, sampled.weight := 0]
-        survey$participants[, sampled.weight := 0]
+        if ("sampled.weight" %in% colnames(contacts)) contacts[, sampled.weight := NULL]
+        if ("sampled.weight" %in% colnames(survey$participants)) survey$participants[, sampled.weight := NULL]
 
         if (bootstrap)
         {
@@ -438,8 +438,14 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 sampled.participants <- sample(participant_ids, replace=T)
                 good.sample <- !sample.all.age.groups ||
                     (length(setdiff(age.limits,
-                                    unique(survey$participants[part_id %in% sampled.participants,
+                                    unique(survey$participants[get(columns[["id"]]) %in% sampled.participants,
                                                                lower.age.limit]))) == 0)
+                sample.table <-
+                    data.table(id=sampled.participants, sampled.weight=1)
+                sample.table <- sample.table[, list(sampled.weight=sum(sampled.weight)), by=id]
+                setnames(sample.table, "id", columns[["id"]])
+                contacts <- merge(contacts, sample.table, all.x=TRUE)
+                survey$participants <- merge(survey$participants, sample.table, all.x=TRUE)
             }
         } else
         {
@@ -449,9 +455,11 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
 
         ## normalise weights
         contacts[part_id %in% sampled.participants,
-                 sampled.weight := weight / sum(weight) * .N]
+                 sampled.weight := sampled.weight / sum(sampled.weight) * .N]
+        contacts[is.na(sampled.weight), sampled.weight := 0]
         survey$participants[part_id %in% sampled.participants,
-                            sampled.weight := weight / sum(weight) * .N]
+                            sampled.weight := sampled.weight / sum(sampled.weight) * .N]
+        survey$participants[is.na(sampled.weight), sampled.weight := 0]
 
         ## calculate weighted contact matrix
         weighted.matrix <-
