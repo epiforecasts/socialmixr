@@ -427,8 +427,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     ret <- list()
     for (i in seq_len(n))
     {
-        if ("sampled.weight" %in% colnames(contacts)) contacts[, sampled.weight := NULL]
-        if ("sampled.weight" %in% colnames(survey$participants)) survey$participants[, sampled.weight := NULL]
+        contacts[, sampled.weight := 0]
+        survey$participants[, sampled.weight := 0]
 
         if (bootstrap)
         {
@@ -441,11 +441,10 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                                     unique(survey$participants[get(columns[["id"]]) %in% sampled.participants,
                                                                lower.age.limit]))) == 0)
                 sample.table <-
-                    data.table(id=sampled.participants, sampled.weight=1)
-                sample.table <- sample.table[, list(sampled.weight=sum(sampled.weight)), by=id]
-                setnames(sample.table, "id", columns[["id"]])
-                contacts <- merge(contacts, sample.table, all.x=TRUE)
-                survey$participants <- merge(survey$participants, sample.table, all.x=TRUE)
+                    data.table(id=sampled.participants, weight=1)
+                sample.table <- sample.table[, list(weight=sum(weight)), by=id]
+                contacts[get(columns[["id"]]) %in% sample.table$id, sampled.weight := sample.table$weight]
+                survey$participants[get(columns[["id"]]) %in% sample.table$id, sampled.weight := sample.table$weight]
             }
         } else
         {
@@ -456,10 +455,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         ## normalise weights
         contacts[part_id %in% sampled.participants,
                  sampled.weight := sampled.weight / sum(sampled.weight) * .N]
-        contacts[is.na(sampled.weight), sampled.weight := 0]
         survey$participants[part_id %in% sampled.participants,
                             sampled.weight := sampled.weight / sum(sampled.weight) * .N]
-        survey$participants[is.na(sampled.weight), sampled.weight := 0]
 
         ## calculate weighted contact matrix
         weighted.matrix <-
