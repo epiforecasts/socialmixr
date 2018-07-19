@@ -148,14 +148,14 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                                 get(columns[["participant.age"]]) >=  min(age.limits)]
     }
 
+    exact.column <- paste(columns[["contact.age"]], "exact", sep="_")
+    min.column <- paste(columns[["contact.age"]], "est_min", sep="_")
+    max.column <- paste(columns[["contact.age"]], "est_max", sep="_")
+
     ## set contact age if it's not in the data
     if (!(columns[["contact.age"]] %in% colnames(survey$contacts)))
     {
         survey$contacts[, paste(columns[["contact.age"]]) := NA_integer_]
-
-        exact.column <- paste(columns[["contact.age"]], "exact", sep="_")
-        min.column <- paste(columns[["contact.age"]], "est_min", sep="_")
-        max.column <- paste(columns[["contact.age"]], "est_max", sep="_")
 
         if (exact.column %in% colnames(survey$contacts))
         {
