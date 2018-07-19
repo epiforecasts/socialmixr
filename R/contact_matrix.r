@@ -173,7 +173,9 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     }
 
     ## sample estimated contact ages
-    if (estimated.contact.age == "sample")
+    if (estimated.contact.age == "sample" &&
+        get(min.column) %in% colnames(survey$contacts) &&
+        get(max.column) %in% colnames(survey$contacts))
     {
         survey$contacts[is.na(get(columns[["contact.age"]])) &
                  !is.na(get(min.column)) & !is.na(get(max.column)),
