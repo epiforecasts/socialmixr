@@ -77,3 +77,14 @@ test_that("warning is thrown if missing data exist",
   expect_warning(contact_matrix(survey=polymod, missing.contact.age = "keep", symmetric = TRUE), "missing.contact.age")
   expect_warning(contact_matrix(survey=polymod, split = TRUE), "age limits")
 })
+
+test_that("error is thrown if an unknown argument is passed",
+{
+    expect_error(contact_matrix(dummy="test"), "Unknown argument")
+})
+
+test_that("error is thrown if invalid age limits are passed",
+{
+    expect_error(contact_matrix(survey=polymod, age.limits = c(13,11)), "increasing")
+})
+
