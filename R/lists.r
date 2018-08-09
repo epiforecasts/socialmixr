@@ -15,6 +15,7 @@ list_surveys <- function()
     identifier.3 <- NULL
     title <- NULL
     creator <- NULL
+    doi <- NULL
 
     record_list <-
         data.table(list_records("https://zenodo.org/oai2d",

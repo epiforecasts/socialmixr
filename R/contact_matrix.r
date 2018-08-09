@@ -44,6 +44,12 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     dayofweek <- NULL
     contact.age.group <- NULL
     proportion <- NULL
+    weight.cont <- NULL
+    weight.part <- NULL
+    id <- NULL
+    sampled.weight <- NULL
+    bootstrap.weight <- NULL
+    participants <- NULL
 
     surveys <- c("participants", "contacts")
 
