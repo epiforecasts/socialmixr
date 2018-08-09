@@ -1,7 +1,10 @@
-# socialmixr 0.1.9999
+# socialmixr 0.1.3
 
 * improved handling of DOIs
 * fixed usage of weights
+* more consistency checks and tests
+* performance improvements when weighting
+* 'pop_age' can now be called by the user
  
 # socialmixr 0.1.2
 

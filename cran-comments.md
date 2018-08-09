@@ -1,11 +1,6 @@
-## Resubmission
-There was a NOTE about an example taking too long - this is very likely because of the duration of a call to countrycode::countrycode, which can't be fixed here. The example is no longer run.
-
-Install on r-oldrel fails - this is expected because the `addNA` argument to `xtabs` does not exist.
-
 ## Test environments
-* local macOS install (10.13.2), R 3.4.3
-* local linux install (Ubuntu 16.04), R 3.4.3
+* local macOS install (10.13.6), R 3.5.1
+* local linux install (Ubuntu 16.04), R 3.5.1
 * Ubuntu (Trusty) on travis-ci
 
 ## R CMD check results
