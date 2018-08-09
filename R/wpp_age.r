@@ -49,7 +49,15 @@ wpp_age <- function(countries, years)
 
         if (!missing(years))
         {
-            pop <- pop[year %in% years]
+            if (any(pop$year %in% years))
+            {
+                pop <- pop[year %in% years]
+            } else {
+                available.years <- unique(pop$year)
+                nearest.year <- available.years[which.min(abs(available.years - years))]
+                warning("Don't have population data available for ", years, ". Will return nearest year (", ").")
+                pop <- pop[year %in% nearest.year]
+            }
         }
 
         pop <- pop[, lower.age.limit := as.integer(sub("[-+].*$", "", age))]
