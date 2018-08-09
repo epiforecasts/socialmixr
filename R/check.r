@@ -58,8 +58,8 @@ check.survey <- function(x, columns=FALSE, quiet=FALSE, error=FALSE, id.column="
                 error_func("contact age column '", contact.age.column,
                            "' or columns to estimate contact age ('", exact.column, "' or '",
                            min.column, "' and '", max.column, "') do not exist in the contact data frame")
+                success <- FALSE
             }
-            success <- FALSE
         }
 
         if (!(country.column %in% colnames(x$participants)))
