@@ -24,7 +24,6 @@ check <- function(x, ...) UseMethod("check")
 check.survey <- function(x, columns=FALSE, quiet=FALSE, error=FALSE, id.column="part_id", participant.age.column="part_age", country.column="country", year.column="year", contact.age.column="cnt_age", ...)
 {
     if (error) error_func=stop else error_func=warning
-    if (!"survey" %in% class(x)) stop("'x' must be of type 'survey'")
     if (!is.data.frame(x$participants) || !is.data.frame(x$contacts))
         stop("The 'participants' and 'contacts' elements of 'x' must be data.frames")
 
@@ -68,17 +67,7 @@ check.survey <- function(x, columns=FALSE, quiet=FALSE, error=FALSE, id.column="
             error_func("country column '", country.column, "' does not exist ",
                  "in the participant data frame")
             success <- FALSE
-        } else
-        {
-            suppressWarnings(corrected_countries <-
-                               countrycode(x$participants[, get(country.column)],
-                                           "country.name", "country.name"))
-          failed_countries <- corrected_countries[is.na(corrected_countries)]
-          if (length(failed_countries) > 0)
-          {
-            stop("Mis-spelled countries: could not find ", paste(failed_countries, sep=", "), ".")
-          }
-         }
+        }
     }
 
     if (!quiet) {
