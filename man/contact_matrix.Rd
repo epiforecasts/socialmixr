@@ -5,12 +5,12 @@
 \title{Generate a contact matrix from diary survey data}
 \usage{
 contact_matrix(survey, countries = c(), survey.pop, age.limits, filter,
-  n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE,
-  estimated.contact.age = c("mean", "sample", "missing"),
-  missing.participant.age = c("remove", "keep"),
+  n = 1, bootstrap, counts = FALSE, symmetric = FALSE,
+  split = FALSE, estimated.contact.age = c("mean", "sample",
+  "missing"), missing.participant.age = c("remove", "keep"),
   missing.contact.age = c("remove", "sample", "keep"), weights = c(),
-  weigh.dayofweek = FALSE, sample.all.age.groups = FALSE, quiet = FALSE,
-  ...)
+  weigh.dayofweek = FALSE, sample.all.age.groups = FALSE,
+  quiet = FALSE, ...)
 }
 \arguments{
 \item{survey}{a \code{\link{survey}} object}
