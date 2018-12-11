@@ -171,30 +171,29 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         {
             survey$contacts[, paste(columns[["contact.age"]]) := get(exact.column)]
         }
-        if (min.column %in% colnames(survey$contacts) &&
-            max.column %in% colnames(survey$contacts) &&
-            estimated.contact.age != "missing")
-        {
-            survey$contacts[is.na(get(columns[["contact.age"]])) & !is.na(get(min.column)) &
-                            !is.na(get(max.column)),
-                            paste(columns[["contact.age"]]) := as.integer(rowMeans(.SD)),
-                            .SDcols=c(min.column, max.column)]
-        }
     }
 
     ## sample estimated contact ages
-    if (estimated.contact.age == "sample" &&
-        min.column %in% colnames(survey$contacts) &&
+    if (min.column %in% colnames(survey$contacts) &&
         max.column %in% colnames(survey$contacts))
     {
-        survey$contacts[is.na(get(columns[["contact.age"]])) &
-                 !is.na(get(min.column)) & !is.na(get(max.column)),
-                 paste(columns[["contact.age"]]) :=
-                     as.integer(runif(.N,
-                                      as.integer(min(get(min.column),
-                                                     get(max.column))),
-                                      as.integer(max(get(min.column),
-                                                     get(max.column)))))]
+        if (estimated.contact.age == "mean")
+        {
+            survey$contacts[is.na(get(columns[["contact.age"]])) &
+                            !is.na(get(min.column)) & !is.na(get(max.column)),
+                            paste(columns[["contact.age"]]) :=
+                                as.integer(rowMeans(.SD)),
+                            .SDcols=c(min.column, max.column)]
+        } else if (estimated.contact.age == "sample")
+        {
+            survey$contacts[is.na(get(columns[["contact.age"]])) &
+                            !is.na(get(min.column)) & !is.na(get(max.column)) &
+                            get(min.column) <= get(max.column),
+                            paste(columns[["contact.age"]]) :=
+                                as.integer(runif(.N,
+                                                 get(min.column),
+                                                 get(max.column)))]
+        }
     }
 
     if (missing.contact.age == "remove" &&
