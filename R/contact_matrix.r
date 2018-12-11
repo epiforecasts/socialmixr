@@ -107,7 +107,11 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     max.age <- max(survey$participants[, get(columns[["participant.age"]])], na.rm = TRUE) + 1
     if (missing(age.limits))
     {
-        age.limits <- c(0, seq_len(max.age-1))
+        all.ages <-
+            unique(as.integer(survey$participants[, get(columns[["participant.age"]])]))
+        all.ages <- all.ages[!is.na(all.ages)]
+        all.ages <- all.ages[order(all.ages)]
+        age.limits <- union(0, all.ages)
     }
     age.limits <- as.integer(age.limits)
     if (any(is.na(age.limits)) || any(diff(age.limits) <= 0))
