@@ -55,7 +55,7 @@ wpp_age <- function(countries, years)
             } else {
                 available.years <- unique(pop$year)
                 nearest.year <- available.years[which.min(abs(available.years - years))]
-                warning("Don't have population data available for ", years, ". Will return nearest year (", ").")
+                warning("Don't have population data available for ", years, ". Will return nearest year (", nearest.year, ").")
                 pop <- pop[year %in% nearest.year]
             }
         }
