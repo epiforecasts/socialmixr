@@ -40,16 +40,21 @@ get_survey <- function(survey, quiet=FALSE, ...)
 
         if (is.character(survey))
         {
+            if (length(survey) > 1)
+                stop("if 'survey' is a DOI or URL, it must be of length 1")
+
             survey <- sub("^(https?:\\/\\/(dx\\.)?doi\\.org\\/|doi:)", "", survey)
+            survey <- sub("#.*$", "", survey)
             is.doi <- (length(survey) > 0) && all(grepl("^10.[0-9.]{4,}/[-._;()/:A-z0-9]+$", survey))
-            if (is.doi && length(survey) > 1)
-                stop("if 'survey' is a DOI, it must be of length 1")
+            is.url <- (length(survey) > 0) && (is.doi || grepl("^https?:\\/\\/", survey))
+
+            if (is.doi) url <- paste0("https://doi.org/", survey) else url <- survey
+ 
         } else stop("'survey' must be an 'survey' object, integer or character")
 
-        if (is.doi)
+        if (is.url)
         {
-            doi_url <- paste0("https://doi.org/", survey)
-            temp_body <- GET(doi_url, config = list(followlocation = TRUE))
+            temp_body <- GET(url, config = list(followlocation = TRUE))
             if (temp_body$status_code == 404) stop("DOI '", survey, "' not found")
 
             parsed_body <- content(temp_body, as = "text", encoding = "UTF-8")
@@ -62,9 +67,10 @@ get_survey <- function(survey, quiet=FALSE, ...)
             reference <- list(title=parsed_cite$name,
                               bibtype="Misc",
                               author=authors,
-                              doi=parsed_cite$identifier,
-                              note=paste("Version", parsed_cite$version),
                               year=as.integer(substr(parsed_cite$datePublished, 1, 4)))
+            if ("version" %in% names(reference))
+                reference[["note"]] <- paste("Version", parsed_cite$version)
+            reference[[ifelse(is.doi, "doi", "url")]] <- survey
 
             data <- data.table(parsed_cite$distribution)
 
