@@ -607,7 +607,10 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
 
     if (exists("survey.year")) {
         survey.pop[, year := survey.year]
-        survey.pop <- survey.pop[, list(lower.age.limit, population,
+        survey.pop <-
+            merge(survey.pop,
+                  unique(survey$participants[, list(lower.age.limit, age.group)]))
+        survey.pop <- survey.pop[, list(age.group, population,
                                         proportion=population/sum(population), year)]
     }
 
@@ -618,7 +621,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         useNA <- "no"
     }
     part.pop <- data.table(table(survey$participants[, age.group], useNA = useNA))
-    setnames(part.pop, c("lower.age.limit", "participants"))
+    setnames(part.pop, c("age.group", "participants"))
     part.pop[, proportion := participants / sum(participants)]
 
     if (length(ret) > 1) return_value <- list(matrices = ret)
