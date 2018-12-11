@@ -62,8 +62,6 @@ wpp_age <- function(countries, years)
 
         pop <- pop[, lower.age.limit := as.integer(sub("[-+].*$", "", age))]
         pop <- pop[, list(country, lower.age.limit, year, population = (female + male) * 1000)]
-        ## convert to standardised country name
-        pop <- pop[, country := countrycode(country, "country.name", "country.name")]
     }
 
     return(as.data.frame(pop))
