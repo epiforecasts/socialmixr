@@ -7,11 +7,11 @@ participants_reduced$participants$added_weight <- 0.5
 participants_reduced$participants$country <- NULL
 
 options <-
-  list(test1 = list(survey = polymod, countries = "United Kingdom", counts = TRUE, weigh.dayofweek = TRUE, missing.contact.age = "sample", symmetric = TRUE),
-       test2 = list(n = 2, survey = participants_reduced, age.limits = c(0, 1), weights = "added_weight", symmetric = TRUE, weigh.dayofweek = TRUE),
+  list(test1 = list(survey = polymod, countries = "United Kingdom", counts = TRUE, weigh.dayofweek = TRUE, missing.contact.age = "sample", age.limits=seq(0, 80, by=5)),
+       test2 = list(n = 2, survey = polymod, age.limits = c(0, 5), weights = "added_weight", symmetric = TRUE),
        test3 = list(survey = polymod, survey.pop="Australia", countries = "GB", split=TRUE, filter = c(cnt_home = 1), age.limits=c(0, 5, 10), missing.contact.age = "remove", estimated.contact.age = "sample"))
 
-contacts <- lapply(options, function(x) {do.call(contact_matrix, x)})
+suppressMessages(contacts <- lapply(options, function(x) {do.call(contact_matrix, x)}))
 
 test_that("contact matrix exists and is square",
 {
@@ -75,7 +75,7 @@ test_that("warning is thrown if n > 1 and bootstrap = FALSE",
 test_that("warning is thrown if missing data exist",
 {
   expect_warning(contact_matrix(survey=polymod, missing.contact.age = "keep", symmetric = TRUE), "missing.contact.age")
-  expect_warning(contact_matrix(survey=polymod, split = TRUE), "age limits")
+  expect_warning(contact_matrix(survey=polymod, split = TRUE), "age groups")
 })
 
 test_that("error is thrown if an unknown argument is passed",
