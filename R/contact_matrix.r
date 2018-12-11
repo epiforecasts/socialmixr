@@ -581,11 +581,9 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 ## get rid of name but preserve row and column names
                 weighted.matrix <- unname(weighted.matrix)
 
-                norm.vector <-
-                    xtabs(data = sampled.participants,
-                          formula = sampled.weight ~ age.group, addNA = TRUE)
                 nb.contacts <- apply(weighted.matrix, 1, sum)
-                mean.contacts <- sum(norm.vector*nb.contacts)/sum(norm.vector)
+                mean.contacts <- sum(survey.pop$population*nb.contacts)/
+                    sum(survey.pop$population)
                 spectrum.matrix <- weighted.matrix
                 spectrum.matrix[is.na(spectrum.matrix)] <- 0
                 spectrum <- as.numeric(eigen(spectrum.matrix, only.values = TRUE)$values[1])
