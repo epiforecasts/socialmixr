@@ -80,6 +80,9 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     ## check if specific countries are requested (if a survey contains data from multiple countries)
     if (length(countries) > 0 && columns[["country"]] %in% colnames(survey$participants))
     {
+        survey$participants[, paste(columns[["country"]]) :=
+                                  countrycode(get(columns[["country"]]),
+                                              "country.name", "country.name")]
         if (all(nchar(countries) == 2))
         {
             suppressWarnings(corrected_countries <-
