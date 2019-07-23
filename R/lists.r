@@ -16,6 +16,7 @@ list_surveys <- function()
     title <- NULL
     creator <- NULL
     doi <- NULL
+    redirect <- NULL
 
     record_list <-
         data.table(list_records("https://zenodo.org/oai2d",
