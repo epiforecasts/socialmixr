@@ -9,7 +9,6 @@ clean <- function(x, ...) UseMethod("clean")
 ##' @param x A \code{\link{survey}} object
 ##' @param country.column the name of the country denoting the country in which the survey participant was interviewed
 ##' @param ... ignored
-##' @return invisibly returns a character vector of the relevant columns
 ##' @importFrom countrycode countrycode
 ##' @return a cleaned survey in the correct format
 ##' @examples
