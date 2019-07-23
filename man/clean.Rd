@@ -15,8 +15,6 @@
 \item{...}{ignored}
 }
 \value{
-invisibly returns a character vector of the relevant columns
-
 a cleaned survey in the correct format
 }
 \description{
