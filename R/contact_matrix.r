@@ -176,6 +176,14 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         }
     }
 
+    ## convert factors to integers
+    if (class(survey$contacts[[columns[["contact.age"]]]]) == "factor")
+    {
+        survey$contacts[, paste(columns[["contact.age"]]) :=
+                              as.integer(levels(get(columns[["contact.age"]])))
+                        [get(columns[["contact.age"]])]]
+    }
+
     ## sample estimated contact ages
     if (min.column %in% colnames(survey$contacts) &&
         max.column %in% colnames(survey$contacts))
@@ -443,7 +451,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     }
 
     ## set contact age groups
-           max.contact.age <-
+    max.contact.age <-
         survey$contacts[, max(get(columns[["contact.age"]]), na.rm = TRUE) + 1]
 
     contact.age.group.breaks <- part.age.group.breaks
