@@ -4,7 +4,7 @@ check <- function(x, ...) UseMethod("check")
 ##' @rdname check
 ##' @title Check contact survey data
 ##'
-##' @description Checks that a survey fulfilss all the requirements to work with the 'contact_matrix' function
+##' @description Checks that a survey fulfills all the requirements to work with the 'contact_matrix' function
 ##'
 ##' @param x A \code{\link{survey}} object
 ##' @param columns if given, a named character vector containing the name of the "id", "participant.age" and "contact.age" columns
