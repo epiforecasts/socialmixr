@@ -35,7 +35,7 @@
 invisibly returns a character vector of the relevant columns
 }
 \description{
-Checks that a survey fulfils all the requirements to work with the 'contact_matrix' function
+Checks that a survey fulfilss all the requirements to work with the 'contact_matrix' function
 }
 \examples{
 data(polymod)

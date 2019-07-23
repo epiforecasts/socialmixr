@@ -13,5 +13,7 @@ character vector of surveys
 List all surveys available for download
 }
 \examples{
-list_surveys()
+\dontrun{
+  list_surveys()
+}
 }
