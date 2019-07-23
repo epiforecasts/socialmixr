@@ -21,15 +21,16 @@ list_surveys <- function()
         data.table(list_records("https://zenodo.org/oai2d",
                                 metadataPrefix="oai_datacite",
                                 set="user-social_contact_data"))
-
+    ## remove duplicated records
     relations <- grep("^relation(\\.|$)", colnames(record_list), value=TRUE)
     DOIs <- apply(record_list, 1, function(x) grep("^doi:", x[relations], value=TRUE)[1])
     record_list <- record_list[, doi := sub("^doi:", "", DOIs)]
-    record_list <-
-      record_list[record_list[, .I[datestamp == max(datestamp)], by=doi]$V1]
+    record_list <- record_list[, url := paste0("https://doi.org/", doi)]
+    record_list[, redirect := httr::HEAD(url)$url, by=1:nrow(record_list)]
+    record_list <- record_list[identifier.3==redirect]
     record_list <- record_list[, id := seq_len(nrow(record_list))]
     setkey(record_list, id)
-    return(record_list[, list(id, date, title, creator, url=paste0("https://doi.org/", doi))])
+    return(record_list[, list(id, date, title, creator, url=url)])
 }
 
 ##' List all countries contained in a survey
