@@ -3,7 +3,9 @@
 ##' @return character vector of surveys
 ##' @importFrom oai list_records
 ##' @examples
-##' list_surveys()
+##' \dontrun{
+##'   list_surveys()
+##' }
 ##' @export
 list_surveys <- function()
 {

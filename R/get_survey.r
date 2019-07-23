@@ -11,8 +11,10 @@
 ##' @importFrom stringr str_extract_all
 ##' @importFrom XML xpathSApply htmlParse xmlValue
 ##' @examples
-##' list_surveys()
-##' peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
+##' \dontrun{
+##'   list_surveys()
+##'   peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
+##' }
 ##' @return a survey in the correct format
 ##' @export
 get_survey <- function(survey, quiet=FALSE, ...)
