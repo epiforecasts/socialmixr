@@ -80,13 +80,13 @@ list_surveys()
 A survey can be downloaded using the `get_survey` command. This will get the relevant data of a survey given either its ID (the first column in the output of the `list_surveys` command) or Zenodo DOI (also returned by `list_surveys`). All other relevant commands in the `socialmixr` package accept a DOI or ID, but if a survey is to be used repeatedly it is worth downloading it and storing it locally to avoid the need for a network connection and speed up processing.
 
 ```{r eval=FALSE}
-peru <- get_survey("https://doi.org/10.5281/zenodo.1095664")
-saveRDS(peru, "peru.rds")
+peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
+saveRDS(peru_survey, "peru.rds")
 ```
 
 This way, the `peru` data set can be loaded in the future without the need for an internet connection using
 ```{r eval=FALSE}
-peru <- readRDS("peru.rds")
+peru_survey <- readRDS("peru.rds")
 ```
 
 Some surveys may contain data from multiple countries. To check this, use the `survey_countries` function
