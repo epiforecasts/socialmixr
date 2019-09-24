@@ -1,3 +1,7 @@
+# socialmixr 0.1.5
+
+* removed option to call survey by number - use DOI for reproducibility
+
 # socialmixr 0.1.4
 
 * better work with missing and diverse data (e.g., age as factors)
