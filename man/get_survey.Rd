@@ -7,7 +7,7 @@
 get_survey(survey, quiet = FALSE, ...)
 }
 \arguments{
-\item{survey}{a DOI (see \code{\link{list_surveys}}), or a numerical id (corresponding to the numbers returned in the \code{id} column returned by \code{\link{list_surveys}}), or a character vector of file names, or a \code{\link{survey}} object (in which case only cleaning is done).}
+\item{survey}{a DOI (see \code{\link{list_surveys}}), or a character vector of file names, or a \code{\link{survey}} object (in which case only cleaning is done).}
 
 \item{quiet}{if TRUE, suppress messages}
 

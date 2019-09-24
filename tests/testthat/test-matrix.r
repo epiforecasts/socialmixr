@@ -44,7 +44,6 @@ test_that("demography is numeric",
 test_that("survey argument is validated",
 {
   expect_error(contact_matrix(survey = "bogus"), "not found")
-  expect_error(contact_matrix(survey = c(1, 2, 3)), "must be of length 1")
 })
 
 test_that("error is thrown if no survey population can be generated",
