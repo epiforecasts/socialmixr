@@ -73,11 +73,11 @@ Surveys
 
 The key argument to the `contact_matrix` function is the `survey` that it supposed to use. The `socialmixr` package includes the POLYMOD survey, which will be used if not survey is specified. It also provides access to all surveys in the [Social contact data](https://zenodo.org/communities/social_contact_data) community on [Zenodo](https://zenodo.org). The available surveys can be listed (if an internet connection is available) with
 
-```{r}
+```{r eval=FALSE}
 list_surveys()
 ```
 
-A survey can be downloaded using the `get_survey` command. This will get the relevant data of a survey given either its ID (the first column in the output of the `list_surveys` command) or Zenodo DOI (also returned by `list_surveys`). All other relevant commands in the `socialmixr` package accept a DOI or ID, but if a survey is to be used repeatedly it is worth downloading it and storing it locally to avoid the need for a network connection and speed up processing.
+A survey can be downloaded using the `get_survey` command. This will get the relevant data of a survey given its Zenodo DOI (as returned by `list_surveys`). All other relevant commands in the `socialmixr` package accept a DOI, but if a survey is to be used repeatedly it is worth downloading it and storing it locally to avoid the need for a network connection and speed up processing.
 
 ```{r eval=FALSE}
 peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
