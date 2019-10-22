@@ -10,7 +10,8 @@
 reduce_agegroups <- function(x, limits) {
     ret <- x[NA]
     int <- findInterval(x, limits)
-    ret[int > 0] <- limits[int[int > 0]]
+    ret[!is.na(int) & int > 0] <-
+      limits[int[!is.na(int) & int > 0]]
     return(ret)
 }
 
