@@ -273,25 +273,18 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 missing.countries <- setdiff(survey.countries, unique(country.pop$country))
                 if (length(missing.countries) > 0)
                 {
-                    warning("Could not find population data for ",
+                    stop("Could not find population data for ",
                             paste(missing.countries, collapse = ", "), ". ",
                             " Use wpp_countries() to get a list of country names.")
                 }
 
-                if (length(missing.countries) == length(survey.countries)) {
-                    warning("No survey data available for any of the requested data. ",
-                            "I don't know which population this is from. ",
-                            "Assuming the survey is representative")
-                    survey.representative <- TRUE
-                } else {
-                    ## get demographic data closest to survey year
-                    country.pop.year <- unique(country.pop[, year])
-                    survey.year <-
-                        min(country.pop.year[which.min(abs(survey.year - country.pop.year))])
-                    survey.pop <-
-                        country.pop[year == survey.year][, list(population = sum(population)),
-                                                         by = "lower.age.limit"]
-                }
+                ## get demographic data closest to survey year
+                country.pop.year <- unique(country.pop[, year])
+                survey.year <-
+                    min(country.pop.year[which.min(abs(survey.year - country.pop.year))])
+                survey.pop <-
+                    country.pop[year == survey.year][, list(population = sum(population)),
+                                                     by = "lower.age.limit"]
             }
 
             if (survey.representative) {
@@ -311,12 +304,6 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         ## adjust age groups by interpolating, in case they don't match between
         ## demographic and survey data
         survey.pop <- data.table(pop_age(survey.pop, age.limits, ...))
-
-        if (nrow(survey.pop) == 0)
-        {
-            warning("Could not construct survey population data.")
-            survey.pop <- data.table(lower.age.limit=age.limits, population=NA_integer_)
-        }
 
         ## possibly adjust age groups according to maximum age (so as not to have empty age groups)
         survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, age.limits)]

@@ -8,21 +8,20 @@
 ##' limits_to_agegroups(c(0, 5, 10))
 ##' @export
 limits_to_agegroups <- function(x, limits) {
-  if (missing(limits)) limits <- unique(x)[order(unique(x))]
+    if (missing(limits)) limits <- unique(x)[order(unique(x))]
     limits <- limits[!is.na(limits)]
+    agegroups <- c()
     if (length(limits) > 1)
     {
-        agegroups <- c(sapply(seq(1, length(limits) - 1), function(y) {
+        agegroups <- vapply(seq(1, length(limits) - 1), function(y) {
             if ((limits[y+1] - 1) > limits[y]) {
                 paste(limits[y], limits[y+1] - 1, sep = "-")
             } else {
                 limits[y]
             }
-        }), paste(limits[length(limits)], "+", sep = ""))
-    } else
-    {
-        agegroups <- c("all")
+        }, "")
     }
+    agegroups <- c(agegroups, paste(limits[length(limits)], "+", sep = ""))
     agegroups <- factor(agegroups, levels = agegroups)
     names(agegroups) <- limits
     return(unname(agegroups[as.character(x)]))

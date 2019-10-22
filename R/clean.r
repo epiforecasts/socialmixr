@@ -22,17 +22,11 @@ clean.survey <- function(x, country.column="country", ...)
     ## update country names
     if (country.column %in% colnames(x$participants))
     {
-      if (all(nchar(as.character(x$participants[[country.column]])) == 2))
-      {
-        x$participants[, paste(country.column) :=
-                                    factor(countrycode(get(country.column),
-                                                       "iso2c", "country.name"))]
-      } else
-      {
-        x$participants[, paste(country.column) :=
-                           factor(countrycode(get(country.column),
-                                              "country.name", "country.name"))]
-      }
+      countries <- x$participants[[country.column]]
+      origin.code <- ifelse(all(nchar(as.character(countries)) == 2), "iso2c", "country.name")
+      converted_countries <- suppressWarnings(countrycode(countries, origin.code, "country.name"))
+      converted_countries[is.na(converted_countries)] <- as.character(countries[is.na(converted_countries)])
+      x$participants[, paste(country.column) := factor(converted_countries)]
     }
 
     return(x)
