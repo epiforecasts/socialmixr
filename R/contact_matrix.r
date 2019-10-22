@@ -330,8 +330,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                        upper.age.limit = c(present.lower.age.limits[-1], max.age))
         ## set upper age limits and construct age groups
         survey$participants <-
-            merge(survey$participants, lower.upper.age.limits, by="lower.age.limit")
         if (all(is.na(survey.pop$population))) survey.pop[, population := NULL]
+            merge(survey$participants, lower.upper.age.limits, by="lower.age.limit", all.x=TRUE)
     }
 
     survey$participants[, lower.age.limit := reduce_agegroups(get(columns[["participant.age"]]),
