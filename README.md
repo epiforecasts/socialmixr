@@ -8,13 +8,19 @@ Social mixing matrices for infectious disease modelling in R
 Installation
 ==============
 
-The current development version can be installed using the `devtools` package
+The package can be installed using
 
 ```r
-devtools::install_github("sbfnk/socialmixr")
+install.packages("socialmixr")
+```
+
+The current development version can be installed using the `remotes` package
+
+```r
+remotes::install_github("sbfnk/socialmixr")
 ```
 
 Documentation
 ======
 
-For information on how to use the socialmixr package, see the [vignette](http://sbfnk.github.io/socialmixr/).
+For information on how to use the socialmixr package, see the [vignette](https://cran.r-project.org/web/packages/socialmixr/vignettes/introduction.html).
