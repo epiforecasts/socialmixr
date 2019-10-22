@@ -211,6 +211,11 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         nrow(survey$contacts[is.na(get(columns[["contact.age"]])) |
                              get(columns[["contact.age"]]) < min(age.limits)]) > 0)
     {
+        if (!quiet && n == 1 && !missing.contact.age.set)
+        {
+            message("Removing participants that have contacts without age information. ",
+                    "To change this behaviour, set the 'missing.contact.age' option")
+        }
         missing.age.id <-
             survey$contacts[is.na(get(columns[["contact.age"]])) |
                             get(columns[["contact.age"]]) < min(age.limits),
@@ -400,12 +405,6 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     if (missing.contact.age == "sample" &&
         nrow(survey$contacts[is.na(get(columns[["contact.age"]]))]) > 0)
     {
-        if (!quiet && n == 1 && !missing.contact.age.set)
-        {
-            message("Sampling the age of contacts with missing age from other ",
-                    "participants of the same age group.\n  To change this behaviour, set the ",
-                    "'missing.contact.age' option")
-        }
         for (this.age.group in
              unique(survey$contacts[is.na(get(columns[["contact.age"]])), age.group]))
         {
