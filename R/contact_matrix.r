@@ -409,7 +409,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         {
             ## first, deal with missing age
             if (nrow(survey$contacts[!is.na(get(columns[["contact.age"]])) &
-                              age.group == this.age.group]) > 0)
+                                     age.group == this.age.group]) > 0)
             {
                 ## some contacts in the age group have an age, sample from these
                 survey$contacts[is.na(get(columns[["contact.age"]])) &
@@ -525,6 +525,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                     suggested.options <- c(suggested.options, "'missing.participant.age'")
                 if (any(is.na(colnames(weighted.matrix))))
                     suggested.options <- c(suggested.options, "'missing.contact.age'")
+
                 warning.suggestion <-
                     paste0(warning.suggestion, paste(suggested.options, collapse = " and "))
                 if (na.content)
