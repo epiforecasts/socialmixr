@@ -625,8 +625,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     part.pop[, proportion := participants / sum(participants)]
 
     if (length(ret) > 1) return_value <- list(matrices = ret)
-    else if (length(ret) == 1) return_value <- ret[[1]]
-    else return_value <- NULL
+    else return_value <- ret[[1]]
 
     if (!is.null(return_value)) {
         if (need.survey.pop) return_value[["demography"]] <- survey.pop[]
