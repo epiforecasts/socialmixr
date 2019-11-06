@@ -7,7 +7,7 @@ test_that("list of surveys is not empty",
 
 test_that("surveys can be downloaded",
 {
-  expect_true(class(suppressWarnings(get_survey("10.5281/zenodo.1059920"))) == "survey")
+  expect_true(class(suppressMessages(suppressWarnings(get_survey("10.5281/zenodo.1059920")))) == "survey")
 })
 
 test_that("surveys can be cited",
