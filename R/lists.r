@@ -10,7 +10,6 @@
 list_surveys <- function()
 {
     ## circumvent R CMD CHECK errors by defining global variables
-    id <- NULL
     relation.1 <- NULL
     datestamp <- NULL
     identifier.1 <- NULL
@@ -31,8 +30,7 @@ list_surveys <- function()
     record_list <- record_list[, url := paste0("https://doi.org/", doi)]
     record_list[, redirect := httr::HEAD(url)$url, by=1:nrow(record_list)]
     record_list <- record_list[identifier.3==redirect]
-    record_list <- record_list[, id := seq_len(nrow(record_list))]
-    setkey(record_list, id)
+    setkey(record_list, date)
     return(record_list[, list(id, date, title, creator, url=url)])
 }
 
