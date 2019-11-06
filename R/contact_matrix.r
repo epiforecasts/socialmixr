@@ -177,11 +177,14 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     }
 
     ## convert factors to integers
-    if (class(survey$contacts[[columns[["contact.age"]]]]) == "factor")
-    {
-        survey$contacts[, paste(columns[["contact.age"]]) :=
-                              as.integer(levels(get(columns[["contact.age"]])))
-                        [get(columns[["contact.age"]])]]
+    for (age_column in
+         c(columns[["contact.age"]], min.column, max.column, exact.column)) {
+        if (age_column %in% colnames(survey$contacts) &&
+            class(survey$contacts[[age_column]]) == "factor")
+        {
+            survey$contacts[, paste(age_column) :=
+                                  as.integer(levels(get(age_column)))[get(age_column)]]
+        }
     }
 
     ## sample estimated contact ages
@@ -493,6 +496,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                   formula = sampled.weight ~ age.group + contact.age.group,
                   addNA = TRUE)
 
+        dims <- dim(weighted.matrix)
         dim.names <- dimnames(weighted.matrix)
 
         if (!counts) { ## normalise to give mean number of contacts
@@ -502,11 +506,12 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                       formula = sampled.weight ~ age.group, addNA = TRUE)
 
             ## normalise contact matrix
-            weighted.matrix <- apply(weighted.matrix, 2, function(x) x/norm.vector)
+            weighted.matrix <-
+                array(apply(weighted.matrix, 2, function(x) x/norm.vector), dim=dims,
+                      dimnames=dim.names)
             ## set non-existent data to NA
             weighted.matrix[is.nan(weighted.matrix)] <- NA_real_
         }
-
 
         ## construct a warning in case there are NAs
         na.headers <- any(is.na(colnames(weighted.matrix))) ||
@@ -559,7 +564,6 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 normalised.weighted.matrix <- diag(survey.pop$population) %*% weighted.matrix
                 weighted.matrix <- 0.5 * diag(1/survey.pop$population) %*%
                     (normalised.weighted.matrix + t(normalised.weighted.matrix))
-
             }
         }
 
@@ -601,7 +605,6 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
             }
         }
 
-        dimnames(weighted.matrix) <- dim.names
         ret[[i]][["matrix"]] <- weighted.matrix
     }
 
