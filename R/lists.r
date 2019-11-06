@@ -31,7 +31,7 @@ list_surveys <- function()
     record_list[, redirect := httr::HEAD(url)$url, by=1:nrow(record_list)]
     record_list <- record_list[identifier.3==redirect]
     setkey(record_list, date)
-    return(record_list[, list(id, date, title, creator, url=url)])
+    return(record_list[, list(date, title, creator, url=url)])
 }
 
 ##' List all countries contained in a survey
