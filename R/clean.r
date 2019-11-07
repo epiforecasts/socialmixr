@@ -25,7 +25,10 @@ clean.survey <- function(x, country.column="country", participant.age.column="pa
     if (country.column %in% colnames(x$participants))
     {
       countries <- x$participants[[country.column]]
-      origin.code <- ifelse(all(nchar(as.character(countries)) == 2), "iso2c", "country.name")
+      origin.code <-
+        ifelse(all(nchar(as.character(countries)) == 2), "iso2c",
+        ifelse(all(nchar(as.character(countries)) == 3), "iso3c",
+               "country.name"))
       converted_countries <- suppressWarnings(countrycode(countries, origin.code, "country.name"))
       converted_countries[is.na(converted_countries)] <- as.character(countries[is.na(converted_countries)])
       x$participants[, paste(country.column) := factor(converted_countries)]
