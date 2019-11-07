@@ -172,7 +172,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
 
         if (exact.column %in% colnames(survey$contacts))
         {
-            survey$contacts[, paste(columns[["contact.age"]]) := get(exact.column)]
+            survey$contacts[!is.na(get(exact.column)),
+                            paste(columns[["contact.age"]]) := get(exact.column)]
         }
     }
 
