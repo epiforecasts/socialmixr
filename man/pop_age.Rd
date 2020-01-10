@@ -4,8 +4,13 @@
 \alias{pop_age}
 \title{Change age groups in population data}
 \usage{
-pop_age(pop, age.limits, pop.age.column = "lower.age.limit",
-  pop.column = "population", ...)
+pop_age(
+  pop,
+  age.limits,
+  pop.age.column = "lower.age.limit",
+  pop.column = "population",
+  ...
+)
 }
 \arguments{
 \item{pop}{a data frame with columns indicating lower age limits and population sizes (see 'age.column' and 'pop.column')}

@@ -5,10 +5,18 @@
 \alias{check.survey}
 \title{Check contact survey data}
 \usage{
-\method{check}{survey}(x, columns = FALSE, quiet = FALSE,
-  error = FALSE, id.column = "part_id",
-  participant.age.column = "part_age", country.column = "country",
-  year.column = "year", contact.age.column = "cnt_age", ...)
+\method{check}{survey}(
+  x,
+  columns = FALSE,
+  quiet = FALSE,
+  error = FALSE,
+  id.column = "part_id",
+  participant.age.column = "part_age",
+  country.column = "country",
+  year.column = "year",
+  contact.age.column = "cnt_age",
+  ...
+)
 }
 \arguments{
 \item{x}{A \code{\link{survey}} object}
