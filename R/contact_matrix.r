@@ -26,8 +26,6 @@
 ##' @importFrom countrycode countrycode
 ##' @import data.table
 ##' @export
-##' @inheritParams get_survey
-##' @inheritParams pop_age
 ##' @examples
 ##' data(polymod)
 ##' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
