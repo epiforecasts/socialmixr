@@ -1,3 +1,9 @@
+# socialmixr 0.1.6
+
+* if access to Zenodo fails an informative error message is now given
+* tests that require access to Zenodo now fail if it cannot be accessed
+* fixed bug in interpreting return values of the Zenodo API
+
 # socialmixr 0.1.5
 
 * removed option to call survey by number - use DOI for reproducibility
