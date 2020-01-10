@@ -24,7 +24,7 @@ get_survey <- function(survey, quiet=FALSE, ...)
     literal <- NULL
     given <- NULL
     family <- NULL
-    fileFormat <- NULL
+    encodingFormat <- NULL
     contentUrl <- NULL
 
     if ("survey" %in% class(survey))
@@ -43,7 +43,7 @@ get_survey <- function(survey, quiet=FALSE, ...)
             is.url <- (length(survey) > 0) && (is.doi || grepl("^https?:\\/\\/", survey))
 
             if (is.doi) url <- paste0("https://doi.org/", survey) else url <- survey
- 
+
         } else stop("'survey' must be an 'survey' object, integer or character")
 
         if (is.url)
@@ -68,7 +68,7 @@ get_survey <- function(survey, quiet=FALSE, ...)
 
             data <- data.table(parsed_cite$distribution)
 
-            urls <- data[fileFormat == "csv", contentUrl]
+            urls <- data[encodingFormat == "csv", contentUrl]
 
             message("Getting ", parsed_cite$name, ".")
 
