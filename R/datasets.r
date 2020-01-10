@@ -16,7 +16,7 @@
 #'   non-physical contact), duration_multi has five levels (1 is less than 5
 #'   minutes while 5 is more than 4 hours, increasing in the order found in
 #'   Figure 1 in Mossong et al.), and frequency_multi has five levels (1 is
-#'   daily, 2 is weekly, 3 is montly, 4 is less often, and 5 is first time)}
+#'   daily, 2 is weekly, 3 is monthly, 4 is less often, and 5 is first time)}
 #'   All other variables are described on the Zenodo repository of the data,
 #'   available at https://doi.org/10.5281/zenodo.1043437
 #' }
