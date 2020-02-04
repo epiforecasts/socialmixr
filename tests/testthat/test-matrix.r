@@ -10,6 +10,7 @@ polymod8 <- survey(polymod$participants, polymod$contacts, polymod$reference)
 
 polymod2$participants$added_weight <- 0.5
 polymod2$contacts$cnt_age <- factor(polymod2$contacts$cnt_age)
+polymod2$participants$part_age[1] <- "3-5"
 polymod3$participants$dayofweek <- NULL
 polymod3$participants$year <- NULL
 polymod4$participants$country <- NULL

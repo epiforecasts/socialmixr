@@ -17,13 +17,11 @@ clean <- function(x, ...) UseMethod("clean")
 ##' data(polymod)
 ##' cleaned <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
 ##' @export
-clean.survey <- function(x, country.column="country", participant.age.column="part_age", ...)
-{
+clean.survey <- function(x, country.column="country", participant.age.column="part_age", ...) {
     x <- survey(x$participants, x$contacts, x$reference)
 
     ## update country names
-    if (country.column %in% colnames(x$participants))
-    {
+    if (country.column %in% colnames(x$participants)) {
       countries <- x$participants[[country.column]]
       origin.code <-
         ifelse(all(nchar(as.character(countries)) == 2), "iso2c",
@@ -36,10 +34,16 @@ clean.survey <- function(x, country.column="country", participant.age.column="pa
 
     if (participant.age.column %in% colnames(x$participants) &&
         !is.numeric(x$participants[, get(participant.age.column)])) {
+        ## split off units
         split_units <-
             strsplit(as.character(x$participants[, get(participant.age.column)]),
                      split=" ")
-        periods <- vapply(split_units, function(x) {
+        ## set empty units to years
+        split_complete <- lapply(split_units, function(x) {
+            if (length(x)==1) x[2] <- "years"
+            x
+        })
+        periods <- vapply(split_complete, function(x) {
             if (any(is.na(x))) return(NA_real_)
             amounts <- as.numeric(strsplit(x[1], split="-")[[1]])
             mean(vapply(amounts, function(y) {
