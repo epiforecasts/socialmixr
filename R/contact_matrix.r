@@ -263,6 +263,10 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 ## get population data for countries from 'wpp' package
                 country.pop <- data.table(wpp_age(survey.countries))
 
+                # !! warning: spelling can differ between wpp_age and wpp_countries (e.g. Viet Nam vs Vietnam) 
+                # fix: rename countries using the same approach as in clean(survey,...)
+                country.pop$country <- suppressWarnings(countrycode(country.pop$country, "country.name", "country.name"))
+                
                 ## check if survey data are from a specific year - in that case
                 ## use demographic data from that year, otherwise latest
                 if (columns[["year"]] %in% colnames(survey$participants))
