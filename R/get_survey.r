@@ -35,7 +35,7 @@ get_survey <- function(survey, quiet=FALSE, ...)
         if (is.character(survey))
         {
             if (length(survey) > 1)
-                stop("if 'survey' is a DOI or URL, it must be of length 1")
+                warning("if 'survey' is a DOI or URL, it must be of length 1")
 
             survey <- sub("^(https?:\\/\\/(dx\\.)?doi\\.org\\/|doi:)", "", survey)
             survey <- sub("#.*$", "", survey)
