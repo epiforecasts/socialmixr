@@ -48,6 +48,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     sampled.weight <- NULL
     bootstrap.weight <- NULL
     participants <- NULL
+    study.year <- NULL
+    survey.year <- NULL
 
     surveys <- c("participants", "contacts")
 
@@ -342,6 +344,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         # set proportions
         survey.pop[, proportion := survey.pop$population/sum(survey.pop$population)]
         
+    }
 
     survey$participants[, weight := 1]
     survey$contacts[, weight := 1]
@@ -558,6 +561,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 normalised.weighted.matrix <- diag(survey.pop$population) %*% weighted.matrix
                 weighted.matrix <- 0.5 * diag(1/survey.pop$population) %*%
                     (normalised.weighted.matrix + t(normalised.weighted.matrix))
+                rownames(weighted.matrix) <- colnames(weighted.matrix)
             }
         }
 
@@ -602,13 +606,15 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         ret[[i]][["matrix"]] <- weighted.matrix
     }
 
-    if (exists("survey.year")) {
+    if (exists("survey.year") && !is.null(survey.year)) {
         survey.pop[, year := survey.year]
         survey.pop <-
             merge(survey.pop,
                   unique(survey$participants[, list(lower.age.limit, age.group)]))
-        survey.pop <- survey.pop[, list(age.group, population,
-                                        proportion=population/sum(population), year)]
+        survey.pop <- survey.pop[, list(age.group, 
+                                        population,
+                                        proportion, 
+                                        year)]
     }
 
     ## get number of participants in each age group
@@ -621,8 +627,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     setnames(part.pop, c("age.group", "participants"))
     part.pop[, proportion := participants / sum(participants)]
 
-    if (length(ret) > 1) return_value <- list(matrices = ret)
-    else return_value <- ret[[1]]
+    if (length(ret) > 1) { return_value <- list(matrices = ret)
+    } else return_value <- ret[[1]]
 
     if (!is.null(return_value)) {
         if (need.survey.pop) return_value[["demography"]] <- survey.pop[]
