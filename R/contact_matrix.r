@@ -337,14 +337,14 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
 
     survey$participants[, lower.age.limit := reduce_agegroups(get(columns[["participant.age"]]),
                                                               age.limits[age.limits < max.age])]
-    part.age.group.breaks <- c(age.limits[age.limits < max.age], max.age)
+    part.age.group.breaks <- c(age.limits[age.limits <= max.age], max.age + 1)
     survey$participants[, age.group :=
                               cut(survey$participants[, get(columns[["participant.age"]])],
                                   breaks = part.age.group.breaks,
                                   right = FALSE)]
     age.groups <- survey$participants[, levels(age.group)]
     age.groups[length(age.groups)] <-
-        paste0(max(survey$participants$lower.age.limit, na.rm=TRUE), "+")
+        sub("\\[([0-9]+),.*$", "\\1+", age.groups[length(age.groups)])
     survey$participants[, age.group :=
                               factor(age.group, levels=levels(age.group), labels=age.groups)]
 
