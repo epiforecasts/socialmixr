@@ -15,9 +15,10 @@ contact_matrix(
   counts = FALSE,
   symmetric = FALSE,
   split = FALSE,
+  estimated.participant.age = c("mean", "sample", "missing"),
   estimated.contact.age = c("mean", "sample", "missing"),
-  missing.participant.age = c("remove", "keep"),
-  missing.contact.age = c("remove", "sample", "keep"),
+  missing.participant.age = c("remove", "sample", "keep"),
+  missing.contact.age = c("remove", "keep"),
   weights = c(),
   weigh.dayofweek = FALSE,
   sample.all.age.groups = FALSE,
@@ -45,6 +46,8 @@ contact_matrix(
 \item{symmetric}{whether to make matrix symmetric}
 
 \item{split}{whether to split the number of contacts and assortativity}
+
+\item{estimated.participant.age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
 
 \item{estimated.contact.age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
 
