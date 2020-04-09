@@ -7,6 +7,7 @@ polymod5 <- survey(polymod$participants, polymod$contacts, polymod$reference)
 polymod6 <- survey(polymod$participants, polymod$contacts, polymod$reference)
 polymod7 <- survey(polymod$participants, polymod$contacts, polymod$reference)
 polymod8 <- survey(polymod$participants, polymod$contacts, polymod$reference)
+polymod9 <- survey(polymod$participants, polymod$contacts, polymod$reference)
 
 polymod2$participants$added_weight <- 0.5
 polymod2$contacts$cnt_age <- factor(polymod2$contacts$cnt_age)
@@ -25,6 +26,13 @@ polymod8$contacts$cnt_age_est_max <- NA_real_
 polymod8$contacts$cnt_age <- NA_real_
 polymod8$contacts[polymod$contacts$part_id==10, "cnt_age"] <- 10
 polymod8$contacts[polymod$contacts$part_id==20, "cnt_age"] <- 20
+polymod9$participants$part_age_est_min <- 1
+polymod9$participants$part_age_est_max <- 15
+polymod9$participants$part_age <- NULL
+polymod9$participants$part_age_est_min <- 1
+polymod9$participants$part_age_est_max <- 15
+nn <- nrow(polymod9$participants)
+polymod9$participants$part_age <- ifelse(runif(nn) > 0.7, 20, NA)
 
 empty_pop <- data.frame(lower.age.limit=c(0, 5), population = NA_real_)
 
@@ -169,3 +177,29 @@ test_that("warning is thrown if it is assumed that the survey is representative"
   expect_warning(contact_matrix(survey=polymod4, symmetric=TRUE), "Assuming the survey is representative")
 })
 
+
+test_that("Taking mean of estimated contact's age give na when mean is not in an age limit ",
+{
+  cm <- contact_matrix(survey=polymod9, age.limits=c(0, 5, 10, 15, 20))
+  expect_true(is.na(rowSums(cm$matrix)[1]))
+  expect_false(is.na(rowSums(cm$matrix)[2]))
+  expect_true(is.na(rowSums(cm$matrix)[3]))
+  expect_true(is.na(rowSums(cm$matrix)[4]))
+  expect_false(is.na(rowSums(cm$matrix)[5]))
+  
+})
+test_that("Taking sample of estimated participant's give na when no overlap with the age limits ",
+{
+  cm <- contact_matrix(survey=polymod9, symmetric=TRUE, age.limits=c(0, 5, 10, 15, 20), estimated.participant.age = "sample")
+  expect_false(is.na(rowSums(cm$matrix)[1]))
+  expect_false(is.na(rowSums(cm$matrix)[2]))
+  expect_false(is.na(rowSums(cm$matrix)[3]))
+  expect_true(is.na(rowSums(cm$matrix)[4]))
+  expect_false(is.na(rowSums(cm$matrix)[5]))
+  
+})
+
+
+
+
+contact_matrix(survey=polymod9, symmetric=TRUE, age.limits=c(0, 5, 10, 15), )
