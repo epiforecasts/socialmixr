@@ -4,7 +4,8 @@
 \name{polymod}
 \alias{polymod}
 \title{Social contact data from 8 European countries}
-\format{A list of two data frames:
+\format{
+A list of two data frames:
 \describe{
   \item{participants}{the study participant, with age, country, year and day
   of the week (starting with 1 = Monday)}
@@ -16,7 +17,8 @@
   daily, 2 is weekly, 3 is monthly, 4 is less often, and 5 is first time)}
   All other variables are described on the Zenodo repository of the data,
   available at https://doi.org/10.5281/zenodo.1043437
-}}
+}
+}
 \source{
 \url{http://dx.doi.org/10.1371/journal.pmed.0050074}
 }
