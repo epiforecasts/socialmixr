@@ -43,7 +43,7 @@ contact_matrix(
 
 \item{counts}{whether to return counts (instead of means)}
 
-\item{symmetric}{whether to make matrix symmetric}
+\item{symmetric}{whether to make matrix symmetric, such that c_{ij}N_i = c{ji}N_j.}
 
 \item{split}{whether to split the number of contacts and assortativity}
 
