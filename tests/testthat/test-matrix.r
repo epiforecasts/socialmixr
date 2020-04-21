@@ -190,7 +190,7 @@ test_that("Taking mean of estimated contact's age give na when mean is not in an
 })
 test_that("Taking sample of estimated participant's give na when no overlap with the age limits ",
 {
-  cm <- contact_matrix(survey=polymod9, symmetric=TRUE, age.limits=c(0, 5, 10, 15, 20), estimated.participant.age = "sample")
+  cm <- contact_matrix(survey=polymod9, age.limits=c(0, 5, 10, 15, 20), estimated.participant.age = "sample")
   expect_false(is.na(rowSums(cm$matrix)[1]))
   expect_false(is.na(rowSums(cm$matrix)[2]))
   expect_false(is.na(rowSums(cm$matrix)[3]))
@@ -199,7 +199,3 @@ test_that("Taking sample of estimated participant's give na when no overlap with
   
 })
 
-
-
-
-contact_matrix(survey=polymod9, symmetric=TRUE, age.limits=c(0, 5, 10, 15), )
