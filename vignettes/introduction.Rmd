@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-[socialmixr](https://github.com/sbfnk/socialmixr) is an `R` package to derive social mixing matrices from survey data. These are particularly useful for age-structured [infectious disease models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease). For background on age-specific mixing matrices and what data inform them, see, for example, the paper on by [Mossong et al](https://doi.org/10.1371/journal.pmed.0050074).
+[socialmixr](https://github.com/sbfnk/socialmixr) is an `R` package to derive social mixing matrices from survey data. These are particularly useful for age-structured [infectious disease models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease). For background on age-specific mixing matrices and what data inform them, see, for example, the paper on POLYMOD by [Mossong et al](https://doi.org/10.1371/journal.pmed.0050074).
 
 Usage
 ======
@@ -131,7 +131,7 @@ $$c_{ij} N_i = c_{ji}N_j$$
 
 Because of variation in the sample from which the contact matrix is obtained, this relationship is usually not fulfilled exactly. In order to obtain a symmetric contact matrix that fulfills it, one can use
 
-$$c'_{ij} = \frac{1}{2N_i} (c_ij N_i + c_ji N_j)$$
+$$c'_{ij} = \frac{1}{2N_i} (c_{ij} N_i + c_{ji} N_j)$$
 
 To get this version of the contact matrix, use `symmetric = TRUE` when calling the `contact_matrix` function.
 
