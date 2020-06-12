@@ -8,6 +8,7 @@ polymod6 <- survey(polymod$participants, polymod$contacts, polymod$reference)
 polymod7 <- survey(polymod$participants, polymod$contacts, polymod$reference)
 polymod8 <- survey(polymod$participants, polymod$contacts, polymod$reference)
 polymod9 <- survey(polymod$participants, polymod$contacts, polymod$reference)
+polymod10 <- survey(polymod$participants, polymod$contacts, polymod$reference)
 
 polymod2$participants$added_weight <- 0.5
 polymod2$contacts$cnt_age <- factor(polymod2$contacts$cnt_age)
@@ -33,7 +34,10 @@ polymod9$participants$part_age_est_min <- 1
 polymod9$participants$part_age_est_max <- 15
 nn <- nrow(polymod9$participants)
 polymod9$participants$part_age <- ifelse(runif(nn) > 0.7, 20, NA)
-
+polymod10$participants$added_weight <- 
+  ifelse(polymod10$participants$dayofweek %in% 1:5, 5, 2)
+polymod10$participants$added_weight2 <- .3
+                                           
 empty_pop <- data.frame(lower.age.limit=c(0, 5), population = NA_real_)
 
 options <-
@@ -198,4 +202,22 @@ test_that("Taking sample of estimated participant's give na when no overlap with
   expect_false(is.na(rowSums(cm$matrix)[5]))
   
 })
-
+test_that("If weights = weigh.dayofweek, the results are identical",
+          {
+  expect_identical(suppressMessages(
+    contact_matrix(survey = polymod10,countries="United Kingdom",
+                   weigh.dayofweek = TRUE)), 
+    suppressMessages(
+      contact_matrix(survey = polymod10, countries="United Kingdom", 
+                     weights = "added_weight")))
+          })
+test_that("The order in which weights are applied do not change the results",
+          {
+  expect_identical(suppressMessages(
+    contact_matrix(survey = polymod10,countries="United Kingdom",
+                   weights = c("added_weight2", "added_weight"))),
+    suppressMessages(
+      contact_matrix(survey = polymod10, countries="United Kingdom", 
+                     weights = c("added_weight", "added_weight2"))))
+  
+})
