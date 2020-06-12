@@ -49,6 +49,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     sampled.weight <- NULL
     bootstrap.weight <- NULL
     participants <- NULL
+    sum_weight <- NULL
     
     surveys <- c("participants", "contacts")
     
@@ -404,6 +405,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     
     survey$participants[, weight := 1]
     survey$contacts[, weight := 1]
+    
     ## assign weights to participants, to account for weekend/weekday variation
     if (weigh.dayofweek) {
         found.dayofweek <- FALSE
@@ -411,8 +413,16 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         {
             if ("dayofweek" %in% colnames(survey[[table]]))
             {
-                survey[[table]][dayofweek %in% 1:5, weight := 5]
-                survey[[table]][!(dayofweek %in% 1:5), weight := 2]
+                ## Add column sum_weight: Number of entries on weekdays / weekends
+                survey[[table]][,  sum_weight := nrow(.SD), 
+                                by = (dayofweek %in% 1:5), ]
+                
+                ## The sum of the weights on weekdays is 5
+                survey[[table]][dayofweek %in% 1:5, weight := 5/sum_weight]
+                ## The sum of the weights on weekend is 2
+                survey[[table]][!(dayofweek %in% 1:5), weight := 2/sum_weight]
+                
+                survey[[table]][,  sum_weight := NULL]
                 found.dayofweek <- TRUE
             }
         }
@@ -429,7 +439,13 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
             for (table in surveys) {
                 if (weights[i] %in% colnames(survey[[table]]))
                 {
-                    survey[[table]][, weight := weight * get(weights[i])]
+                    ## Number of entry per level of weight[i]
+                    survey[[table]][,  sum_weight := nrow(.SD), 
+                                    by = get(weights[i])]
+                    ## Compute the individual weight
+                    survey[[table]][,  weight := weight * get(weights[i]) / sum_weight]
+                    ## Remove the column "sum_weight"
+                    survey[[table]][,  sum_weight := NULL]
                 }
             }
         }
