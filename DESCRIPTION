@@ -2,7 +2,8 @@ Package: socialmixr
 Version: 0.1.6
 Date: 2020-01-10
 Title: Social Mixing Matrices for Infectious Disease Modelling
-Authors@R: person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre"))
+Authors@R: c(person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre")),
+person("Alexis", "Robert", email = "alexis.robert@lshtm.ac.uk", role = c("ctb")))
 Depends: R (>= 3.5.0)
 Imports: data.table, curl, httr, jsonlite, oai, wpp2015, countrycode,
         stringr, XML, lubridate
