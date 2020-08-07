@@ -222,7 +222,7 @@ test_that("The order in which weights are applied do not change the results",
   
 })
 
-thest_that("The spelling of country names is not causing issues (e.g. Viet Nam vs. Vietnam",
+test_that("The spelling of country names is not causing issues (e.g. Viet Nam vs. Vietnam",
            {
              vietnam1 <- get_survey("https://doi.org/10.5281/zenodo.1289473")
              expect_true(length(suppressMessages(contact_matrix(vietnam1,symmetric = F))) == 2) # no demography data used
