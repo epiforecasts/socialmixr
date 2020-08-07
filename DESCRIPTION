@@ -1,13 +1,13 @@
 Package: socialmixr
-Version: 0.1.6
-Date: 2020-01-10
+Version: 0.1.7
+Date: 2020-08-06
 Title: Social Mixing Matrices for Infectious Disease Modelling
 Authors@R: 
   c(
         person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre")),
         person("Maria", "Bekker-Nielsen Dunbar", role = c("ctb")),
         person("Carl A. B.", "Pearson", role = c("ctb")),
-        person("Sam", "Clifford", role = c("ctb")),
+        person("Sam", "Clifford", email = "sj.clifford@gmail.com", role = c("ctb")),
         person("Christopher", "Jarvis", role = c("ctb")),
         person("Alexis", "Robert", email = "alexis.robert@lshtm.ac.uk", role = c("ctb"))
    )

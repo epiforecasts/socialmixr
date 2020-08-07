@@ -1,3 +1,10 @@
+# socialmixr 0.1.7
+
+* fixed bug when age is given as a range, or when age.limits contains ages not represented in the data
+* limits_to_agegroups now returns an ordered list (thanks @pearsonca)
+* now allows for estimated participant age (thanks @jarvisc1)
+* fixed bug in calculating weights (thanks @alxsrobert)
+
 # socialmixr 0.1.6
 
 * if access to Zenodo fails an informative error message is now given
