@@ -229,4 +229,17 @@ test_that("The spelling of country names is not causing issues (e.g. Viet Nam vs
              expect_true(length(suppressMessages(contact_matrix(vietnam1,symmetric = T))) == 2) # uses demography data!
 })
 
+test_that("The selection of age groups based on the participant data is used for the reference population",
+          {
+            # no problems expected
+            cm <- suppressMessages(contact_matrix(polymod, age.limits = c(0,18,50,100),symmetric = F)) 
+            expect_true(cm$demography$age.group == cm$participants$age.group)
+            
+            # problems expected if the age.group.breaks of the reference population is not updated according the participant data
+            cm <- suppressMessages(contact_matrix(polymod, age.limits = c(0,18,50,100),symmetric = T))
+            expect_true(cm$demography$age.group == cm$participants$age.group)
+})
+
+
+
 
