@@ -89,7 +89,7 @@ get_survey <- function(survey, quiet=FALSE, ...)
                 stop("File", ifelse(length(missing) > 1, "s", ""), " ", 
                      paste(paste0("'", missing, "'", collapse=""), sep=", "), " not found.")
             }
-            files <- survey
+            files <- survey[grepl('csv',survey)] # select csv files
             reference <- NULL
         }
 
@@ -115,14 +115,14 @@ get_survey <- function(survey, quiet=FALSE, ...)
         ## first, get the common files
         for (type in main_types)
         {
-          main_file[type] <- grep(paste0("_", type,"_common\\.csv$"), files, value=TRUE)
-          if (length(main_file[type]) == 0)
+          main_file <- grep(paste0("_", type,"_common\\.csv$"), files, value=TRUE)
+          if (length(main_file) == 0)
           {
               stop("Need a file ending ", paste0("_", type, "_common.csv"),
                    ", but no such file found.")
           }
-          main_surveys[[type]] <- contact_data[[main_file[type]]]
-          files <- setdiff(files, main_file[type])
+          main_surveys[[type]] <- contact_data[[main_file]]
+          files <- setdiff(files, main_file)
         }
 
         ## next, get any extra files
