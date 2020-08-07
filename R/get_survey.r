@@ -34,14 +34,14 @@ get_survey <- function(survey, quiet=FALSE, ...)
     {
         if (is.character(survey))
         {
-            if (length(survey) > 1)
-                stop("if 'survey' is a DOI or URL, it must be of length 1")
-
             survey <- sub("^(https?:\\/\\/(dx\\.)?doi\\.org\\/|doi:)", "", survey)
             survey <- sub("#.*$", "", survey)
             is.doi <- (length(survey) > 0) && all(grepl("^10.[0-9.]{4,}/[-._;()/:A-z0-9]+$", survey))
             is.url <- (length(survey) > 0) && (is.doi || grepl("^https?:\\/\\/", survey))
 
+            if (is.url & length(survey) > 1)
+                stop("if 'survey' is a DOI or URL, it must be of length 1")
+            
             if (is.doi) url <- paste0("https://doi.org/", survey) else url <- survey
 
         } else stop("'survey' must be an 'survey' object, integer or character")
