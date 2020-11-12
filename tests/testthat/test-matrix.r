@@ -37,7 +37,7 @@ polymod9$participants$part_age <- ifelse(runif(nn) > 0.7, 20, NA)
 polymod10$participants$added_weight <- 
   ifelse(polymod10$participants$dayofweek %in% 1:5, 5, 2)
 polymod10$participants$added_weight2 <- .3
-                                           
+
 empty_pop <- data.frame(lower.age.limit=c(0, 5), population = NA_real_)
 
 options <-
@@ -88,7 +88,7 @@ test_that("error is thrown if no survey population can be generated",
 
 test_that("error is thrown if age limits are non-numeric",
 {
-  expect_error(suppressWarnings(contact_matrix(survey = polymod, age.limits = c(0, 5, "fifteen")), "age.limits"))
+  expect_error(suppressWarnings(contact_matrix(survey = polymod, age.limits = c(0, 5, "fifteen"))), "age.limits")
 })
 
 test_that("error is thrown if country is not found",
