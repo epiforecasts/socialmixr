@@ -211,13 +211,13 @@ test_that("If weights = weigh.dayofweek, the results are identical",
       contact_matrix(survey = polymod10, countries="United Kingdom", 
                      weights = "added_weight")))
           })
+
 test_that("The order in which weights are applied do not change the results",
           {
-  expect_identical(suppressMessages(
+  expect_equal(suppressMessages(
     contact_matrix(survey = polymod10,countries="United Kingdom",
                    weights = c("added_weight2", "added_weight"))),
     suppressMessages(
-      contact_matrix(survey = polymod10, countries="United Kingdom", 
+      contact_matrix(survey = polymod10, countries="United Kingdom",
                      weights = c("added_weight", "added_weight2"))))
-  
 })
