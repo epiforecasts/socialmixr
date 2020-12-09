@@ -13,7 +13,7 @@
 ##' @param symmetric whether to make matrix symmetric, such that c_{ij}N_i = c{ji}N_j.
 ##' @param split whether to split the number of contacts and assortativity
 ##' @param estimated.participant.age if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
-##' @param estimated.contact.age if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
+##' @param estimated.contact.age if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
 ##' @param missing.participant.age if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group
 ##' @param missing.contact.age if set to "remove" (default), participants that that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group
 ##' @param weights columns that contain weights
@@ -51,6 +51,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     participants <- NULL
     sum_weight <- NULL
     
+    # study.year <- NULL
+    # survey.year <- NULL
     surveys <- c("participants", "contacts")
     
     dot.args <- list(...)
