@@ -1,3 +1,8 @@
+# socialmixr 0.1.8
+
+* fixed test
+* fixed order of limits in `reduce_agegroups`
+
 # socialmixr 0.1.7
 
 * fixed bug when age is given as a range, or when age.limits contains ages not represented in the data
