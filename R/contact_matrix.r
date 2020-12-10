@@ -703,6 +703,10 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     setnames(part.pop, c("age.group", "participants"))
     part.pop[, proportion := participants / sum(participants)]
     
+    # optional: change survey.pop$age.group factors into characters (cfr. part.pop)
+    if (need.survey.pop) survey.pop[,age.group:= as.character(age.group)]
+    
+    # set function output
     if (length(ret) > 1) return_value <- list(matrices = ret)
     else return_value <- ret[[1]]
     

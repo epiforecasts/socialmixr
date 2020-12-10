@@ -222,22 +222,22 @@ test_that("The order in which weights are applied do not change the results",
                      weights = c("added_weight", "added_weight2"))))
 })
 
-test_that("The spelling of country names is not causing issues (e.g. Viet Nam vs. Vietnam",
+test_that("Different spelled country names in Zenodo datasets vs wpp-package does not cause issues (e.g. Viet Nam vs. Vietnam)",
            {
+             
              vietnam1 <- get_survey("https://doi.org/10.5281/zenodo.1289473")
              expect_true(length(suppressMessages(contact_matrix(vietnam1,symmetric = F))) == 2) # no demography data used
-             expect_true(length(suppressMessages(contact_matrix(vietnam1,symmetric = T))) == 2) # uses demography data!
+             expect_true(length(suppressMessages(contact_matrix(vietnam1,symmetric = T))) == 3) # country is recognized and demography data found
 })
 
 test_that("The selection of age groups based on the participant data is used for the reference population",
           {
             # no problems expected
             cm <- suppressMessages(contact_matrix(polymod, age.limits = c(0,18,50,100),symmetric = F)) 
-            expect_true(cm$demography$age.group == cm$participants$age.group)
             
-            # problems expected if the age.group.breaks of the reference population is not updated according the participant data
+            # problems expected if age.group.breaks of the reference population is not updated according to the participant data
             cm <- suppressMessages(contact_matrix(polymod, age.limits = c(0,18,50,100),symmetric = T))
-            expect_true(cm$demography$age.group == cm$participants$age.group)
+            expect_true(all(cm$demography$age.group == cm$participants$age.group))
 })
 
 
