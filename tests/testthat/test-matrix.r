@@ -9,6 +9,8 @@ polymod7 <- survey(polymod$participants, polymod$contacts, polymod$reference)
 polymod8 <- survey(polymod$participants, polymod$contacts, polymod$reference)
 polymod9 <- survey(polymod$participants, polymod$contacts, polymod$reference)
 polymod10 <- survey(polymod$participants, polymod$contacts, polymod$reference)
+polymod11 <- survey(polymod$participants, polymod$contacts, polymod$reference)
+polymod11 <- polymod
 
 polymod2$participants$added_weight <- 0.5
 polymod2$contacts$cnt_age <- factor(polymod2$contacts$cnt_age)
@@ -37,6 +39,12 @@ polymod9$participants$part_age <- ifelse(runif(nn) > 0.7, 20, NA)
 polymod10$participants$added_weight <- 
   ifelse(polymod10$participants$dayofweek %in% 1:5, 5, 2)
 polymod10$participants$added_weight2 <- .3
+
+# to test weights (age and day.of.week)
+part_selection <- (polymod11$participants$part_age %in% (1:2) & polymod11$participants$dayofweek %in% 1:6) |
+  (polymod11$participants$part_age %in% (3)   & polymod11$participants$dayofweek %in% 2:3)
+polymod11$participants <- polymod11$participants[part_selection,]
+table(polymod11$participants$part_age,polymod11$participants$dayofweek)
 
 empty_pop <- data.frame(lower.age.limit=c(0, 5), population = NA_real_)
 
@@ -220,6 +228,39 @@ test_that("The order in which weights are applied do not change the results",
     suppressMessages(
       contact_matrix(survey = polymod10, countries="United Kingdom",
                      weights = c("added_weight", "added_weight2"))))
+})
+
+test_that("The day.of.week weight does not affect single-year age groups that reported only during weekdays",
+          {
+            
+            suppressMessages(suppressWarnings(matrix_unweighted <- contact_matrix(polymod11, age.limits = 1:3, weigh.dayofweek = FALSE,symmetric = F)))
+            suppressMessages(suppressWarnings(matrix_weighted   <- contact_matrix(polymod11, age.limits = 1:3, weigh.dayofweek = TRUE,symmetric = F)))
+            
+            num_contacts_unweighted <- rowSums(matrix_unweighted$matrix)
+            num_contacts_weighted   <- rowSums(matrix_weighted$matrix)
+            
+            # ages 1 and 2 => impaced by weights
+            expect_true(rowSums(matrix_unweighted$matrix)[1] != rowSums(matrix_weighted$matrix)[2])
+            expect_true(rowSums(matrix_unweighted$matrix)[2] != rowSums(matrix_weighted$matrix)[2])
+            
+            # age 3 => contains only data on weekdays => should not be impacted by weights
+            expect_equal(num_contacts_unweighted[3], num_contacts_weighted[3])
+})
+
+test_that("The day.of.week weight does not affect an age group that reported only during weekdays",
+          {
+            
+            matrix_unweighted <- contact_matrix(polymod11, age.limits = c(0,3), weigh.dayofweek = FALSE,symmetric = F)
+            matrix_weighted   <- contact_matrix(polymod11, age.limits = c(0,3), weigh.dayofweek = TRUE,symmetric = F)
+            
+            num_contacts_unweighted <- rowSums(matrix_unweighted$matrix)
+            num_contacts_weighted   <- rowSums(matrix_weighted$matrix)
+            
+            # age group 1 => adjusted by weights
+            expect_true(rowSums(matrix_unweighted$matrix)[1] != rowSums(matrix_weighted$matrix)[2])
+            
+            # age group 2 => contains only data on weekdays => should not be impacted by weights
+            expect_equal(num_contacts_unweighted[2], num_contacts_weighted[2])
 })
 
 test_that("Different spelled country names in Zenodo datasets vs wpp-package does not cause issues (e.g. Viet Nam vs. Vietnam)",
