@@ -410,6 +410,21 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
             merge(survey$participants, lower.upper.age.limits, by="lower.age.limit", all.x=TRUE)
     }
     
+    ## set contact age groups
+    max.contact.age <-
+        survey$contacts[, max(get(columns[["contact.age"]]), na.rm = TRUE) + 1]
+    
+    contact.age.group.breaks <- part.age.group.breaks
+    if (max.contact.age > max(contact.age.group.breaks)) {
+        contact.age.group.breaks[length(contact.age.group.breaks)] <- max.contact.age
+    }
+    survey$contacts[, contact.age.group :=
+                        cut(get(columns[["contact.age"]]),
+                            breaks = contact.age.group.breaks,
+                            labels = age.groups,
+                            right = FALSE)]
+    
+    ## weights
     survey$participants[, weight := 1]
     survey$contacts[, weight := 1]
     
@@ -458,17 +473,13 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         }
     }
     
-    if (n > 1)
-    {
-        if (!bootstrap)
-        {
-            warning("n > 1 does not make sense if not bootstrapping. Will return just one sample.")
-            n <- 1
-        }
-    }
+    # post-stratification weight standardisation: by age.group
+    survey$participants[, weight := weight / sum(weight) * .N,
+                        by = age.group]
+    survey$contacts[, weight := weight / sum(weight) * .N,
+                    by = age.group]
     
     ## merge participants and contacts into a single data table
-    survey$participants[, weight := weight / sum(weight) * .N]
     setkeyv(survey$participants, columns[["id"]])
     participant_ids <- unique(survey$participants[[columns[["id"]]]])
     
@@ -476,7 +487,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         merge(survey$contacts, survey$participants, by = columns[["id"]], all = F,
               allow.cartesian = T, suffixes=c(".cont", ".part"))
     survey$contacts[, weight := weight.cont * weight.part]
-    survey$contacts[, weight := weight / sum(weight) * .N]
+
     setkeyv(survey$contacts, columns[["id"]])
     
     ## sample contacts
@@ -514,20 +525,15 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         }
     }
     
-    ## set contact age groups
-    max.contact.age <-
-        survey$contacts[, max(get(columns[["contact.age"]]), na.rm = TRUE) + 1]
-    
-    contact.age.group.breaks <- part.age.group.breaks
-    if (max.contact.age > max(contact.age.group.breaks)) {
-        contact.age.group.breaks[length(contact.age.group.breaks)] <- max.contact.age
+    ## Bootstrap
+    if (n > 1)
+    {
+        if (!bootstrap)
+        {
+            warning("n > 1 does not make sense if not bootstrapping. Will return just one sample.")
+            n <- 1
+        }
     }
-    survey$contacts[, contact.age.group :=
-                        cut(get(columns[["contact.age"]]),
-                            breaks = contact.age.group.breaks,
-                            labels = age.groups,
-                            right = FALSE)]
-    
     ret <- list()
     for (i in seq_len(n))
     {

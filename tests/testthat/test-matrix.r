@@ -240,7 +240,7 @@ test_that("The day.of.week weight does not affect single-year age groups that re
             num_contacts_weighted   <- rowSums(matrix_weighted$matrix)
             
             # ages 1 and 2 => impaced by weights
-            expect_true(rowSums(matrix_unweighted$matrix)[1] != rowSums(matrix_weighted$matrix)[2])
+            expect_true(rowSums(matrix_unweighted$matrix)[1] != rowSums(matrix_weighted$matrix)[1])
             expect_true(rowSums(matrix_unweighted$matrix)[2] != rowSums(matrix_weighted$matrix)[2])
             
             # age 3 => contains only data on weekdays => should not be impacted by weights
@@ -257,11 +257,21 @@ test_that("The day.of.week weight does not affect an age group that reported onl
             num_contacts_weighted   <- rowSums(matrix_weighted$matrix)
             
             # age group 1 => adjusted by weights
-            expect_true(rowSums(matrix_unweighted$matrix)[1] != rowSums(matrix_weighted$matrix)[2])
+            expect_true(rowSums(matrix_unweighted$matrix)[1] != rowSums(matrix_weighted$matrix)[1])
             
             # age group 2 => contains only data on weekdays => should not be impacted by weights
             expect_equal(num_contacts_unweighted[2], num_contacts_weighted[2])
 })
+
+test_that("The day.of.week weight should change the result with only one age group",
+          {
+            
+            matrix_unweighted <- contact_matrix(polymod11, age.limits = c(0), weigh.dayofweek = FALSE,symmetric = F)
+            matrix_weighted   <- contact_matrix(polymod11, age.limits = c(0), weigh.dayofweek = TRUE,symmetric = F)
+            
+            expect_false(matrix_unweighted$matrix == matrix_weighted$matrix)
+})
+
 
 test_that("Different spelled country names in Zenodo datasets vs wpp-package does not cause issues (e.g. Viet Nam vs. Vietnam)",
            {
@@ -271,7 +281,7 @@ test_that("Different spelled country names in Zenodo datasets vs wpp-package doe
              expect_true(length(suppressMessages(contact_matrix(vietnam1,symmetric = T))) == 3) # country is recognized and demography data found
 })
 
-test_that("The selection of age groups based on the participant data is used for the reference population",
+test_that("The selection of age groups based on the participant data is also used for the reference population",
           {
             # no problems expected
             cm <- suppressMessages(contact_matrix(polymod, age.limits = c(0,18,50,100),symmetric = F)) 
