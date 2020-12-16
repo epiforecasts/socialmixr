@@ -17,9 +17,13 @@
 ##' @param missing.participant.age if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group
 ##' @param missing.contact.age if set to "remove" (default), participants that that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group
 ##' @param weights columns that contain weights
-##' @param weigh.dayofweek whether to weigh the day of the week (weight 5 for weekdays ans 2 for weekends)
+##' @param weigh.dayofweek whether to weigh the day of the week (weight (5/7 / N_week/N) for weekdays and (2/7 / N_weekend/N) for weekends)
+##' @param weigh.age whether to weigh by the age of the participants (vs. the populations' age distribution)
+##' @param weight.threshold threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff)
 ##' @param sample.all.age.groups what to do if bootstrapping fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead
 ##' @param quiet if set to TRUE, output is reduced
+##' @param return.demography boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters)
+##' @param return.part.weights boolean to return the participant weights
 ##' @param ... further arguments to pass to \code{\link{get_survey}}, \code{\link{check}} and \code{\link{pop_age}} (especially column names)
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
 ##' @importFrom stats xtabs runif median
@@ -31,7 +35,7 @@
 ##' data(polymod)
 ##' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, estimated.participant.age=c("mean", "sample", "missing"), estimated.contact.age=c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep"), weights = c(), weigh.dayofweek = FALSE, sample.all.age.groups = FALSE, quiet = FALSE, ...)
+contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, estimated.participant.age=c("mean", "sample", "missing"), estimated.contact.age=c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep"), weights = c(), weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, sample.all.age.groups = FALSE, quiet = FALSE, return.part.weights = FALSE, return.demography = NA, ...)
 {
     ## circumvent R CMD CHECK errors by defining global variables
     lower.age.limit <- NULL
@@ -50,6 +54,16 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     bootstrap.weight <- NULL
     participants <- NULL
     sum_weight <- NULL
+    
+    age.count <- NULL
+    age.proportion <- NULL
+    population.proportion <- NULL
+    population.count <- NULL
+    weight.age <- NULL
+    participant.age <- NULL
+    age.count <- NULL
+    age.proportion <- NULL
+    is.weekday <- NULL
     
     # study.year <- NULL
     # survey.year <- NULL
@@ -296,8 +310,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     survey$participants[, age.group :=
                             factor(age.group, levels=levels(age.group), labels=age.groups)]
     
-    ## if split or symmetric requested, get demographic data (survey population)
-    need.survey.pop <- split || symmetric
+    ## if split, symmetric or age weights are requested, get demographic data (survey population)
+    need.survey.pop <- split || symmetric || weigh.age || (!is.na(return.demography) && return.demography)
     if (need.survey.pop)
     {
         ## check if survey population is either not given or given as a vector of countries
@@ -383,6 +397,10 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 }
             }
         }
+        # keep reference of survey.pop
+        survey.pop.full <- data.table(pop_age(survey.pop, seq(min(survey.pop$lower.age.limit),
+                                                              max(survey.pop$lower.age.limit+5)), ...))
+        
         ## adjust age groups by interpolating, in case they don't match between
         ## demographic and survey data
         survey.pop <- data.table(pop_age(survey.pop, part.age.group.breaks, ...))
@@ -446,6 +464,9 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 
                 survey[[table]][,  sum_weight := NULL]
                 found.dayofweek <- TRUE
+                
+                # add boolean for "weekday"
+                survey[[table]][,  is.weekday := dayofweek %in% 1:5]
             }
         }
         if (!found.dayofweek)
@@ -455,7 +476,43 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         }
     }
     
-    ## further weigh contacts if columns are specified
+    ## assign weights to participants, to account for age variation
+    if (weigh.age) {
+        # for (table in surveys)
+        for (table in surveys[1]) #TODO: option to change survey[[table]] into survey$participant
+        {
+            if ("age.group" %in% colnames(survey[[table]]))
+            {
+                # get number and proportion of participants by age
+                survey[[table]][,age.count:= .N, by= eval(columns[["participant.age"]])]
+                survey[[table]][,age.proportion:= age.count / .N]
+                 
+                # get reference population by age (absolute and proportional) 
+                part.age.all      <- range(unique(survey[[table]][,get(columns[["participant.age"]])]))
+                survey.pop.detail <- data.table(pop_age(survey.pop.full, seq(part.age.all[1],part.age.all[2]+1)))
+                names(survey.pop.detail) <- c(columns[["participant.age"]],'population.count')
+                survey.pop.detail[,population.proportion := population.count / sum(population.count)]
+                
+                # merge reference and survey population data
+                survey[[table]] <- merge(survey[[table]],survey.pop.detail,by=eval(columns[["participant.age"]]))
+                
+                # calculate age-specific weights
+                survey[[table]][, weight.age := population.proportion/age.proportion]
+                
+                # merge 'weight.age' into 'weight'
+                survey[[table]][, weight := weight * weight.age]
+                
+                ## Remove the additional columns 
+                survey[[table]][,  age.count := NULL]
+                survey[[table]][,  age.proportion := NULL]
+                survey[[table]][,  population.count := NULL]
+                survey[[table]][,  population.proportion := NULL]
+                survey[[table]][,  weight.age := NULL]
+            }
+        }
+    }
+    
+    ## further weigh if columns are specified
     if (length(weights) > 0) {
         for (i in 1:length(weights)) {
             for (table in surveys) {
@@ -478,6 +535,15 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                         by = age.group]
     survey$contacts[, weight := weight / sum(weight) * .N,
                     by = age.group]
+
+    # option to truncate weights (if not NULL or NA)
+    if(!is.null(weight.threshold) && !is.na(weight.threshold)){
+        for (table in surveys) {
+            survey[[table]][weight > weight.threshold, weight := weight.threshold]
+            survey[[table]][, weight := weight / sum(weight) * .N,
+                            by = age.group]
+        }
+    }
     
     ## merge participants and contacts into a single data table
     setkeyv(survey$participants, columns[["id"]])
@@ -705,20 +771,52 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     } else {
         useNA <- "no"
     }
+    
     part.pop <- data.table(table(survey$participants[, age.group], useNA = useNA))
     setnames(part.pop, c("age.group", "participants"))
     part.pop[, proportion := participants / sum(participants)]
     
-    # optional: change survey.pop$age.group factors into characters (cfr. part.pop)
-    if (need.survey.pop) survey.pop[,age.group:= as.character(age.group)]
-    
     # set function output
-    if (length(ret) > 1) return_value <- list(matrices = ret)
-    else return_value <- ret[[1]]
+    if (length(ret) > 1) { 
+        return_value <- list(matrices = ret)
+    } else {
+        return_value <- ret[[1]]
+    }
     
     if (!is.null(return_value)) {
-        if (need.survey.pop) return_value[["demography"]] <- survey.pop[]
+        if (need.survey.pop && (is.na(return.demography) || return.demography)) {
+            # change survey.pop$age.group factors into characters (cfr. part.pop)
+            survey.pop[,age.group:= as.character(age.group)] 
+            return_value[["demography"]] <- survey.pop[]
+            }
         return_value[["participants"]] <- part.pop[]
+    }
+    
+    # option to return participant weights
+    if(return.part.weights){
+        
+        # default
+        part.weights <- survey$participants[, .N, by = list(age.group, weight)]
+        part.weights <- part.weights[order(age.group,weight),]
+        
+        # add age and/or dayofweek info 
+        if(weigh.age && weigh.dayofweek){
+            part.weights <- survey$participants[, .N, by = list(age.group,participant.age=get(columns[["participant.age"]]),is.weekday,weight)]
+            part.weights <- part.weights[order(age.group,participant.age,is.weekday,weight),]
+        } else if(weigh.age){
+            part.weights <- survey$participants[, .N, by = list(age.group,participant.age=get(columns[["participant.age"]]),weight)]
+            part.weights <- part.weights[order(age.group,participant.age,weight),]
+        } else if(weigh.dayofweek){
+            part.weights <- survey$participants[, .N, by = list(age.group,is.weekday,weight)]
+            part.weights <- part.weights[order(age.group,is.weekday,weight),]
+        } #TODO: make this more elegant
+
+        # set name of last column
+        names(part.weights)[ncol(part.weights)] <- "participants"
+        
+        # add proportion and add to return_value
+        part.weights[, proportion := participants / sum(participants)]
+        return_value[["participants_weights"]] <- part.weights[]
     }
     
     return(return_value)
