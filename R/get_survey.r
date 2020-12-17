@@ -53,7 +53,7 @@ get_survey <- function(survey, quiet=FALSE, ...)
 
             parsed_body <- content(temp_body, as = "text", encoding = "UTF-8")
             parsed_cite <-
-                fromJSON(xmlValue(xpathSApply(htmlParse(temp_body),
+                fromJSON(xmlValue(xpathSApply(htmlParse(parsed_body),
                                               '//script[@type="application/ld+json"]')[[1]]))
 
             authors <- as.person(paste(parsed_cite$creator$name, sep =","))
