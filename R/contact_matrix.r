@@ -816,7 +816,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         
         # add proportion and add to return_value
         part.weights[, proportion := participants / sum(participants)]
-        return_value[["participants_weights"]] <- part.weights[]
+        return_value[["participants.weights"]] <- part.weights[]
     }
     
     return(return_value)
