@@ -1,9 +1,9 @@
-##' Get age-specific population data according to the World Population Prospects 2015 edition
+##' Get age-specific population data according to the World Population Prospects 2019 edition
 ##'
-##' This uses data from the \code{wpp2015} package but combines male and female,
+##' This uses data from the \code{wpp2019} package but combines male and female,
 ##' and converts age groups to lower age limits
 ##' @return data frame of age-specific population data
-##' @import wpp2015
+##' @import wpp2019
 ##' @importFrom data.table data.table dcast melt
 ##' @importFrom countrycode countrycode
 ##' @param countries countries, will return all if not given
@@ -23,10 +23,11 @@ wpp_age <- function(countries, years)
     female <- NULL
     male <- NULL
     country_code <- NULL
+    name <- NULL
 
-    data(popF, package = "wpp2015", envir = environment())
-    data(popM, package = "wpp2015", envir = environment())
-
+    data(popF, package = "wpp2019", envir = environment())
+    data(popM, package = "wpp2019", envir = environment())
+    
     popM <- data.table(popM)
     popF <- data.table(popF)
 
@@ -34,6 +35,10 @@ wpp_age <- function(countries, years)
     popF <- popF[, sex := "female"]
 
     pop <- rbind(popM, popF)
+    
+    # change column names to remain compatible with the 2015 package
+    pop[,country:=name]
+    pop[,name:=NULL]
 
     if (!missing(countries))
     {
