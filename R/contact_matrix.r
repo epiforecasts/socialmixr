@@ -802,15 +802,15 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         # add age and/or dayofweek info 
         if(weigh.age && weigh.dayofweek){
             part.weights <- survey$participants[, .N, by = list(age.group,participant.age=get(columns[["participant.age"]]),is.weekday,weight)]
-            part.weights <- part.weights[order(age.group,participant.age,is.weekday,weight),]
         } else if(weigh.age){
             part.weights <- survey$participants[, .N, by = list(age.group,participant.age=get(columns[["participant.age"]]),weight)]
-            part.weights <- part.weights[order(age.group,participant.age,weight),]
         } else if(weigh.dayofweek){
             part.weights <- survey$participants[, .N, by = list(age.group,is.weekday,weight)]
-            part.weights <- part.weights[order(age.group,is.weekday,weight),]
-        } #TODO: make this more elegant
+        } 
 
+        # order (from left to right)
+        part.weights <- part.weights[order(part.weights),]
+        
         # set name of last column
         names(part.weights)[ncol(part.weights)] <- "participants"
         
