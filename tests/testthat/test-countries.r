@@ -6,7 +6,7 @@ test_that("list of countries is not empty",
   expect_true(length(survey_countries(polymod)) > 0)
 })
 
-test_that("population data for 2020 can be found",
+test_that("population data for 2015-2020 can be loaded",
 {
   suppressWarnings({
     expect_equal(wpp_age("Belgium",2015)$year[1],2015)
