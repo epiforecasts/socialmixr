@@ -18,7 +18,7 @@ contact_matrix(
   estimated.participant.age = c("mean", "sample", "missing"),
   estimated.contact.age = c("mean", "sample", "missing"),
   missing.participant.age = c("remove", "keep"),
-  missing.contact.age = c("remove", "sample", "keep"),
+  missing.contact.age = c("remove", "sample", "keep", "ignore"),
   weights = c(),
   weigh.dayofweek = FALSE,
   weigh.age = FALSE,
@@ -57,7 +57,7 @@ contact_matrix(
 
 \item{missing.participant.age}{if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group}
 
-\item{missing.contact.age}{if set to "remove" (default), participants that that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group}
+\item{missing.contact.age}{if set to "remove" (default), participants that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group; if set to "ignore", contact with missing age are ignored in the contact analysis}
 
 \item{weights}{columns that contain weights}
 

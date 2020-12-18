@@ -15,7 +15,7 @@
 ##' @param estimated.participant.age if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
 ##' @param estimated.contact.age if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
 ##' @param missing.participant.age if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group
-##' @param missing.contact.age if set to "remove" (default), participants that that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group
+##' @param missing.contact.age if set to "remove" (default), participants that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group; if set to "ignore", contact with missing age are ignored in the contact analysis
 ##' @param weights columns that contain weights
 ##' @param weigh.dayofweek whether to weigh the day of the week (weight (5/7 / N_week/N) for weekdays and (2/7 / N_weekend/N) for weekends)
 ##' @param weigh.age whether to weigh by the age of the participants (vs. the populations' age distribution)
@@ -35,7 +35,7 @@
 ##' data(polymod)
 ##' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, estimated.participant.age=c("mean", "sample", "missing"), estimated.contact.age=c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep"), weights = c(), weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, sample.all.age.groups = FALSE, quiet = FALSE, return.part.weights = FALSE, return.demography = NA, ...)
+contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, estimated.participant.age=c("mean", "sample", "missing"), estimated.contact.age=c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = c(), weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, sample.all.age.groups = FALSE, quiet = FALSE, return.part.weights = FALSE, return.demography = NA, ...)
 {
     ## circumvent R CMD CHECK errors by defining global variables
     lower.age.limit <- NULL
@@ -296,6 +296,20 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         survey$participants <- survey$participants[!(get(columns[["id"]]) %in% missing.age.id)]
     }
     
+    
+    if (missing.contact.age == "ignore" &&
+        nrow(survey$contacts[is.na(get(columns[["contact.age"]])) |
+                             get(columns[["contact.age"]]) < min(age.limits)]) > 0)
+    {
+        if (!quiet && n == 1 && !missing.contact.age.set)
+        {
+            message("Ignore contacts without age information. ",
+                    "To change this behaviour, set the 'missing.contact.age' option")
+        }
+        survey$contacts <- survey$contacts[!is.na(get(columns[["contact.age"]])) &
+                                               get(columns[["contact.age"]]) >= min(age.limits),]
+    }
+    
     # adjust age.group.brakes to the lower and upper ages in the survey
     survey$participants[, lower.age.limit := reduce_agegroups(get(columns[["participant.age"]]),
                                                               age.limits[age.limits < max.age])]
@@ -427,20 +441,6 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         survey$participants <-
             merge(survey$participants, lower.upper.age.limits, by="lower.age.limit", all.x=TRUE)
     }
-    
-    ## set contact age groups
-    max.contact.age <-
-        survey$contacts[, max(get(columns[["contact.age"]]), na.rm = TRUE) + 1]
-    
-    contact.age.group.breaks <- part.age.group.breaks
-    if (max.contact.age > max(contact.age.group.breaks)) {
-        contact.age.group.breaks[length(contact.age.group.breaks)] <- max.contact.age
-    }
-    survey$contacts[, contact.age.group :=
-                        cut(get(columns[["contact.age"]]),
-                            breaks = contact.age.group.breaks,
-                            labels = age.groups,
-                            right = FALSE)]
     
     ## weights
     survey$participants[, weight := 1]
@@ -590,6 +590,20 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
             }
         }
     }
+    
+    ## set contact age groups
+    max.contact.age <-
+        survey$contacts[, max(get(columns[["contact.age"]]), na.rm = TRUE) + 1]
+    
+    contact.age.group.breaks <- part.age.group.breaks
+    if (max.contact.age > max(contact.age.group.breaks)) {
+        contact.age.group.breaks[length(contact.age.group.breaks)] <- max.contact.age
+    }
+    survey$contacts[, contact.age.group :=
+                        cut(get(columns[["contact.age"]]),
+                            breaks = contact.age.group.breaks,
+                            labels = age.groups,
+                            right = FALSE)]
     
     ## Bootstrap
     if (n > 1)

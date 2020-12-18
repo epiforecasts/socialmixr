@@ -397,3 +397,38 @@ test_that("Country names in Zenodo datasets and the wpp package are aligned (e.g
             expect_true(length(suppressWarnings(contact_matrix(vietnam1,symmetric = F, quiet=TRUE))) == 2) # no demography data used
             expect_true(length(suppressWarnings(contact_matrix(vietnam1,symmetric = T, quiet=TRUE))) == 3) # country is recognized and demography data found
 })
+
+test_that("Participants that report contacts with missing age are removed/samples/ignored",
+{
+  
+  num.part <- nrow(polymod$participants)
+  num.part.missing.age <- sum(is.na(polymod$participants$part_age))
+
+  # keep missing participant and contact ages ==>> get original sample size
+  expect_equal(sum(contact_matrix(survey=polymod,age.limits=c(0),quiet=TRUE,
+               missing.participant.age = 'keep', 
+               missing.contact.age = 'keep')$participants$participants),num.part)
+  
+  # remove missing participant ages ==>> get original sample size - num.part.missing.age
+  expect_equal(sum(contact_matrix(survey=polymod,age.limits=c(0),quiet=TRUE,
+              missing.participant.age = 'remove', 
+              missing.contact.age = 'keep')$participants$participants), num.part - num.part.missing.age)
+  
+  # remove missing participant ages ==>> get original sample size - num.part.missing.age
+  expect_lt(sum(contact_matrix(survey=polymod,age.limits=c(0),quiet=TRUE,
+               missing.participant.age = 'remove', 
+               missing.contact.age = 'remove')$participants$participants), num.part - num.part.missing.age)
+  
+  # keep missing contact ages ==>> additional column in contact matrix
+  expect_equal(ncol(contact_matrix(survey=polymod,age.limits=c(0),quiet=TRUE,
+                                   missing.contact.age = 'remove')$matrix),1)
+  
+  expect_equal(ncol(contact_matrix(survey=polymod,age.limits=c(0),quiet=TRUE,
+                                  missing.contact.age = 'keep')$matrix),2)
+  
+  expect_equal(ncol(contact_matrix(survey=polymod,age.limits=c(0),quiet=TRUE,
+                                   missing.contact.age = 'ignore')$matrix),1)
+  
+  expect_equal(ncol(contact_matrix(survey=polymod,age.limits=c(0),quiet=TRUE,
+                                   missing.contact.age = 'sample')$matrix),1)
+})
