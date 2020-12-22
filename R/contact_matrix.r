@@ -285,7 +285,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
     # adjust age.group.brakes to the lower and upper ages in the survey
     survey$participants[, lower.age.limit := reduce_agegroups(get(columns[["participant.age"]]),
                                                               age.limits[age.limits < max.age])]
-    part.age.group.breaks <- c(age.limits[age.limits <= max.age], max.age + 1)
+    part.age.group.breaks  <- c(age.limits[age.limits < max.age], max.age)
+    part.age.group.present <- age.limits[age.limits < max.age]
     survey$participants[, age.group :=
                             cut(survey$participants[, get(columns[["participant.age"]])],
                                 breaks = part.age.group.breaks,
@@ -295,6 +296,12 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         sub("\\[([0-9]+),.*$", "\\1+", age.groups[length(age.groups)])
     survey$participants[, age.group :=
                             factor(age.group, levels=levels(age.group), labels=age.groups)]
+    
+    ## add upper age limits
+    lower.upper.age.limits <- data.table(lower.age.limit = part.age.group.present,
+                                         upper.age.limit = part.age.group.breaks[-1])
+    survey$participants <-
+        merge(survey$participants, lower.upper.age.limits, by="lower.age.limit", all.x=TRUE)
     
     ## if split or symmetric requested, get demographic data (survey population)
     need.survey.pop <- split || symmetric
@@ -367,6 +374,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 survey.pop <-
                     country.pop[year == survey.year][, list(population = sum(population)),
                                                      by = "lower.age.limit"]
+                pop.survey.age.gap <- unique(diff(sort(survey.pop$lower.age.limit)))
+                survey.pop[,upper.age.limit := lower.age.limit+pop.survey.age.gap]
             }
             
             if (survey.representative) {
@@ -385,29 +394,11 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         }
         ## adjust age groups by interpolating, in case they don't match between
         ## demographic and survey data
-        survey.pop <- data.table(pop_age(survey.pop, part.age.group.breaks, ...))
-        
-        ## possibly adjust age groups according to maximum age (so as not to have empty age groups)
-        survey.pop[, lower.age.limit := reduce_agegroups(lower.age.limit, age.limits)]
-        survey.pop <- survey.pop[, list(population = sum(population)), by=lower.age.limit]
-        setkey(survey.pop, lower.age.limit)
-        ## re-assign lower age limits in participants
-        survey$participants[, lower.age.limit :=
-                                reduce_agegroups(get(columns[["participant.age"]]),
-                                                 survey.pop$lower.age.limit)]
-        present.lower.age.limits <- unique(survey.pop$lower.age.limit)
-        present.lower.age.limits <-
-            present.lower.age.limits[order(present.lower.age.limits)]
-        
+        survey.pop.max <- max(survey.pop$upper.age.limit)
+        survey.pop <- data.table(pop_age(survey.pop, part.age.group.present, ...)) 
+
         ## set upper age limits
-        survey.pop[, upper.age.limit := c(survey.pop$lower.age.limit[-1], max.age)]
-        
-        lower.upper.age.limits <-
-            data.table(lower.age.limit = present.lower.age.limits,
-                       upper.age.limit = c(present.lower.age.limits[-1], max.age))
-        ## set upper age limits and construct age groups
-        survey$participants <-
-            merge(survey$participants, lower.upper.age.limits, by="lower.age.limit", all.x=TRUE)
+        survey.pop[, upper.age.limit := c(part.age.group.present[-1], survey.pop.max)]
     }
     
     survey$participants[, weight := 1]
