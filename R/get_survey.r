@@ -34,14 +34,14 @@ get_survey <- function(survey, quiet=FALSE, ...)
     {
         if (is.character(survey))
         {
-            if (length(survey) > 1)
-                stop("if 'survey' is a DOI or URL, it must be of length 1")
-
             survey <- sub("^(https?:\\/\\/(dx\\.)?doi\\.org\\/|doi:)", "", survey)
             survey <- sub("#.*$", "", survey)
             is.doi <- (length(survey) > 0) && all(grepl("^10.[0-9.]{4,}/[-._;()/:A-z0-9]+$", survey))
             is.url <- (length(survey) > 0) && (is.doi || grepl("^https?:\\/\\/", survey))
 
+            if (is.url & length(survey) > 1)
+                stop("if 'survey' is a DOI or URL, it must be of length 1")
+            
             if (is.doi) url <- paste0("https://doi.org/", survey) else url <- survey
 
         } else stop("'survey' must be an 'survey' object, integer or character")
@@ -53,7 +53,7 @@ get_survey <- function(survey, quiet=FALSE, ...)
 
             parsed_body <- content(temp_body, as = "text", encoding = "UTF-8")
             parsed_cite <-
-                fromJSON(xmlValue(xpathSApply(htmlParse(temp_body),
+                fromJSON(xmlValue(xpathSApply(htmlParse(parsed_body),
                                               '//script[@type="application/ld+json"]')[[1]]))
 
             authors <- as.person(paste(parsed_cite$creator$name, sep =","))
@@ -89,7 +89,7 @@ get_survey <- function(survey, quiet=FALSE, ...)
                 stop("File", ifelse(length(missing) > 1, "s", ""), " ", 
                      paste(paste0("'", missing, "'", collapse=""), sep=", "), " not found.")
             }
-            files <- survey
+            files <- survey[grepl('csv',survey)] # select csv files
             reference <- NULL
         }
 
@@ -115,14 +115,14 @@ get_survey <- function(survey, quiet=FALSE, ...)
         ## first, get the common files
         for (type in main_types)
         {
-          main_file[type] <- grep(paste0("_", type,"_common\\.csv$"), files, value=TRUE)
-          if (length(main_file[type]) == 0)
+          main_file <- grep(paste0("_", type,"_common\\.csv$"), files, value=TRUE)
+          if (length(main_file) == 0)
           {
               stop("Need a file ending ", paste0("_", type, "_common.csv"),
                    ", but no such file found.")
           }
-          main_surveys[[type]] <- contact_data[[main_file[type]]]
-          files <- setdiff(files, main_file[type])
+          main_surveys[[type]] <- contact_data[[main_file]]
+          files <- setdiff(files, main_file)
         }
 
         ## next, get any extra files

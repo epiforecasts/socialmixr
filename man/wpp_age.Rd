@@ -2,7 +2,7 @@
 % Please edit documentation in R/wpp_age.r
 \name{wpp_age}
 \alias{wpp_age}
-\title{Get age-specific population data according to the World Population Prospects 2015 edition}
+\title{Get age-specific population data according to the World Population Prospects 2019 edition}
 \usage{
 wpp_age(countries, years)
 }
@@ -15,7 +15,7 @@ wpp_age(countries, years)
 data frame of age-specific population data
 }
 \description{
-This uses data from the \code{wpp2015} package but combines male and female,
+This uses data from the \code{wpp2019} package but combines male and female,
 and converts age groups to lower age limits
 }
 \examples{

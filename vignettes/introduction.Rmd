@@ -120,7 +120,7 @@ Demography
 
 Obtaining symmetric contact matrices or splitting out their components (see below) requires information about the underlying demographic composition of the survey population. This can be passed to `contact_matrix` as the `survey.pop` argument, a `data.frame` with two columns, `lower.age.limit` (denoting the lower end of the age groups) and `population` (denoting the number of people in each age group). If no `survey.pop` is not given, `contact_matrix` will try to obtain the age structure of the population (as per the `countries` argument) from the [World Population Prospects](https://esa.un.org/unpd/wpp/) of the United Nations, using estimates from the year that closest matches the year in which the contact survey was conducted.
 
-If demographic information is used, this is returned by `contact_matrix` as the `demography` field in the results list.
+If demographic information is used, this is returned by `contact_matrix` as the `demography` field in the results list. It is possible to enfore or prevent the function to return demography data by using the boolean `return.demography`.
 
 Symmetric contact matrices
 =======
@@ -165,3 +165,41 @@ library('ggplot2')
 df <- melt(mr, varnames = c("age1", "age2"), value.name = "contacts")
 ggplot(df, aes(x = age2, y = age1, fill = contacts)) + theme(legend.position="bottom") + geom_tile()
 ```
+
+Participant weights
+=======
+
+
+Participant weights are commonly used to align sample and population characteristics in terms of temporal aspectecs and the ages distribution. For example, the day of the week has been reported as a driving factor for social contact behavior, hence to obtain a weekly average, the survey data should represent the weekly 2/5 distribution of weekend/week days. To align the survey data to this distribution, one can obtain participant weights in the form of:
+$$w_{day.of.week} = \tfrac{5/7}{N_{weekday}/N} \text{  OR   } \tfrac{2/7}{N_{weekend}/N}$$
+with sample size $N$, and $N_{weekday}$ and $N_{weekend}$ the number of participants that were surveyed during weekdays and weekend days, respectively. It is possible to remove the constant values (e.g. $w = 5/N_{weekday}$), which results in the same standardized weights. However, we opt to use the relaive proportions to calculate weights to enable truncation with a generic threshold (see below). 
+
+Another driver of social contact patterns is age. To improve the representativeness of survey data, age-specific weights can be calculated as:
+$$w_{age} = \tfrac{P_{a}/P}{N_{a}/N}$$
+with $P$ the population size, $P_a$ the population fraction of age $a$, $N$ the survey sample size and $N_a$ the survey fraction of age $a$. The combination of age-specific and temporal weights for participant $i$ of age $a$ can be constructed as:
+$$w_{i} = w_{age} * w_{day.of.week} $$
+Finally, the weights can to be standardised as follows:
+$$\tilde{w}_{i} =  \tfrac{w_{i}}{\sum_{}^{} w_{}} * N $$
+However, if the social contact analyses is based on (age) stratification by splitting the population into non-overlapping groups (strata), it requires the weights to be standardized so that the weighted totals within mutually exclusive cells equal the known population totals (Kolenikov 2016). The post-stratification cells need to be mutually exclusive and cover the whole population. The post-stratified (PS) weight for participant $i$ of \mbox{group $g$} is:
+$$\tilde{w}^{PS}_{i} =  \tfrac{w_{i}}{\sum_{\text{j}}^{\text{group g}} w_{j}} * N_g$$
+
+Temporal weights are activated in `contact_matirx` by `weigh.dayofweek` and age-specific weights are used when enabling `weight.age`. The post-strafitication weights are calculated by default. It is possible to obtain the participant weights via the option `return.part.weights`.
+
+```{r message=FALSE, warning=FALSE}
+contact_matrix(survey = polymod, age.limits = c(0,18,60), weigh.dayofweek = TRUE, 
+               weigh.age = TRUE, return.part.weights = TRUE)
+
+```
+
+
+Participant weights threshold
+=======
+
+If the survey population differs extensively from the demography, (some) participants can end up with high weights and as such, a large contribution to the population averages. It can be warranted to limit the influence of single participants by a truncation of the weights. This trucation is applied on the standardized weights,  followed by another standardisation to make shure that the sum of the weights still equals the sample size. The latter can lead to final weights of which some little exceed the threshold value. To enbable the threshold in `contact_matrix`, you need to provide a numeric `weight.threshold`.
+
+```{r message=FALSE, warning=FALSE}
+contact_matrix(survey = polymod, age.limits = c(0,18,60), weigh.dayofweek = TRUE, 
+               weigh.age = TRUE, return.part.weights = TRUE,
+               weight.threshold = 3)
+```
+
