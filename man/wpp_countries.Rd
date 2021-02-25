@@ -10,7 +10,7 @@ wpp_countries()
 list of countries
 }
 \description{
-Uses the World Population Prospects data from the \code{wpp2019} package
+Uses the World Population Prospects data from the \code{wpp2017} package
 }
 \examples{
 \dontrun{wpp_countries()}
