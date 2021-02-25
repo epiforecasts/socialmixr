@@ -420,9 +420,13 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 }
             }
         }
-        # keep reference of survey.pop
-        survey.pop.full <- data.table(pop_age(survey.pop, seq(min(survey.pop$lower.age.limit),
-                                                              max(survey.pop$lower.age.limit+5)), ...))
+        if (weigh.age) {
+            ## keep reference of survey.pop
+            survey.pop.full <-
+                data.table(pop_age(survey.pop,
+                                   seq(min(survey.pop$lower.age.limit),
+                                       max(survey.pop$lower.age.limit+5)), ...))
+        }
         
         ## adjust age groups by interpolating, in case they don't match between
         ## demographic and survey data
