@@ -338,7 +338,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         ## check if survey population is either not given or given as a vector of countries
         if (missing(survey.pop) || is.character(survey.pop))
         {
-            survey.representative=FALSE
+            survey.representative <- FALSE
             if (!missing(survey.pop))
             {
                 ## survey population is given as vector of countries
@@ -361,7 +361,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                             "' column found in the data. ",
                             "I don't know which population this is from. ",
                             "Assuming the survey is representative")
-                    survey.representative=TRUE
+                    survey.representative <- TRUE
                 }
             }
             
