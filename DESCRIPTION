@@ -1,6 +1,6 @@
 Package: socialmixr
-Version: 0.1.7
-Date: 2020-08-06
+Version: 0.1.8
+Date: 2020-11-12
 Title: Social Mixing Matrices for Infectious Disease Modelling
 Authors@R: 
   c(
@@ -12,13 +12,13 @@ Authors@R:
         person("Alexis", "Robert", email = "alexis.robert@lshtm.ac.uk", role = c("ctb"))
    )
 Depends: R (>= 3.5.0)
-Imports: data.table, curl, httr, jsonlite, oai, wpp2019, countrycode,
+Imports: data.table, curl, httr, jsonlite, oai, wpp2017, countrycode,
         stringr, XML, lubridate
 Description: Provides methods for sampling contact matrices from diary data for use in infectious disease modelling, as discussed in Mossong et al. (2008) <doi:10.1371/journal.pmed.0050074>.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests: testthat, knitr, rmarkdown, ggplot2, reshape2, formatR
 VignetteBuilder: knitr
 NeedsCompilation: no

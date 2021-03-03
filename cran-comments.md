@@ -8,3 +8,7 @@ There were no ERRORs, WARNINGs or NOTEs.
 
 ## Downstream dependencies
 0 packages with problems.
+
+## Further notes
+
+In a previous submission tehre was an error in the noLD environment on CRAN. This has now been fixed.

@@ -52,9 +52,9 @@ survey_countries <- function(survey, country.column = "country", ...)
 
 ##' List all countries and regions for which socialmixr has population data
 ##'
-##' Uses the World Population Prospects data from the \code{wpp2019} package
+##' Uses the World Population Prospects data from the \code{wpp2017} package
 ##' @return list of countries
-##' @import wpp2019
+##' @import wpp2017
 ##' @importFrom data.table data.table setkey
 ##' @importFrom utils data
 ##' @importFrom countrycode countrycode
@@ -67,8 +67,8 @@ wpp_countries <- function()
     popF <- NULL
     popM <- NULL
 
-    data(popF, package = "wpp2019", envir = environment())
-    data(popM, package = "wpp2019", envir = environment())
+    data(popF, package = "wpp2017", envir = environment())
+    data(popM, package = "wpp2017", envir = environment())
     pop <- data.table(rbind(popF, popM))
     countries <- as.character(unique(pop$name))
     found_countries <-
