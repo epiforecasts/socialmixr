@@ -367,7 +367,7 @@ test_that("The participant weights add up to the sample size",
   })
 })
 
-test_that("The thresholdweights with threshold",
+test_that("The weights with threshold",
           {
             suppressWarnings({
               
