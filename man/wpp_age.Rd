@@ -2,7 +2,7 @@
 % Please edit documentation in R/wpp_age.r
 \name{wpp_age}
 \alias{wpp_age}
-\title{Get age-specific population data according to the World Population Prospects 2019 edition}
+\title{Get age-specific population data according to the World Population Prospects 2017 edition}
 \usage{
 wpp_age(countries, years)
 }

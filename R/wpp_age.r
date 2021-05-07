@@ -1,4 +1,4 @@
-##' Get age-specific population data according to the World Population Prospects 2019 edition
+##' Get age-specific population data according to the World Population Prospects 2017 edition
 ##'
 ##' This uses data from the \code{wpp2017} package but combines male and female,
 ##' and converts age groups to lower age limits
