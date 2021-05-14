@@ -37,6 +37,9 @@ wpp_age <- function(countries, years)
         data(popMprojMed, package = "wpp2017", envir = environment())
         data(popFprojMed, package = "wpp2017", envir = environment())
         
+        popMprojMed <- data.table(popMprojMed)
+        popFprojMed <- data.table(popFprojMed)
+        
         popM <- data.table(merge(popM,popMprojMed))
         popF <- data.table(merge(popF,popFprojMed))
         warning("Don't have historial population data available after ", years_included, ". Will make use of the median projection of population counts from the WPP2017 package.")
