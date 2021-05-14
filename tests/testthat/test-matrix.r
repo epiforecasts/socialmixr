@@ -432,3 +432,52 @@ test_that("Participants that report contacts with missing age are removed/sample
   expect_equal(ncol(contact_matrix(survey=polymod,age.limits=c(0),quiet=TRUE,
                                    missing.contact.age = 'sample')$matrix),1)
 })
+
+
+test_that("User-defined reference populations with open ended age groups are handled correctly",
+{
+  suppressWarnings({
+  survey.pop <- data.frame(lower.age.limit = c(0,4,15),
+                           population = c(4e6,1e5,6e6))
+  
+  # to handle the open ended age group in the survey.pop
+  expect_equal(nrow(contact_matrix(polymod, 
+                                   age.limits = c(0,18,60),
+                                   symmetric = T, # to make sure that demography is returned
+                                   survey.pop = survey.pop)$demography),3)
+  
+  # to check the column names
+  expect_equal(names(contact_matrix(polymod, 
+                                   age.limits = c(0,18,60),
+                                   symmetric = T, # to make sure that demography is returned
+                                   survey.pop = survey.pop)$demography)[1],"age.group")
+  
+  expect_error(contact_matrix(polymod_nocountry, 
+                 age.limits = c(0,18,60),
+                 symmetric = T, # to make sure that demography is returned
+                 survey.pop = 'dummy')
+  )
+  
+  })
+})
+
+test_that("The absence of reference population info is going well",
+{
+  suppressWarnings({
+    
+    polymod_nocountry <- polymod
+    polymod_nocountry$participants$country <- NULL
+    
+    # no reference population given
+    expect_equal(nrow(contact_matrix(polymod_nocountry, 
+                                     age.limits = c(0,18,60),
+                                     symmetric = T # to make sure that demography is returned
+                                     )$demography),3)
+    
+    # to check the column names
+    expect_equal(names(contact_matrix(polymod_nocountry, 
+                                      age.limits = c(0,18,60),
+                                      symmetric = T # to make sure that demography is returned
+                                      )$demography)[1],"age.group")
+  })
+})
