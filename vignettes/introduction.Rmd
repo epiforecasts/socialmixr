@@ -203,3 +203,23 @@ contact_matrix(survey = polymod, age.limits = c(0,18,60), weigh.dayofweek = TRUE
                weight.threshold = 3)
 ```
 
+Contact rates per capita
+=======
+
+Contact matrices $c_{ij}$ represent typically the reported number of contacts of an individual of age $i$ with individuals of age $j$. The contact matrix per capita provides the contact rates with one individual age $j$ in the reference population demographics. These per capita matrices can be used in infectious disease modelling to calculate for example the force of infection. The latter is based on the likelihood that one susceptible individual of age $i$ will be in contact with one infectious individual of age $j$. 
+
+The contact rates per capita are calculated as follows:
+
+$$\tilde{c}_{ij} =  \tfrac{c_{ij}}{N_{j}}$$
+
+Please note that if the option `symmetric=TRUE` is specified in `contact_matrix`, the matrices per capita will actually be symmetric, while the default contact matrix will show assymetry if the sub-population sizes are different.
+
+
+```{r message=FALSE, warning=FALSE}
+contact_matrix(survey = polymod, countries = "Germany",age.limits = c(0,60), symmetric = T, per.capita = TRUE)
+```
+
+
+
+
+

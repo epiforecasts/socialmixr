@@ -481,3 +481,68 @@ test_that("The absence of reference population info is going well",
                                       )$demography)[1],"age.group")
   })
 })
+
+test_that("Contact matrices per capita can be provided",
+{
+  suppressWarnings({
+    
+    # get contact matrix per capita
+    expect_type(contact_matrix(polymod, 
+                               age.limits = c(0,18,60),
+                               per.capita = T
+                               )$matrix.per.capita,'double')
+    
+    
+    # per capita matrix is not returned when counts=TRUE
+    expect_null(contact_matrix(polymod, 
+                               age.limits = c(0,18,60),
+                               per.capita = T,
+                               counts = T
+                               )$matrix.per.capita)
+  })
+  
+  # per capita matrix is not returned when split=TRUE
+  expect_null(contact_matrix(polymod, 
+                             age.limits = c(0,18,60),
+                             per.capita = T,
+                             split = T
+  )$matrix.per.capita)
+})
+
+test_that("Symmetric contact matrices per capita are actually symmetric",
+          {
+            suppressWarnings({
+              
+              # get contact matrix per capita
+              matrix.per.capita <- contact_matrix(polymod, 
+                                                  age.limits = c(0,18,60),
+                                                  symmetric = T, # to make sure that demography is returned
+                                                  per.capita = T
+                                                 )$matrix.per.capita
+              
+              expect_equal(c(matrix.per.capita),c(t(matrix.per.capita)))
+              
+            })
+          })
+
+
+test_that("Contact matrices per capita are also generated when bootstrapping",
+{
+  suppressWarnings({
+    
+    # get contact matrix per capita
+    expect_equal(length(contact_matrix(polymod, 
+                                 age.limits = c(0,18,60),
+                                 per.capita = T,
+                                 n = 3
+    )$matrices[[3]]),2)
+    
+    # get no contact matrix per capita
+    expect_equal(length(contact_matrix(polymod, 
+                                       age.limits = c(0,18,60),
+                                       per.capita = F,
+                                       n = 3
+    )$matrices[[1]]),1)
+    
+  })
+})
