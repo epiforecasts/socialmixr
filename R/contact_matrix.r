@@ -402,10 +402,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 survey.pop <-
                     country.pop[year == survey.year][, list(population = sum(population)),
                                                      by = "lower.age.limit"]
-                pop.survey.age.gap <- unique(diff(sort(survey.pop$lower.age.limit)))
-                survey.pop[,upper.age.limit := lower.age.limit+pop.survey.age.gap]
             }
-
             if (survey.representative) {
                 survey.pop <-
                     survey$participants[, lower.age.limit :=
@@ -419,13 +416,31 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                         survey$participants[, median(get(columns[["year"]]), na.rm=TRUE)]
                 }
             }
+        } else{
+            # if survey.pop is a data frame with columns 'lower.age.limit' and 'population'
+            survey.pop <- data.table(survey.pop)
+            # make sure the maximum survey.pop age exceeds the participant age group breaks
+            if(max(survey.pop$lower.age.limit) < max(part.age.group.present)){
+                survey.pop <- rbind(survey.pop,
+                                    list(max(part.age.group.present+1),0))
+            }
+            
+            # add dummy survey.year
+            survey.year <- NA
         }
+        
+        # add upper.age.limit after sorting the survey.pop ages (and add maximum age > given ages)
+        survey.pop <- survey.pop[order(lower.age.limit),]
+        survey.pop$upper.age.limit <- unlist(c(survey.pop[-1,'lower.age.limit'],
+                                               1+max(survey.pop$lower.age.limit,
+                                                   part.age.group.present)))
+        
         if (weigh.age) {
             ## keep reference of survey.pop
             survey.pop.full <-
                 data.table(pop_age(survey.pop,
                                    seq(min(survey.pop$lower.age.limit),
-                                       max(survey.pop$lower.age.limit+5)), ...))
+                                       max(survey.pop$upper.age.limit)), ...))
         }
 
         ## adjust age groups by interpolating, in case they don't match between
