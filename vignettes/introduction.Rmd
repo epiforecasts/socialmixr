@@ -179,6 +179,25 @@ To model the contact matrix in this way with the `contact_matrix` function, set 
 contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), split = TRUE)
 ```
 
+Filters
+=======
+
+The function `contact_matrix` enables the filtering of social contact data. This can for example be used to select contacts reported at school or to select long duration contacts. Any filter can applied to the data, if given as a list of the form (column=filter_value). As such, only contacts that have 'filter_value' in 'column' will be considered for the generated contact matrix.
+
+```{r, warning=FALSE, message=FALSE}
+# contact matrix for school-related contacts
+contact_matrix(polymod, age.limits= c(0, 20, 60), filter = list(cnt_school=1))$matrix
+
+# contact matrix for work-related contacts involving physical contact
+contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_work=1, phys_contact=1))$matrix
+
+# contact matrix for daily contacts at home with males
+contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_home=1, cnt_gender="M", duration_multi=5))$matrix
+
+```
+
+
+
 Plotting
 =======
 
