@@ -13,7 +13,7 @@ Authors@R:
    )
 Depends: R (>= 3.5.0)
 Imports: data.table, curl, httr, jsonlite, oai, wpp2017, countrycode,
-        stringr, XML, lubridate
+        stringr, XML, lubridate, fields
 Description: Provides methods for sampling contact matrices from diary data for use in infectious disease modelling, as discussed in Mossong et al. (2008) <doi:10.1371/journal.pmed.0050074>.
 License: GPL-3
 Encoding: UTF-8

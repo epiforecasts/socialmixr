@@ -198,17 +198,32 @@ contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_home=1, cnt
 
 
 
-Plotting
+Plotting (ggplot2)
 =======
 
 The contact matrices can be plotted for example in line with the figures from Mossong et al (2020) by using the `geom_tile` function of the `ggplot2` package.
 
-```{r fig.width=5, fig.height=5, tidy=TRUE}
+```{r fig.width=4, fig.height=4, tidy=TRUE}
 library('reshape2')
 library('ggplot2')
 df <- melt(mr, varnames = c("age.group", "age.group.contact"), value.name = "contacts")
 ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) + theme(legend.position="bottom") + geom_tile()
 ```
+
+Plotting (R base)
+=======
+
+The contact matrices can be plotted with `matrix_plot` as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changend.
+
+```{r fig.width=4, fig.height=4, tidy=TRUE}
+matrix_plot(mr)
+matrix_plot(mr,color.palette = gray.colors)
+
+library(RColorBrewer)
+usr_col <- function(x){ return(brewer.pal(x,'YlGn')) }
+matrix_plot(mr, num.colors = 9, color.palette = usr_col)
+```
+
 
 Participant weights
 =======
