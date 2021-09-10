@@ -89,7 +89,7 @@ get_survey <- function(survey, quiet=FALSE, ...)
                 stop("File", ifelse(length(missing) > 1, "s", ""), " ", 
                      paste(paste0("'", missing, "'", collapse=""), sep=", "), " not found.")
             }
-            files <- survey[grepl('csv',survey)] # select csv files
+            files <- survey[grepl("csv",survey)] # select csv files
             reference <- NULL
         }
 

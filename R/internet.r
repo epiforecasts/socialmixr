@@ -7,7 +7,7 @@
 check_zenodo <- function() {
   status <- 0
   try({
-    status <- status_code(GET('http://zenodo.org'))
+    status <- status_code(GET("http://zenodo.org"))
   }, silent = TRUE)
   return(status)
 }

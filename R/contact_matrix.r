@@ -433,7 +433,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         
         # add upper.age.limit after sorting the survey.pop ages (and add maximum age > given ages)
         survey.pop <- survey.pop[order(lower.age.limit),]
-        survey.pop$upper.age.limit <- unlist(c(survey.pop[-1,'lower.age.limit'],
+        survey.pop$upper.age.limit <- unlist(c(survey.pop[-1,"lower.age.limit"],
                                                1+max(survey.pop$lower.age.limit,
                                                    part.age.group.present)))
         
@@ -502,7 +502,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 # get reference population by age (absolute and proportional)
                 part.age.all      <- range(unique(survey[[table]][,get(columns[["participant.age"]])]))
                 survey.pop.detail <- data.table(pop_age(survey.pop.full, seq(part.age.all[1],part.age.all[2]+1)))
-                names(survey.pop.detail) <- c(columns[["participant.age"]],'population.count')
+                names(survey.pop.detail) <- c(columns[["participant.age"]],"population.count")
                 survey.pop.detail[,population.proportion := population.count / sum(population.count)]
 
                 # merge reference and survey population data

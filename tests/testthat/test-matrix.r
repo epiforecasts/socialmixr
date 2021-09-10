@@ -317,14 +317,14 @@ test_that("The return.demography overrules other parameters",
     expect_null(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, split =FALSE)$demography)
     
     # default behaviour
-    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, symmetric=TRUE)$demography,'list')
-    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, weigh.age=TRUE)$demography,'list')
-    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, split=TRUE)$demography,'list')
+    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, symmetric=TRUE)$demography,"list")
+    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, weigh.age=TRUE)$demography,"list")
+    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, split=TRUE)$demography,"list")
     
     # always return demography, irrespectively of other function paramters   
-    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, symmetric=FALSE, return.demography=TRUE)$demography,'list')
-    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, weigh.age=FALSE, return.demography=TRUE)$demography,'list')
-    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, split=FALSE, return.demography=TRUE)$demography,'list')
+    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, symmetric=FALSE, return.demography=TRUE)$demography,"list")
+    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, weigh.age=FALSE, return.demography=TRUE)$demography,"list")
+    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, split=FALSE, return.demography=TRUE)$demography,"list")
     
     # never return demography data, irrespectively of other function paramters 
     expect_null(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, symmetric =TRUE, return.demography=FALSE)$demography)
@@ -340,7 +340,7 @@ test_that("The return.part.weights option",
       expect_null(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE)$participants.weights)
       
       # with participant weights data
-      expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, return.part.weights=TRUE)$participants.weights,'list')
+      expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, return.part.weights=TRUE)$participants.weights,"list")
       
       # without any weight method activated, weights should be 1
       expect_equal(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, return.part.weights=TRUE)$participants.weights$weight,c(1,1))
