@@ -428,7 +428,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
             }
             
             # add dummy survey.year
-            survey.year <- NA
+            survey.year <- NA_integer_
         }
         
         # add upper.age.limit after sorting the survey.pop ages (and add maximum age > given ages)

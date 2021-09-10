@@ -499,14 +499,14 @@ test_that("Contact matrices per capita can be provided",
                                per.capita = T,
                                counts = T
                                )$matrix.per.capita)
+
+    # per capita matrix is not returned when split=TRUE
+    expect_null(contact_matrix(polymod, 
+                               age.limits = c(0,18,60),
+                               per.capita = T,
+                               split = T
+    )$matrix.per.capita)
   })
-  
-  # per capita matrix is not returned when split=TRUE
-  expect_null(contact_matrix(polymod, 
-                             age.limits = c(0,18,60),
-                             per.capita = T,
-                             split = T
-  )$matrix.per.capita)
 })
 
 test_that("Symmetric contact matrices per capita are actually symmetric",
