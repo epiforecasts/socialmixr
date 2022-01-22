@@ -10,6 +10,9 @@
 #' @param ... ignored
 #' @export
 pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.column = "population", ...) {
+
+  chkDots(...)
+
   ## circumvent R CMD CHECK errors by defining global variables
   ..original.lower.age.limit <- NULL
   ..segment <- NULL
