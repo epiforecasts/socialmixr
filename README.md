@@ -1,7 +1,10 @@
 Social mixing matrices for infectious disease modelling in R
 =============
 
-[![Build Status](https://travis-ci.org/sbfnk/socialmixr.png?branch=master)](https://travis-ci.org/sbfnk/socialmixr) [![codecov](https://codecov.io/github/sbfnk/socialmixr/branch/master/graphs/badge.svg)](https://codecov.io/github/sbfnk/socialmixr) 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/epiforecasts/socialmixr/workflows/R-CMD-check/badge.svg)](https://github.com/epiforecasts/socialmixr/actions)
+[![codecov](https://codecov.io/github/sbfnk/socialmixr/branch/master/graphs/badge.svg)](https://codecov.io/github/sbfnk/socialmixr) 
+<!-- badges: end -->
 
 [socialmixr](https://github.com/sbfnk/socialmixr) is an `R` package to derive social mixing matrices from survey data.
 
