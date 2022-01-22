@@ -1,9 +1,9 @@
-##' Check the status of the Zenodo repository
-##'
-##' @return HTTP status code, or 0 if internet down.
-##' @author Sebastian Funk
-##' @importFrom httr status_code GET
-##' @keywords internal
+#' Check the status of the Zenodo repository
+#'
+#' @return HTTP status code, or 0 if internet down.
+#' @author Sebastian Funk
+#' @importFrom httr status_code GET
+#' @keywords internal
 check_zenodo <- function() {
   status <- 0
   try(
@@ -15,11 +15,11 @@ check_zenodo <- function() {
   return(status)
 }
 
-##' Check if the Zenodo repository is available
-##'
-##' @return TRUE or FALSE, depending on whether Zenodo can be accessed.
-##' @author Sebastian Funk
-##' @keywords internal
+#' Check if the Zenodo repository is available
+#'
+#' @return TRUE or FALSE, depending on whether Zenodo can be accessed.
+#' @author Sebastian Funk
+#' @keywords internal
 zenodo_available <- function() {
   if (check_zenodo() == 200) {
     return(TRUE)
@@ -27,10 +27,10 @@ zenodo_available <- function() {
   return(FALSE)
 }
 
-##' Helper function to ensure Zenodo can be accessed
-##'
-##' @author Sebastian Funk
-##' @keywords internal
+#' Helper function to ensure Zenodo can be accessed
+#'
+#' @author Sebastian Funk
+#' @keywords internal
 ensure_zenodo_available <- function() {
   status <- check_zenodo()
   if (status == 200) {

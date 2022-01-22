@@ -1,16 +1,16 @@
-##' Get age-specific population data according to the World Population Prospects 2019 edition
-##'
-##' This uses data from the \code{wpp2017} package but combines male and female,
-##' and converts age groups to lower age limits
-##' @return data frame of age-specific population data
-##' @import wpp2017
-##' @importFrom data.table data.table dcast melt
-##' @importFrom countrycode countrycode
-##' @param countries countries, will return all if not given
-##' @param years years, will return all if not given
-##' @examples
-##' wpp_age("Italy", c(1990, 2000))
-##' @export
+#' Get age-specific population data according to the World Population Prospects 2019 edition
+#'
+#' This uses data from the \code{wpp2017} package but combines male and female,
+#' and converts age groups to lower age limits
+#' @return data frame of age-specific population data
+#' @import wpp2017
+#' @importFrom data.table data.table dcast melt
+#' @importFrom countrycode countrycode
+#' @param countries countries, will return all if not given
+#' @param years years, will return all if not given
+#' @examples
+#' wpp_age("Italy", c(1990, 2000))
+#' @export
 wpp_age <- function(countries, years) {
   ## circumvent R CMD CHECK errors by defining global variables
   popF <- NULL

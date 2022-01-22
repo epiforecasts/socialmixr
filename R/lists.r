@@ -1,12 +1,12 @@
-##' List all surveys available for download
-##'
-##' @return character vector of surveys
-##' @importFrom oai list_records
-##' @examples
-##' \dontrun{
-##'   list_surveys()
-##' }
-##' @export
+#' List all surveys available for download
+#'
+#' @return character vector of surveys
+#' @importFrom oai list_records
+#' @examples
+#' \dontrun{
+#'   list_surveys()
+#' }
+#' @export
 list_surveys <- function() {
   ## circumvent R CMD CHECK errors by defining global variables
   relation.1 <- NULL
@@ -34,32 +34,32 @@ list_surveys <- function() {
   return(record_list[, list(date, title, creator, url = url)])
 }
 
-##' List all countries contained in a survey
-##'
-##' @param country.column column in the survey indicating the country
-##' @param ... further arguments for \code{\link{get_survey}}
-##' @return list of countries
-##' @inheritParams get_survey
-##' @examples
-##' data(polymod)
-##' survey_countries(polymod)
-##' @export
+#' List all countries contained in a survey
+#'
+#' @param country.column column in the survey indicating the country
+#' @param ... further arguments for \code{\link{get_survey}}
+#' @return list of countries
+#' @inheritParams get_survey
+#' @examples
+#' data(polymod)
+#' survey_countries(polymod)
+#' @export
 survey_countries <- function(survey, country.column = "country", ...) {
   survey <- get_survey(survey, ...)
   return(as.character(unique(survey[["participants"]][[country.column]])))
 }
 
-##' List all countries and regions for which socialmixr has population data
-##'
-##' Uses the World Population Prospects data from the \code{wpp2017} package
-##' @return list of countries
-##' @import wpp2017
-##' @importFrom data.table data.table setkey
-##' @importFrom utils data
-##' @importFrom countrycode countrycode
-##' @examples
-##' \dontrun{wpp_countries()}
-##' @export
+#' List all countries and regions for which socialmixr has population data
+#'
+#' Uses the World Population Prospects data from the \code{wpp2017} package
+#' @return list of countries
+#' @import wpp2017
+#' @importFrom data.table data.table setkey
+#' @importFrom utils data
+#' @importFrom countrycode countrycode
+#' @examples
+#' \dontrun{wpp_countries()}
+#' @export
 wpp_countries <- function() {
   ## circumvent R CMD CHECK errors by defining global variables
   popF <- NULL
