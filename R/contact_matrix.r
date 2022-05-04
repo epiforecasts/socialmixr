@@ -24,6 +24,7 @@
 ##' @param quiet if set to TRUE, output is reduced
 ##' @param return.demography boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters)
 ##' @param return.part.weights boolean to return the participant weights
+##' @param per.capita wheter to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE')
 ##' @param ... further arguments to pass to \code{\link{get_survey}}, \code{\link{check}} and \code{\link{pop_age}} (especially column names)
 ##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
 ##' @importFrom stats xtabs runif median
@@ -35,7 +36,7 @@
 ##' data(polymod)
 ##' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 ##' @author Sebastian Funk
-contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, estimated.participant.age=c("mean", "sample", "missing"), estimated.contact.age=c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = c(), weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, sample.all.age.groups = FALSE, quiet = FALSE, return.part.weights = FALSE, return.demography = NA, ...)
+contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, estimated.participant.age=c("mean", "sample", "missing"), estimated.contact.age=c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = c(), weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, sample.all.age.groups = FALSE, quiet = FALSE, return.part.weights = FALSE, return.demography = NA, per.capita = FALSE, ...)
 {
     ## circumvent R CMD CHECK errors by defining global variables
     lower.age.limit <- NULL
@@ -332,7 +333,8 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         merge(survey$participants, lower.upper.age.limits, by="lower.age.limit", all.x=TRUE)
 
     ## if split, symmetric or age weights are requested, get demographic data (survey population)
-    need.survey.pop <- split || symmetric || weigh.age || (!is.na(return.demography) && return.demography)
+    need.survey.pop <- split || symmetric || weigh.age || 
+        (!is.na(return.demography) && return.demography) || per.capita
     if (need.survey.pop)
     {
         ## check if survey population is either not given or given as a vector of countries
@@ -402,10 +404,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 survey.pop <-
                     country.pop[year == survey.year][, list(population = sum(population)),
                                                      by = "lower.age.limit"]
-                pop.survey.age.gap <- unique(diff(sort(survey.pop$lower.age.limit)))
-                survey.pop[,upper.age.limit := lower.age.limit+pop.survey.age.gap]
             }
-
             if (survey.representative) {
                 survey.pop <-
                     survey$participants[, lower.age.limit :=
@@ -419,13 +418,31 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                         survey$participants[, median(get(columns[["year"]]), na.rm=TRUE)]
                 }
             }
+        } else{
+            # if survey.pop is a data frame with columns 'lower.age.limit' and 'population'
+            survey.pop <- data.table(survey.pop)
+            # make sure the maximum survey.pop age exceeds the participant age group breaks
+            if(max(survey.pop$lower.age.limit) < max(part.age.group.present)){
+                survey.pop <- rbind(survey.pop,
+                                    list(max(part.age.group.present+1),0))
+            }
+            
+            # add dummy survey.year
+            survey.year <- NA_integer_
         }
+        
+        # add upper.age.limit after sorting the survey.pop ages (and add maximum age > given ages)
+        survey.pop <- survey.pop[order(lower.age.limit),]
+        survey.pop$upper.age.limit <- unlist(c(survey.pop[-1,"lower.age.limit"],
+                                               1+max(survey.pop$lower.age.limit,
+                                                   part.age.group.present)))
+        
         if (weigh.age) {
             ## keep reference of survey.pop
             survey.pop.full <-
                 data.table(pop_age(survey.pop,
                                    seq(min(survey.pop$lower.age.limit),
-                                       max(survey.pop$lower.age.limit+5)), ...))
+                                       max(survey.pop$upper.age.limit)), ...))
         }
 
         ## adjust age groups by interpolating, in case they don't match between
@@ -485,7 +502,7 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
                 # get reference population by age (absolute and proportional)
                 part.age.all      <- range(unique(survey[[table]][,get(columns[["participant.age"]])]))
                 survey.pop.detail <- data.table(pop_age(survey.pop.full, seq(part.age.all[1],part.age.all[2]+1)))
-                names(survey.pop.detail) <- c(columns[["participant.age"]],'population.count')
+                names(survey.pop.detail) <- c(columns[["participant.age"]],"population.count")
                 survey.pop.detail[,population.proportion := population.count / sum(population.count)]
 
                 # merge reference and survey population data
@@ -763,6 +780,23 @@ contact_matrix <- function(survey, countries=c(), survey.pop, age.limits, filter
         }
 
         ret[[i]][["matrix"]] <- weighted.matrix
+        
+        # option to add matrix per capita, i.e. the contact rate of age i with one individual of age j in the population.
+        if(per.capita){
+            if (counts) {
+                warning("'per.capita=TRUE' does not make sense with 'counts=TRUE'; ",
+                        "will not return the contact matrix per capita.")
+            } else if (split) {
+                warning("'per.capita=TRUE' does not make sense with 'split=TRUE'; ",
+                        "will not return the contact matrix per capita.")
+            } else {
+            survey.pop$population
+            weighted.matrix.per.capita <- weighted.matrix / matrix(rep(survey.pop$population,nrow(survey.pop)),ncol=nrow(survey.pop),byrow = TRUE)
+            weighted.matrix.per.capita
+            ret[[i]][["matrix.per.capita"]] <- weighted.matrix.per.capita
+            }
+        }
+        
     }
 
     if (exists("survey.year")) {

@@ -14,5 +14,7 @@ test_that("population data for 2015-2020 can be loaded",
     expect_equal(wpp_age("Belgium",2012)$year[1],2010)
     expect_equal(wpp_age("Belgium",2013)$year[1],2015)
     expect_equal(wpp_age("Belgium",2014)$year[1],2015)
+    expect_equal(wpp_age("Belgium",2019)$year[1],2020)
+    expect_equal(wpp_age("Belgium",2021)$year[1],2020)
   })
 })

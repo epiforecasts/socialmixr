@@ -1,7 +1,8 @@
-##' Get age-specific population data according to the World Population Prospects 2019 edition
+##' Get age-specific population data according to the World Population Prospects 2017 edition
 ##'
 ##' This uses data from the \code{wpp2017} package but combines male and female,
-##' and converts age groups to lower age limits
+##' and converts age groups to lower age limits. If the requested year is not present 
+##' in the historical data, wpp projections are used.
 ##' @return data frame of age-specific population data
 ##' @import wpp2017
 ##' @importFrom data.table data.table dcast melt
@@ -30,7 +31,21 @@ wpp_age <- function(countries, years)
     
     popM <- data.table(popM)
     popF <- data.table(popF)
-
+    
+    # wpp2017 is limited to 2015, so add wpp projections is e.g. 2020 data is requested
+    years_included <- max(as.numeric(names(popM)[-(1:3)]))
+    if(!missing(years) && any(years>years_included)){
+        data(popMprojMed, package = "wpp2017", envir = environment())
+        data(popFprojMed, package = "wpp2017", envir = environment())
+        
+        popMprojMed <- data.table(popMprojMed)
+        popFprojMed <- data.table(popFprojMed)
+        
+        popM <- data.table(merge(popM,popMprojMed))
+        popF <- data.table(merge(popF,popFprojMed))
+        warning("Don't have historial population data available after ", years_included, ". Will make use of the median projection of population counts from the WPP2017 package.")
+    }
+    
     popM <- popM[, sex := "male"]
     popF <- popF[, sex := "female"]
 
@@ -66,7 +81,8 @@ wpp_age <- function(countries, years)
         }
 
         pop <- pop[, lower.age.limit := as.integer(sub("[-+].*$", "", age))]
-        pop <- pop[, list(country, lower.age.limit, year, population = (female + male) * 1000)]
+        pop <- pop[, list(country, lower.age.limit, year, population = (female + male) * 1000)] # reorder columns
+        pop <- pop[order(lower.age.limit),] # sort by lower.age.limit
     }
 
     return(as.data.frame(pop))

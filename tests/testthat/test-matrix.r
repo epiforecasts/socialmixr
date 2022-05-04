@@ -317,14 +317,14 @@ test_that("The return.demography overrules other parameters",
     expect_null(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, split =FALSE)$demography)
     
     # default behaviour
-    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, symmetric=TRUE)$demography,'list')
-    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, weigh.age=TRUE)$demography,'list')
-    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, split=TRUE)$demography,'list')
+    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, symmetric=TRUE)$demography,"list")
+    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, weigh.age=TRUE)$demography,"list")
+    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, split=TRUE)$demography,"list")
     
     # always return demography, irrespectively of other function paramters   
-    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, symmetric=FALSE, return.demography=TRUE)$demography,'list')
-    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, weigh.age=FALSE, return.demography=TRUE)$demography,'list')
-    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, split=FALSE, return.demography=TRUE)$demography,'list')
+    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, symmetric=FALSE, return.demography=TRUE)$demography,"list")
+    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, weigh.age=FALSE, return.demography=TRUE)$demography,"list")
+    expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, split=FALSE, return.demography=TRUE)$demography,"list")
     
     # never return demography data, irrespectively of other function paramters 
     expect_null(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, symmetric =TRUE, return.demography=FALSE)$demography)
@@ -340,7 +340,7 @@ test_that("The return.part.weights option",
       expect_null(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE)$participants.weights)
       
       # with participant weights data
-      expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, return.part.weights=TRUE)$participants.weights,'list')
+      expect_type(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, return.part.weights=TRUE)$participants.weights,"list")
       
       # without any weight method activated, weights should be 1
       expect_equal(contact_matrix(survey=polymod, age.limits=c(0,18), quiet=TRUE, return.part.weights=TRUE)$participants.weights$weight,c(1,1))
@@ -367,7 +367,7 @@ test_that("The participant weights add up to the sample size",
   })
 })
 
-test_that("The thresholdweights with threshold",
+test_that("The weights with threshold",
           {
             suppressWarnings({
               
@@ -431,4 +431,118 @@ test_that("Participants that report contacts with missing age are removed/sample
   
   expect_equal(ncol(contact_matrix(survey=polymod,age.limits=c(0),quiet=TRUE,
                                    missing.contact.age = 'sample')$matrix),1)
+})
+
+
+test_that("User-defined reference populations with open ended age groups are handled correctly",
+{
+  suppressWarnings({
+  survey.pop <- data.frame(lower.age.limit = c(0,4,15),
+                           population = c(4e6,1e5,6e6))
+  
+  # to handle the open ended age group in the survey.pop
+  expect_equal(nrow(contact_matrix(polymod, 
+                                   age.limits = c(0,18,60),
+                                   symmetric = T, # to make sure that demography is returned
+                                   survey.pop = survey.pop)$demography),3)
+  
+  # to check the column names
+  expect_equal(names(contact_matrix(polymod, 
+                                   age.limits = c(0,18,60),
+                                   symmetric = T, # to make sure that demography is returned
+                                   survey.pop = survey.pop)$demography)[1],"age.group")
+  
+  expect_error(contact_matrix(polymod_nocountry, 
+                 age.limits = c(0,18,60),
+                 symmetric = T, # to make sure that demography is returned
+                 survey.pop = 'dummy')
+  )
+  
+  })
+})
+
+test_that("The absence of reference population info is going well",
+{
+  suppressWarnings({
+    
+    polymod_nocountry <- polymod
+    polymod_nocountry$participants$country <- NULL
+    
+    # no reference population given
+    expect_equal(nrow(contact_matrix(polymod_nocountry, 
+                                     age.limits = c(0,18,60),
+                                     symmetric = T # to make sure that demography is returned
+                                     )$demography),3)
+    
+    # to check the column names
+    expect_equal(names(contact_matrix(polymod_nocountry, 
+                                      age.limits = c(0,18,60),
+                                      symmetric = T # to make sure that demography is returned
+                                      )$demography)[1],"age.group")
+  })
+})
+
+test_that("Contact matrices per capita can be provided",
+{
+  suppressWarnings({
+    
+    # get contact matrix per capita
+    expect_type(contact_matrix(polymod, 
+                               age.limits = c(0,18,60),
+                               per.capita = T
+                               )$matrix.per.capita,'double')
+    
+    
+    # per capita matrix is not returned when counts=TRUE
+    expect_null(contact_matrix(polymod, 
+                               age.limits = c(0,18,60),
+                               per.capita = T,
+                               counts = T
+                               )$matrix.per.capita)
+
+    # per capita matrix is not returned when split=TRUE
+    expect_null(contact_matrix(polymod, 
+                               age.limits = c(0,18,60),
+                               per.capita = T,
+                               split = T
+    )$matrix.per.capita)
+  })
+})
+
+test_that("Symmetric contact matrices per capita are actually symmetric",
+          {
+            suppressWarnings({
+              
+              # get contact matrix per capita
+              matrix.per.capita <- contact_matrix(polymod, 
+                                                  age.limits = c(0,18,60),
+                                                  symmetric = T, # to make sure that demography is returned
+                                                  per.capita = T
+                                                 )$matrix.per.capita
+              
+              expect_equal(c(matrix.per.capita),c(t(matrix.per.capita)))
+              
+            })
+          })
+
+
+test_that("Contact matrices per capita are also generated when bootstrapping",
+{
+  suppressWarnings({
+    
+    # get contact matrix per capita
+    expect_equal(length(contact_matrix(polymod, 
+                                 age.limits = c(0,18,60),
+                                 per.capita = T,
+                                 n = 3
+    )$matrices[[3]]),2)
+    
+    # get no contact matrix per capita
+    expect_equal(length(contact_matrix(polymod, 
+                                       age.limits = c(0,18,60),
+                                       per.capita = F,
+                                       n = 3
+    )$matrices[[1]]),1)
+    
+  })
 })
