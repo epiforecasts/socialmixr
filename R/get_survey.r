@@ -26,7 +26,7 @@ get_survey <- function(survey, quiet = FALSE, ...) {
   encodingFormat <- NULL
   contentUrl <- NULL
 
-  if ("survey" %in% class(survey)) {
+  if (inherits(survey, "survey")) {
     new_survey <- survey
   } else {
     if (is.character(survey)) {
