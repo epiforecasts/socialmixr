@@ -5,11 +5,13 @@ Title: Social Mixing Matrices for Infectious Disease Modelling
 Authors@R: 
   c(
         person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre")),
+        person("Lander", "Willem", role = c("aut")),
         person("Maria", "Bekker-Nielsen Dunbar", role = c("ctb")),
         person("Carl A. B.", "Pearson", role = c("ctb")),
         person("Sam", "Clifford", email = "sj.clifford@gmail.com", role = c("ctb")),
         person("Christopher", "Jarvis", role = c("ctb")),
-        person("Alexis", "Robert", email = "alexis.robert@lshtm.ac.uk", role = c("ctb"))
+        person("Alexis", "Robert", email = "alexis.robert@lshtm.ac.uk", role = c("ctb"),
+        person("Niel", "Hens", role = c("ctb"))
    )
 Depends: R (>= 3.5.0)
 Imports: data.table, curl, httr, jsonlite, oai, wpp2017, countrycode,
