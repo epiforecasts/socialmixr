@@ -1,26 +1,47 @@
 Package: socialmixr
-Version: 0.1.8
-Date: 2020-11-12
 Title: Social Mixing Matrices for Infectious Disease Modelling
-Authors@R: 
-  c(
-        person("Sebastian", "Funk", email = "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre")),
-        person("Lander", "Willem", role = c("aut")),
-        person("Maria", "Bekker-Nielsen Dunbar", role = c("ctb")),
-        person("Carl A. B.", "Pearson", role = c("ctb")),
-        person("Sam", "Clifford", email = "sj.clifford@gmail.com", role = c("ctb")),
-        person("Christopher", "Jarvis", role = c("ctb")),
-        person("Alexis", "Robert", email = "alexis.robert@lshtm.ac.uk", role = c("ctb"),
-        person("Niel", "Hens", role = c("ctb"))
-   )
-Depends: R (>= 3.5.0)
-Imports: data.table, curl, httr, jsonlite, oai, wpp2017, countrycode,
-        stringr, XML, lubridate, fields, grDevices
-Description: Provides methods for sampling contact matrices from diary data for use in infectious disease modelling, as discussed in Mossong et al. (2008) <doi:10.1371/journal.pmed.0050074>.
+Version: 0.1.8
+Authors@R: c(
+    person("Sebastian", "Funk", , "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre")),
+    person("Lander", "Willem", role = "aut"),
+    person("Maria", "Bekker-Nielsen Dunbar", role = "ctb"),
+    person("Carl A. B.", "Pearson", role = "ctb"),
+    person("Sam", "Clifford", , "sj.clifford@gmail.com", role = "ctb"),
+    person("Christopher", "Jarvis", role = "ctb"),
+    person("Alexis", "Robert", , "alexis.robert@lshtm.ac.uk", role = "ctb"),
+    person("Niel", "Hens", role = "ctb")
+  )
+Description: Provides methods for sampling contact matrices from diary
+    data for use in infectious disease modelling, as discussed in Mossong
+    et al. (2008) <doi:10.1371/journal.pmed.0050074>.
 License: GPL-3
+Depends: 
+    R (>= 3.5.0)
+Imports: 
+    countrycode,
+    curl,
+    data.table,
+    fields,
+    grDevices,
+    httr,
+    jsonlite,
+    lubridate,
+    oai,
+    stringr,
+    wpp2017,
+    XML
+Suggests: 
+    formatR,
+    ggplot2,
+    knitr,
+    reshape2,
+    rmarkdown,
+    testthat
+VignetteBuilder: 
+    knitr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
-Suggests: testthat, knitr, rmarkdown, ggplot2, reshape2, formatR
-VignetteBuilder: knitr
 NeedsCompilation: no
+RoxygenNote: 7.1.2
+URL: https://github.com/epiforecasts/socialmixr
+BugReports: https://github.com/epiforecasts/socialmixr/issues
