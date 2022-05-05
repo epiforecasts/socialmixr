@@ -179,76 +179,49 @@ To model the contact matrix in this way with the `contact_matrix` function, set 
 contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), split = TRUE)
 ```
 
-Filters
+Filtering
 =======
 
-The function `contact_matrix` enables the filtering of social contact data. This can for example be used to select contacts reported at school or to select long-duration contacts. Any filter can be applied to the data, if given as a list of the form (column=filter_value). As such, only contacts that have 'filter_value' in 'column' will be considered for the generated contact matrix.
+The `filter` argument to `contact_matrix` can be used to select particular participants or contacts. For example, in the `polymod` dataset, the indicators `cnt_home`, `cnt_work`, `cnt_school`, `cnt_transport`, `cnt_leisure` and `cnt_otherplace` take value 0 or 1 depending on where a contact occurred:
 
-```{r, warning=FALSE, message=FALSE}
-# contact matrix for school-related contacts
-contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_school=1))$matrix
-
-# contact matrix for work-related contacts involving physical contact
-contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_work=1, phys_contact=1))$matrix
-
-# contact matrix for daily contacts at home with males
-contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_home=1, cnt_gender="M", duration_multi=5))$matrix
-
+```{r message=FALSE, warning=FALSE}
+head(polymod$contacts)
 ```
 
+In order to derive a contact matrix for home contacts only, one would use `filter = list(cnt_home = 1)`.
 
-
-Plotting (ggplot2)
-=======
-
-The contact matrices can be plotted by using the `geom_tile` function of the `ggplot2` package.
-
-```{r fig.width=4, fig.height=4, tidy=TRUE}
-library('reshape2')
-library('ggplot2')
-df <- melt(mr, varnames = c("age.group", "age.group.contact"), value.name = "contacts")
-ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) + theme(legend.position = "bottom") + geom_tile()
+```{r message=FALSE, warning=FALSE}
+contact_matrix(survey = polymod, age.limits = c(0,18,60), filter = list(cnt_home = 1))
 ```
 
-Plotting (R base)
-=======
+In order to derive a contact matrix outside home, school or work, one would use
 
-The contact matrices can be plotted with the `matrix_plot` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changend.
-
-```{r fig.width=4, fig.height=4, tidy=TRUE}
-matrix_plot(mr)
-matrix_plot(mr,color.palette = gray.colors)
-
-library(RColorBrewer)
-usr_col <- function(x){ return(brewer.pal(x,'YlGn')) }
-matrix_plot(mr, num.colors = 9, color.palette = usr_col)
+```{r message=FALSE, warning=FALSE}
+contact_matrix(survey = polymod, age.limits = c(0,18,60), filter = list(cnt_home = 0, cnt_school = 0, cnt_work = 0))
 ```
-
 
 Participant weights
 =======
 
+Participant weights are commonly used to align sample and population characteristics in terms of temporal aspects and the age distribution. For example, the day of the week has been reported as a driving factor for social contact behavior, hence to obtain a weekly average, the survey data should represent the weekly 2/5 distribution of weekend/week days. To align the survey data to this distribution, one can obtain participant weights in the form of:
+$$w_{day.of.week} = \tfrac{5/7}{N_{weekday}/N} \text{  OR   } \tfrac{2/7}{N_{weekend}/N}$$
+with sample size $N$, and $N_{weekday}$ and $N_{weekend}$ the number of participants that were surveyed during weekdays and weekend days, respectively. It is possible to remove the constant values (e.g. $w = 5/N_{weekday}$), which results in the same standardized weights. However, we opt to use the relative proportions to calculate weights to enable truncation with a generic threshold (see below). 
 
-Participant weights are commonly used to align sample and population characteristics in terms of the age distribution and temporal aspects. For example, the day of the week has been reported as a driving factor for social contact behavior, hence to obtain a weekly average, the survey data should represent the weekly 2/5 distribution of weekend/week days. To align the survey data to this distribution, one can obtain participant weights in the form of:
-$$w_{day.of.week} = \tfrac{5\ /\ 7}{N_{weekday}\ /\ N} \text{  OR   } \tfrac{2\ /\ 7}{N_{weekend}\ /\ N}$$
-with $N$, $N_{weekday}$ and $N_{weekend}$ the number of participants in total and surveyed during weekdays and weekend days, respectively. It is possible to remove the constant values (e.g. $w = 5/N_{weekday}$), which results in the same standardized weights. However, we opt to use the relative proportions when calculating weights to enable truncation with a generic threshold (see below). 
 Another driver of social contact patterns is age. To improve the representativeness of survey data, age-specific weights can be calculated as:
-
 $$w_{age} = \tfrac{P_{a}\ /\ P}{N_{a}\ /\ N}$$
-
 with $P$ the population size, $P_a$ the population fraction of age $a$, $N$ the survey sample size and $N_a$ the survey fraction of age $a$. The combination of age-specific and temporal weights for participant $i$ of age $a$ can be constructed as:
 $$w_{i} = w_{age} * w_{day.of.week} $$
 Finally, the weights can to be standardized as follows:
 $$\tilde{w}_{i} =  \tfrac{w_{i}}{\sum_{}^{} w_{}} * N $$
+
 If the social contact analysis is based on stratification by splitting the population into non-overlapping groups, it requires the weights to be standardized so that the weighted totals within mutually exclusive cells equal the known population totals (Kolenikov 2016). The post-stratification cells need to be mutually exclusive and cover the whole population. The post-stratified (PS) weight for participant $i$ of \mbox{group $g$} is:
 $$\tilde{w}^{PS}_{i} =  \tfrac{w_{i}}{\sum_{\text{j}}^{\text{group g}} w_{j}} * N_g$$
 
-Temporal weights are activated in `contact_matirx` by `weigh.dayofweek = TRUE` and age-specific weights by `weight.age = TRUE`. The post-stratification weights are calculated by default. It is possible to obtain the participant weights via the option `return.part.weights = TRUE`.
+Temporal weights are activated in `contact_matrix` by `weigh.dayofweek = TRUE` and age-specific weights by `weight.age = TRUE`. The post-stratification weights are calculated by default. It is possible to obtain the participant weights via the option `return.part.weights = TRUE`.
 
 ```{r message=FALSE, warning=FALSE}
 contact_matrix(survey = polymod, age.limits = c(0,18,60), weigh.dayofweek = TRUE, 
                weigh.age = TRUE, return.part.weights = TRUE)
-
 ```
 
 
@@ -498,13 +471,37 @@ survey_data$w_tilde[survey_data$w_tilde>3] = 3
 print(paste('weighted average number of contacts after truncation:',round(mean(survey_data$m_i * survey_data$w_tilde),digits = 2)))
 ```
 
+Plotting (ggplot2)
+=======
+
+The contact matrices can be plotted by using the `geom_tile` function of the `ggplot2` package.
+
+```{r fig.width=4, fig.height=4, tidy=TRUE}
+library('reshape2')
+library('ggplot2')
+df <- melt(mr, varnames = c("age.group", "age.group.contact"), value.name = "contacts")
+ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) + theme(legend.position = "bottom") + geom_tile()
+```
+
+Plotting (R base)
+=======
+
+The contact matrices can be plotted with the `matrix_plot` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changend.
+
+```{r fig.width=4, fig.height=4, tidy=TRUE}
+matrix_plot(mr)
+matrix_plot(mr,color.palette = gray.colors)
+
+library(RColorBrewer)
+usr_col <- function(x){ return(brewer.pal(x,'YlGn')) }
+matrix_plot(mr, num.colors = 9, color.palette = usr_col)
+```
 
 References
 =======
 * Kolenikov. 2016. Post-stratification or non-response adjustment. Survey Practice. 9(3).
 * Hens et al. 2009. Estimating the impact of school closure on social mixing behavior and the transmission of close contact infections in eight European countries. BMC Infectious Diseases. 9(187)
 * Willem et al. 2012. A nice day for an infection? Weather conditions and social contact patterns relevant to influenza transmission. PLoS ONE. 7(11)
-
 
 
 

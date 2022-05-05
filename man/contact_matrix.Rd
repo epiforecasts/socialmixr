@@ -40,7 +40,7 @@ contact_matrix(
 
 \item{age.limits}{lower limits of the age groups over which to construct the matrix}
 
-\item{filter}{any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered}
+\item{filter}{any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given.}
 
 \item{n}{number of matrices to sample}
 
