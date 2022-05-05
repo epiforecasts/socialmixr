@@ -1,9 +1,9 @@
-##' Check the status of the Zenodo repository
-##'
-##' @return HTTP status code, or 0 if internet down.
-##' @author Sebastian Funk
-##' @importFrom httr status_code GET
-##' @keywords internal
+#' Check the status of the Zenodo repository
+#'
+#' @return HTTP status code, or 0 if internet down.
+#' @author Sebastian Funk
+#' @importFrom httr status_code GET
+#' @keywords internal
 check_zenodo <- function() {
   status <- 0
   try(

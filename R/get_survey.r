@@ -1,22 +1,22 @@
-##' Get a survey, either from its Zenodo repository, a set of files, or a survey variable
-##'
-##' @description Downloads survey data, or extracts them from files, and returns a clean data set.
-##' @param survey a DOI (see \code{\link{list_surveys}}), or a character vector of file names, or a \code{\link{survey}} object (in which case only cleaning is done).
-##' @param quiet if TRUE, suppress messages
-##' @param ... options for \code{\link{clean}}, which is called at the end of this
-##' @importFrom httr GET add_headers content
-##' @importFrom jsonlite fromJSON
-##' @importFrom curl curl_download
-##' @importFrom utils as.person read.csv
-##' @importFrom stringr str_extract_all
-##' @importFrom XML xpathSApply htmlParse xmlValue
-##' @examples
-##' \dontrun{
-##'   list_surveys()
-##'   peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
-##' }
-##' @return a survey in the correct format
-##' @export
+#' Get a survey, either from its Zenodo repository, a set of files, or a survey variable
+#'
+#' @description Downloads survey data, or extracts them from files, and returns a clean data set.
+#' @param survey a DOI (see \code{\link{list_surveys}}), or a character vector of file names, or a \code{\link{survey}} object (in which case only cleaning is done).
+#' @param quiet if TRUE, suppress messages
+#' @param ... options for \code{\link{clean}}, which is called at the end of this
+#' @importFrom httr GET add_headers content
+#' @importFrom jsonlite fromJSON
+#' @importFrom curl curl_download
+#' @importFrom utils as.person read.csv
+#' @importFrom stringr str_extract_all
+#' @importFrom XML xpathSApply htmlParse xmlValue
+#' @examples
+#' \dontrun{
+#'   list_surveys()
+#'   peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
+#' }
+#' @return a survey in the correct format
+#' @export
 get_survey <- function(survey, quiet = FALSE, ...) {
   ## circumvent R CMD CHECK errors by defining global variables
   id <- NULL
