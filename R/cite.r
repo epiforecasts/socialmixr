@@ -17,6 +17,9 @@ cite <- function(x, ...) UseMethod("cite")
 #' cite(polymod)
 #' @export
 cite.survey <- function(x, quiet = FALSE, ...) {
+
+  chkDots(...)
+
   survey <- get_survey(x)
   if (is.null(x$reference)) stop("No citation defined for ", ifelse(is.null(x$name), "survey", x$name))
 
