@@ -31,7 +31,6 @@ Imports:
     wpp2017,
     XML
 Suggests: 
-    formatR,
     ggplot2,
     knitr,
     reshape2,
