@@ -1,30 +1,25 @@
 context("Getting list of surveys")
 
-test_that("list of surveys is not empty",
-{
+test_that("list of surveys is not empty", {
   skip_if_no_zenodo()
   skip_on_cran()
   expect_true(nrow(list_surveys()) > 0)
 })
 
-test_that("surveys can be downloaded",
-{
+test_that("surveys can be downloaded", {
   skip_if_no_zenodo()
   skip_on_cran()
   expect_true(class(suppressMessages(suppressWarnings(get_survey("10.5281/zenodo.1059920")))) == "survey")
 })
 
-test_that("surveys can be cited",
-{
+test_that("surveys can be cited", {
   expect_true(class(cite(polymod)) == "bibentry")
 })
 
-test_that("missing surveys can't be cited",
-{
+test_that("missing surveys can't be cited", {
   expect_error(cite.survey("bogus"), "not found")
 })
 
-test_that("multiple DOI's cannot be loaded",
-  {
-    expect_error(suppressMessages(suppressWarnings(get_survey(c("10.5281/zenodo.1059920","10.5281/zenodo.1059920")))))
-  })
+test_that("multiple DOI's cannot be loaded", {
+  expect_error(suppressMessages(suppressWarnings(get_survey(c("10.5281/zenodo.1059920", "10.5281/zenodo.1059920")))))
+})
