@@ -1,14 +1,14 @@
-##' Change age groups in population data
-##'
-##' This changes population data to have age groups with the given age.limits, extrapolating linearly between age groups (if more are requested than available) and summing populations (if fewer are requested than available)
-##' @return data frame of age-specific population data
-##' @importFrom data.table data.table setkeyv
-##' @param pop a data frame with columns indicating lower age limits and population sizes (see 'age.column' and 'pop.column')
-##' @param age.limits lower age limits of age groups to extract
-##' @param pop.age.column column in the 'pop' data frame indicating the lower age group limit
-##' @param pop.column column in the 'pop' data frame indicating the population size
-##' @param ... ignored
-##' @export
+#' Change age groups in population data
+#'
+#' This changes population data to have age groups with the given age.limits, extrapolating linearly between age groups (if more are requested than available) and summing populations (if fewer are requested than available)
+#' @return data frame of age-specific population data
+#' @importFrom data.table data.table setkeyv
+#' @param pop a data frame with columns indicating lower age limits and population sizes (see 'age.column' and 'pop.column')
+#' @param age.limits lower age limits of age groups to extract
+#' @param pop.age.column column in the 'pop' data frame indicating the lower age group limit
+#' @param pop.column column in the 'pop' data frame indicating the population size
+#' @param ... ignored
+#' @export
 pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.column = "population", ...) {
   ## circumvent R CMD CHECK errors by defining global variables
   ..original.lower.age.limit <- NULL

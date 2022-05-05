@@ -1,21 +1,21 @@
 #' @export
 cite <- function(x, ...) UseMethod("cite")
-##' @name cite
-##' @rdname cite
-##' @title Citation for a survey
-##'
-##' @description Gets a full citation for a \code{\link{survey}}. If quiet is FALSE (default)
-##'
-##' @param x a character vector of surveys to cite
-##' @param quiet if set to TRUE, do not print entry, just return bibentry object
-##' @param ... ignored
-##' @return citation as bibentry
-##' @importFrom utils bibentry
-##' @importFrom httr GET content
-##' @examples
-##' data(polymod)
-##' cite(polymod)
-##' @export
+#' @name cite
+#' @rdname cite
+#' @title Citation for a survey
+#'
+#' @description Gets a full citation for a \code{\link{survey}}. If quiet is FALSE (default)
+#'
+#' @param x a character vector of surveys to cite
+#' @param quiet if set to TRUE, do not print entry, just return bibentry object
+#' @param ... ignored
+#' @return citation as bibentry
+#' @importFrom utils bibentry
+#' @importFrom httr GET content
+#' @examples
+#' data(polymod)
+#' cite(polymod)
+#' @export
 cite.survey <- function(x, quiet = FALSE, ...) {
   survey <- get_survey(x)
   if (is.null(x$reference)) stop("No citation defined for ", ifelse(is.null(x$name), "survey", x$name))

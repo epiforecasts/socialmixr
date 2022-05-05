@@ -1,22 +1,22 @@
 #' @export
 clean <- function(x, ...) UseMethod("clean")
-##' @name clean
-##' @rdname clean
-##' @title Clean contact survey data
-##'
-##' @description Cleans survey data to work with the 'contact_matrix' function
-##'
-##' @param x A \code{\link{survey}} object
-##' @param country.column the name of the country in which the survey participant was interviewed
-##' @param participant.age.column the column in \code{x$participants} containing participants' age
-##' @param ... ignored
-##' @importFrom countrycode countrycode
-##' @importFrom lubridate period_to_seconds period years
-##' @return a cleaned survey in the correct format
-##' @examples
-##' data(polymod)
-##' cleaned <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
-##' @export
+#' @name clean
+#' @rdname clean
+#' @title Clean contact survey data
+#'
+#' @description Cleans survey data to work with the 'contact_matrix' function
+#'
+#' @param x A \code{\link{survey}} object
+#' @param country.column the name of the country in which the survey participant was interviewed
+#' @param participant.age.column the column in \code{x$participants} containing participants' age
+#' @param ... ignored
+#' @importFrom countrycode countrycode
+#' @importFrom lubridate period_to_seconds period years
+#' @return a cleaned survey in the correct format
+#' @examples
+#' data(polymod)
+#' cleaned <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
+#' @export
 clean.survey <- function(x, country.column = "country", participant.age.column = "part_age", ...) {
   x <- survey(x$participants, x$contacts, x$reference)
 

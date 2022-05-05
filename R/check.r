@@ -1,26 +1,26 @@
 #' @export
 check <- function(x, ...) UseMethod("check")
-##' @name check
-##' @rdname check
-##' @title Check contact survey data
-##'
-##' @description Checks that a survey fulfills all the requirements to work with the 'contact_matrix' function
-##'
-##' @param x A \code{\link{survey}} object
-##' @param columns if given, a named character vector containing the name of the "id", "participant.age" and "contact.age" columns
-##' @param quiet if TRUE, will not exit quietly if the test is passed.
-##' @param error if TRUE, will stop if an error is found in the structure of the \code{participants} and \code{contacts} data frame
-##' @param id.column the column in both the \code{participants} and \code{contacts} data frames that links contacts to participants
-##' @param participant.age.column the column in the \code{participants} data frame containing participants' age
-##' @param country.column the column in the \code{participants} data frame containing the country in which the participant was queried
-##' @param year.column the column in the \code{participants} data frame containing the year in which the participant was queried
-##' @param contact.age.column the column in the \code{contacts} data frame containing the age of contacts; if this does not exist, at least columns "..._exact", "..._est_min" and "..._est_max" must (see the \code{estimated.contact.age} option in \code{\link{contact_matrix}})
-##' @param ... ignored
-##' @return invisibly returns a character vector of the relevant columns
-##' @examples
-##' data(polymod)
-##' check(polymod)
-##' @export
+#' @name check
+#' @rdname check
+#' @title Check contact survey data
+#'
+#' @description Checks that a survey fulfills all the requirements to work with the 'contact_matrix' function
+#'
+#' @param x A \code{\link{survey}} object
+#' @param columns if given, a named character vector containing the name of the "id", "participant.age" and "contact.age" columns
+#' @param quiet if TRUE, will not exit quietly if the test is passed.
+#' @param error if TRUE, will stop if an error is found in the structure of the \code{participants} and \code{contacts} data frame
+#' @param id.column the column in both the \code{participants} and \code{contacts} data frames that links contacts to participants
+#' @param participant.age.column the column in the \code{participants} data frame containing participants' age
+#' @param country.column the column in the \code{participants} data frame containing the country in which the participant was queried
+#' @param year.column the column in the \code{participants} data frame containing the year in which the participant was queried
+#' @param contact.age.column the column in the \code{contacts} data frame containing the age of contacts; if this does not exist, at least columns "..._exact", "..._est_min" and "..._est_max" must (see the \code{estimated.contact.age} option in \code{\link{contact_matrix}})
+#' @param ... ignored
+#' @return invisibly returns a character vector of the relevant columns
+#' @examples
+#' data(polymod)
+#' check(polymod)
+#' @export
 check.survey <- function(x, columns = FALSE, quiet = FALSE, error = FALSE, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
   if (error) error_func <- stop else error_func <- warning
   if (!is.data.frame(x$participants) || !is.data.frame(x$contacts)) {

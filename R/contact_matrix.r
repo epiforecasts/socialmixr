@@ -1,41 +1,41 @@
-##' Generate a contact matrix from diary survey data
-##'
-##' Samples a contact survey using a bootstrap
-##'
-##' @param survey a \code{\link{survey}} object
-##' @param countries limit to one or more countries; if not given, will use all countries in the survey; these can be given as country names or 2-letter (ISO Alpha-2) country codes
-##' @param survey.pop survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the chosen countries, or all countries in the survey if \code{countries} is not given
-##' @param age.limits lower limits of the age groups over which to construct the matrix
-##' @param filter any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given.
-##' @param n number of matrices to sample
-##' @param bootstrap whether to sample participants and contacts randomly using a bootstrap; by default, will use bootstrap if n > 1
-##' @param counts whether to return counts (instead of means)
-##' @param symmetric whether to make matrix symmetric, such that c_{ij}N_i = c{ji}N_j.
-##' @param split whether to split the number of contacts and assortativity
-##' @param estimated.participant.age if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
-##' @param estimated.contact.age if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
-##' @param missing.participant.age if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group
-##' @param missing.contact.age if set to "remove" (default), participants that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group; if set to "ignore", contact with missing age are ignored in the contact analysis
-##' @param weights columns that contain weights
-##' @param weigh.dayofweek whether to weigh the day of the week (weight (5/7 / N_week/N) for weekdays and (2/7 / N_weekend/N) for weekends)
-##' @param weigh.age whether to weigh by the age of the participants (vs. the populations' age distribution)
-##' @param weight.threshold threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff)
-##' @param sample.all.age.groups what to do if bootstrapping fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead
-##' @param quiet if set to TRUE, output is reduced
-##' @param return.demography boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters)
-##' @param return.part.weights boolean to return the participant weights
-##' @param per.capita wheter to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE')
-##' @param ... further arguments to pass to \code{\link{get_survey}}, \code{\link{check}} and \code{\link{pop_age}} (especially column names)
-##' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
-##' @importFrom stats xtabs runif median
-##' @importFrom utils data globalVariables
-##' @importFrom countrycode countrycode
-##' @import data.table
-##' @export
-##' @examples
-##' data(polymod)
-##' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
-##' @author Sebastian Funk
+#' Generate a contact matrix from diary survey data
+#'
+#' Samples a contact survey using a bootstrap
+#'
+#' @param survey a \code{\link{survey}} object
+#' @param countries limit to one or more countries; if not given, will use all countries in the survey; these can be given as country names or 2-letter (ISO Alpha-2) country codes
+#' @param survey.pop survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the chosen countries, or all countries in the survey if \code{countries} is not given
+#' @param age.limits lower limits of the age groups over which to construct the matrix
+#' @param filter any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given.
+#' @param n number of matrices to sample
+#' @param bootstrap whether to sample participants and contacts randomly using a bootstrap; by default, will use bootstrap if n > 1
+#' @param counts whether to return counts (instead of means)
+#' @param symmetric whether to make matrix symmetric, such that c_{ij}N_i = c{ji}N_j.
+#' @param split whether to split the number of contacts and assortativity
+#' @param estimated.participant.age if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
+#' @param estimated.contact.age if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
+#' @param missing.participant.age if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group
+#' @param missing.contact.age if set to "remove" (default), participants that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group; if set to "ignore", contact with missing age are ignored in the contact analysis
+#' @param weights columns that contain weights
+#' @param weigh.dayofweek whether to weigh the day of the week (weight (5/7 / N_week/N) for weekdays and (2/7 / N_weekend/N) for weekends)
+#' @param weigh.age whether to weigh by the age of the participants (vs. the populations' age distribution)
+#' @param weight.threshold threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff)
+#' @param sample.all.age.groups what to do if bootstrapping fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead
+#' @param quiet if set to TRUE, output is reduced
+#' @param return.demography boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters)
+#' @param return.part.weights boolean to return the participant weights
+#' @param per.capita wheter to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE')
+#' @param ... further arguments to pass to \code{\link{get_survey}}, \code{\link{check}} and \code{\link{pop_age}} (especially column names)
+#' @return a list of sampled contact matrices, and the underlying demography of the surveyed population
+#' @importFrom stats xtabs runif median
+#' @importFrom utils data globalVariables
+#' @importFrom countrycode countrycode
+#' @import data.table
+#' @export
+#' @examples
+#' data(polymod)
+#' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+#' @author Sebastian Funk
 contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, estimated.participant.age = c("mean", "sample", "missing"), estimated.contact.age = c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = c(), weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, sample.all.age.groups = FALSE, quiet = FALSE, return.part.weights = FALSE, return.demography = NA, per.capita = FALSE, ...) {
   ## circumvent R CMD CHECK errors by defining global variables
   lower.age.limit <- NULL
