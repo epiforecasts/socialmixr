@@ -239,7 +239,7 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
   for (age_column in
     c(columns[["contact.age"]], min.column, max.column, exact.column)) {
     if (age_column %in% colnames(survey$contacts) &&
-      class(survey$contacts[[age_column]]) == "factor") {
+      is.factor(survey$contacts[[age_column]])) {
       survey$contacts[, paste(age_column) :=
         as.integer(levels(get(age_column)))[get(age_column)]]
     }
