@@ -39,10 +39,52 @@ get_survey <- function(survey, quiet = FALSE, ...) {
         stop("if 'survey' is a DOI or URL, it must be of length 1")
       }
 
-      if (is.doi) url <- paste0("https://doi.org/", survey) else url <- survey
-    } else {
-      stop("'survey' must be an 'survey' object, integer or character")
-    }
+        if (is.url)
+        {
+            temp_body <- GET(url, config = list(followlocation = TRUE))
+            if (temp_body$status_code == 404) stop("DOI '", survey, "' not found")
+
+            parsed_body <- content(temp_body, as = "text", encoding = "UTF-8")
+            parsed_cite <-
+                fromJSON(xmlValue(xpathSApply(htmlParse(parsed_body),
+                                              '//script[@type="application/ld+json"]')[[1]]))
+
+            authors <- as.person(paste(parsed_cite$creator$name, sep =","))
+
+            reference <- list(title=parsed_cite$name,
+                              bibtype="Misc",
+                              author=authors,
+                              year=as.integer(substr(parsed_cite$datePublished, 1, 4)))
+            if ("version" %in% names(reference))
+                reference[["note"]] <- paste("Version", parsed_cite$version)
+            reference[[ifelse(is.doi, "doi", "url")]] <- survey
+
+            data <- data.table(parsed_cite$distribution)
+
+            urls <- data[encodingFormat == "csv", contentUrl]
+
+            message("Getting ", parsed_cite$name, ".")
+
+            dir <- tempdir()
+            files <- vapply(urls, function(x)
+            {
+                temp <- paste(dir, basename(x), sep="/")
+                message("Downloading ", x)
+                dl <- curl_download(x, temp)
+                return(temp)
+            }, "")
+        } else
+        {
+            exist <- vapply(survey, file.exists, TRUE)
+            missing <- survey[!exist]
+            if (length(missing) > 0)
+            {
+                stop("File", ifelse(length(missing) > 1, "s", ""), " ", 
+                     paste(paste0("'", missing, "'", collapse=""), sep=", "), " not found.")
+            }
+            files <- survey[grepl("csv",survey)] # select csv files
+            reference <- NULL
+        }
 
     if (is.url) {
       temp_body <- GET(url, config = list(followlocation = TRUE))

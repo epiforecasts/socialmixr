@@ -27,6 +27,7 @@ contact_matrix(
   quiet = FALSE,
   return.part.weights = FALSE,
   return.demography = NA,
+  per.capita = FALSE,
   ...
 )
 }
@@ -39,7 +40,7 @@ contact_matrix(
 
 \item{age.limits}{lower limits of the age groups over which to construct the matrix}
 
-\item{filter}{any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered}
+\item{filter}{any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given.}
 
 \item{n}{number of matrices to sample}
 
@@ -74,6 +75,8 @@ contact_matrix(
 \item{return.part.weights}{boolean to return the participant weights}
 
 \item{return.demography}{boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters)}
+
+\item{per.capita}{wheter to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE')}
 
 \item{...}{further arguments to pass to \code{\link{get_survey}}, \code{\link{check}} and \code{\link{pop_age}} (especially column names)}
 }
