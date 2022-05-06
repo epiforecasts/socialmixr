@@ -7,8 +7,7 @@
 #' @examples
 #' limits_to_agegroups(c(0, 5, 10))
 #' @export
-limits_to_agegroups <- function(x, limits) {
-  if (missing(limits)) limits <- unique(x)[order(unique(x))]
+limits_to_agegroups <- function(x, limits = sort(unique(x))) {
   limits <- limits[!is.na(limits)]
   agegroups <- if (length(limits) > 1) {
     vapply(seq(1, length(limits) - 1), function(y) {

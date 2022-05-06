@@ -4,7 +4,7 @@
 \alias{limits_to_agegroups}
 \title{Convert lower age limits to age groups.}
 \usage{
-limits_to_agegroups(x, limits)
+limits_to_agegroups(x, limits = sort(unique(x)))
 }
 \arguments{
 \item{x}{age limits to transform}
