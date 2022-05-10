@@ -486,11 +486,11 @@ ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) + theme(l
 Plotting (R base)
 =======
 
-The contact matrices can be plotted with the `matrix_plot` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changend.
+The contact matrices can be plotted with the `matrix_plot` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changed.
 
 ```{r fig.width=4, fig.height=4, tidy=TRUE}
 matrix_plot(mr)
-matrix_plot(mr,color.palette = gray.colors)
+matrix_plot(mr, color.palette = gray.colors)
 
 usr_col <- function(x){ return(grDevices::hcl.colors(x, 'YlGn')) }
 matrix_plot(mr, num.colors = 9, color.palette = usr_col)
