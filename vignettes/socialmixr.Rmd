@@ -21,29 +21,28 @@ knitr::opts_chunk$set(
 
 [socialmixr](https://github.com/sbfnk/socialmixr) is an `R` package to derive social mixing matrices from survey data. These are particularly useful for age-structured [infectious disease models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease). For background on age-specific mixing matrices and what data inform them, see, for example, the paper on POLYMOD by [Mossong et al](https://doi.org/10.1371/journal.pmed.0050074).
 
-Usage
-======
+# Usage
 
 The latest stable version of the `socialmixr` package is installed via
+
 ```{r eval=FALSE}
 install.packages('socialmixr')
 ```
 
 The latest development version of the `socialmixr` package can be installed via
+
 ```{r eval=FALSE}
 devtools::install_github('sbfnk/socialmixr')
 ```
 
 To load the package, use
-```{r eval=FALSE}
+
+```{r}
 library('socialmixr')
 ```
-```{r echo=FALSE}
-suppressWarnings(library('socialmixr'))
-```
 
 
-At the heart of the `socialmixr` package is the `contact_matrix` function. This extracts a contact matrix from survey data. You can use the `R` help to find out about usage of the `contact_matrix` function, including a list of examples:
+At the heart of the `socialmixr` package is the `contact_matrix()` function. This extracts a contact matrix from survey data. You can use the `R` help to find out about usage of the `contact_matrix()` function, including a list of examples:
 
 ```{r eval=FALSE}
 ?contact_matrix
@@ -63,23 +62,21 @@ contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15
 
 This generates a contact matrix from the UK part of the POLYMOD study, with age groups 0-1, 1-5, 5-15 and 15+ years. It contains the mean number of contacts that each member of an age group (row) has reported with members of the same or another age group (column).
 
-Methodology
-==============
+# Methodology
 
-The `contact_matrix` function requires a survey given as a list of two elements, both given as data.frames: `participants` and `contacts`. They must be linked by an ID column that refers to the identity of the queried participants (by default `global_id`, but this can be changed using the `id.column` argument). The `participants` data frame, as a minimum, must have the ID column and a column denoting participant age (which can be set by the `part.age.column` argument, by default `participant_age`). The `contacts` data frame, similarly, must have the ID column and a column denoting age (which can be set by the `contact.age.column` argument, by default `cnt_age_mean`).
+The `contact_matrix()` function requires a survey given as a list of two elements, both given as data.frames: `participants` and `contacts`. They must be linked by an ID column that refers to the identity of the queried participants (by default `global_id`, but this can be changed using the `id.column` argument). The `participants` data frame, as a minimum, must have the ID column and a column denoting participant age (which can be set by the `part.age.column` argument, by default `participant_age`). The `contacts` data frame, similarly, must have the ID column and a column denoting age (which can be set by the `contact.age.column` argument, by default `cnt_age_mean`).
 
 The function then either randomly samples participants (if `bootstrap` is set to `TRUE`) or takes all participants in the survey and determines the mean number of contacts in each age group given the age group of the participant. The age groups can be set using the `age.limits` argument, which should be set to the lower limits of the age groups (e.g., `age.limits = c(0, 5, 10)` for age groups 0-5, 5-10, 10+). If these are not given, the narrowest age groups possible given survey and demographic data are used.
 
-Surveys
-=======
+# Surveys
 
-The key argument to the `contact_matrix` function is the `survey` that it supposed to use. The `socialmixr` package includes the POLYMOD survey, which will be used if not survey is specified. It also provides access to all surveys in the [Social contact data](https://zenodo.org/communities/social_contact_data) community on [Zenodo](https://zenodo.org). The available surveys can be listed (if an internet connection is available) with
+The key argument to the `contact_matrix()` function is the `survey` that it supposed to use. The `socialmixr` package includes the POLYMOD survey, which will be used if not survey is specified. It also provides access to all surveys in the [Social contact data](https://zenodo.org/communities/social_contact_data) community on [Zenodo](https://zenodo.org). The available surveys can be listed (if an internet connection is available) with
 
 ```{r eval=FALSE}
 list_surveys()
 ```
 
-A survey can be downloaded using the `get_survey` command. This will get the relevant data of a survey given its Zenodo DOI (as returned by `list_surveys`). All other relevant commands in the `socialmixr` package accept a DOI, but if a survey is to be used repeatedly it is worth downloading it and storing it locally to avoid the need for a network connection and speed up processing.
+A survey can be downloaded using the `get_survey()` command. This will get the relevant data of a survey given its Zenodo DOI (as returned by `list_surveys()`). All other relevant commands in the `socialmixr` package accept a DOI, but if a survey is to be used repeatedly it is worth downloading it and storing it locally to avoid the need for a network connection and speed up processing.
 
 ```{r eval=FALSE}
 peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
@@ -87,6 +84,7 @@ saveRDS(peru_survey, "peru.rds")
 ```
 
 This way, the `peru` data set can be loaded in the future without the need for an internet connection using
+
 ```{r eval=FALSE}
 peru_survey <- readRDS("peru.rds")
 ```
@@ -99,16 +97,15 @@ survey_countries(polymod)
 
 If one wishes to get a contact matrix for one or more specific countries, a `countries` argument can be passed to `contact_matrix`. If this is not done, the different surveys contained in a dataset are combined as if they were one single sample (i.e., not applying any population-weighting by country or other correction).
 
-By default, socialmixr uses the POLYMOD survey. A reference for any given survey can be obtained using `cite`, e.g.
+By default, socialmixr uses the POLYMOD survey. A reference for any given survey can be obtained using `cite()`, e.g.
 
 ```{r}
 cite(polymod)
 ```
 
-Bootstrapping
-=======
+# Bootstrapping
 
-To get an idea of uncertainty of the contact matrices, a bootstrap can be used. If an argument `n` greater than 1 is passed to `contact_matrix`, multiple samples of contact matrices are generated. For each sample, participants are sampled (with replacement, to get the same number of participants of the original study), and contacts are sampled from the set of all the contacts of all the participants (again, with replacement). All resulting contact matrices are returned as `matrices` field in the returned list. From these, derived quantities can be obtained, for example the mean
+To get an idea of uncertainty of the contact matrices, a bootstrap can be used. If an argument `n` greater than 1 is passed to `contact_matrix()`, multiple samples of contact matrices are generated. For each sample, participants are sampled (with replacement, to get the same number of participants of the original study), and contacts are sampled from the set of all the contacts of all the participants (again, with replacement). All resulting contact matrices are returned as `matrices` field in the returned list. From these, derived quantities can be obtained, for example the mean
 
 ```{r}
 m <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), n=5)
@@ -117,22 +114,19 @@ mr <- Reduce("+", lapply(m$matrices, function(x) {x$matrix})) / length(m$matrice
 mr
 ```
 
-Demography
-=======
+# Demography
 
-Obtaining symmetric contact matrices, splitting out their components (see below) and age-specific participant weights require information about the underlying demographic composition of the survey population. This can be passed to `contact_matrix` as the `survey.pop` argument, a `data.frame` with two columns, `lower.age.limit` (denoting the lower end of the age groups) and `population` (denoting the number of people in each age group). If no `survey.pop` is not given, `contact_matrix` will try to obtain the age structure of the population (as per the `countries` argument) from the [World Population Prospects](https://esa.un.org/unpd/wpp/) of the United Nations, using estimates from the year that closest matches the year in which the contact survey was conducted.
+Obtaining symmetric contact matrices, splitting out their components (see below) and age-specific participant weights require information about the underlying demographic composition of the survey population. This can be passed to `contact_matrix()` as the `survey.pop` argument, a `data.frame` with two columns, `lower.age.limit` (denoting the lower end of the age groups) and `population` (denoting the number of people in each age group). If no `survey.pop` is not given, `contact_matrix` will try to obtain the age structure of the population (as per the `countries` argument) from the [World Population Prospects](https://esa.un.org/unpd/wpp/) of the United Nations, using estimates from the year that closest matches the year in which the contact survey was conducted.
 
 If demographic information is used, this is returned by `contact_matrix` as the `demography` field in the results list. It is possible to enforce or prevent the function to return demography data by using the `return.demography` option.
 
 ```{r, warning=FALSE, message=FALSE}
 contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 20), 
                return.demography = TRUE)$demography
-
 ```
 
 
-Symmetric contact matrices
-=======
+# Symmetric contact matrices
 
 Conceivably, contact matrices should be symmetric: the total number of contacts made by members of one age group with those of another should be the same as vice versa. Mathematically, if $m_{ij}$ is the mean number of contacts made by members of age group $i$ with members of age group $j$, and the total number of people in age group $i$ is $N_i$, then
 
@@ -155,32 +149,30 @@ The contact matrix per capita $c_{ij}$ contains the social contact rates of one 
 
 $$c_{ij} =  \tfrac{m_{ij}}{N_{j}}$$
 
-To get the per capita contact matrix, use `per.capita = TRUE` when calling the `contact_matrix` function. Please note that if the option `symmetric = TRUE` is specified, the contact matrix $m_{ij}$ can show asymmetry if the sub-population sizes are different, but the contact matrix per capita will be fully symmetric:
+To get the per capita contact matrix, use `per.capita = TRUE` when calling the `contact_matrix()` function. Please note that if the option `symmetric = TRUE` is specified, the contact matrix $m_{ij}$ can show asymmetry if the sub-population sizes are different, but the contact matrix per capita will be fully symmetric:
 
 $$c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}$$
 
 
 ```{r message=FALSE, warning=FALSE}
-contact_matrix(survey = polymod, countries = "Germany",age.limits = c(0,60), symmetric = T, per.capita = TRUE)
+contact_matrix(survey = polymod, countries = "Germany", age.limits = c(0,60), symmetric = TRUE, per.capita = TRUE)
 ```
 
-Splitting contact matrices
-=======
+# Splitting contact matrices
 
-The `contact_matrix` contains a simple model for the elements of the contact matrix, by which it is split into a _global_ component, as well as three components representing _contacts_, _assortativity_ and _demography_. In other words, the elements $m_{ij}$ of the contact matrix are modeled as
+The `contact_matrix()` contains a simple model for the elements of the contact matrix, by which it is split into a _global_ component, as well as three components representing _contacts_, _assortativity_ and _demography_. In other words, the elements $m_{ij}$ of the contact matrix are modeled as
 
 $$ m_{ij} = q d_i a_{ij} n_j $$
 
 where $q d_i$ is the number of contacts that a member of group $i$ makes across age groups, $n_j$ is the proportion of the surveyed population in age group $j$. The constant $q$ is set to the value of the largest eigenvalue of $m_{ij}$; if used in an infectious disease model, it can be replaced by the basic reproduction number $R_0$.
 
-To model the contact matrix in this way with the `contact_matrix` function, set `split = TRUE`. The components of the matrix are returned as elements `normalisation` ($q$), `contacts` ($d_i$), `matrix` ($a_{ij}$) and `demography` ($n_j$) of the resulting list.
+To model the contact matrix in this way with the `contact_matrix()` function, set `split = TRUE`. The components of the matrix are returned as elements `normalisation` ($q$), `contacts` ($d_i$), `matrix` ($a_{ij}$) and `demography` ($n_j$) of the resulting list.
 
 ```{r}
 contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), split = TRUE)
 ```
 
-Filtering
-=======
+# Filtering
 
 The `filter` argument to `contact_matrix` can be used to select particular participants or contacts. For example, in the `polymod` dataset, the indicators `cnt_home`, `cnt_work`, `cnt_school`, `cnt_transport`, `cnt_leisure` and `cnt_otherplace` take value 0 or 1 depending on where a contact occurred:
 
@@ -200,17 +192,16 @@ In order to derive a contact matrix outside home, school or work, one would use
 contact_matrix(survey = polymod, age.limits = c(0,18,60), filter = list(cnt_home = 0, cnt_school = 0, cnt_work = 0))
 ```
 
-Participant weights
-=======
+# Participant weights
 
 Participant weights are commonly used to align sample and population characteristics in terms of temporal aspects and the age distribution. For example, the day of the week has been reported as a driving factor for social contact behavior, hence to obtain a weekly average, the survey data should represent the weekly 2/5 distribution of weekend/week days. To align the survey data to this distribution, one can obtain participant weights in the form of:
-$$w_{day.of.week} = \tfrac{5/7}{N_{weekday}/N} \text{  OR   } \tfrac{2/7}{N_{weekend}/N}$$
+$$w_{\textrm{day.of.week}} = \tfrac{5/7}{N_{\textrm{weekday}}/N} \text{  OR   } \tfrac{2/7}{N_{\textrm{weekend}}/N}$$
 with sample size $N$, and $N_{weekday}$ and $N_{weekend}$ the number of participants that were surveyed during weekdays and weekend days, respectively. It is possible to remove the constant values (e.g. $w = 5/N_{weekday}$), which results in the same standardized weights. However, we opt to use the relative proportions to calculate weights to enable truncation with a generic threshold (see below). 
 
 Another driver of social contact patterns is age. To improve the representativeness of survey data, age-specific weights can be calculated as:
 $$w_{age} = \tfrac{P_{a}\ /\ P}{N_{a}\ /\ N}$$
 with $P$ the population size, $P_a$ the population fraction of age $a$, $N$ the survey sample size and $N_a$ the survey fraction of age $a$. The combination of age-specific and temporal weights for participant $i$ of age $a$ can be constructed as:
-$$w_{i} = w_{age} * w_{day.of.week} $$
+$$w_{i} = w_{\textrm{age}} * w_{\textrm{day.of.week}} $$
 Finally, the weights can to be standardized as follows:
 $$\tilde{w}_{i} =  \tfrac{w_{i}}{\sum_{}^{} w_{}} * N $$
 
@@ -246,27 +237,28 @@ kable(survey_data)
 ```
 
 The summary statistics for the sample (N) and reference population (P) are as follows
-```{r, include=TRUE}
+
+```{r}
 N             = 6
-N_age         = c(2,3,1)
-N_age.group   = c( 5 ,1)
-N_day.of.week = c(3,3)
+N_age         = c(2, 3, 1)
+N_age.group   = c(5, 1)
+N_day.of.week = c(3, 3)
 
 P             = 3000
-P_age         = c(1000,1000,1000)
-P_age.group   = c( 2000 ,1000)
+P_age         = c(1000, 1000, 1000)
+P_age.group   = c(2000, 1000)
 
-P_day.of.week = c(5/7,2/7)*3000
-
+P_day.of.week = c(5/7, 2/7) * 3000
 ```
 
-This survey data results in an unweighted average number of contacts:
-```{r, include=TRUE,echo=F}
+This survey data results in an unweighted average number of contacts of 
+
+```{r, echo=FALSE}
 print(paste('unweighted average number of contacts:',round(mean(survey_data$m_i),digits = 2)))
 ```
 
 and age-specific unweighted averages on the number of contacts:
-```{r, include=TRUE,echo=F}
+```{r, echo=FALSE}
 kable(aggregate(m_i ~ age + age.group, data = survey_data, mean))
 ```
 
@@ -274,7 +266,7 @@ kable(aggregate(m_i ~ age + age.group, data = survey_data, mean))
 
 The following table contains the participants weights based on the survey day with and without the population and sample size constants ($w$ and $w'$, respectively). Note that the standardized weights $\tilde{w}$ and $\tilde{w'}$ are the same:
 
-```{r, include=TRUE, echo=F}
+```{r, echo=FALSE}
 # including population constants
 survey_data$w <- NA
 for(i in 1:nrow(survey_data)){
@@ -305,7 +297,7 @@ survey_data$w_dot_tilde <- NULL
 Note the different scale of $w$ and $w'$, and the more straightforward interpretation of the numerical value of $w$ in terms of relative differences to apply truncation.
 Using the standardized weights, we are able to calculate the weighted number of contacts:
 
-```{r,include=TRUE,echo=F}
+```{r, echo=FALSE}
 # add weighted number of contacts
 survey_data['m_i * w_tilde'] = survey_data$m_i * survey_data$w_tilde
 
@@ -320,14 +312,14 @@ print(paste('weighted average number of contacts:',round(mean(survey_data$m_i * 
 
 If the population-based weights are directly used in age-specific groups, the contact behavior of the 3 year-old participant, which participated during week day, is inflated due to the under-representation of week days in the survey sample. In addition, the number of contacts for 1 year-old participants is decreased because of the over-representation of weekend days in the survey. Using the population-weights within the two aggregated age groups, we obtain a more intuitive weighting for age group A, but it is still skewed for individuals in age group B. As such, this weighted average for age group B has no meaning in terms of social contact behavior:
 
-```{r, include=TRUE,echo=F}
+```{r, echo=FALSE}
 kable(list(aggregate(m_i * w_tilde ~ age, data = survey_data, mean),
            aggregate(m_i * w_tilde ~ age.group, data = survey_data, mean)))
 ```
 
 If we subdivide the population, we need to use post-stratification weights ("w_PS") in which the weighted totals within mutually exclusive cells equal the sample size. For the age groups, this goes as follows:
 
-```{r, include=TRUE,echo=F}
+```{r, echo=FALSE}
 survey_data$w_PS <- NA
 for(i in 1:nrow(survey_data)){
   k_i    <- survey_data$age.group[i]
@@ -343,7 +335,7 @@ kable(survey_data)
 
 The weighted means equal:
 
-```{r, include=TRUE,echo=F}
+```{r, echo=FALSE}
 kable(aggregate(m_i * w_PS ~ age.group, data = survey_data, mean))
 ```
 
@@ -351,7 +343,7 @@ kable(aggregate(m_i * w_PS ~ age.group, data = survey_data, mean))
 
 We repeated the example by calculating age-specific participant weights on the population and age-group level:
 
-```{r, include=TRUE, echo=F}
+```{r, echo=FALSE}
 survey_data$w        <- NA
 survey_data$w_tilde   <- NA
 survey_data$w_PS      <- NULL
@@ -378,20 +370,21 @@ print(paste('weighted average number of contacts:',round(mean(survey_data$m_i * 
 ```
 
 If the age-specific weights are directly used within the age groups, the contact behavior for age group B is inflated to unrealistic levels and the number of contacts for age group A is artificially low:
-```{r, include=TRUE,echo=F}
+
+```{r, echo=FALSE}
 kable(list(aggregate(m_i * w_tilde ~ age, data = survey_data, mean),
             aggregate(m_i * w_tilde ~ age.group, data = survey_data, mean)))
 ```
 
 Using the post-stratification weights, we end up with:
 
-```{r, include=TRUE,echo=F}
+```{r, echo=FALSE}
 kable(aggregate(m_i * w_PS ~ age.group, data = survey_data, mean))
 ```
 
 # Weight threshold
 
-If the survey population differs extensively from the demography, some participants can end up with relatively high weights and as such, an excessive contribution to the population average. This warrants the limitation of single participant influences by a truncation of the weights. To enable this in `contact_matrix`, you need to provide a numeric `weight.threshold`. This truncation is applied on the standardized weights, followed by another standardization to make sure that the sum of the weights still equals the sample size. The latter can lead to final weights of which some little exceed the given threshold value. 
+If the survey population differs extensively from the demography, some participants can end up with relatively high weights and as such, an excessive contribution to the population average. This warrants the limitation of single participant influences by a truncation of the weights. To enable this in `contact_matrix()`, you need to provide a numeric `weight.threshold`. This truncation is applied on the standardized weights, followed by another standardization to make sure that the sum of the weights still equals the sample size. The latter can lead to final weights of which some little exceed the given threshold value. 
 
 ```{r message=FALSE, warning=FALSE}
 contact_matrix(survey = polymod, age.limits = c(0,18,60), weigh.dayofweek = TRUE, 
@@ -420,11 +413,9 @@ N             = nrow(survey_data)
 N_age         = table(survey_data$age)
 N_age.group   = table(survey_data$age.group)
 N_day.of.week = table(survey_data$day.of.week)
-
-
 ```
 
-```{r, include=TRUE, echo=F}
+```{r, echo=FALSE}
 survey_data$w        <- NA
 survey_data$w_tilde   <- NA
 survey_data$w_PS      <- NULL
@@ -459,34 +450,32 @@ print(paste('weighted average number of contacts:',round(mean(survey_data$m_i * 
 
 The single participant of 3 years of age has a very large influence on the weighted population average. As such, we propose to truncate the relative age-specific weights $w$ at 3. As such, the weighted population average equals:
 
-```{r, echo=F}
+```{r, echo=FALSE}
 survey_data$w_tilde[survey_data$w_tilde>3] = 3
-
 ```
 
-```{r, echo=F}
-
+```{r, echo=FALSE}
 survey_data$w_tilde[survey_data$w_tilde>3] = 3
 
 print(paste('weighted average number of contacts after truncation:',round(mean(survey_data$m_i * survey_data$w_tilde),digits = 2)))
 ```
 
-Plotting (ggplot2)
-=======
+# Plotting (ggplot2)
 
-The contact matrices can be plotted by using the `geom_tile` function of the `ggplot2` package.
+The contact matrices can be plotted by using the `geom_tile()` function of the `ggplot2` package.
 
 ```{r fig.width=4, fig.height=4, tidy=TRUE}
 library('reshape2')
 library('ggplot2')
 df <- melt(mr, varnames = c("age.group", "age.group.contact"), value.name = "contacts")
-ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) + theme(legend.position = "bottom") + geom_tile()
+ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) + 
+  theme(legend.position = "bottom") + 
+  geom_tile()
 ```
 
-Plotting (R base)
-=======
+# Plotting (R base)
 
-The contact matrices can be plotted with the `matrix_plot` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changed.
+The contact matrices can be plotted with the `matrix_plot()` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changed.
 
 ```{r fig.width=4, fig.height=4, tidy=TRUE}
 matrix_plot(mr)
@@ -496,8 +485,8 @@ usr_col <- function(x){ return(grDevices::hcl.colors(x, 'YlGn')) }
 matrix_plot(mr, num.colors = 9, color.palette = usr_col)
 ```
 
-References
-=======
+# References
+
 * Kolenikov. 2016. Post-stratification or non-response adjustment. Survey Practice. 9(3).
 * Hens et al. 2009. Estimating the impact of school closure on social mixing behavior and the transmission of close contact infections in eight European countries. BMC Infectious Diseases. 9(187)
 * Willem et al. 2012. A nice day for an infection? Weather conditions and social contact patterns relevant to influenza transmission. PLoS ONE. 7(11)
