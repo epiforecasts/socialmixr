@@ -2,6 +2,7 @@ Social mixing matrices for infectious disease modelling in R
 =============
 
 <!-- badges: start -->
+[![CRAN version](https://www.r-pkg.org/badges/version-ago/socialmixr)](https://cran.r-project.org/package=socialmixr)
 [![R-CMD-check](https://github.com/epiforecasts/socialmixr/workflows/R-CMD-check/badge.svg)](https://github.com/epiforecasts/socialmixr/actions)
 [![Codecov test coverage](https://codecov.io/gh/epiforecasts/socialmixr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/epiforecasts/socialmixr?branch=main)
 <!-- badges: end -->
