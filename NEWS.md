@@ -1,3 +1,19 @@
+# socialmixr 0.1.9
+
+## Major changes
+
+* new `matrix_plot()` function to plot contact matrix
+
+## Minor changes
+
+* world population data has been updated to 2017 by switching from the wpp2015
+to wpp2017 package
+* `chkDots()` is now used to ensure no argument is silently ignored by S3 methods
+
+## Internal changes
+
+* continuous integration is now done via GitHub Actions
+
 # socialmixr 0.1.8
 
 * fixed test
