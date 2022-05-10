@@ -2,6 +2,9 @@
 title: "Introduction to socialmixr"
 author: "Sebastian Funk"
 date: "`r Sys.Date()`"
+bibliography: socialmixr.bib
+nocite: '@*'
+link-citations: true
 output:
   rmarkdown::html_vignette: 
     toc: true
@@ -19,7 +22,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-[socialmixr](https://github.com/sbfnk/socialmixr) is an `R` package to derive social mixing matrices from survey data. These are particularly useful for age-structured [infectious disease models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease). For background on age-specific mixing matrices and what data inform them, see, for example, the paper on POLYMOD by [Mossong et al](https://doi.org/10.1371/journal.pmed.0050074).
+[socialmixr](https://github.com/sbfnk/socialmixr) is an `R` package to derive social mixing matrices from survey data. These are particularly useful for age-structured [infectious disease models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease). For background on age-specific mixing matrices and what data inform them, see, for example, the paper on POLYMOD by [@mossong_social_2008].
 
 # Usage
 
@@ -205,7 +208,7 @@ $$w_{i} = w_{\textrm{age}} * w_{\textrm{day.of.week}} $$
 Finally, the weights can to be standardized as follows:
 $$\tilde{w}_{i} =  \tfrac{w_{i}}{\sum_{}^{} w_{}} * N $$
 
-If the social contact analysis is based on stratification by splitting the population into non-overlapping groups, it requires the weights to be standardized so that the weighted totals within mutually exclusive cells equal the known population totals (Kolenikov 2016). The post-stratification cells need to be mutually exclusive and cover the whole population. The post-stratified (PS) weight for participant $i$ of \mbox{group $g$} is:
+If the social contact analysis is based on stratification by splitting the population into non-overlapping groups, it requires the weights to be standardized so that the weighted totals within mutually exclusive cells equal the known population totals [@kolenikov_post-stratification_2016]. The post-stratification cells need to be mutually exclusive and cover the whole population. The post-stratified (PS) weight for participant $i$ of \mbox{group $g$} is:
 $$\tilde{w}^{PS}_{i} =  \tfrac{w_{i}}{\sum_{\text{j}}^{\text{group g}} w_{j}} * N_g$$
 
 Temporal weights are activated in `contact_matrix` by `weigh.dayofweek = TRUE` and age-specific weights by `weight.age = TRUE`. The post-stratification weights are calculated by default. It is possible to obtain the participant weights via the option `return.part.weights = TRUE`.
@@ -475,7 +478,7 @@ ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) +
 
 # Plotting (R base)
 
-The contact matrices can be plotted with the `matrix_plot()` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changed.
+The contact matrices can be plotted with the `matrix_plot()` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by idefault, though this can be changed.
 
 ```{r fig.width=4, fig.height=4, tidy=TRUE}
 matrix_plot(mr)
@@ -486,10 +489,4 @@ matrix_plot(mr, num.colors = 9, color.palette = usr_col)
 ```
 
 # References
-
-* Kolenikov. 2016. Post-stratification or non-response adjustment. Survey Practice. 9(3).
-* Hens et al. 2009. Estimating the impact of school closure on social mixing behavior and the transmission of close contact infections in eight European countries. BMC Infectious Diseases. 9(187)
-* Willem et al. 2012. A nice day for an infection? Weather conditions and social contact patterns relevant to influenza transmission. PLoS ONE. 7(11)
-
-
 
