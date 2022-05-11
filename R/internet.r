@@ -8,7 +8,7 @@ check_zenodo <- function() {
   status <- 0
   try(
     {
-      status <- status_code(GET("http://zenodo.org"))
+      status <- status_code(HEAD("https://zenodo.org"))
     },
     silent = TRUE
   )
@@ -37,7 +37,7 @@ ensure_zenodo_available <- function() {
     return()
   }
 
-  err_str <- "The Zenodo repository at http://zenodo.org cannot be accessed."
+  err_str <- "The Zenodo repository at https://zenodo.org cannot be accessed."
 
   if (status > 0) {
     err_str <- paste0(err_str, "HTTP status code ", status, ".")
