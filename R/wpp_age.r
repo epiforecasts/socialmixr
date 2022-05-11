@@ -9,21 +9,11 @@
 #' @importFrom countrycode countrycode
 #' @param countries countries, will return all if not given
 #' @param years years, will return all if not given
+#' @autoglobal
 #' @examples
 #' wpp_age("Italy", c(1990, 2000))
 #' @export
 wpp_age <- function(countries, years) {
-  ## circumvent R CMD CHECK errors by defining global variables
-  popF <- NULL
-  popM <- NULL
-  sex <- NULL
-  country <- NULL
-  lower.age.limit <- NULL
-  age <- NULL
-  female <- NULL
-  male <- NULL
-  country_code <- NULL
-  name <- NULL
 
   data(popF, package = "wpp2017", envir = environment())
   data(popM, package = "wpp2017", envir = environment())

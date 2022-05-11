@@ -10,6 +10,7 @@
 #' @importFrom utils as.person read.csv
 #' @importFrom stringr str_extract_all
 #' @importFrom XML xpathSApply htmlParse xmlValue
+#' @autoglobal
 #' @examples
 #' \dontrun{
 #'   list_surveys()
@@ -18,13 +19,6 @@
 #' @return a survey in the correct format
 #' @export
 get_survey <- function(survey, quiet = FALSE, ...) {
-  ## circumvent R CMD CHECK errors by defining global variables
-  id <- NULL
-  literal <- NULL
-  given <- NULL
-  family <- NULL
-  encodingFormat <- NULL
-  contentUrl <- NULL
 
   if (inherits(survey, "survey")) {
     new_survey <- survey
