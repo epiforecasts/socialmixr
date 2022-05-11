@@ -2,7 +2,7 @@
 #'
 #' This function combines the R image.plot function with numeric contact rates in the matrix cells.
 #'
-#' @param mij a contact matrix containing contact rates between participants of age i (rows) with contacts of age j (columns). This is the default matrix format of \code{\link{contact_matrix}}.
+#' @param mij a contact matrix containing contact rates between participants of age i (rows) with contacts of age j (columns). This is the default matrix format of [contact_matrix()].
 #' @param min.legend the color scale minimum (default = 0). Set to NA to use the minimium value of `mij`.
 #' @param max.legend the color scale maximum (default = NA). Set to NA to use the maximum value of `mij`.
 #' @param num.digits the number of digits when rounding the contact rates (default = 2). Use NA to disable this.
@@ -14,8 +14,8 @@
 #' @param cex.text size of the numeric values in the matrix (default: 1)
 #' @param xlab a title for the x axis (default: "Age group (years)")
 #' @param ylab a title for the y axis (default: "Contact age group (years)")
-#' @param color.palette the color palette to use (default: \code{\link{heat.colors}}). Other examples are \code{\link{topo.colors}}, \code{\link{terrain.colors}} and \code{\link{hcl.colors}}. User-defined functions are also possible if they take the number of colors to be in the palette as function argument.
-#' @param ... further arguments to pass to \code{\link{image.plot}}
+#' @param color.palette the color palette to use (default: [heat.colors()]). Other examples are [topo.colors()], [terrain.colors()] and [hcl.colors()]. User-defined functions are also possible if they take the number of colors to be in the palette as function argument.
+#' @param ... further arguments to pass to [image.plot()]
 #' @importFrom fields image.plot
 #' @importFrom grDevices heat.colors
 #' @importFrom graphics axis text

@@ -6,9 +6,9 @@ clean <- function(x, ...) UseMethod("clean")
 #'
 #' @description Cleans survey data to work with the 'contact_matrix' function
 #'
-#' @param x A \code{\link{survey}} object
+#' @param x A [survey()] object
 #' @param country.column the name of the country in which the survey participant was interviewed
-#' @param participant.age.column the column in \code{x$participants} containing participants' age
+#' @param participant.age.column the column in `x$participants` containing participants' age
 #' @param ... ignored
 #' @importFrom countrycode countrycode
 #' @importFrom lubridate period_to_seconds period years

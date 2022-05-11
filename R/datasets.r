@@ -20,5 +20,5 @@
 #'   All other variables are described on the Zenodo repository of the data,
 #'   available at https://doi.org/10.5281/zenodo.1043437
 #' }
-#' @source \url{http://dx.doi.org/10.1371/journal.pmed.0050074}
+#' @source <http://dx.doi.org/10.1371/journal.pmed.0050074>
 "polymod"

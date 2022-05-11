@@ -29,7 +29,7 @@ list_surveys <- function() {
 #' List all countries contained in a survey
 #'
 #' @param country.column column in the survey indicating the country
-#' @param ... further arguments for \code{\link{get_survey}}
+#' @param ... further arguments for [get_survey()]
 #' @return list of countries
 #' @inheritParams get_survey
 #' @examples
@@ -43,7 +43,7 @@ survey_countries <- function(survey, country.column = "country", ...) {
 
 #' List all countries and regions for which socialmixr has population data
 #'
-#' Uses the World Population Prospects data from the \code{wpp2017} package
+#' Uses the World Population Prospects data from the `wpp2017` package
 #' @return list of countries
 #' @import wpp2017
 #' @importFrom data.table data.table setkey

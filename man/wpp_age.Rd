@@ -16,7 +16,7 @@ data frame of age-specific population data
 }
 \description{
 This uses data from the \code{wpp2017} package but combines male and female,
-and converts age groups to lower age limits. If the requested year is not present 
+and converts age groups to lower age limits. If the requested year is not present
 in the historical data, wpp projections are used.
 }
 \examples{
