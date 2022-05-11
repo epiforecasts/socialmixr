@@ -32,41 +32,13 @@
 #' @importFrom countrycode countrycode
 #' @import data.table
 #' @export
+#' @autoglobal
 #' @examples
 #' data(polymod)
 #' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 #' @author Sebastian Funk
 contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, estimated.participant.age = c("mean", "sample", "missing"), estimated.contact.age = c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = c(), weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, sample.all.age.groups = FALSE, quiet = FALSE, return.part.weights = FALSE, return.demography = NA, per.capita = FALSE, ...) {
-  ## circumvent R CMD CHECK errors by defining global variables
-  lower.age.limit <- NULL
-  N <- NULL
-  population <- NULL
-  upper.age.limit <- NULL
-  age.group <- NULL
-  weight <- NULL
-  dayofweek <- NULL
-  contact.age.group <- NULL
-  proportion <- NULL
-  weight.cont <- NULL
-  weight.part <- NULL
-  id <- NULL
-  sampled.weight <- NULL
-  bootstrap.weight <- NULL
-  participants <- NULL
-  sum_weight <- NULL
 
-  age.count <- NULL
-  age.proportion <- NULL
-  population.proportion <- NULL
-  population.count <- NULL
-  weight.age <- NULL
-  participant.age <- NULL
-  age.count <- NULL
-  age.proportion <- NULL
-  is.weekday <- NULL
-
-  # study.year <- NULL
-  # survey.year <- NULL
   surveys <- c("participants", "contacts")
 
   dot.args <- list(...)

@@ -8,16 +8,13 @@
 #' @param pop.age.column column in the 'pop' data frame indicating the lower age group limit
 #' @param pop.column column in the 'pop' data frame indicating the population size
 #' @param ... ignored
+#'
+#' @autoglobal
+#'
 #' @export
 pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.column = "population", ...) {
 
   chkDots(...)
-
-  ## circumvent R CMD CHECK errors by defining global variables
-  ..original.lower.age.limit <- NULL
-  ..segment <- NULL
-  ..upper.age.limit <- NULL
-  population <- NULL
 
   if (!is.data.frame(pop) ||
     length(intersect(colnames(pop), c(pop.age.column, pop.column))) < 2) {

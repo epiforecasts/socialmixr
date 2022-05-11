@@ -2,21 +2,13 @@
 #'
 #' @return character vector of surveys
 #' @importFrom oai list_records
+#' @autoglobal
 #' @examples
 #' \dontrun{
 #'   list_surveys()
 #' }
 #' @export
 list_surveys <- function() {
-  ## circumvent R CMD CHECK errors by defining global variables
-  relation.1 <- NULL
-  datestamp <- NULL
-  identifier.1 <- NULL
-  identifier.3 <- NULL
-  title <- NULL
-  creator <- NULL
-  doi <- NULL
-  redirect <- NULL
 
   record_list <-
     data.table(list_records("https://zenodo.org/oai2d",
@@ -57,13 +49,11 @@ survey_countries <- function(survey, country.column = "country", ...) {
 #' @importFrom data.table data.table setkey
 #' @importFrom utils data
 #' @importFrom countrycode countrycode
+#' @autoglobal
 #' @examples
 #' \dontrun{wpp_countries()}
 #' @export
 wpp_countries <- function() {
-  ## circumvent R CMD CHECK errors by defining global variables
-  popF <- NULL
-  popM <- NULL
 
   data(popF, package = "wpp2017", envir = environment())
   data(popM, package = "wpp2017", envir = environment())
