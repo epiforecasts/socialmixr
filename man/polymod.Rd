@@ -20,7 +20,7 @@ available at https://doi.org/10.5281/zenodo.1043437
 }
 }
 \source{
-\url{http://dx.doi.org/10.1371/journal.pmed.0050074}
+\url{https://doi.org/10.1371/journal.pmed.0050074}
 }
 \usage{
 polymod
