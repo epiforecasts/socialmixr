@@ -4,7 +4,7 @@ cite <- function(x, ...) UseMethod("cite")
 #' @rdname cite
 #' @title Citation for a survey
 #'
-#' @description Gets a full citation for a \code{\link{survey}}. If quiet is FALSE (default)
+#' @description Gets a full citation for a [survey()]. If quiet is FALSE (default)
 #'
 #' @param x a character vector of surveys to cite
 #' @param quiet if set to TRUE, do not print entry, just return bibentry object

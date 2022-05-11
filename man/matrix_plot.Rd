@@ -22,11 +22,11 @@ matrix_plot(
 )
 }
 \arguments{
-\item{mij}{a contact matrix containing contact rates between participants of age i (rows) with contacts of age j (columns). This is the default matrix format of \code{\link{contact_matrix}}.}
+\item{mij}{a contact matrix containing contact rates between participants of age i (rows) with contacts of age j (columns). This is the default matrix format of \code{\link[=contact_matrix]{contact_matrix()}}.}
 
-\item{min.legend}{the color scale minimum (default = 0). Set to NA to use the minimium value of `mij`.}
+\item{min.legend}{the color scale minimum (default = 0). Set to NA to use the minimium value of \code{mij}.}
 
-\item{max.legend}{the color scale maximum (default = NA). Set to NA to use the maximum value of `mij`.}
+\item{max.legend}{the color scale maximum (default = NA). Set to NA to use the maximum value of \code{mij}.}
 
 \item{num.digits}{the number of digits when rounding the contact rates (default = 2). Use NA to disable this.}
 
@@ -46,9 +46,9 @@ matrix_plot(
 
 \item{cex.text}{size of the numeric values in the matrix (default: 1)}
 
-\item{color.palette}{the color palette to use (default: \code{\link{heat.colors}}). Other examples are \code{\link{topo.colors}}, \code{\link{terrain.colors}} and \code{\link{hcl.colors}}. User-defined functions are also possible if they take the number of colors to be in the palette as function argument.}
+\item{color.palette}{the color palette to use (default: \code{\link[=heat.colors]{heat.colors()}}). Other examples are \code{\link[=topo.colors]{topo.colors()}}, \code{\link[=terrain.colors]{terrain.colors()}} and \code{\link[=hcl.colors]{hcl.colors()}}. User-defined functions are also possible if they take the number of colors to be in the palette as function argument.}
 
-\item{...}{further arguments to pass to \code{\link{image.plot}}}
+\item{...}{further arguments to pass to \code{\link[=image.plot]{image.plot()}}}
 }
 \description{
 This function combines the R image.plot function with numeric contact rates in the matrix cells.

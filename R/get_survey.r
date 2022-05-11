@@ -1,9 +1,9 @@
 #' Get a survey, either from its Zenodo repository, a set of files, or a survey variable
 #'
 #' @description Downloads survey data, or extracts them from files, and returns a clean data set.
-#' @param survey a DOI (see \code{\link{list_surveys}}), or a character vector of file names, or a \code{\link{survey}} object (in which case only cleaning is done).
+#' @param survey a DOI (see [list_surveys()]), or a character vector of file names, or a [survey()] object (in which case only cleaning is done).
 #' @param quiet if TRUE, suppress messages
-#' @param ... options for \code{\link{clean}}, which is called at the end of this
+#' @param ... options for [clean()], which is called at the end of this
 #' @importFrom httr GET add_headers content
 #' @importFrom jsonlite fromJSON
 #' @importFrom curl curl_download

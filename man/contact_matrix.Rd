@@ -32,7 +32,7 @@ contact_matrix(
 )
 }
 \arguments{
-\item{survey}{a \code{\link{survey}} object}
+\item{survey}{a \code{\link[=survey]{survey()}} object}
 
 \item{countries}{limit to one or more countries; if not given, will use all countries in the survey; these can be given as country names or 2-letter (ISO Alpha-2) country codes}
 
@@ -78,7 +78,7 @@ contact_matrix(
 
 \item{per.capita}{wheter to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE')}
 
-\item{...}{further arguments to pass to \code{\link{get_survey}}, \code{\link{check}} and \code{\link{pop_age}} (especially column names)}
+\item{...}{further arguments to pass to \code{\link[=get_survey]{get_survey()}}, \code{\link[=check]{check()}} and \code{\link[=pop_age]{pop_age()}} (especially column names)}
 }
 \value{
 a list of sampled contact matrices, and the underlying demography of the surveyed population
