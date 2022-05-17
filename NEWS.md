@@ -2,6 +2,7 @@
 
 ## Major changes
 
+* `quiet` argument has been removed from `check()`, `cite()`, `contact_matrix()`, and `get_survey()`. If you want to silence diagnostic messages, you should use R idiomatic mechanisms, such as `suppressMessages()`
 * new `matrix_plot()` function to plot contact matrix
 
 ## Minor changes

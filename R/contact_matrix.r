@@ -21,7 +21,6 @@
 #' @param weigh.age whether to weigh by the age of the participants (vs. the populations' age distribution)
 #' @param weight.threshold threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff)
 #' @param sample.all.age.groups what to do if bootstrapping fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead
-#' @param quiet if set to TRUE, output is reduced
 #' @param return.demography boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters)
 #' @param return.part.weights boolean to return the participant weights
 #' @param per.capita wheter to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE')
@@ -37,7 +36,7 @@
 #' data(polymod)
 #' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 #' @author Sebastian Funk
-contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, estimated.participant.age = c("mean", "sample", "missing"), estimated.contact.age = c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = c(), weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, sample.all.age.groups = FALSE, quiet = FALSE, return.part.weights = FALSE, return.demography = NA, per.capita = FALSE, ...) {
+contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, estimated.participant.age = c("mean", "sample", "missing"), estimated.contact.age = c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = c(), weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, sample.all.age.groups = FALSE, return.part.weights = FALSE, return.demography = NA, per.capita = FALSE, ...) {
 
   surveys <- c("participants", "contacts")
 
@@ -58,9 +57,9 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
   missing.contact.age <- match.arg(missing.contact.age)
 
   ## get the survey
-  survey <- get_survey(survey, quiet)
+  survey <- get_survey(survey)
   ## check and get columns
-  columns <- check(survey, columns = TRUE, quiet = TRUE, ...)
+  columns <- suppressMessages(check(survey, columns = TRUE, ...))
 
   ## if bootstrap not asked for
   if (missing(bootstrap)) bootstrap <- (n > 1)
@@ -180,7 +179,7 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
   if (missing.participant.age == "remove" &&
     nrow(survey$participants[is.na(get(columns[["participant.age"]])) |
       get(columns[["participant.age"]]) < min(age.limits)]) > 0) {
-    if (!quiet && !missing.participant.age.set) {
+    if (!missing.participant.age.set) {
       message(
         "Removing participants without age information. ",
         "To change this behaviour, set the 'missing.participant.age' option"
@@ -245,7 +244,7 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
   if (missing.contact.age == "remove" &&
     nrow(survey$contacts[is.na(get(columns[["contact.age"]])) |
       get(columns[["contact.age"]]) < min(age.limits)]) > 0) {
-    if (!quiet && n == 1 && !missing.contact.age.set) {
+    if (n == 1 && !missing.contact.age.set) {
       message(
         "Removing participants that have contacts without age information. ",
         "To change this behaviour, set the 'missing.contact.age' option"
@@ -264,7 +263,7 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
   if (missing.contact.age == "ignore" &&
     nrow(survey$contacts[is.na(get(columns[["contact.age"]])) |
       get(columns[["contact.age"]]) < min(age.limits)]) > 0) {
-    if (!quiet && n == 1 && !missing.contact.age.set) {
+    if (n == 1 && !missing.contact.age.set) {
       message(
         "Ignore contacts without age information. ",
         "To change this behaviour, set the 'missing.contact.age' option"

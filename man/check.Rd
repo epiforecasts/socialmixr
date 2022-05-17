@@ -8,7 +8,6 @@
 \method{check}{survey}(
   x,
   columns = FALSE,
-  quiet = FALSE,
   error = FALSE,
   id.column = "part_id",
   participant.age.column = "part_age",
@@ -22,8 +21,6 @@
 \item{x}{A \code{\link[=survey]{survey()}} object}
 
 \item{columns}{if given, a named character vector containing the name of the "id", "participant.age" and "contact.age" columns}
-
-\item{quiet}{if TRUE, will not exit quietly if the test is passed.}
 
 \item{error}{if TRUE, will stop if an error is found in the structure of the \code{participants} and \code{contacts} data frame}
 
