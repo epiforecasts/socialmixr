@@ -4,12 +4,10 @@
 \alias{get_survey}
 \title{Get a survey, either from its Zenodo repository, a set of files, or a survey variable}
 \usage{
-get_survey(survey, quiet = FALSE, ...)
+get_survey(survey, ...)
 }
 \arguments{
 \item{survey}{a DOI (see \code{\link[=list_surveys]{list_surveys()}}), or a character vector of file names, or a \code{\link[=survey]{survey()}} object (in which case only cleaning is done).}
-
-\item{quiet}{if TRUE, suppress messages}
 
 \item{...}{options for \code{\link[=clean]{clean()}}, which is called at the end of this}
 }

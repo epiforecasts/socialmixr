@@ -7,7 +7,6 @@ cite <- function(x, ...) UseMethod("cite")
 #' @description Gets a full citation for a [survey()]. If quiet is FALSE (default)
 #'
 #' @param x a character vector of surveys to cite
-#' @param quiet if set to TRUE, do not print entry, just return bibentry object
 #' @param ... ignored
 #' @return citation as bibentry
 #' @importFrom utils bibentry
@@ -16,7 +15,7 @@ cite <- function(x, ...) UseMethod("cite")
 #' data(polymod)
 #' cite(polymod)
 #' @export
-cite.survey <- function(x, quiet = FALSE, ...) {
+cite.survey <- function(x, ...) {
 
   chkDots(...)
 
@@ -30,7 +29,6 @@ cite.survey <- function(x, quiet = FALSE, ...) {
     )
 
   bref <- do.call(bibentry, ref)
-  if (!quiet) print(bref, style = "citation")
 
-  invisible(bref)
+  return(bref)
 }

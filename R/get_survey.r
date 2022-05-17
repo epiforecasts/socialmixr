@@ -2,7 +2,6 @@
 #'
 #' @description Downloads survey data, or extracts them from files, and returns a clean data set.
 #' @param survey a DOI (see [list_surveys()]), or a character vector of file names, or a [survey()] object (in which case only cleaning is done).
-#' @param quiet if TRUE, suppress messages
 #' @param ... options for [clean()], which is called at the end of this
 #' @importFrom httr GET add_headers content
 #' @importFrom jsonlite fromJSON
@@ -18,7 +17,7 @@
 #' }
 #' @return a survey in the correct format
 #' @export
-get_survey <- function(survey, quiet = FALSE, ...) {
+get_survey <- function(survey, ...) {
 
   if (inherits(survey, "survey")) {
     new_survey <- survey
@@ -239,7 +238,7 @@ get_survey <- function(survey, quiet = FALSE, ...) {
 
   new_survey <- clean(new_survey, ...)
 
-  if (!quiet && !is.null(new_survey$reference)) {
+  if (!is.null(new_survey$reference)) {
     message(
       "Using ", new_survey$reference$title,
       ". To cite this in a publication, use the 'cite' function"

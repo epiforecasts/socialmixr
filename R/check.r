@@ -8,7 +8,6 @@ check <- function(x, ...) UseMethod("check")
 #'
 #' @param x A [survey()] object
 #' @param columns if given, a named character vector containing the name of the "id", "participant.age" and "contact.age" columns
-#' @param quiet if TRUE, will not exit quietly if the test is passed.
 #' @param error if TRUE, will stop if an error is found in the structure of the `participants` and `contacts` data frame
 #' @param id.column the column in both the `participants` and `contacts` data frames that links contacts to participants
 #' @param participant.age.column the column in the `participants` data frame containing participants' age
@@ -21,7 +20,7 @@ check <- function(x, ...) UseMethod("check")
 #' data(polymod)
 #' check(polymod)
 #' @export
-check.survey <- function(x, columns = FALSE, quiet = FALSE, error = FALSE, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
+check.survey <- function(x, columns = FALSE, error = FALSE, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
 
   chkDots(...)
   if (error) error_func <- stop else error_func <- warning
@@ -75,9 +74,8 @@ check.survey <- function(x, columns = FALSE, quiet = FALSE, error = FALSE, id.co
     }
   }
 
-  if (!quiet) {
-    if (success) message("Check OK.") else message("Check FAILED.")
-  }
+  if (success) message("Check OK.") else message("Check FAILED.")
+
   invisible(c(
     id = id.column, participant.age = participant.age.column,
     country = country.column, year = year.column,

@@ -24,7 +24,6 @@ contact_matrix(
   weigh.age = FALSE,
   weight.threshold = NA,
   sample.all.age.groups = FALSE,
-  quiet = FALSE,
   return.part.weights = FALSE,
   return.demography = NA,
   per.capita = FALSE,
@@ -69,8 +68,6 @@ contact_matrix(
 \item{weight.threshold}{threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff)}
 
 \item{sample.all.age.groups}{what to do if bootstrapping fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead}
-
-\item{quiet}{if set to TRUE, output is reduced}
 
 \item{return.part.weights}{boolean to return the participant weights}
 
