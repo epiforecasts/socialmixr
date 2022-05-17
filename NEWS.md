@@ -1,7 +1,8 @@
 # socialmixr 0.1.9
 
-## Major changes
+## Major & breaking changes
 
+* `error` argument has been removed from `check()` and always return warnings. If you want to turn these warnings into errors, please have a look at `options(warn = 2)`
 * `quiet` argument has been removed from `check()`, `cite()`, `contact_matrix()`, and `get_survey()`. If you want to silence diagnostic messages, you should use R idiomatic mechanisms, such as `suppressMessages()`
 * new `matrix_plot()` function to plot contact matrix
 
