@@ -30,8 +30,8 @@ wpp_age <- function(countries, years) {
     popMprojMed <- data.table(popMprojMed)
     popFprojMed <- data.table(popFprojMed)
 
-    popM <- data.table(merge(popM, popMprojMed))
-    popF <- data.table(merge(popF, popFprojMed))
+    popM <- merge(popM, popMprojMed)
+    popF <- merge(popF, popFprojMed)
     warning("Don't have historial population data available after ", years_included, ". Will make use of the median projection of population counts from the WPP2017 package.")
   }
 
@@ -51,7 +51,7 @@ wpp_age <- function(countries, years) {
 
   if (nrow(pop) > 0) {
     pop <- melt(pop, id.vars = c("country", "country_code", "age", "sex"), variable.name = "year")
-    pop <- data.table(dcast(pop, country + country_code + age + year ~ sex, value.var = "value"))
+    pop <- dcast(pop, country + country_code + age + year ~ sex, value.var = "value")
 
     pop[, year := as.integer(as.character(year))]
 
