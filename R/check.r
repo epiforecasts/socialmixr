@@ -8,7 +8,6 @@ check <- function(x, ...) UseMethod("check")
 #'
 #' @param x A [survey()] object
 #' @param columns if given, a named character vector containing the name of the "id", "participant.age" and "contact.age" columns
-#' @param error if TRUE, will stop if an error is found in the structure of the `participants` and `contacts` data frame
 #' @param id.column the column in both the `participants` and `contacts` data frames that links contacts to participants
 #' @param participant.age.column the column in the `participants` data frame containing participants' age
 #' @param country.column the column in the `participants` data frame containing the country in which the participant was queried
@@ -20,10 +19,9 @@ check <- function(x, ...) UseMethod("check")
 #' data(polymod)
 #' check(polymod)
 #' @export
-check.survey <- function(x, columns = FALSE, error = FALSE, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
+check.survey <- function(x, columns = FALSE, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
 
   chkDots(...)
-  if (error) error_func <- stop else error_func <- warning
   if (!is.data.frame(x$participants) || !is.data.frame(x$contacts)) {
     stop("The 'participants' and 'contacts' elements of 'x' must be data.frames")
   }
@@ -34,7 +32,7 @@ check.survey <- function(x, columns = FALSE, error = FALSE, id.column = "part_id
   if (!missing(columns)) {
     if (!(id.column %in% colnames(x$participants) &&
       id.column %in% colnames(x$contacts))) {
-      error_func(
+      warning(
         "id.columns '", id.column, "' does not exist in both the ",
         "participants and contacts data frames"
       )
@@ -42,7 +40,7 @@ check.survey <- function(x, columns = FALSE, error = FALSE, id.column = "part_id
     }
 
     if (!(participant.age.column %in% colnames(x$participants))) {
-      error_func(
+      warning(
         "participant age column '", participant.age.column, "' does not exist ",
         "in the participant data frame"
       )
@@ -56,7 +54,7 @@ check.survey <- function(x, columns = FALSE, error = FALSE, id.column = "part_id
 
       if (!((exact.column %in% colnames(x$contacts)) ||
         (min.column %in% colnames(x$contacts) && max.column %in% colnames(x$contacts)))) {
-        error_func(
+        warning(
           "contact age column '", contact.age.column,
           "' or columns to estimate contact age ('", exact.column, "' or '",
           min.column, "' and '", max.column, "') do not exist in the contact data frame"
@@ -66,7 +64,7 @@ check.survey <- function(x, columns = FALSE, error = FALSE, id.column = "part_id
     }
 
     if (!(country.column %in% colnames(x$participants))) {
-      error_func(
+      warning(
         "country column '", country.column, "' does not exist ",
         "in the participant data frame"
       )
