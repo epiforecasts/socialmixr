@@ -8,7 +8,7 @@
 #' @importFrom curl curl_download
 #' @importFrom utils as.person read.csv
 #' @importFrom stringr str_extract_all
-#' @importFrom XML xpathSApply htmlParse xmlValue
+#' @importFrom xml2 xml_text xml_find_first
 #' @autoglobal
 #' @examples
 #' \dontrun{
@@ -41,13 +41,12 @@ get_survey <- function(survey, ...) {
       temp_body <- GET(url, config = list(followlocation = TRUE))
       if (temp_body$status_code == 404) stop("DOI '", survey, "' not found")
 
-      parsed_body <- content(temp_body, as = "text", encoding = "UTF-8")
-      parsed_cite <-
-        fromJSON(xmlValue(xpathSApply(
-          htmlParse(parsed_body),
-          '//script[@type="application/ld+json"]'
-        )[[1]]))
-
+      parsed_body <- content(temp_body, encoding = "UTF-8")
+      parsed_cite <- fromJSON(
+        xml_text(
+          xml_find_first(parsed_body, '//script[@type="application/ld+json"]')
+        )
+      )
       authors <- as.person(paste(parsed_cite$creator$name, sep = ","))
 
       reference <- list(
