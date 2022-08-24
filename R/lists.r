@@ -46,7 +46,7 @@ survey_countries <- function(survey, country.column = "country", ...) {
 #' Uses the World Population Prospects data from the `wpp2017` package
 #' @return list of countries
 #' @import wpp2017
-#' @importFrom data.table data.table setkey
+#' @importFrom data.table fread setkey
 #' @importFrom utils data
 #' @importFrom countrycode countrycode
 #' @autoglobal
@@ -55,9 +55,10 @@ survey_countries <- function(survey, country.column = "country", ...) {
 #' @export
 wpp_countries <- function() {
 
-  data(popF, package = "wpp2017", envir = environment())
-  data(popM, package = "wpp2017", envir = environment())
-  pop <- data.table(rbind(popF, popM))
+  popF <- fread(system.file("data", "popF.txt", package = "wpp2017"))
+  popM <- fread(system.file("data", "popM.txt", package = "wpp2017"))
+
+  pop <- rbind(popF, popM)
   countries <- as.character(unique(pop$name))
   found_countries <-
     suppressWarnings(countrycode::countrycode(
