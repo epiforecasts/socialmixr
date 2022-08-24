@@ -236,8 +236,8 @@ test_that("The order in which weights are applied do not change the results", {
 })
 
 test_that("The day.of.week weight does not affect single-year age groups that reported only during weekdays", {
-  suppressMessages(suppressWarnings(matrix_unweighted <- contact_matrix(polymod11, age.limits = 1:3, weigh.dayofweek = FALSE, symmetric = F)))
-  suppressMessages(suppressWarnings(matrix_weighted <- contact_matrix(polymod11, age.limits = 1:3, weigh.dayofweek = TRUE, symmetric = F)))
+  suppressMessages(suppressWarnings(matrix_unweighted <- contact_matrix(polymod11, age.limits = 1:3, weigh.dayofweek = FALSE, symmetric = FALSE)))
+  suppressMessages(suppressWarnings(matrix_weighted <- contact_matrix(polymod11, age.limits = 1:3, weigh.dayofweek = TRUE, symmetric = FALSE)))
 
   num_contacts_unweighted <- rowSums(matrix_unweighted$matrix)
   num_contacts_weighted <- rowSums(matrix_weighted$matrix)
@@ -251,8 +251,8 @@ test_that("The day.of.week weight does not affect single-year age groups that re
 })
 
 test_that("The day.of.week weight does not affect an age group that reported only during weekdays", {
-  matrix_unweighted <- contact_matrix(polymod11, age.limits = c(0, 3), weigh.dayofweek = FALSE, symmetric = F)
-  matrix_weighted <- contact_matrix(polymod11, age.limits = c(0, 3), weigh.dayofweek = TRUE, symmetric = F)
+  matrix_unweighted <- contact_matrix(polymod11, age.limits = c(0, 3), weigh.dayofweek = FALSE, symmetric = FALSE)
+  matrix_weighted <- contact_matrix(polymod11, age.limits = c(0, 3), weigh.dayofweek = TRUE, symmetric = FALSE)
 
   num_contacts_unweighted <- rowSums(matrix_unweighted$matrix)
   num_contacts_weighted <- rowSums(matrix_weighted$matrix)
@@ -265,16 +265,16 @@ test_that("The day.of.week weight does not affect an age group that reported onl
 })
 
 test_that("The day.of.week weight should change the result with only one age group", {
-  matrix_unweighted <- contact_matrix(polymod11, age.limits = c(0), weigh.dayofweek = FALSE, symmetric = F)
-  matrix_weighted <- contact_matrix(polymod11, age.limits = c(0), weigh.dayofweek = TRUE, symmetric = F)
+  matrix_unweighted <- contact_matrix(polymod11, age.limits = c(0), weigh.dayofweek = FALSE, symmetric = FALSE)
+  matrix_weighted <- contact_matrix(polymod11, age.limits = c(0), weigh.dayofweek = TRUE, symmetric = FALSE)
 
   expect_false(matrix_unweighted$matrix == matrix_weighted$matrix)
 })
 
 test_that("The age-specific weight should change the results for multi-year age groups", {
   suppressWarnings({
-    matrix_unweighted <- contact_matrix(polymod11, age.limits = c(0, 3), weigh.age = FALSE, symmetric = F)
-    matrix_weighted <- contact_matrix(polymod11, age.limits = c(0, 3), weigh.age = TRUE, symmetric = F)
+    matrix_unweighted <- contact_matrix(polymod11, age.limits = c(0, 3), weigh.age = FALSE, symmetric = FALSE)
+    matrix_weighted <- contact_matrix(polymod11, age.limits = c(0, 3), weigh.age = TRUE, symmetric = FALSE)
   })
 
   expect_gt(sum(matrix_unweighted$matrix[1, ]), sum(matrix_weighted$matrix[1, ])) # manual calculation
@@ -304,10 +304,10 @@ test_that("The age-specific weight should not change the results with single yea
 
 test_that("The selection of age groups based on the participant data is also used for the reference population", {
   # no problems expected
-  cm <- suppressWarnings(contact_matrix(polymod, age.limits = c(0, 18, 50, 100), symmetric = F))
+  cm <- suppressWarnings(contact_matrix(polymod, age.limits = c(0, 18, 50, 100), symmetric = FALSE))
 
   # problems expected if age.group.breaks of the reference population is not updated according to the participant data
-  cm <- suppressWarnings(contact_matrix(polymod, age.limits = c(0, 18, 50, 100), symmetric = T))
+  cm <- suppressWarnings(contact_matrix(polymod, age.limits = c(0, 18, 50, 100), symmetric = TRUE))
   expect_true(all(cm$demography$age.group == cm$participants$age.group))
 })
 
@@ -393,8 +393,8 @@ test_that("Country names in Zenodo datasets and the wpp package are aligned (e.g
   skip_if_no_zenodo()
   skip_on_cran()
   vietnam1 <- get_survey("https://doi.org/10.5281/zenodo.1289473")
-  expect_length(suppressWarnings(contact_matrix(vietnam1, symmetric = F)), 2) # no demography data used
-  expect_length(suppressWarnings(contact_matrix(vietnam1, symmetric = T)), 3) # country is recognized and demography data found
+  expect_length(suppressWarnings(contact_matrix(vietnam1, symmetric = FALSE)), 2) # no demography data used
+  expect_length(suppressWarnings(contact_matrix(vietnam1, symmetric = TRUE)), 3) # country is recognized and demography data found
 })
 
 test_that("Participants that report contacts with missing age are removed/samples/ignored", {
@@ -455,14 +455,14 @@ test_that("User-defined reference populations with open ended age groups are han
     # to handle the open ended age group in the survey.pop
     expect_equal(nrow(contact_matrix(polymod,
       age.limits = c(0, 18, 60),
-      symmetric = T, # to make sure that demography is returned
+      symmetric = TRUE, # to make sure that demography is returned
       survey.pop = survey.pop
     )$demography), 3)
 
     # to check the column names
     expect_equal(names(contact_matrix(polymod,
       age.limits = c(0, 18, 60),
-      symmetric = T, # to make sure that demography is returned
+      symmetric = TRUE, # to make sure that demography is returned
       survey.pop = survey.pop
     )$demography)[1], "age.group")
 
@@ -482,13 +482,13 @@ test_that("The absence of reference population info is going well", {
     # no reference population given
     expect_equal(nrow(contact_matrix(polymod_nocountry,
       age.limits = c(0, 18, 60),
-      symmetric = T # to make sure that demography is returned
+      symmetric = TRUE # to make sure that demography is returned
     )$demography), 3)
 
     # to check the column names
     expect_equal(names(contact_matrix(polymod_nocountry,
       age.limits = c(0, 18, 60),
-      symmetric = T # to make sure that demography is returned
+      symmetric = TRUE # to make sure that demography is returned
     )$demography)[1], "age.group")
   })
 })
@@ -499,22 +499,22 @@ test_that("Contact matrices per capita can be provided", {
     # get contact matrix per capita
     expect_type(contact_matrix(polymod,
       age.limits = c(0, 18, 60),
-      per.capita = T
+      per.capita = TRUE
     )$matrix.per.capita, "double")
 
 
     # per capita matrix is not returned when counts=TRUE
     expect_null(contact_matrix(polymod,
       age.limits = c(0, 18, 60),
-      per.capita = T,
-      counts = T
+      per.capita = TRUE,
+      counts = TRUE
     )$matrix.per.capita)
 
     # per capita matrix is not returned when split=TRUE
     expect_null(contact_matrix(polymod,
       age.limits = c(0, 18, 60),
-      per.capita = T,
-      split = T
+      per.capita = TRUE,
+      split = TRUE
     )$matrix.per.capita)
   })
 })
@@ -525,8 +525,8 @@ test_that("Symmetric contact matrices per capita are actually symmetric", {
     # get contact matrix per capita
     matrix.per.capita <- contact_matrix(polymod,
       age.limits = c(0, 18, 60),
-      symmetric = T, # to make sure that demography is returned
-      per.capita = T
+      symmetric = TRUE, # to make sure that demography is returned
+      per.capita = TRUE
     )$matrix.per.capita
 
     expect_equal(c(matrix.per.capita), c(t(matrix.per.capita)))
@@ -540,14 +540,14 @@ test_that("Contact matrices per capita are also generated when bootstrapping", {
     # get contact matrix per capita
     expect_length(contact_matrix(polymod,
       age.limits = c(0, 18, 60),
-      per.capita = T,
+      per.capita = TRUE,
       n = 3
     )$matrices[[3]], 2)
 
     # get no contact matrix per capita
     expect_length(contact_matrix(polymod,
       age.limits = c(0, 18, 60),
-      per.capita = F,
+      per.capita = FALSE,
       n = 3
     )$matrices[[1]], 1)
   })
