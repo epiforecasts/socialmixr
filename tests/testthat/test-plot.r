@@ -1,7 +1,7 @@
 context("Plotting contact matrices")
 
 suppressWarnings({
-  dta <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 18, 65), per.capita = T)
+  dta <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 18, 65), per.capita = TRUE)
 })
 
 test_that("contact matrix can be plotted", {
