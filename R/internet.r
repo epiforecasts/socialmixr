@@ -2,7 +2,7 @@
 #'
 #' @return HTTP status code, or 0 if internet down.
 #' @author Sebastian Funk
-#' @importFrom httr status_code GET
+#' @importFrom httr status_code HEAD
 #' @keywords internal
 check_zenodo <- function() {
   status <- 0
