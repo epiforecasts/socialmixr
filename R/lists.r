@@ -51,7 +51,7 @@ survey_countries <- function(survey, country.column = "country", ...) {
 #' @importFrom countrycode countrycode
 #' @autoglobal
 #' @examples
-#' \dontrun{wpp_countries()}
+#' wpp_countries()
 #' @export
 wpp_countries <- function() {
 
