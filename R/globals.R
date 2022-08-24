@@ -35,8 +35,6 @@ utils::globalVariables(c(
   "identifier.3", # <list_surveys>
   "title", # <list_surveys>
   "creator", # <list_surveys>
-  "popF", # <wpp_countries>
-  "popM", # <wpp_countries>
   ":=", # <pop_age>
   "..original.lower.age.limit", # <pop_age>
   "..segment", # <pop_age>

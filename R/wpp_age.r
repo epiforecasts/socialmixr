@@ -5,7 +5,7 @@
 #' in the historical data, wpp projections are used.
 #' @return data frame of age-specific population data
 #' @import wpp2017
-#' @importFrom data.table data.table dcast melt
+#' @importFrom data.table dcast melt fread
 #' @importFrom countrycode countrycode
 #' @param countries countries, will return all if not given
 #' @param years years, will return all if not given
@@ -15,20 +15,15 @@
 #' @export
 wpp_age <- function(countries, years) {
 
-  data(popF, package = "wpp2017", envir = environment())
-  data(popM, package = "wpp2017", envir = environment())
-
-  popM <- data.table(popM)
-  popF <- data.table(popF)
+  popM <- fread(system.file("data", "popM.txt", package = "wpp2017"))
+  popF <- fread(system.file("data", "popF.txt", package = "wpp2017"))
 
   # wpp2017 is limited to 2015, so add wpp projections is e.g. 2020 data is requested
   years_included <- max(as.numeric(names(popM)[-(1:3)]))
   if (!missing(years) && any(years > years_included)) {
-    data(popMprojMed, package = "wpp2017", envir = environment())
-    data(popFprojMed, package = "wpp2017", envir = environment())
 
-    popMprojMed <- data.table(popMprojMed)
-    popFprojMed <- data.table(popFprojMed)
+    popMprojMed <- fread(system.file("data", "popMprojMed.txt", package = "wpp2017"))
+    popFprojMed <- fread(system.file("data", "popFprojMed.txt", package = "wpp2017"))
 
     popM <- merge(popM, popMprojMed)
     popF <- merge(popF, popFprojMed)
