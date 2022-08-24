@@ -50,7 +50,7 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
       x
     })
     periods <- vapply(split_complete, function(x) {
-      if (any(is.na(x))) {
+      if (anyNA(x)) {
         return(NA_real_)
       }
       amounts <- as.numeric(strsplit(x[1], split = "-")[[1]])

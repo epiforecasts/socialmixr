@@ -125,7 +125,7 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
     age.limits <- union(0, all.ages)
   }
   age.limits <- as.integer(age.limits)
-  if (any(is.na(age.limits)) || any(diff(age.limits) <= 0)) {
+  if (anyNA(age.limits) || any(diff(age.limits) <= 0)) {
     stop("'age.limits' must be an increasing integer vector of lower age limits.")
   }
 
@@ -682,9 +682,8 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
     }
 
     ## construct a warning in case there are NAs
-    na.headers <- any(is.na(colnames(weighted.matrix))) ||
-      any(is.na(rownames(weighted.matrix)))
-    na.content <- any(is.na(weighted.matrix))
+    na.headers <- anyNA(dimnames(weighted.matrix), recursive = TRUE)
+    na.content <- anyNA(weighted.matrix)
     na.present <- na.headers || na.content
 
     if (na.present) {
@@ -692,10 +691,10 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
       if (na.headers) {
         warning.suggestion <- paste0(warning.suggestion, "setting ")
         suggested.options <- c()
-        if (any(is.na(rownames(weighted.matrix)))) {
+        if (anyNA(rownames(weighted.matrix))) {
           suggested.options <- c(suggested.options, "'missing.participant.age'")
         }
-        if (any(is.na(colnames(weighted.matrix)))) {
+        if (anyNA(colnames(weighted.matrix))) {
           suggested.options <- c(suggested.options, "'missing.contact.age'")
         }
 
@@ -807,7 +806,7 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
   }
 
   ## get number of participants in each age group
-  if (any(is.na(survey$participants$age.group))) {
+  if (anyNA(survey$participants$age.group)) {
     useNA <- "always"
   } else {
     useNA <- "no"
