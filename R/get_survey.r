@@ -34,7 +34,7 @@ get_survey <- function(survey, ...) {
 
       if (is.doi) url <- paste0("https://doi.org/", survey) else url <- survey
     } else {
-      stop("'survey' must be an 'survey' object, integer or character")
+      stop("'survey' must be an 'survey' object or character")
     }
 
     if (is.url) {
@@ -47,13 +47,13 @@ get_survey <- function(survey, ...) {
           xml_find_first(parsed_body, '//script[@type="application/ld+json"]')
         )
       )
-      authors <- as.person(paste(parsed_cite$creator$name, sep = ","))
+      authors <- as.person(parsed_cite$creator$name)
 
       reference <- list(
         title = parsed_cite$name,
         bibtype = "Misc",
         author = authors,
-        year = as.integer(substr(parsed_cite$datePublished, 1, 4))
+        year = data.table::year(parsed_cite$datePublished)
       )
       if ("version" %in% names(reference)) {
         reference[["note"]] <- paste("Version", parsed_cite$version)
@@ -68,7 +68,7 @@ get_survey <- function(survey, ...) {
 
       dir <- tempdir()
       files <- vapply(urls, function(x) {
-        temp <- paste(dir, basename(x), sep = "/")
+        temp <- file.path(dir, basename(x))
         message("Downloading ", x)
         dl <- curl_download(x, temp)
         return(temp)
@@ -87,7 +87,7 @@ get_survey <- function(survey, ...) {
     }
 
     contact_data <- lapply(files, function(x) {
-      data.table(read.csv(x))
+      fread(x)
     })
     names(contact_data) <- files
 
