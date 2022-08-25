@@ -11,6 +11,15 @@
 #'
 #' @autoglobal
 #'
+#' @examples
+#' ages_it_2015 <- wpp_age("Italy", 2015)
+#'
+#' # Modify the age data.frame to get age groups of 10 years instead of 5
+#' pop_age(ages_it_2015, age.limit = seq(0, 100, by = 10))
+#'
+#' # The function will also automatically interpolate if necessary
+#' pop_age(ages_it_2015, age.limit = c(0, 18, 40, 65))
+#'
 #' @export
 pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.column = "population", ...) {
 

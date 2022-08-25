@@ -29,3 +29,13 @@ data frame of age-specific population data
 \description{
 This changes population data to have age groups with the given age.limits, extrapolating linearly between age groups (if more are requested than available) and summing populations (if fewer are requested than available)
 }
+\examples{
+ages_it_2015 <- wpp_age("Italy", 2015)
+
+# Modify the age data.frame to get age groups of 10 years instead of 5
+pop_age(ages_it_2015, age.limit = seq(0, 100, by = 10))
+
+# The function will also automatically interpolate if necessary
+pop_age(ages_it_2015, age.limit = c(0, 18, 40, 65))
+
+}
