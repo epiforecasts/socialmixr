@@ -121,7 +121,7 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
     all.ages <-
       unique(as.integer(survey$participants[, get(columns[["participant.age"]])]))
     all.ages <- all.ages[!is.na(all.ages)]
-    all.ages <- all.ages[order(all.ages)]
+    all.ages <- sort(all.ages)
     age.limits <- union(0, all.ages)
   }
   age.limits <- as.integer(age.limits)

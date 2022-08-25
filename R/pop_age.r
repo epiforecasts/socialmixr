@@ -33,7 +33,7 @@ pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.col
   setkeyv(pop, pop.age.column)
 
   if (!missing(age.limits)) {
-    age.limits <- age.limits[order(age.limits)]
+    age.limits <- sort(age.limits)
     max.age <- max(pop[, pop.age.column, with = FALSE])
     missing.ages <- setdiff(
       age.limits[age.limits <= max.age],
