@@ -25,8 +25,7 @@ pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.col
 
   chkDots(...)
 
-  if (!is.data.frame(pop) ||
-    length(intersect(colnames(pop), c(pop.age.column, pop.column))) < 2) {
+  if (!is.data.frame(pop) || !all(hasName(pop, c(pop.age.column, pop.column)))) {
     stop("Expecting 'pop' to be a data.frame with columns ", pop.age.column, " and ", pop.column)
   }
 
