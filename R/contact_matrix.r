@@ -433,30 +433,26 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
 
   ## weights
   survey$participants[, weight := 1]
-  survey$contacts[, weight := 1]
 
   ## assign weights to participants, to account for weekend/weekday variation
   if (weigh.dayofweek) {
     found.dayofweek <- FALSE
-    for (table in surveys)
-    {
-      if ("dayofweek" %in% colnames(survey[[table]])) {
-        ## Add column sum_weight: Number of entries on weekdays / weekends
-        survey[[table]][, sum_weight := nrow(.SD),
-          by = (dayofweek %in% 1:5),
-        ]
+    if ("dayofweek" %in% colnames(survey$participants)) {
+      ## Add column sum_weight: Number of entries on weekdays / weekends
+      survey$participants[, sum_weight := nrow(.SD),
+        by = (dayofweek %in% 1:5),
+      ]
 
-        ## The sum of the weights on weekdays is 5
-        survey[[table]][dayofweek %in% 1:5, weight := 5 / sum_weight]
-        ## The sum of the weights on weekend is 2
-        survey[[table]][!(dayofweek %in% 1:5), weight := 2 / sum_weight]
+      ## The sum of the weights on weekdays is 5
+      survey$participants[dayofweek %in% 1:5, weight := 5 / sum_weight]
+      ## The sum of the weights on weekend is 2
+      survey$participants[!(dayofweek %in% 1:5), weight := 2 / sum_weight]
 
-        survey[[table]][, sum_weight := NULL]
-        found.dayofweek <- TRUE
+      survey$participants[, sum_weight := NULL]
+      found.dayofweek <- TRUE
 
-        # add boolean for "weekday"
-        survey[[table]][, is.weekday := dayofweek %in% 1:5]
-      }
+      # add boolean for "weekday"
+      survey$participants[, is.weekday := dayofweek %in% 1:5]
     }
     if (!found.dayofweek) {
       warning(
@@ -468,53 +464,47 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
 
   ## assign weights to participants, to account for age variation
   if (weigh.age) {
-    # for (table in surveys)
-    for (table in surveys[1]) # TODO: option to change survey[[table]] into survey$participant
-    {
-      if ("age.group" %in% colnames(survey[[table]])) {
-        # get number and proportion of participants by age
-        survey[[table]][, age.count := .N, by = eval(columns[["participant.age"]])]
-        survey[[table]][, age.proportion := age.count / .N]
+    if ("age.group" %in% colnames(survey$participants)) {
+      # get number and proportion of participants by age
+      survey$participants[, age.count := .N, by = eval(columns[["participant.age"]])]
+      survey$participants[, age.proportion := age.count / .N]
 
-        # get reference population by age (absolute and proportional)
-        part.age.all <- range(unique(survey[[table]][, get(columns[["participant.age"]])]))
-        survey.pop.detail <- data.table(pop_age(survey.pop.full, seq(part.age.all[1], part.age.all[2] + 1)))
-        names(survey.pop.detail) <- c(columns[["participant.age"]], "population.count")
-        survey.pop.detail[, population.proportion := population.count / sum(population.count)]
+      # get reference population by age (absolute and proportional)
+      part.age.all <- range(unique(survey$participants[, get(columns[["participant.age"]])]))
+      survey.pop.detail <- data.table(pop_age(survey.pop.full, seq(part.age.all[1], part.age.all[2] + 1)))
+      names(survey.pop.detail) <- c(columns[["participant.age"]], "population.count")
+      survey.pop.detail[, population.proportion := population.count / sum(population.count)]
 
-        # merge reference and survey population data
-        survey[[table]] <- merge(survey[[table]], survey.pop.detail, by = eval(columns[["participant.age"]]))
+      # merge reference and survey population data
+      survey$participants <- merge(survey$participants, survey.pop.detail, by = eval(columns[["participant.age"]]))
 
-        # calculate age-specific weights
-        survey[[table]][, weight.age := population.proportion / age.proportion]
+      # calculate age-specific weights
+      survey$participants[, weight.age := population.proportion / age.proportion]
 
-        # merge 'weight.age' into 'weight'
-        survey[[table]][, weight := weight * weight.age]
+      # merge 'weight.age' into 'weight'
+      survey$participants[, weight := weight * weight.age]
 
-        ## Remove the additional columns
-        survey[[table]][, age.count := NULL]
-        survey[[table]][, age.proportion := NULL]
-        survey[[table]][, population.count := NULL]
-        survey[[table]][, population.proportion := NULL]
-        survey[[table]][, weight.age := NULL]
-      }
+      ## Remove the additional columns
+      survey$participants[, age.count := NULL]
+      survey$participants[, age.proportion := NULL]
+      survey$participants[, population.count := NULL]
+      survey$participants[, population.proportion := NULL]
+      survey$participants[, weight.age := NULL]
     }
   }
 
   ## further weigh if columns are specified
   if (length(weights) > 0) {
     for (i in 1:length(weights)) {
-      for (table in surveys) {
-        if (weights[i] %in% colnames(survey[[table]])) {
-          ## Number of entry per level of weight[i]
-          survey[[table]][, sum_weight := nrow(.SD),
-            by = get(weights[i])
-          ]
-          ## Compute the individual weight
-          survey[[table]][, weight := weight * get(weights[i]) / sum_weight]
-          ## Remove the column "sum_weight"
-          survey[[table]][, sum_weight := NULL]
-        }
+      if (weights[i] %in% colnames(survey$participants)) {
+        ## Number of entry per level of weight[i]
+        survey$participants[, sum_weight := nrow(.SD),
+          by = get(weights[i])
+        ]
+        ## Compute the individual weight
+        survey$participants[, weight := weight * get(weights[i]) / sum_weight]
+        ## Remove the column "sum_weight"
+        survey$participants[, sum_weight := NULL]
       }
     }
   }
@@ -523,18 +513,14 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
   survey$participants[, weight := weight / sum(weight) * .N,
     by = age.group
   ]
-  survey$contacts[, weight := weight / sum(weight) * .N,
-    by = age.group
-  ]
 
   # option to truncate weights (if not NULL or NA)
   if (!is.null(weight.threshold) && !is.na(weight.threshold)) {
-    for (table in surveys) {
-      survey[[table]][weight > weight.threshold, weight := weight.threshold]
-      survey[[table]][, weight := weight / sum(weight) * .N,
-        by = age.group
-      ]
-    }
+    survey$participants[weight > weight.threshold, weight := weight.threshold]
+    # re-normalise
+    survey$participants[, weight := weight / sum(weight) * .N,
+      by = age.group
+    ]
   }
 
   ## merge participants and contacts into a single data table
@@ -546,7 +532,6 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
       by = columns[["id"]], all = F,
       allow.cartesian = T, suffixes = c(".cont", ".part")
     )
-  survey$contacts[, weight := weight.cont * weight.part]
 
   setkeyv(survey$contacts, columns[["id"]])
 
