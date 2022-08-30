@@ -38,6 +38,8 @@
 #' @author Sebastian Funk
 contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, estimated.participant.age = c("mean", "sample", "missing"), estimated.contact.age = c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = c(), weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, sample.all.age.groups = FALSE, return.part.weights = FALSE, return.demography = NA, per.capita = FALSE, ...) {
 
+  age.group <- NULL
+
   surveys <- c("participants", "contacts")
 
   dot.args <- list(...)
