@@ -9,7 +9,14 @@ test_that("list of surveys is not empty", {
 test_that("surveys can be downloaded", {
   skip_if_no_zenodo()
   skip_on_cran()
-  expect_true(class(suppressMessages(suppressWarnings(get_survey("10.5281/zenodo.1059920")))) == "survey")
+
+  s <- suppressMessages(suppressWarnings(get_survey("10.5281/zenodo.1059920")))
+
+  expect_s3_class(s, "survey")
+  expect_named(
+    s$reference,
+    c("title", "bibtype", "author", "year", "note", "doi")
+  )
 })
 
 test_that("surveys can be cited", {
