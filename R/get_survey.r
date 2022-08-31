@@ -3,7 +3,7 @@
 #' @description Downloads survey data, or extracts them from files, and returns a clean data set.
 #' @param survey a DOI (see [list_surveys()]), or a character vector of file names, or a [survey()] object (in which case only cleaning is done).
 #' @param ... options for [clean()], which is called at the end of this
-#' @importFrom httr GET add_headers content
+#' @importFrom httr GET add_headers content status_code
 #' @importFrom jsonlite fromJSON
 #' @importFrom curl curl_download
 #' @importFrom utils as.person read.csv
@@ -39,7 +39,7 @@ get_survey <- function(survey, ...) {
 
     if (is.url) {
       temp_body <- GET(url, config = list(followlocation = TRUE))
-      if (temp_body$status_code == 404) stop("DOI '", survey, "' not found")
+      if (status_code(temp_body) == 404) stop("DOI '", survey, "' not found")
 
       parsed_body <- content(temp_body, encoding = "UTF-8")
       parsed_cite <- fromJSON(
