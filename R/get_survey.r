@@ -55,7 +55,7 @@ get_survey <- function(survey, ...) {
         author = authors,
         year = data.table::year(parsed_cite$datePublished)
       )
-      if ("version" %in% names(reference)) {
+      if ("version" %in% names(parsed_cite)) {
         reference[["note"]] <- paste("Version", parsed_cite$version)
       }
       reference[[ifelse(is.doi, "doi", "url")]] <- survey
