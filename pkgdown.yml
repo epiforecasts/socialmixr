@@ -3,7 +3,7 @@ pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   socialmixr: socialmixr.html
-last_built: 2022-08-31T19:51Z
+last_built: 2022-09-01T19:24Z
 urls:
   reference: https://epiforecasts.io/socialmixr/reference
   article: https://epiforecasts.io/socialmixr/articles
