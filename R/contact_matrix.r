@@ -462,33 +462,31 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
 
   ## assign weights to participants, to account for age variation
   if (weigh.age) {
-    if ("age.group" %in% colnames(survey$participants)) {
       # get number and proportion of participants by age
-      survey$participants[, age.count := .N, by = eval(columns[["participant.age"]])]
-      survey$participants[, age.proportion := age.count / .N]
+    survey$participants[, age.count := .N, by = eval(columns[["participant.age"]])]
+    survey$participants[, age.proportion := age.count / .N]
 
-      # get reference population by age (absolute and proportional)
-      part.age.all <- range(unique(survey$participants[, get(columns[["participant.age"]])]))
-      survey.pop.detail <- data.table(pop_age(survey.pop.full, seq(part.age.all[1], part.age.all[2] + 1)))
-      names(survey.pop.detail) <- c(columns[["participant.age"]], "population.count")
-      survey.pop.detail[, population.proportion := population.count / sum(population.count)]
+    # get reference population by age (absolute and proportional)
+    part.age.all <- range(unique(survey$participants[, get(columns[["participant.age"]])]))
+    survey.pop.detail <- data.table(pop_age(survey.pop.full, seq(part.age.all[1], part.age.all[2] + 1)))
+    names(survey.pop.detail) <- c(columns[["participant.age"]], "population.count")
+    survey.pop.detail[, population.proportion := population.count / sum(population.count)]
 
-      # merge reference and survey population data
-      survey$participants <- merge(survey$participants, survey.pop.detail, by = eval(columns[["participant.age"]]))
+    # merge reference and survey population data
+    survey$participants <- merge(survey$participants, survey.pop.detail, by = eval(columns[["participant.age"]]))
 
-      # calculate age-specific weights
-      survey$participants[, weight.age := population.proportion / age.proportion]
+    # calculate age-specific weights
+    survey$participants[, weight.age := population.proportion / age.proportion]
 
-      # merge 'weight.age' into 'weight'
-      survey$participants[, weight := weight * weight.age]
+    # merge 'weight.age' into 'weight'
+    survey$participants[, weight := weight * weight.age]
 
-      ## Remove the additional columns
-      survey$participants[, age.count := NULL]
-      survey$participants[, age.proportion := NULL]
-      survey$participants[, population.count := NULL]
-      survey$participants[, population.proportion := NULL]
-      survey$participants[, weight.age := NULL]
-    }
+    ## Remove the additional columns
+    survey$participants[, age.count := NULL]
+    survey$participants[, age.proportion := NULL]
+    survey$participants[, population.count := NULL]
+    survey$participants[, population.proportion := NULL]
+    survey$participants[, weight.age := NULL]
   }
 
   ## further weigh if columns are specified
