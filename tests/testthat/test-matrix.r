@@ -37,7 +37,7 @@ polymod9$participants$part_age_est_max <- 15
 nn <- nrow(polymod9$participants)
 polymod9$participants$part_age <- ifelse(runif(nn) > 0.7, 20, NA)
 polymod10$participants$added_weight <-
-  ifelse(polymod10$participants$dayofweek %in% 1:5, 5, 2)
+  ifelse(polymod10$participants$hh_size > 1, 2, 1)
 polymod10$participants$added_weight2 <- .3
 
 # to test weights (age and day.of.week)
@@ -193,6 +193,7 @@ test_that("Taking mean of estimated contact's age give na when mean is not in an
   expect_true(is.na(rowSums(cm$matrix)[4]))
   expect_false(is.na(rowSums(cm$matrix)[5]))
 })
+
 test_that("Taking sample of estimated participant's give na when no overlap with the age limits ", {
   cm <- contact_matrix(survey = polymod9, age.limits = c(0, 5, 10, 15, 20), estimated.participant.age = "sample")
   expect_false(is.na(rowSums(cm$matrix)[1]))
@@ -201,22 +202,28 @@ test_that("Taking sample of estimated participant's give na when no overlap with
   expect_true(is.na(rowSums(cm$matrix)[4]))
   expect_false(is.na(rowSums(cm$matrix)[5]))
 })
-test_that("If weights = weigh.dayofweek, the results are identical", {
-  expect_identical(
-    suppressMessages(
-      contact_matrix(
-        survey = polymod10, countries = "United Kingdom",
-        weigh.dayofweek = TRUE
-      )
-    ),
-    suppressMessages(
-      contact_matrix(
-        survey = polymod10, countries = "United Kingdom",
-        weights = "added_weight"
+
+test_that("If weights = added_weight, the results are not identical", {
+  cm_orig <- suppressMessages(
+    contact_matrix(
+      survey = polymod10, countries = "United Kingdom",
+      age.limits = c(0, 18, 60),
+      return.part.weights = T
       )
     )
-  )
+  cm_weight <- suppressMessages(contact_matrix(
+    survey = polymod10, countries = "United Kingdom",
+    age.limits = c(0, 18, 60),
+    weights = "added_weight",
+    return.part.weights = T
+  ))
+  
+  cm_weight$participants
+  expect_equal(cm_orig$participants,cm_weight$participants)
+  expect_false(nrow(cm_orig$participants.weights) == nrow(cm_weight$participants.weights))
+  expect_false(all(cm_orig$matrix == cm_weight$matrix))
 })
+
 
 test_that("The order in which weights are applied do not change the results", {
   expect_equal(

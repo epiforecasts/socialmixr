@@ -16,9 +16,9 @@
 #' @param estimated.contact.age if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
 #' @param missing.participant.age if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group
 #' @param missing.contact.age if set to "remove" (default), participants that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group; if set to "ignore", contact with missing age are ignored in the contact analysis
-#' @param weights columns that contain weights
-#' @param weigh.dayofweek whether to weigh the day of the week (weight (5/7 / N_week/N) for weekdays and (2/7 / N_weekend/N) for weekends)
-#' @param weigh.age whether to weigh by the age of the participants (vs. the populations' age distribution)
+#' @param weights column names(s) of the participant data of the [survey()] object with user-specified weights (default = empty vector)
+#' @param weigh.dayofweek whether to weigh social contacts data by the day of the week (weight (5/7 / N_week / N) for weekdays and (2/7 / N_weekend / N) for weekends)
+#' @param weigh.age whether to weigh social contacts data by the age of the participants (vs. the populations' age distribution)
 #' @param weight.threshold threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff)
 #' @param sample.all.age.groups what to do if bootstrapping fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead
 #' @param return.demography boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters)
@@ -432,7 +432,7 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
   ## weights
   survey$participants[, weight := 1]
 
-  ## assign weights to participants, to account for weekend/weekday variation
+  ## assign weights to participants to account for weekend/weekday variation
   if (weigh.dayofweek) {
     found.dayofweek <- FALSE
     if ("dayofweek" %in% colnames(survey$participants)) {
@@ -489,18 +489,12 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
     survey$participants[, weight.age := NULL]
   }
 
-  ## further weigh if columns are specified
+  ## option to weigh the contact data with user-defined participant weights
   if (length(weights) > 0) {
     for (i in 1:length(weights)) {
       if (weights[i] %in% colnames(survey$participants)) {
-        ## Number of entry per level of weight[i]
-        survey$participants[, sum_weight := nrow(.SD),
-          by = get(weights[i])
-        ]
-        ## Compute the individual weight
-        survey$participants[, weight := weight * get(weights[i]) / sum_weight]
-        ## Remove the column "sum_weight"
-        survey$participants[, sum_weight := NULL]
+        ## Compute the overall weight
+        survey$participants[, weight := weight * get(weights[i])]
       }
     }
   }
@@ -510,7 +504,7 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
     by = age.group
   ]
 
-  # option to truncate weights (if not NULL or NA)
+  # option to truncate overall participant weights (if not NULL or NA)
   if (!is.null(weight.threshold) && !is.na(weight.threshold)) {
     survey$participants[weight > weight.threshold, weight := weight.threshold]
     # re-normalise
