@@ -1,14 +1,14 @@
 context("Getting list of surveys")
 
 test_that("list of surveys is not empty", {
-  skip_if_no_zenodo()
+  skip_if_offline("zenodo.org")
   skip_on_cran()
   skip_on_ci()
   expect_true(nrow(list_surveys()) > 0)
 })
 
 test_that("surveys can be downloaded", {
-  skip_if_no_zenodo()
+  skip_if_offline("zenodo.org")
   skip_on_cran()
   skip_on_ci()
 

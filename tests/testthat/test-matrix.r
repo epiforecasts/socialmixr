@@ -390,7 +390,7 @@ test_that("The weights with threshold", {
 })
 
 test_that("Country names in Zenodo datasets and the wpp package are aligned (e.g. Viet Nam vs. Vietnam)", {
-  skip_if_no_zenodo()
+  skip_if_offline("zenodo.org")
   skip_on_cran()
   vietnam1 <- get_survey("https://doi.org/10.5281/zenodo.1289473")
   expect_length(suppressWarnings(contact_matrix(vietnam1, symmetric = FALSE)), 2) # no demography data used
