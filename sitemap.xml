@@ -22,9 +22,6 @@
     <loc>https://epiforecasts.io/socialmixr/reference/check.html</loc>
   </url>
   <url>
-    <loc>https://epiforecasts.io/socialmixr/reference/check_zenodo.html</loc>
-  </url>
-  <url>
     <loc>https://epiforecasts.io/socialmixr/reference/cite.html</loc>
   </url>
   <url>
@@ -32,9 +29,6 @@
   </url>
   <url>
     <loc>https://epiforecasts.io/socialmixr/reference/contact_matrix.html</loc>
-  </url>
-  <url>
-    <loc>https://epiforecasts.io/socialmixr/reference/ensure_zenodo_available.html</loc>
   </url>
   <url>
     <loc>https://epiforecasts.io/socialmixr/reference/get_survey.html</loc>
@@ -71,8 +65,5 @@
   </url>
   <url>
     <loc>https://epiforecasts.io/socialmixr/reference/wpp_countries.html</loc>
-  </url>
-  <url>
-    <loc>https://epiforecasts.io/socialmixr/reference/zenodo_available.html</loc>
   </url>
 </urlset>
