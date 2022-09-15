@@ -180,7 +180,7 @@ contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15
 
 # Filtering
 
-The function `contact_matrix()` enables the filtering of social contact data. This can for example be used to select contacts reported at school or to select long-duration contacts. Any filter can be applied to the data, if given as a list of the form (column=filter_value). As such, only contacts that have 'filter_value' in 'column' will be considered for the generated contact matrix.
+The `filter` argument to `contact_matrix()` can be used to select particular participants or contacts.  For example, in the `polymod` dataset, the indicators `cnt_home`, `cnt_work`, `cnt_school`, `cnt_transport`, `cnt_leisure` and `cnt_otherplace` take value 0 or 1 depending on where a contact occurred. Any filter can be applied to the data, if given as a list of the form (column=filter_value). As such, only contacts that have 'filter_value' in 'column' will be considered for the generated contact matrix:
 
 ```{r, warning=FALSE, message=FALSE}
 # contact matrix for school-related contacts
@@ -490,7 +490,7 @@ ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) +
 
 # Plotting (R base)
 
-The contact matrices can be plotted with the `matrix_plot()` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changend.
+The contact matrices can be plotted with the `matrix_plot()` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changed.
 
 ```{r fig.width=4, fig.height=4, tidy=TRUE}
 matrix_plot(mr)
