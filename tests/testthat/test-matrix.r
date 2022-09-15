@@ -215,7 +215,7 @@ test_that("If weights = added_weight, the results are not identical", {
     survey = polymod10, countries = "United Kingdom",
     age.limits = c(0, 18, 60),
     weights = "added_weight",
-    return.part.weights = T
+    return.part.weights = TRUE
   ))
   
   cm_weight$participants
