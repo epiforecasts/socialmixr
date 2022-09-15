@@ -208,7 +208,7 @@ test_that("If weights = added_weight, the results are not identical", {
     contact_matrix(
       survey = polymod10, countries = "United Kingdom",
       age.limits = c(0, 18, 60),
-      return.part.weights = T
+      return.part.weights = TRUE
       )
     )
   cm_weight <- suppressMessages(contact_matrix(
