@@ -115,25 +115,28 @@ get_survey <- function(survey, ...) {
     ## first, get the common files
     for (type in main_types)
     {
-      main_file <- grep(paste0("_", type, "_common\\.csv$"), files, value = TRUE)
-      if (length(main_file) == 0) {
+      main_files <- grep(paste0("_", type, "_common\\.csv$"), files, value = TRUE)
+      if (length(main_files) == 0) {
         stop(
-          "Need a file ending ", paste0("_", type, "_common.csv"),
+          "Need at least one file ending ", paste0("_", type, "_common.csv"),
           ", but no such file found."
         )
       }
-      main_surveys[[type]] <- contact_data[[main_file]]
-      files <- setdiff(files, main_file)
+      main_surveys[[type]] <- rbindlist(contact_data[main_files])
+      files <- setdiff(files, main_files)
     }
 
     ## next, get any extra files
     for (type in main_types)
     {
       extra_files <- grep(paste0("_", type, "_.*\\.csv$"), files, value = TRUE)
-      for (extra_file in extra_files) {
-        common_id <- intersect(file_id_cols[[extra_file]], colnames(main_surveys[[type]]))
+      extra_types <- sub("^.*_([^_]+)\\.csv$", "\\1", extra_files)
+      for (extra_type in unique(extra_types)) {
+        joint_table <- rbindlist(contact_data[extra_files[extra_types == extra_type]], fill = TRUE)
+        joint_id_cols <- unique(unlist(file_id_cols[extra_files]))
+        common_id <- intersect(joint_id_cols, colnames(main_surveys[[type]]))
         if (length(common_id) > 0) {
-          main_surveys[[type]] <- merge(main_surveys[[type]], contact_data[[extra_file]], by = common_id)
+          main_surveys[[type]] <- merge(main_surveys[[type]], joint_table, by = common_id)
         } else {
           warning(
             "Ignoring file ", basename(extra_file), " because it",
@@ -148,26 +151,36 @@ get_survey <- function(survey, ...) {
     ## lastly, merge in any additional files that can be merged
     for (type in main_types)
     {
-      can_merge <- vapply(files, function(x) {
-        length(file_id_cols[[x]]) > 0 && all(file_id_cols[[x]] %in% colnames(main_surveys[[type]]))
+      additional_types <- sub("^.*_([^_]+)\\.csv$", "\\1", files)
+      additional_tables <- lapply(unique(additional_types), function(x) {
+        rbindlist(contact_data[files[additional_types == x]] )
+      })
+      names(additional_tables) <- unique(additional_types)
+      additional_id_cols <- lapply(unique(additional_types), function(x) {
+        unique(unlist(file_id_cols[files[additional_types == x]]))
+      })
+      names(additional_id_cols) <- unique(additional_types)
+
+      can_merge <- vapply(unique(additional_types), function(x) {
+        length(additional_id_cols[[x]]) > 0 && all(additional_id_cols[[x]] %in% colnames(main_surveys[[type]]))
       }, TRUE)
-      merge_files <- names(can_merge[which(can_merge)])
-      while (length(merge_files) > 0) {
-        merged_files <- c()
-        for (file in merge_files)
+      merge_types <- names(can_merge[which(can_merge)])
+      while (length(merge_types) > 0) {
+        merged_types <- c()
+        for (additional_type in merge_types)
         {
           do_merge <- TRUE
 
-          common_id <- intersect(file_id_cols[[file]], colnames(main_surveys[[type]]))
+          common_id <- intersect(additional_id_cols[[additional_type]], colnames(main_surveys[[type]]))
 
           unique_main_survey_ids <- unique(main_surveys[[type]][, common_id, with = FALSE])
-          unique_additional_survey_ids <- unique(contact_data[[file]][, common_id, with = FALSE])
+          unique_additional_survey_ids <- unique(additional_tables[[additional_type]][, common_id, with = FALSE])
 
           if (nrow(unique_main_survey_ids) < nrow(main_surveys[[type]]) &&
             nrow(unique_additional_survey_ids) <
-              nrow(contact_data[[file]])) {
+              nrow(additional_tables[[additional_type]])) {
             warning(
-              "Cannot merge ", basename(file), " into '", type, "' survey",
+              "Cannot merge ", additional_type, " into '", type, "' survey",
               " because the ID column", ifelse(length(common_id) > 1, "s", ""),
               " ", paste0("'", common_id, "'", collapse = ", "),
               " cannot be uniquely matched."
