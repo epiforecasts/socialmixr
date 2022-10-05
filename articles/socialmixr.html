@@ -70,7 +70,7 @@
       <img src="" class="logo" alt=""><h1>Introduction to socialmixr</h1>
                         <h4 data-toc-skip class="author">Sebastian Funk</h4>
             
-            <h4 data-toc-skip class="date">2022-09-15</h4>
+            <h4 data-toc-skip class="date">2022-10-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/HEAD/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
       <div class="d-none name"><code>socialmixr.Rmd</code></div>
@@ -124,12 +124,6 @@
 <p>This generates a contact matrix from the UK part of the POLYMOD study, with age groups 0-1, 1-5, 5-15 and 15+ years. It contains the mean number of contacts that each member of an age group (row) has reported with members of the same or another age group (column).</p>
 </div>
 <div class="section level2">
-<h2 id="methodology">Methodology<a class="anchor" aria-label="anchor" href="#methodology"></a>
-</h2>
-<p>The <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> function requires a survey given as a list of two elements, both given as data.frames: <code>participants</code> and <code>contacts</code>. They must be linked by an ID column that refers to the identity of the queried participants (by default <code>global_id</code>, but this can be changed using the <code>id.column</code> argument). The <code>participants</code> data frame, as a minimum, must have the ID column and a column denoting participant age (which can be set by the <code>part.age.column</code> argument, by default <code>participant_age</code>). The <code>contacts</code> data frame, similarly, must have the ID column and a column denoting age (which can be set by the <code>contact.age.column</code> argument, by default <code>cnt_age_mean</code>).</p>
-<p>The function then either randomly samples participants (if <code>bootstrap</code> is set to <code>TRUE</code>) or takes all participants in the survey and determines the mean number of contacts in each age group given the age group of the participant. The age groups can be set using the <code>age.limits</code> argument, which should be set to the lower limits of the age groups (e.g., <code>age.limits = c(0, 5, 10)</code> for age groups 0-5, 5-10, 10+). If these are not given, the narrowest age groups possible given survey and demographic data are used.</p>
-</div>
-<div class="section level2">
 <h2 id="surveys">Surveys<a class="anchor" aria-label="anchor" href="#surveys"></a>
 </h2>
 <p>The key argument to the <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> function is the <code>survey</code> that it supposed to use. The <code>socialmixr</code> package includes the POLYMOD survey, which will be used if not survey is specified. It also provides access to all surveys in the <a href="https://zenodo.org/communities/social_contact_data" class="external-link">Social contact data</a> community on <a href="https://zenodo.org" class="external-link">Zenodo</a>. The available surveys can be listed (if an internet connection is available) with</p>
@@ -172,10 +166,10 @@
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
-<span><span class="co">#&gt;    [0,1)  0.34693850 0.6732124 1.246896 5.635579</span></span>
-<span><span class="co">#&gt;    [1,5)  0.09073411 1.8492447 1.427204 5.318210</span></span>
-<span><span class="co">#&gt;    [5,15) 0.02303795 0.5048605 8.145247 6.337268</span></span>
-<span><span class="co">#&gt;    15+    0.03484059 0.3567059 1.346059 9.455890</span></span></code></pre></div>
+<span><span class="co">#&gt;    [0,1)  0.61916667 0.7519048 1.187262 6.172738</span></span>
+<span><span class="co">#&gt;    [1,5)  0.10921187 2.0100569 1.172597 5.393942</span></span>
+<span><span class="co">#&gt;    [5,15) 0.02520215 0.5152173 8.157671 6.401818</span></span>
+<span><span class="co">#&gt;    15+    0.03561700 0.3627983 1.281353 9.661380</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
@@ -1073,8 +1067,11 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="plotting-ggplot2">Plotting (ggplot2)<a class="anchor" aria-label="anchor" href="#plotting-ggplot2"></a>
+<h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
 </h2>
+<div class="section level3">
+<h3 id="using-ggplot2">Using ggplot2<a class="anchor" aria-label="anchor" href="#using-ggplot2"></a>
+</h3>
 <p>The contact matrices can be plotted by using the <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a></code> function of the <code>ggplot2</code> package.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/hadley/reshape" class="external-link">'reshape2'</a></span><span class="op">)</span></span>
@@ -1085,10 +1082,10 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="socialmixr_files/figure-html/unnamed-chunk-39-1.png" width="384"></p>
 </div>
-<div class="section level2">
-<h2 id="plotting-r-base">Plotting (R base)<a class="anchor" aria-label="anchor" href="#plotting-r-base"></a>
-</h2>
-<p>The contact matrices can be plotted with the <code><a href="../reference/matrix_plot.html">matrix_plot()</a></code> function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changed.</p>
+<div class="section level3">
+<h3 id="using-r-base">Using R base<a class="anchor" aria-label="anchor" href="#using-r-base"></a>
+</h3>
+<p>The contact matrices can also be plotted with the <code><a href="../reference/matrix_plot.html">matrix_plot()</a></code> function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changed.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/matrix_plot.html">matrix_plot</a></span><span class="op">(</span><span class="va">mr</span><span class="op">)</span></span></code></pre></div>
 <p><img src="socialmixr_files/figure-html/unnamed-chunk-40-1.png" width="384"></p>
@@ -1100,6 +1097,7 @@
 <span><span class="va">usr_col</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span> <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu">grDevices</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">'YlGn'</span><span class="op">)</span><span class="op">)</span> <span class="op">}</span></span>
 <span><span class="fu"><a href="../reference/matrix_plot.html">matrix_plot</a></span><span class="op">(</span><span class="va">mr</span>, num.colors <span class="op">=</span> <span class="fl">9</span>, color.palette <span class="op">=</span> <span class="va">usr_col</span><span class="op">)</span></span></code></pre></div>
 <p><img src="socialmixr_files/figure-html/unnamed-chunk-40-3.png" width="384"></p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
