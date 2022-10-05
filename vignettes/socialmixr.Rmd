@@ -68,12 +68,6 @@ contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15
 
 This generates a contact matrix from the UK part of the POLYMOD study, with age groups 0-1, 1-5, 5-15 and 15+ years. It contains the mean number of contacts that each member of an age group (row) has reported with members of the same or another age group (column).
 
-# Methodology
-
-The `contact_matrix()` function requires a survey given as a list of two elements, both given as data.frames: `participants` and `contacts`. They must be linked by an ID column that refers to the identity of the queried participants (by default `global_id`, but this can be changed using the `id.column` argument). The `participants` data frame, as a minimum, must have the ID column and a column denoting participant age (which can be set by the `part.age.column` argument, by default `participant_age`). The `contacts` data frame, similarly, must have the ID column and a column denoting age (which can be set by the `contact.age.column` argument, by default `cnt_age_mean`).
-
-The function then either randomly samples participants (if `bootstrap` is set to `TRUE`) or takes all participants in the survey and determines the mean number of contacts in each age group given the age group of the participant. The age groups can be set using the `age.limits` argument, which should be set to the lower limits of the age groups (e.g., `age.limits = c(0, 5, 10)` for age groups 0-5, 5-10, 10+). If these are not given, the narrowest age groups possible given survey and demographic data are used.
-
 # Surveys
 
 The key argument to the `contact_matrix()` function is the `survey` that it supposed to use. The `socialmixr` package includes the POLYMOD survey, which will be used if not survey is specified. It also provides access to all surveys in the [Social contact data](https://zenodo.org/communities/social_contact_data) community on [Zenodo](https://zenodo.org). The available surveys can be listed (if an internet connection is available) with
@@ -475,7 +469,9 @@ survey_data$w_tilde[survey_data$w_tilde>3] = 3
 print(paste('weighted average number of contacts after truncation:',round(mean(survey_data$m_i * survey_data$w_tilde),digits = 2)))
 ```
 
-# Plotting (ggplot2)
+# Plotting
+
+## Using ggplot2
 
 The contact matrices can be plotted by using the `geom_tile()` function of the `ggplot2` package.
 
@@ -488,9 +484,9 @@ ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) +
   geom_tile()
 ```
 
-# Plotting (R base)
+## Using R base
 
-The contact matrices can be plotted with the `matrix_plot()` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changed.
+The contact matrices can also be plotted with the `matrix_plot()` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changed.
 
 ```{r fig.width=4, fig.height=4, tidy=TRUE}
 matrix_plot(mr)
