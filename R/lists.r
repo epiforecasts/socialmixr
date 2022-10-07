@@ -17,7 +17,7 @@ list_surveys <- function() {
     ))
   ## remove duplicated records
   relations <- grep("^relation(\\.|$)", colnames(record_list), value = TRUE)
-  DOIs <- apply(record_list, 1, function(x) grep("^doi:", x[relations], value = TRUE)[1])
+  DOIs <- apply(record_list, 1, function(x) grep("^doi:.*zenodo", x[relations], value = TRUE)[1])
   record_list <- record_list[, doi := sub("^doi:", "", DOIs)]
   record_list <- record_list[, url := paste0("https://doi.org/", doi)]
   record_list[, redirect := httr::HEAD(url)$url, by = 1:nrow(record_list)]
