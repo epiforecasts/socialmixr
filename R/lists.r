@@ -15,15 +15,22 @@ list_surveys <- function() {
       metadataPrefix = "oai_datacite",
       set = "user-social_contact_data"
     ))
-  ## remove duplicated records
+  ## find common DOI for different versions, i.e. the "relation" that is a DOI
   relations <- grep("^relation(\\.|$)", colnames(record_list), value = TRUE)
-  DOIs <- apply(record_list, 1, function(x) grep("^doi:.*zenodo", x[relations], value = TRUE)[1])
-  record_list <- record_list[, doi := sub("^doi:", "", DOIs)]
-  record_list <- record_list[, url := paste0("https://doi.org/", doi)]
-  record_list[, redirect := httr::HEAD(url)$url, by = 1:nrow(record_list)]
-  record_list <- record_list[identifier.3 == redirect]
+  DOIs <- apply(record_list, 1, function(x) grep("^doi:.*zenodo", x[relations], value = TRUE))
+  record_list <- record_list[, common_doi := DOIs]
+  record_list <- record_list[, url := sub("doi:", "https://doi.org/", common_doi)]
+  ## get number within version DOI, this is expected to be ascending by version
+  record_list <-
+    record_list[, doi.nb := as.integer(sub("^.*zenodo\\.", "", identifier.1))]
+  ## save date at which first entered
+  record_list <- record_list[, date := min(date), by = common_doi]
+  ## order by DOI number and extract newest version
+  record_list <- record_list[order(-doi.nb)]
+  record_list <- record_list[, .SD[1], by = common_doi]
+  ## order by date
   setkey(record_list, date)
-  return(record_list[, list(date, title, creator, url = url)])
+  return(record_list[, list(date_added = date, title, creator, url = url)])
 }
 
 #' List all countries contained in a survey
