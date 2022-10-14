@@ -37,6 +37,9 @@
     <loc>https://epiforecasts.io/socialmixr/reference/contact_matrix.html</loc>
   </url>
   <url>
+    <loc>https://epiforecasts.io/socialmixr/reference/download_survey.html</loc>
+  </url>
+  <url>
     <loc>https://epiforecasts.io/socialmixr/reference/get_survey.html</loc>
   </url>
   <url>
@@ -47,6 +50,9 @@
   </url>
   <url>
     <loc>https://epiforecasts.io/socialmixr/reference/list_surveys.html</loc>
+  </url>
+  <url>
+    <loc>https://epiforecasts.io/socialmixr/reference/load_survey.html</loc>
   </url>
   <url>
     <loc>https://epiforecasts.io/socialmixr/reference/matrix_plot.html</loc>
