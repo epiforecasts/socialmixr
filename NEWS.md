@@ -1,4 +1,4 @@
-# socialmixr 0.1.9
+# socialmixr 0.2.0
 
 ## Major & breaking changes
 
@@ -15,6 +15,7 @@ to wpp2017 package
 ## Internal changes
 
 * continuous integration is now done via GitHub Actions
+* improved robustness of survey loading and cleaning
 
 # socialmixr 0.1.8
 

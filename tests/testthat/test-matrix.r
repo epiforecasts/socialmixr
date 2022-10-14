@@ -1,16 +1,15 @@
 context("Generating contact matrices")
 
-polymod2 <- survey(polymod$participants, polymod$contacts, polymod$reference)
-polymod3 <- survey(polymod$participants, polymod$contacts, polymod$reference)
-polymod4 <- survey(polymod$participants, polymod$contacts, polymod$reference)
-polymod5 <- survey(polymod$participants, polymod$contacts, polymod$reference)
-polymod6 <- survey(polymod$participants, polymod$contacts, polymod$reference)
-polymod7 <- survey(polymod$participants, polymod$contacts, polymod$reference)
-polymod8 <- survey(polymod$participants, polymod$contacts, polymod$reference)
-polymod9 <- survey(polymod$participants, polymod$contacts, polymod$reference)
-polymod10 <- survey(polymod$participants, polymod$contacts, polymod$reference)
-polymod11 <- survey(polymod$participants, polymod$contacts, polymod$reference)
-polymod11 <- polymod
+polymod2 <- get_survey(polymod)
+polymod3 <- get_survey(polymod)
+polymod4 <- get_survey(polymod)
+polymod5 <- get_survey(polymod)
+polymod6 <- get_survey(polymod)
+polymod7 <- get_survey(polymod)
+polymod8 <- get_survey(polymod)
+polymod9 <- get_survey(polymod)
+polymod10 <- get_survey(polymod)
+polymod11 <- get_survey(polymod)
 
 polymod2$participants$added_weight <- 0.5
 polymod2$contacts$cnt_age <- factor(polymod2$contacts$cnt_age)
@@ -100,7 +99,7 @@ test_that("demography is numeric", {
 })
 
 test_that("survey argument is validated", {
-  expect_error(contact_matrix(survey = "bogus"), "not found")
+  expect_error(contact_matrix(survey = "bogus"), "URL")
 })
 
 test_that("error is thrown if no survey population can be generated", {

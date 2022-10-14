@@ -10,6 +10,7 @@
 #' @param ... ignored
 #'
 #' @autoglobal
+#' @importFrom utils hasName
 #'
 #' @examples
 #' ages_it_2015 <- wpp_age("Italy", 2015)

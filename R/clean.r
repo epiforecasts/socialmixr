@@ -16,6 +16,7 @@ clean <- function(x, ...) UseMethod("clean")
 #' @examples
 #' data(polymod)
 #' cleaned <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
+#' @autoglobal
 #' @export
 clean.survey <- function(x, country.column = "country", participant.age.column = "part_age", ...) {
 
@@ -37,28 +38,70 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
     x$participants[, paste(country.column) := factor(converted_countries)]
   }
 
-  if (participant.age.column %in% colnames(x$participants) &&
-    !is.numeric(x$participants[, get(participant.age.column)])) {
-    ## split off units
-    split_units <-
-      strsplit(as.character(x$participants[, get(participant.age.column)]),
-        split = " "
+  if (nrow(x$participants) > 0 &&
+        participant.age.column %in% colnames(x$participants) &&
+        !is.numeric(x$participants[, get(participant.age.column)])) {
+    ## set any entries not containing numbers to NA
+    x$participants <- x$participants[,
+      paste(participant.age.column) := fifelse(
+        grepl("[0-9]", get(participant.age.column)),
+        get(participant.age.column),
+        NA_character_
       )
-    ## set empty units to years
-    split_complete <- lapply(split_units, function(x) {
-      if (length(x) == 1) x[2] <- "years"
-      x
-    })
-    periods <- vapply(split_complete, function(x) {
-      if (anyNA(x)) {
-        return(NA_real_)
-      }
-      amounts <- as.numeric(strsplit(x[1], split = "-")[[1]])
-      mean(vapply(amounts, function(y) {
-        period_to_seconds(period(y, x[2])) / period_to_seconds(years(1))
-      }, .0))
-    }, .0)
-    x$participants[, paste(participant.age.column) := periods]
+    ]
+    ## fix "under 1"
+    x$participants <- x$participants[,
+      paste(participant.age.column) := sub("Under ", "0-", get(participant.age.column))
+    ]
+    ## split off units
+    if (any(grepl(" ", x$participant[, get(participant.age.column)]))) {
+      x$participants <- x$participants[,
+        ..age.unit :=
+          tstrsplit(as.character(get(participant.age.column)), " ", keep = 2L)
+      ]
+      x$participants <- x$participants[
+        ..age.unit := fifelse(
+          !is.na(get(participant.age.column)) & is.na(..age.unit),
+          "years",
+          ..age.unit
+        )
+      ]
+    } else {
+      x$participants <- x$participants[,
+        ..age.unit := "years"
+      ]
+    }
+
+    limits <- c("..low", "..high")
+    x$participants <- x$participants[,
+       paste(limits) :=
+        tstrsplit(as.character(get(participant.age.column)), "-", fixed = TRUE)
+    ]
+    x$participants <- x$participants[is.na(..high),
+      ..high := fifelse(is.na(..high), ..low, ..high)
+    ]
+    for (limit in limits) {
+      x$participants <- x$participants[,
+        paste(limit) := fifelse(!is.na(get(limit)), as.numeric(get(limit)), NA_real_)
+      ]
+      x$participants <- x$participants[,
+        paste(limit) := fifelse(
+          !is.na(get(limit)),
+          period_to_seconds(period(get(limit), ..age.unit)) /
+            period_to_seconds(years(1)),
+          NA_real_
+        ),
+        by = 1:nrow(x$participants)
+      ]
+    }
+
+    x$participants <- x$participants[,
+      paste(participant.age.column) := (..low + ..high) / 2
+    ]
+
+    x$participants[, ..high := NULL]
+    x$participants[, ..low := NULL]
+    x$participants[, ..age.unit := NULL]
   }
 
   return(x)

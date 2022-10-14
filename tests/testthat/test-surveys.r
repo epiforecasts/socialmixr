@@ -26,7 +26,7 @@ test_that("surveys can be cited", {
 })
 
 test_that("missing surveys can't be cited", {
-  expect_error(cite.survey("bogus"), "not found")
+  expect_error(cite.survey("bogus"), "URL")
 })
 
 test_that("multiple DOI's cannot be loaded", {
