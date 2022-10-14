@@ -59,11 +59,11 @@ contact_matrix(
 
 \item{missing.contact.age}{if set to "remove" (default), participants that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group; if set to "ignore", contact with missing age are ignored in the contact analysis}
 
-\item{weights}{columns that contain weights}
+\item{weights}{column names(s) of the participant data of the \code{\link[=survey]{survey()}} object with user-specified weights (default = empty vector)}
 
-\item{weigh.dayofweek}{whether to weigh the day of the week (weight (5/7 / N_week/N) for weekdays and (2/7 / N_weekend/N) for weekends)}
+\item{weigh.dayofweek}{whether to weigh social contacts data by the day of the week (weight (5/7 / N_week / N) for weekdays and (2/7 / N_weekend / N) for weekends)}
 
-\item{weigh.age}{whether to weigh by the age of the participants (vs. the populations' age distribution)}
+\item{weigh.age}{whether to weigh social contacts data by the age of the participants (vs. the populations' age distribution)}
 
 \item{weight.threshold}{threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff)}
 
