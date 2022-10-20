@@ -15,6 +15,7 @@ contact_matrix(
   counts = FALSE,
   symmetric = FALSE,
   split = FALSE,
+  sample.participants = FALSE,
   estimated.participant.age = c("mean", "sample", "missing"),
   estimated.contact.age = c("mean", "sample", "missing"),
   missing.participant.age = c("remove", "keep"),
@@ -41,15 +42,17 @@ contact_matrix(
 
 \item{filter}{any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given.}
 
-\item{n}{number of matrices to sample}
+\item{n}{deprecated; number of bootstrap samples to generate}
 
-\item{bootstrap}{whether to sample participants and contacts randomly using a bootstrap; by default, will use bootstrap if n > 1}
+\item{bootstrap}{deprecated; whether to bootstrap contact matrices}
 
 \item{counts}{whether to return counts (instead of means)}
 
 \item{symmetric}{whether to make matrix symmetric, such that c_{ij}N_i = c{ji}N_j.}
 
 \item{split}{whether to split the number of contacts and assortativity}
+
+\item{sample.participants}{whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the \link{contact_matrix_multi} for how to do this..}
 
 \item{estimated.participant.age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
 
@@ -78,7 +81,7 @@ contact_matrix(
 \item{...}{further arguments to pass to \code{\link[=get_survey]{get_survey()}}, \code{\link[=check]{check()}} and \code{\link[=pop_age]{pop_age()}} (especially column names)}
 }
 \value{
-a list of sampled contact matrices, and the underlying demography of the surveyed population
+a contact matrix, and the underlying demography of the surveyed population
 }
 \description{
 Samples a contact survey using a bootstrap

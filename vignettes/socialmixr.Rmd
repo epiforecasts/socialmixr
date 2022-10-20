@@ -106,10 +106,10 @@ cite(polymod)
 
 # Bootstrapping
 
-To get an idea of uncertainty of the contact matrices, a bootstrap can be used. If an argument `n` greater than 1 is passed to `contact_matrix()`, multiple samples of contact matrices are generated. For each sample, participants are sampled (with replacement, to get the same number of participants of the original study), and contacts are sampled from the set of all the contacts of all the participants (again, with replacement). All resulting contact matrices are returned as `matrices` field in the returned list. From these, derived quantities can be obtained, for example the mean
+To get an idea of uncertainty of the contact matrices, a bootstrap can be used using the `contact_matrix_multi()` function. If an argument `n` greater than 1 is passed to `contact_matrix_multi()`, multiple samples of contact matrices are generated. If this is combined with setting `sample.participants = TRUE` then for each sample, participants are sampled (with replacement, to get the same number of participants of the original study). All resulting contact matrices are returned as `matrices` field in the returned list. From these, derived quantities can be obtained, for example the mean:
 
 ```{r}
-m <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), n=5)
+m <- contact_matrix_multi(n = 5, polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 length(m$matrices)
 mr <- Reduce("+", lapply(m$matrices, function(x) {x$matrix})) / length(m$matrices)
 mr
