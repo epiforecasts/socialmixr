@@ -49,53 +49,60 @@ empty_pop <- data.frame(lower.age.limit = c(0, 5), population = NA_real_)
 options <-
   list(
     test1 = list(survey = polymod, countries = "United Kingdom", counts = TRUE, weigh.dayofweek = TRUE, age.limits = seq(0, 80, by = 5), missing.contact.age = "remove"),
-    test2 = list(n = 2, survey = polymod2, age.limits = c(0, 5), weights = "added_weight", symmetric = TRUE),
-    test3 = list(survey = polymod, survey.pop = "Australia", countries = "GB", split = TRUE, filter = c(cnt_home = 1), age.limits = c(0, 5, 10), estimated.contact.age = "sample", symmetric = TRUE, missing.contact.age = "remove"),
-    test4 = list(survey = polymod8, missing.contact.age = "sample", symmetric = TRUE, age.limits = c(0, 5, 15))
+    test2 = list(survey = polymod, survey.pop = "Australia", countries = "GB", split = TRUE, filter = c(cnt_home = 1), age.limits = c(0, 5, 10), estimated.contact.age = "sample", symmetric = TRUE, missing.contact.age = "remove"),
+    test3 = list(survey = polymod8, missing.contact.age = "sample", symmetric = TRUE, age.limits = c(0, 5, 15))
   )
+
+multi_options <- list(
+  test_multi = list(n = 2, survey = polymod2, age.limits = c(0, 5), weights = "added_weight", symmetric = TRUE)
+)
 
 suppressMessages(contacts <- lapply(options, function(x) {
   do.call(contact_matrix, x)
 }))
 
+suppressMessages(multi_contacts <- lapply(multi_options, function(x) {
+  do.call(contact_matrix_multi, x)
+}))
+
 test_that("contact matrix exists and is square", {
-  expect_true(all(sapply(contacts[c(1, 3)], function(x) {
+  expect_true(all(sapply(contacts[c(1, 2)], function(x) {
     length(unique(dim(x[["matrix"]]))) == 1
   })))
-  expect_true(all(sapply(contacts[c(2)], function(x) {
+  expect_true(all(sapply(multi_contacts, function(x) {
     length(unique(dim(x[["matrices"]][[1]][["matrix"]]))) == 1
   })))
-  expect_true(all(sapply(contacts[c(1, 3)], function(x) {
+  expect_true(all(sapply(contacts[c(1, 2)], function(x) {
     prod(dim(x[["matrix"]])) > 0
   })))
-  expect_true(all(sapply(contacts[c(2)], function(x) {
+  expect_true(all(sapply(multi_contacts, function(x) {
     prod(dim(x[["matrices"]][[1]][["matrix"]])) > 0
   })))
 })
 
 test_that("contact matrix is numeric", {
-  expect_true(all(sapply(contacts[c(1, 3)], function(x) {
+  expect_true(all(sapply(contacts[c(1, 2)], function(x) {
     is.numeric(x[["matrix"]])
   })))
-  expect_true(all(sapply(contacts[c(2)], function(x) {
+  expect_true(all(sapply(multi_contacts, function(x) {
     is.numeric(x[["matrices"]][[1]][["matrix"]])
   })))
-  expect_false(any(is.na(sapply(contacts[c(1, 3)], function(x) {
+  expect_false(any(is.na(sapply(contacts[c(1, 2)], function(x) {
     is.numeric(x[["matrix"]])
   }))))
-  expect_false(any(is.na(sapply(contacts[c(2)], function(x) {
+  expect_false(any(is.na(sapply(multi_contacts, function(x) {
     is.numeric(x[["matrices"]][[1]][["matrix"]])
   }))))
-  expect_true(is.numeric(contacts[[3]]$contacts))
-  expect_true(is.numeric(contacts[[3]]$normalisation))
+  expect_true(is.numeric(contacts[[2]]$contacts))
+  expect_true(is.numeric(contacts[[2]]$normalisation))
 })
 
 test_that("demography has been returned", {
-  expect_true(nrow(contacts[[3]]$demography) > 0)
+  expect_true(nrow(contacts[[2]]$demography) > 0)
 })
 
 test_that("demography is numeric", {
-  expect_true(is.numeric(contacts[[3]]$demography$population))
+  expect_true(is.numeric(contacts[[2]]$demography$population))
 })
 
 test_that("survey argument is validated", {
@@ -118,8 +125,9 @@ test_that("warning is thrown if filter column is not found", {
   expect_warning(contact_matrix(survey = polymod, filter = c(test = 0)), "column.* not found")
 })
 
-test_that("warning is thrown if n > 1 and bootstrap = FALSE", {
-  expect_warning(contact_matrix(survey = polymod, n = 2, bootstrap = FALSE), "n > 1 does not make sense if not bootstrapping")
+test_that("warning is thrown if deprecated options are given", {
+  expect_warning(contact_matrix(survey = polymod, n = 2), "deprecated")
+  expect_warning(contact_matrix(survey = polymod, bootstrap = TRUE), "deprecated")
 })
 
 test_that("warning is thrown if missing data exist", {
@@ -536,25 +544,5 @@ test_that("Symmetric contact matrices per capita are actually symmetric", {
     )$matrix.per.capita
 
     expect_equal(c(matrix.per.capita), c(t(matrix.per.capita)))
-  })
-})
-
-
-test_that("Contact matrices per capita are also generated when bootstrapping", {
-  suppressWarnings({
-
-    # get contact matrix per capita
-    expect_length(contact_matrix(polymod,
-      age.limits = c(0, 18, 60),
-      per.capita = TRUE,
-      n = 3
-    )$matrices[[3]], 2)
-
-    # get no contact matrix per capita
-    expect_length(contact_matrix(polymod,
-      age.limits = c(0, 18, 60),
-      per.capita = FALSE,
-      n = 3
-    )$matrices[[1]], 1)
   })
 })
