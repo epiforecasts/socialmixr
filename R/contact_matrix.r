@@ -12,7 +12,7 @@
 #' @param counts whether to return counts (instead of means)
 #' @param symmetric whether to make matrix symmetric, such that c_{ij}N_i = c{ji}N_j.
 #' @param split whether to split the number of contacts and assortativity
-#' @param sample.participants whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the [contact_matrix_multi] for how to do this..
+#' @param sample.participants whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this..
 #' @param estimated.participant.age if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
 #' @param estimated.contact.age if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
 #' @param missing.participant.age if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group
@@ -64,8 +64,9 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
 
   if (!missing(n)) {
     warning("The 'n' option is being deprecated and will be removed ",
-            "following version 0.2.0. Please use the ",
-            "'contact_matrix_multi' function instead.")
+            "following version 0.2.0. Please see the ",
+            "'Bootstrapping' section in the vignette for an ",
+            "alternative approach.")
     if (n > 1) bootstrap <- TRUE
   }
   if (!missing(bootstrap)) {
@@ -850,34 +851,4 @@ contact_matrix <- function(survey, countries = c(), survey.pop, age.limits, filt
   }
 
   return(return_value)
-}
-
-##' Generate multiple contact matrices using bootstrapping
-##'
-##' This function can be used to take into account uncertainty in generating
-##' the contact matrices stemming from the finite underlying population. It
-##' does so by calling the [contact_matrix] function multiple times. If any
-##' of the arguments passed to [contact_matrix] refer to sampling (especially
-##' 'sample.participants') then the resulting contact matrices will differ and
-##' can be used to generate bootstrap confidence intervals, or multiple
-##' verisons of contact matrices consistsent with the data.
-##' @param n number contact matrices to generate
-##' @param ... parameters to pass to [contact_matrix]
-##' @return a list of contact matrices, and the underlying demography of the surveyed population
-##' @author Sebastian Funk
-##' @export
-contact_matrix_multi <- function(n, ...) {
-  cm <- list(matrices = list())
-  for (i in seq_len(n)) {
-    if (i == 1) {
-      cm$matrices[[i]] <- contact_matrix(...)
-    } else {
-      cm$matrices[[i]] <- suppressMessages(contact_matrix(...))
-    }
-    if ("demography" %in% names(cm$matrices[[i]])) {
-      cm$demography <- cm$matrices[[i]]$demography
-      cm$matrices[[i]]$demography <- NULL
-    }
-  }
-  return(cm)
 }
