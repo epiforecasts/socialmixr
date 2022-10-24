@@ -65,6 +65,7 @@
 <span>  counts <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  symmetric <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  split <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  sample.participants <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  estimated.participant.age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sample"</span>, <span class="st">"missing"</span><span class="op">)</span>,</span>
 <span>  estimated.contact.age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sample"</span>, <span class="st">"missing"</span><span class="op">)</span>,</span>
 <span>  missing.participant.age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"remove"</span>, <span class="st">"keep"</span><span class="op">)</span>,</span>
@@ -104,11 +105,11 @@
 
 
 <dt>n</dt>
-<dd><p>number of matrices to sample</p></dd>
+<dd><p>deprecated; number of bootstrap samples to generate</p></dd>
 
 
 <dt>bootstrap</dt>
-<dd><p>whether to sample participants and contacts randomly using a bootstrap; by default, will use bootstrap if n &gt; 1</p></dd>
+<dd><p>deprecated; whether to bootstrap contact matrices</p></dd>
 
 
 <dt>counts</dt>
@@ -121,6 +122,10 @@
 
 <dt>split</dt>
 <dd><p>whether to split the number of contacts and assortativity</p></dd>
+
+
+<dt>sample.participants</dt>
+<dd><p>whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this..</p></dd>
 
 
 <dt>estimated.participant.age</dt>
@@ -179,7 +184,7 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>a list of sampled contact matrices, and the underlying demography of the surveyed population</p>
+<p>a contact matrix, and the underlying demography of the surveyed population</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

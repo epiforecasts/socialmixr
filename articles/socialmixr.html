@@ -70,7 +70,7 @@
       <img src="" class="logo" alt=""><h1>Introduction to socialmixr</h1>
                         <h4 data-toc-skip class="author">Sebastian Funk</h4>
             
-            <h4 data-toc-skip class="date">2022-10-14</h4>
+            <h4 data-toc-skip class="date">2022-10-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/HEAD/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
       <div class="d-none name"><code>socialmixr.Rmd</code></div>
@@ -156,20 +156,32 @@
 <div class="section level2">
 <h2 id="bootstrapping">Bootstrapping<a class="anchor" aria-label="anchor" href="#bootstrapping"></a>
 </h2>
-<p>To get an idea of uncertainty of the contact matrices, a bootstrap can be used. If an argument <code>n</code> greater than 1 is passed to <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code>, multiple samples of contact matrices are generated. For each sample, participants are sampled (with replacement, to get the same number of participants of the original study), and contacts are sampled from the set of all the contacts of all the participants (again, with replacement). All resulting contact matrices are returned as <code>matrices</code> field in the returned list. From these, derived quantities can be obtained, for example the mean</p>
+<p>To get an idea of uncertainty of the contact matrices, a bootstrap can be used using the <code>sample.participants</code> argument of <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code>. If this argument is set to TRUE, participants are sampled (with replacement, to get the same number of participants of the original study) every time the <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> function is called, and thus a different matrix returned every time. From these matrices, derived quantities can be obtained, for example the mean:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, n<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span>, </span>
+<span>  <span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span></span>
+<span>    <span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>,</span>
+<span>    sample.participants <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">matrices</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 5</span></span>
-<span><span class="va">mr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">matrices</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="va">x</span><span class="op">$</span><span class="va">matrix</span><span class="op">}</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">matrices</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
+<span><span class="va">mr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">m</span><span class="op">[</span><span class="st">"matrix"</span>, <span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
-<span><span class="co">#&gt;    [0,1)  0.20703782 0.8606933 1.405630 5.919979</span></span>
-<span><span class="co">#&gt;    [1,5)  0.08828513 2.1894436 1.508809 5.688676</span></span>
-<span><span class="co">#&gt;    [5,15) 0.02507302 0.4577517 8.008954 6.119566</span></span>
-<span><span class="co">#&gt;    15+    0.02557457 0.3600880 1.337437 9.793272</span></span></code></pre></div>
+<span><span class="co">#&gt;    [0,1)  0.38064777 0.7936122 1.430126 6.201853</span></span>
+<span><span class="co">#&gt;    [1,5)  0.11749565 1.8807277 1.372017 5.652059</span></span>
+<span><span class="co">#&gt;    [5,15) 0.02058542 0.4689185 7.946115 6.130031</span></span>
+<span><span class="co">#&gt;    15+    0.02987138 0.3563286 1.341712 9.679417</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
