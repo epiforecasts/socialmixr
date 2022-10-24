@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-[socialmixr](https://github.com/sbfnk/socialmixr) is an `R` package to derive social mixing matrices from survey data. These are particularly useful for age-structured [infectious disease models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease). For background on age-specific mixing matrices and what data inform them, see, for example, the paper on POLYMOD by [@mossong_social_2008].
+[socialmixr](https://github.com/epiforecasts/socialmixr) is an `R` package to derive social mixing matrices from survey data. These are particularly useful for age-structured [infectious disease models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease). For background on age-specific mixing matrices and what data inform them, see, for example, the paper on POLYMOD by [@mossong_social_2008].
 
 # Usage
 
@@ -35,7 +35,7 @@ install.packages('socialmixr')
 The latest development version of the `socialmixr` package can be installed via
 
 ```{r, eval=FALSE}
-devtools::install_github('sbfnk/socialmixr')
+devtools::install_github('epiforecasts/socialmixr')
 ```
 
 To load the package, use
@@ -479,7 +479,7 @@ print(paste('weighted average number of contacts after truncation:',round(mean(s
 
 The contact matrices can be plotted by using the `geom_tile()` function of the `ggplot2` package.
 
-```{r fig.width=4, fig.height=4, tidy=TRUE}
+```{r fig.width=4, fig.height=4}
 library('reshape2')
 library('ggplot2')
 df <- melt(mr, varnames = c("age.group", "age.group.contact"), value.name = "contacts")
@@ -492,7 +492,7 @@ ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) +
 
 The contact matrices can also be plotted with the `matrix_plot()` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changed.
 
-```{r fig.width=4, fig.height=4, tidy=TRUE}
+```{r fig.width=4, fig.height=4}
 matrix_plot(mr)
 matrix_plot(mr, color.palette = gray.colors)
 

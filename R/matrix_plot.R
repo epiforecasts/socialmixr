@@ -23,7 +23,7 @@
 #' @export
 #' @examples
 #' data(polymod)
-#' mij = contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 18,65))$matrix
+#' mij <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 18,65))$matrix
 #' matrix_plot(mij)
 #' @author Lander Willem
 matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, num.colors = 50, main, xlab, ylab, legend.width, cex.lab, cex.axis, cex.text, color.palette = heat.colors, ...) {

@@ -33,9 +33,10 @@ utils::globalVariables(c(
   "file_name", # <download_survey>
   "contentUrl", # <download_survey>
   ":=", # <list_surveys>
-  "doi", # <list_surveys>
-  "redirect", # <list_surveys>
-  "identifier.3", # <list_surveys>
+  "common_doi", # <list_surveys>
+  "doi.nb", # <list_surveys>
+  "identifier.1", # <list_surveys>
+  ".SD", # <list_surveys>
   "title", # <list_surveys>
   "creator", # <list_surveys>
   ":=", # <pop_age>

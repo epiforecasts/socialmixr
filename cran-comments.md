@@ -1,14 +1,25 @@
 ## Test environments
-* local macOS install (10.15.2), R 3.6.1
-* local linux install (Ubuntu 16.04), R 3.6.1
-* Ubuntu (Xenial) on travis-ci
+* local macOS install (12.6), R 4.2.1
+* R-hub
+* winbuilder
 
 ## R CMD check results
-There were no ERRORs, WARNINGs or NOTEs.
+
+There were no ERRORs or WARNINGs. 
+
+There was one NOTE:
+
+```
+* checking for detritus in the temp directory ... NOTE
+Found the following files/directories:
+  'lastMiKTeXException'
+```
+As noted in [R-hub issue #503](https://github.com/r-hub/rhub/issues/503), this could be due to a bug/crash in MiKTeX and can likely be ignored.
 
 ## Downstream dependencies
+
 0 packages with problems.
 
-## Further notes
+## Resubmission notes
 
-In a previous submission tehre was an error in the noLD environment on CRAN. This has now been fixed.
+A previous NOTE on long-running examples has been resolved.

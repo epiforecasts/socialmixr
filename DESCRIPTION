@@ -1,6 +1,6 @@
 Package: socialmixr
 Title: Social Mixing Matrices for Infectious Disease Modelling
-Version: 0.1.9
+Version: 0.2.0
 Authors@R: c(
     person("Sebastian", "Funk", , "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre")),
     person("Lander", "Willem", role = "aut"),
@@ -9,7 +9,8 @@ Authors@R: c(
     person("Sam", "Clifford", , "sj.clifford@gmail.com", role = "ctb"),
     person("Christopher", "Jarvis", role = "ctb"),
     person("Alexis", "Robert", , "alexis.robert@lshtm.ac.uk", role = "ctb"),
-    person("Niel", "Hens", role = "ctb")
+    person("Niel", "Hens", role = "ctb"),
+    person("Pietro", "Coletti", role = c("col", "dtm"))
   )
 Description: Provides methods for sampling contact matrices from diary
     data for use in infectious disease modelling, as discussed in Mossong

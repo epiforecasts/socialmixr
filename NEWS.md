@@ -1,10 +1,14 @@
 # socialmixr 0.2.0
 
+# socialmixr 0.1.8.9000
+
 ## Major & breaking changes
 
 * `error` argument has been removed from `check()` and always return warnings. If you want to turn these warnings into errors, please have a look at `options(warn = 2)`
 * `quiet` argument has been removed from `check()`, `cite()`, `contact_matrix()`, and `get_survey()`. If you want to silence diagnostic messages, you should use R idiomatic mechanisms, such as `suppressMessages()`
+* the `n` and `bootstrap` options of `contact_matrix()` have been deprecated and replaced with a `sample.participants` argument; bootstrapping is now explained in the vignette instead
 * new `matrix_plot()` function to plot contact matrix
+* the use of weights has been improved and the corresponding section in the vignette expanded
 
 ## Minor changes
 
@@ -16,6 +20,7 @@ to wpp2017 package
 
 * continuous integration is now done via GitHub Actions
 * improved robustness of survey loading and cleaning
+* `get_survey()` has been split into separate functions for downloading and processing survey data
 
 # socialmixr 0.1.8
 
