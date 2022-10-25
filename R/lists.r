@@ -65,11 +65,11 @@ wpp_countries <- function() {
   popF <- fread(system.file("data", "popF.txt", package = "wpp2017"))
   popM <- fread(system.file("data", "popM.txt", package = "wpp2017"))
 
-  countries <- unique(c(popF$name, popM$name))
+  countries <- unique(c(popF$country_code, popM$country_code))
   found_countries <-
     suppressWarnings(countrycode::countrycode(
       countries,
-      "country.name",
+      "un",
       "country.name"
     ))
   found_countries <- found_countries[!is.na(found_countries)]
