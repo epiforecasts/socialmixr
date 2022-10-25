@@ -30,7 +30,7 @@ jobs:
           needs: roxygen2
 
       - name: Document
-        run: roxygen2::roxygenise(c("collate", "namespace", "rd", "roxyglobals::global_roclet"))
+        run: roxygen2::roxygenise(roclets = c("collate", "namespace", "rd", "roxyglobals::global_roclet"))
         shell: Rscript {0}
 
       - name: Commit and push changes
