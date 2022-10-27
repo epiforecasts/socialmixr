@@ -1,3 +1,5 @@
+# socialmixr (development version)
+
 # socialmixr 0.2.0
 
 ## Major & breaking changes
