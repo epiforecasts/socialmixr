@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">socialmixr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,28 +47,33 @@
       <small>Source: <a href="https://github.com/epiforecasts/socialmixr/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2"><h2 class="pkg-version" data-toc-text="0.2.0" id="socialmixr-020">socialmixr 0.2.0<a class="anchor" aria-label="anchor" href="#socialmixr-020"></a></h2><p class="text-muted">CRAN release: 2022-10-27</p></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.0" id="socialmixr-020">socialmixr 0.2.0<a class="anchor" aria-label="anchor" href="#socialmixr-020"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.8.9000" id="socialmixr-0189000">socialmixr 0.1.8.9000<a class="anchor" aria-label="anchor" href="#socialmixr-0189000"></a></h2>
 <div class="section level3">
-<h3 id="major--breaking-changes-0-2-0">Major &amp; breaking changes<a class="anchor" aria-label="anchor" href="#major--breaking-changes-0-2-0"></a></h3>
+<h3 id="major--breaking-changes-0-1-8-9000">Major &amp; breaking changes<a class="anchor" aria-label="anchor" href="#major--breaking-changes-0-1-8-9000"></a></h3>
 <ul><li>
 <code>error</code> argument has been removed from <code><a href="../reference/check.html">check()</a></code> and always return warnings. If you want to turn these warnings into errors, please have a look at <code>options(warn = 2)</code>
 </li>
 <li>
 <code>quiet</code> argument has been removed from <code><a href="../reference/check.html">check()</a></code>, <code><a href="../reference/cite.html">cite()</a></code>, <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code>, and <code><a href="../reference/get_survey.html">get_survey()</a></code>. If you want to silence diagnostic messages, you should use R idiomatic mechanisms, such as <code><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages()</a></code>
 </li>
+<li>the <code>n</code> and <code>bootstrap</code> options of <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> have been deprecated and replaced with a <code>sample.participants</code> argument; bootstrapping is now explained in the vignette instead</li>
 <li>new <code><a href="../reference/matrix_plot.html">matrix_plot()</a></code> function to plot contact matrix</li>
+<li>the use of weights has been improved and the corresponding section in the vignette expanded</li>
 </ul></div>
 <div class="section level3">
-<h3 id="minor-changes-0-2-0">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-2-0"></a></h3>
+<h3 id="minor-changes-0-1-8-9000">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-1-8-9000"></a></h3>
 <ul><li>world population data has been updated to 2017 by switching from the wpp2015 to wpp2017 package</li>
 <li>
 <code><a href="https://rdrr.io/r/base/chkDots.html" class="external-link">chkDots()</a></code> is now used to ensure no argument is silently ignored by S3 methods</li>
 </ul></div>
 <div class="section level3">
-<h3 id="internal-changes-0-2-0">Internal changes<a class="anchor" aria-label="anchor" href="#internal-changes-0-2-0"></a></h3>
+<h3 id="internal-changes-0-1-8-9000">Internal changes<a class="anchor" aria-label="anchor" href="#internal-changes-0-1-8-9000"></a></h3>
 <ul><li>continuous integration is now done via GitHub Actions</li>
 <li>improved robustness of survey loading and cleaning</li>
+<li>
+<code><a href="../reference/get_survey.html">get_survey()</a></code> has been split into separate functions for downloading and processing survey data</li>
 </ul></div>
 </div>
     <div class="section level2">
