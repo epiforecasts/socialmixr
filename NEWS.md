@@ -1,7 +1,5 @@
 # socialmixr 0.2.0
 
-# socialmixr 0.1.8.9000
-
 ## Major & breaking changes
 
 * `error` argument has been removed from `check()` and always return warnings. If you want to turn these warnings into errors, please have a look at `options(warn = 2)`

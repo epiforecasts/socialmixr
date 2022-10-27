@@ -10,3 +10,4 @@ cran-comments.md
 ^pkgdown$
 ^codecov\.yml$
 ^LICENSE\.md$
+^CRAN-SUBMISSION$
