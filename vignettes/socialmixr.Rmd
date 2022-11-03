@@ -15,7 +15,7 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
-library('knitr')
+library("knitr")
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -29,22 +29,22 @@ knitr::opts_chunk$set(
 The latest stable version of the `socialmixr` package is installed via
 
 ```{r, eval=FALSE}
-install.packages('socialmixr')
+install.packages("socialmixr")
 ```
 
 The latest development version of the `socialmixr` package can be installed via
 
 ```{r, eval=FALSE}
-devtools::install_github('epiforecasts/socialmixr')
+devtools::install_github("epiforecasts/socialmixr")
 ```
 
 To load the package, use
 
 ```{r, eval=FALSE}
-library('socialmixr')
+library("socialmixr")
 ```
 ```{r, echo=FALSE}
-suppressWarnings(library('socialmixr'))
+suppressWarnings(library("socialmixr"))
 ```
 
 
@@ -109,7 +109,7 @@ cite(polymod)
 To get an idea of uncertainty of the contact matrices, a bootstrap can be used using the  `sample.participants` argument of `contact_matrix()`. If this argument is set to TRUE, participants are sampled (with replacement, to get the same number of participants of the original study) every time the `contact_matrix()` function is called, and thus a different matrix returned every time. From these matrices, derived quantities can be obtained, for example the mean:
 
 ```{r}
-m <- replicate(n = 5, 
+m <- replicate(n = 5,
   contact_matrix(
     polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15),
     sample.participants = TRUE
@@ -126,7 +126,7 @@ Obtaining symmetric contact matrices, splitting out their components (see below)
 If demographic information is used, this is returned by `contact_matrix()` as the `demography` field in the results list. It is possible to enforce or prevent the function to return demography data by using the `return.demography` option.
 
 ```{r, warning=FALSE, message=FALSE}
-contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 20), 
+contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 20),
                return.demography = TRUE)$demography
 ```
 
@@ -159,7 +159,7 @@ $$c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}$$
 
 
 ```{r message=FALSE, warning=FALSE}
-contact_matrix(survey = polymod, countries = "Germany", age.limits = c(0,60), symmetric = TRUE, per.capita = TRUE)
+contact_matrix(survey = polymod, countries = "Germany", age.limits = c(0, 60), symmetric = TRUE, per.capita = TRUE)
 ```
 
 # Splitting contact matrices
@@ -182,13 +182,13 @@ The `filter` argument to `contact_matrix()` can be used to select particular par
 
 ```{r, warning=FALSE, message=FALSE}
 # contact matrix for school-related contacts
-contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_school=1))$matrix
+contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_school = 1))$matrix
 
 # contact matrix for work-related contacts involving physical contact
-contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_work=1, phys_contact=1))$matrix
+contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_work = 1, phys_contact = 1))$matrix
 
 # contact matrix for daily contacts at home with males
-contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_home=1, cnt_gender="M", duration_multi=5))$matrix
+contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_home = 1, cnt_gender = "M", duration_multi = 5))$matrix
 
 ```
 
@@ -213,7 +213,7 @@ $$\tilde{w}^{PS}_{i} =  \tfrac{w_{i}}{\sum_{\text{j}}^{\text{group g}} w_{j}} * 
 Temporal weights are activated in `contact_matrix()` by `weigh.dayofweek = TRUE` and age-specific weights by `weight.age = TRUE`. The post-stratification weights are calculated by default. It is possible to obtain the participant weights via the option `return.part.weights = TRUE`.
 
 ```{r message=FALSE, warning=FALSE}
-contact_matrix(survey = polymod, age.limits = c(0,18,60), weigh.dayofweek = TRUE, 
+contact_matrix(survey = polymod, age.limits = c(0, 18, 60), weigh.dayofweek = TRUE,
                weigh.age = TRUE, return.part.weights = TRUE)
 ```
 
@@ -223,7 +223,7 @@ The `contact_matrix()` allows to specify and use your own participant weights. T
 
 ```{r message=FALSE, warning=FALSE}
 # e.g. use household size as (dummy) weight to provide more importance to participant data from large households
-contact_matrix(survey = polymod, age.limits = c(0,18,60), weights = c('hh_size'))
+contact_matrix(survey = polymod, age.limits = c(0, 18, 60), weights = "hh_size")
 ```
 
 
@@ -232,7 +232,7 @@ contact_matrix(survey = polymod, age.limits = c(0,18,60), weights = c('hh_size')
 If the survey population differs extensively from the demography, some participants can end up with relatively high weights and as such, an excessive contribution to the population average. This warrants the limitation of single participant influences by a truncation of the weights. To enable this in `contact_matrix()`, you need to provide a numeric `weight.threshold`. This truncation is applied on the standardized weights, followed by another standardization to make sure that the sum of the weights still equals the sample size. The latter can lead to final weights of which some little exceed the given threshold value. 
 
 ```{r message=FALSE, warning=FALSE}
-contact_matrix(survey = polymod, age.limits = c(0,18,60), weigh.dayofweek = TRUE, 
+contact_matrix(survey = polymod, age.limits = c(0, 18, 60), weigh.dayofweek = TRUE,
                weigh.age = TRUE, return.part.weights = TRUE, weight.threshold = 3)
 ```
 
@@ -245,14 +245,14 @@ With these numeric examples, we show the importance of post-stratification weigh
 We start from a survey including 6 participants of 1, 2 and 3 years of age. The ages are not equally represented in the sample, though we assume they are equally present in the reference population. We will calculate the weighted average number of contacts by age and by age group, using {1,2} and {3} years of age. The following table shows the reported number of contacts per participant $i$, represented by $m_i$:
 
 ```{r, echo=FALSE}
-survey_data = data.frame(age = c(1,1,2,2,2,3),
-                         day.of.week = as.factor(c('weekend','weekend','weekend','week','week','week')),
+survey_data <- data.frame(age = c(1, 1, 2, 2, 2, 3),
+                         day.of.week = as.factor(c("weekend", "weekend", "weekend", "week", "week", "week")),
                          age.group = NA,
-                         m_i = c(3,2,9,10,8,15))
+                         m_i = c(3, 2, 9, 10, 8, 15))
 
 # age groups 1-2 and 3
-survey_data$age.group = 1-(survey_data$age < 3) + 1
-survey_data$age.group = as.factor(c('A','B'))[survey_data$age.group]
+survey_data$age.group <- 1 - (survey_data$age < 3) + 1
+survey_data$age.group <- as.factor(c("A", "B"))[survey_data$age.group]
 
 kable(survey_data)
 ```
@@ -260,22 +260,22 @@ kable(survey_data)
 The summary statistics for the sample (N) and reference population (P) are as follows
 
 ```{r}
-N             = 6
-N_age         = c(2, 3, 1)
-N_age.group   = c(5, 1)
-N_day.of.week = c(3, 3)
+N             <- 6
+N_age         <- c(2, 3, 1)
+N_age.group   <- c(5, 1)
+N_day.of.week <- c(3, 3)
 
-P             = 3000
-P_age         = c(1000, 1000, 1000)
-P_age.group   = c(2000, 1000)
+P             <- 3000
+P_age         <- c(1000, 1000, 1000)
+P_age.group   <- c(2000, 1000)
 
-P_day.of.week = c(5/7, 2/7) * 3000
+P_day.of.week <- c(5 / 7, 2 / 7) * 3000
 ```
 
 This survey data results in an unweighted average number of contacts:
 
 ```{r, echo=FALSE}
-print(paste('unweighted average number of contacts:',round(mean(survey_data$m_i),digits = 2)))
+print(paste("unweighted average number of contacts:", round(mean(survey_data$m_i), digits = 2)))
 ```
 
 and age-specific unweighted averages on the number of contacts:
@@ -290,7 +290,7 @@ The following table contains the participants weights based on the survey day wi
 ```{r, echo=FALSE}
 # including population constants
 survey_data$w <- NA
-for(i in 1:nrow(survey_data)){
+for (i in seq_len(nrow(survey_data))) {
   day_i <- survey_data$day.of.week[i]
   survey_data$w[i] <- (P_day.of.week[day_i] / P) / (N_day.of.week[day_i] / N)
 }
@@ -298,14 +298,14 @@ survey_data$w_tilde <- survey_data$w / sum(survey_data$w) * N
 
 # without population constants
 survey_data$w_dot <- NA
-for(i in 1:nrow(survey_data)){
+for (i in seq_len((survey_data))) {
   day_i <- survey_data$day.of.week[i]
   survey_data$w_dot[i] <- (P_day.of.week[day_i]) / (N_day.of.week[day_i])
 }
 survey_data$w_dot_tilde <- survey_data$w_dot / sum(survey_data$w_dot) * N
 
 # round
-survey_data[,-(1:4)] <- round(survey_data[,-(1:4)],digits = 2)
+survey_data[, -(1:4)] <- round(survey_data[, -(1:4)], digits = 2)
 
 # print
 kable(survey_data)
@@ -320,15 +320,15 @@ Using the standardized weights, we are able to calculate the weighted number of 
 
 ```{r, echo=FALSE}
 # add weighted number of contacts
-survey_data['m_i * w_tilde'] = survey_data$m_i * survey_data$w_tilde
+survey_data["m_i * w_tilde"] <- survey_data$m_i * survey_data$w_tilde
 
 # show table
 kable(survey_data)
 
 # remove the weighted number of contacts
-survey_data$'m_i * w_tilde' <- NULL
+survey_data$"m_i * w_tilde" <- NULL
 
-print(paste('weighted average number of contacts:',round(mean(survey_data$m_i * survey_data$w_tilde),digits = 2)))
+print(paste("weighted average number of contacts:", round(mean(survey_data$m_i * survey_data$w_tilde), digits = 2)))
 ```
 
 If the population-based weights are directly used in age-specific groups, the contact behavior of the 3 year-old participant, which participated during week day, is inflated due to the under-representation of week days in the survey sample. In addition, the number of contacts for 1 year-old participants is decreased because of the over-representation of weekend days in the survey. Using the population-weights within the two aggregated age groups, we obtain a more intuitive weighting for age group A, but it is still skewed for individuals in age group B. As such, this weighted average for age group B has no meaning in terms of social contact behavior:
@@ -342,14 +342,14 @@ If we subdivide the population, we need to use post-stratification weights ("w_P
 
 ```{r, echo=FALSE}
 survey_data$w_PS <- NA
-for(i in 1:nrow(survey_data)){
+for (i in seq_len(nrow(survey_data))) {
   k_i    <- survey_data$age.group[i]
   flag_k <- survey_data$age.group == k_i
   survey_data$w_PS[i] <- survey_data$w[i] / sum(survey_data$w[flag_k]) * N_age.group[k_i]
 }
 
 # round
-survey_data[,-(1:4)] <- round(survey_data[,-(1:4)],digits = 2)
+survey_data[, -(1:4)] <- round(survey_data[, -(1:4)], digits = 2)
 
 kable(survey_data)
 ```
@@ -368,26 +368,26 @@ We repeated the example by calculating age-specific participant weights on the p
 survey_data$w        <- NA
 survey_data$w_tilde   <- NA
 survey_data$w_PS      <- NULL
-for(i in 1:nrow(survey_data)){
+for (i in seq_len(nrow(survey_data))) {
   age_i <- survey_data$age[i]
-  survey_data$w[i] <- (P_age[age_i] / P) / (N_age[age_i] /N)
+  survey_data$w[i] <- (P_age[age_i] / P) / (N_age[age_i] / N)
 }
 survey_data$w_tilde <- survey_data$w / sum(survey_data$w) * N
 
 survey_data$w_PS <- NA
-for(i in 1:nrow(survey_data)){
+for (i in seq_len(nrow(survey_data))) {
   k_i    <- survey_data$age.group[i]
   flag_k <- survey_data$age.group == k_i
   survey_data$w_PS[i] <- survey_data$w[i] / sum(survey_data$w[flag_k]) * N_age.group[k_i]
 }
 
 # round
-survey_data[,-(1:4)] <- round(survey_data[,-(1:4)],digits = 2)
+survey_data[, -(1:4)] <- round(survey_data[, -(1:4)], digits = 2)
 
 # print
 kable(survey_data)
 
-print(paste('weighted average number of contacts:',round(mean(survey_data$m_i * survey_data$w_tilde),digits = 2)))
+print(paste("weighted average number of contacts:", round(mean(survey_data$m_i * survey_data$w_tilde), digits = 2)))
 ```
 
 If the age-specific weights are directly used within the age groups, the contact behavior for age group B is inflated to unrealistic levels and the number of contacts for age group A is artificially low:
@@ -409,68 +409,52 @@ kable(aggregate(m_i * w_PS ~ age.group, data = survey_data, mean))
 We start with survey data of 14 participants of 1, 2 and 3 years of age, sampled from a population in which all ages are equally present. Given the high representation of participants aged 1 year, the age-specific proportions are skewed in comparison with the reference population. If we calculate the age-specific weights and (un)weighted average number of contacts, we end up with:
 
 ```{r, echo=FALSE}
-survey_data = survey_data[c(rep(1:2,5),3:6),]
+survey_data <- survey_data[c(rep(1:2, 5), 3:6), ]
 survey_data$m_i[survey_data$age == 3] <- 30
 rownames(survey_data) <- NULL
 
-survey_data <- survey_data[order(survey_data$age),]
+survey_data <- survey_data[order(survey_data$age), ]
 survey_data$w <- NULL
 survey_data$w_tilde <- NULL
 survey_data$w_PS <- NULL
-#print(survey_data)
 ```
 
 
 ```{r, echo=FALSE}
-N             = nrow(survey_data)
-N_age         = table(survey_data$age)
-N_age.group   = table(survey_data$age.group)
-N_day.of.week = table(survey_data$day.of.week)
+N             <- nrow(survey_data)
+N_age         <- table(survey_data$age)
+N_age.group   <- table(survey_data$age.group)
+N_day.of.week <- table(survey_data$day.of.week)
 ```
 
 ```{r, echo=FALSE}
 survey_data$w        <- NA
 survey_data$w_tilde   <- NA
 survey_data$w_PS      <- NULL
-for(i in 1:nrow(survey_data)){
+for (i in seq_len(nrow(survey_data))) {
   age_i <- survey_data$age[i]
-  survey_data$w[i] <- (P_age[age_i] / P) / (N_age[age_i] /N)
+  survey_data$w[i] <- (P_age[age_i] / P) / (N_age[age_i] / N)
 }
 survey_data$w_tilde <- survey_data$w / sum(survey_data$w) * N
 
-#survey_data$w_PS <- NA
-# for(i in 1:nrow(survey_data)){
-#   k_i    <- survey_data$age.group[i]
-#   flag_k <- survey_data$age.group == k_i
-#   survey_data$w_PS[i] <- survey_data$w[i] / sum(survey_data$w[flag_k]) * N_age.group[k_i]
-# }
-
-# # without population constants
-# survey_data$w_dot <- NA
-# for(i in 1:nrow(survey_data)){
-#   age_i <- survey_data$age[i]
-#   survey_data$w_dot[i] <- (P_age[age_i]) / (N_age[age_i])
-# }
-# survey_data$w_dot_tilde <- survey_data$w_dot / sum(survey_data$w_dot) * N
-
 # round
-survey_data[,-(1:4)] <- round(survey_data[,-(1:4)],digits = 2)
+survey_data[, -(1:4)] <- round(survey_data[, -(1:4)], digits = 2)
 kable(survey_data)
 
-print(paste('unweighted average number of contacts:',round(mean(survey_data$m_i),digits = 2)))
-print(paste('weighted average number of contacts:',round(mean(survey_data$m_i * survey_data$w_tilde),digits = 2)))
+print(paste("unweighted average number of contacts:", round(mean(survey_data$m_i), digits = 2)))
+print(paste("weighted average number of contacts:", round(mean(survey_data$m_i * survey_data$w_tilde), digits = 2)))
 ```
 
 The single participant of 3 years of age has a very large influence on the weighted population average. As such, we propose to truncate the relative age-specific weights $w$ at 3. As such, the weighted population average equals:
 
 ```{r, echo=FALSE}
-survey_data$w_tilde[survey_data$w_tilde>3] = 3
+survey_data$w_tilde[survey_data$w_tilde > 3] <- 3
 ```
 
 ```{r, echo=FALSE}
-survey_data$w_tilde[survey_data$w_tilde>3] = 3
+survey_data$w_tilde[survey_data$w_tilde > 3] <- 3
 
-print(paste('weighted average number of contacts after truncation:',round(mean(survey_data$m_i * survey_data$w_tilde),digits = 2)))
+print(paste("weighted average number of contacts after truncation:", round(mean(survey_data$m_i * survey_data$w_tilde), digits = 2)))
 ```
 
 # Plotting
@@ -480,11 +464,11 @@ print(paste('weighted average number of contacts after truncation:',round(mean(s
 The contact matrices can be plotted by using the `geom_tile()` function of the `ggplot2` package.
 
 ```{r fig.width=4, fig.height=4}
-library('reshape2')
-library('ggplot2')
+library("reshape2")
+library("ggplot2")
 df <- melt(mr, varnames = c("age.group", "age.group.contact"), value.name = "contacts")
-ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) + 
-  theme(legend.position = "bottom") + 
+ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) +
+  theme(legend.position = "bottom") +
   geom_tile()
 ```
 
@@ -496,7 +480,7 @@ The contact matrices can also be plotted with the `matrix_plot()` function as a 
 matrix_plot(mr)
 matrix_plot(mr, color.palette = gray.colors)
 
-usr_col <- function(x){ return(grDevices::hcl.colors(x, 'YlGn')) }
+usr_col <- function(x) { return(grDevices::hcl.colors(x, "YlGn")) } # nolint
 matrix_plot(mr, num.colors = 9, color.palette = usr_col)
 ```
 

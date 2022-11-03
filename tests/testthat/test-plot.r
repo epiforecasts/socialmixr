@@ -5,21 +5,21 @@ suppressWarnings({
 })
 
 test_that("contact matrix can be plotted", {
-  expect_equal(matrix_plot(dta$matrix), NULL)
+  expect_no_error(matrix_plot(dta$matrix))
 })
 
 test_that("contact matrix per capita can be plotted", {
-  expect_equal(matrix_plot(dta$matrix.per.capita), NULL)
+  expect_no_error(matrix_plot(dta$matrix.per.capita))
 })
 
 test_that("contact matrix can be plotted with different color palette", {
-  expect_equal(matrix_plot(dta$matrix, color.palette = rainbow), NULL)
+  expect_no_error(matrix_plot(dta$matrix, color.palette = rainbow))
 })
 
 test_that("contact matrix can be plotted with ad-hoc min and max values for the legend", {
-  expect_equal(matrix_plot(dta$matrix, min.legend = 4, max.legend = 40), NULL)
+  expect_no_error(matrix_plot(dta$matrix, min.legend = 4, max.legend = 40))
 })
 
 test_that("contact matrix can be plotted with (ad-hoc) min and max values for the legend", {
-  expect_equal(matrix_plot(dta$matrix, min.legend = 4, max.legend = 40), NULL)
+  expect_no_error(matrix_plot(dta$matrix, min.legend = 4, max.legend = 40))
 })

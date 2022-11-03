@@ -41,7 +41,7 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
   redc <- rev(color.palette(num.colors))
 
   # set legend scale
-  legend_scale <- range(pretty(mij), na.rm = T)
+  legend_scale <- range(pretty(mij), na.rm = TRUE)
   if (!is.na(min.legend)) legend_scale[1] <- min.legend
   if (!is.na(max.legend)) legend_scale[2] <- max.legend
 
@@ -72,7 +72,7 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
   if (!is.na(num.digits) && !is.na(cex.text) && cex.text > 0) {
 
     # format results (rounding/scientific)
-    if (any(max(mij, na.rm = T) > 1)) {
+    if (any(max(mij, na.rm = TRUE) > 1)) {
       mij <- round(mij, digits = num.digits)
     } else {
       mij <- format(mij, digits = num.digits)

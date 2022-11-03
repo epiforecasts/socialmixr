@@ -6,7 +6,7 @@
 \usage{
 contact_matrix(
   survey,
-  countries = c(),
+  countries = NULL,
   survey.pop,
   age.limits,
   filter,
@@ -20,7 +20,7 @@ contact_matrix(
   estimated.contact.age = c("mean", "sample", "missing"),
   missing.participant.age = c("remove", "keep"),
   missing.contact.age = c("remove", "sample", "keep", "ignore"),
-  weights = c(),
+  weights = NULL,
   weigh.dayofweek = FALSE,
   weigh.age = FALSE,
   weight.threshold = NA,

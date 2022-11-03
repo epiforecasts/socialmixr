@@ -23,7 +23,7 @@ download_survey <- function(survey, dir = NULL) {
   is.doi <- (length(survey) > 0) && all(grepl("^10.[0-9.]{4,}/[-._;()/:A-z0-9]+$", survey))
   is.url <- (length(survey) > 0) && (is.doi || grepl("^https?:\\/\\/", survey))
 
-  if (is.url & length(survey) > 1) {
+  if (is.url && length(survey) > 1) {
     stop("'survey' must be of length 1")
   }
 

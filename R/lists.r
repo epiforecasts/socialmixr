@@ -19,7 +19,7 @@ list_surveys <- function() {
   relations <- grep("^relation(\\.|$)", colnames(record_list), value = TRUE)
   DOIs <- apply(record_list, 1, function(x) grep("^doi:.*zenodo", x[relations], value = TRUE))
   record_list <- record_list[, common_doi := DOIs]
-  record_list <- record_list[, url := sub("doi:", "https://doi.org/", common_doi)]
+  record_list <- record_list[, url := sub("doi:", "https://doi.org/", common_doi, fixed = TRUE)]
   ## get number within version DOI, this is expected to be ascending by version
   record_list <-
     record_list[, doi.nb := as.integer(sub("^.*zenodo\\.", "", identifier.1))]
