@@ -18,9 +18,9 @@ limits_to_agegroups <- function(x, limits = sort(unique(x))) {
       }
     }, "")
   } else {
-    c()
+    NULL
   }
-  agegroups <- c(agegroups, paste(limits[length(limits)], "+", sep = ""))
+  agegroups <- c(agegroups, paste0(limits[length(limits)], "+"))
   agegroups <- factor(agegroups, levels = agegroups, ordered = TRUE)
   names(agegroups) <- limits
   return(unname(agegroups[as.character(x)]))

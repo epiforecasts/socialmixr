@@ -10,6 +10,7 @@ clean <- function(x, ...) UseMethod("clean")
 #' @param country.column the name of the country in which the survey participant was interviewed
 #' @param participant.age.column the column in `x$participants` containing participants' age
 #' @param ... ignored
+#' @importFrom data.table fcase
 #' @importFrom countrycode countrycode
 #' @importFrom lubridate period_to_seconds period years
 #' @return a cleaned survey in the correct format
@@ -27,12 +28,11 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
   ## update country names
   if (country.column %in% colnames(x$participants)) {
     countries <- x$participants[[country.column]]
-    origin.code <-
-      ifelse(all(nchar(as.character(countries)) == 2), "iso2c",
-        ifelse(all(nchar(as.character(countries)) == 3), "iso3c",
-          "country.name"
-        )
-      )
+    origin.code <- fcase(
+      all(nchar(as.character(countries)) == 2), "iso2c",
+      all(nchar(as.character(countries)) == 3), "iso3c",
+      default = "country.name"
+    )
     converted_countries <- suppressWarnings(countrycode(countries, origin.code, "country.name"))
     converted_countries[is.na(converted_countries)] <- as.character(countries[is.na(converted_countries)])
     x$participants[, paste(country.column) := factor(converted_countries)]
@@ -51,13 +51,13 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
     ]
     ## fix "under 1"
     x$participants <- x$participants[,
-      paste(participant.age.column) := sub("Under ", "0-", get(participant.age.column))
+      paste(participant.age.column) := sub("Under ", "0-", get(participant.age.column), fixed = TRUE)
     ]
     ## split off units
-    if (any(grepl(" ", x$participant[, get(participant.age.column)]))) {
+    if (any(grepl(" ", x$participant[, get(participant.age.column)], fixed = TRUE))) {
       x$participants <- x$participants[,
         ..age.unit :=
-          tstrsplit(as.character(get(participant.age.column)), " ", keep = 2L)
+          tstrsplit(as.character(get(participant.age.column)), " ", keep = 2L, fixed = TRUE)
       ]
       x$participants <- x$participants[
         ..age.unit := fifelse(
@@ -91,7 +91,7 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
             period_to_seconds(years(1)),
           NA_real_
         ),
-        by = 1:nrow(x$participants)
+        by = seq_len(nrow(x$participants))
       ]
     }
 

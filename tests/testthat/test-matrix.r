@@ -37,7 +37,7 @@ nn <- nrow(polymod9$participants)
 polymod9$participants$part_age <- ifelse(runif(nn) > 0.7, 20, NA)
 polymod10$participants$added_weight <-
   ifelse(polymod10$participants$hh_size > 1, 2, 1)
-polymod10$participants$added_weight2 <- .3
+polymod10$participants$added_weight2 <- 0.3
 
 # to test weights (age and day.of.week)
 part_selection <- (polymod11$participants$part_age %in% (1:2) & polymod11$participants$dayofweek %in% 1:6) |
@@ -71,19 +71,19 @@ test_that("contact matrix is numeric", {
   expect_true(all(sapply(contacts, function(x) {
     is.numeric(x[["matrix"]])
   })))
-  expect_false(any(is.na(sapply(contacts, function(x) {
+  expect_false(anyNA(sapply(contacts, function(x) {
     is.numeric(x[["matrix"]])
-  }))))
-  expect_true(is.numeric(contacts[[3]]$contacts))
-  expect_true(is.numeric(contacts[[3]]$normalisation))
+  })))
+  expect_type(contacts[[3]]$contacts, "double")
+  expect_type(contacts[[3]]$normalisation, "double")
 })
 
 test_that("demography has been returned", {
-  expect_true(nrow(contacts[[3]]$demography) > 0)
+  expect_gt(nrow(contacts[[3]]$demography), 0)
 })
 
 test_that("demography is numeric", {
-  expect_true(is.numeric(contacts[[3]]$demography$population))
+  expect_type(contacts[[3]]$demography$population, "double")
 })
 
 test_that("survey argument is validated", {
@@ -200,15 +200,15 @@ test_that("If weights = added_weight, the results are not identical", {
     weights = "added_weight",
     return.part.weights = TRUE
   ))
-  
-  expect_equal(cm_orig$participants,cm_weight$participants)
+
+  expect_identical(cm_orig$participants, cm_weight$participants)
   expect_false(nrow(cm_orig$participants.weights) == nrow(cm_weight$participants.weights))
   expect_false(all(cm_orig$matrix == cm_weight$matrix))
 })
 
 
 test_that("The order in which weights are applied do not change the results", {
-  expect_equal(
+  expect_identical(
     suppressMessages(
       contact_matrix(
         survey = polymod10, countries = "United Kingdom",
@@ -236,7 +236,7 @@ test_that("The day.of.week weight does not affect single-year age groups that re
   expect_true(rowSums(matrix_unweighted$matrix)[2] != rowSums(matrix_weighted$matrix)[2])
 
   # age 3 => contains only data on weekdays => should not be impacted by weights
-  expect_equal(num_contacts_unweighted[3], num_contacts_weighted[3])
+  expect_identical(num_contacts_unweighted[3], num_contacts_weighted[3])
 })
 
 test_that("The day.of.week weight does not affect an age group that reported only during weekdays", {
@@ -250,12 +250,12 @@ test_that("The day.of.week weight does not affect an age group that reported onl
   expect_true(rowSums(matrix_unweighted$matrix)[1] != rowSums(matrix_weighted$matrix)[1])
 
   # age group 2 => contains only data on weekdays => should not be impacted by weights
-  expect_equal(num_contacts_unweighted[2], num_contacts_weighted[2])
+  expect_identical(num_contacts_unweighted[2], num_contacts_weighted[2])
 })
 
 test_that("The day.of.week weight should change the result with only one age group", {
-  matrix_unweighted <- contact_matrix(polymod11, age.limits = c(0), weigh.dayofweek = FALSE, symmetric = FALSE)
-  matrix_weighted <- contact_matrix(polymod11, age.limits = c(0), weigh.dayofweek = TRUE, symmetric = FALSE)
+  matrix_unweighted <- contact_matrix(polymod11, age.limits = 0, weigh.dayofweek = FALSE, symmetric = FALSE)
+  matrix_weighted <- contact_matrix(polymod11, age.limits = 0, weigh.dayofweek = TRUE, symmetric = FALSE)
 
   expect_false(matrix_unweighted$matrix == matrix_weighted$matrix)
 })
@@ -267,7 +267,7 @@ test_that("The age-specific weight should change the results for multi-year age 
   })
 
   expect_gt(sum(matrix_unweighted$matrix[1, ]), sum(matrix_weighted$matrix[1, ])) # manual calculation
-  expect_equal(matrix_unweighted$matrix[2, ], matrix_weighted$matrix[2, ])
+  expect_identical(matrix_unweighted$matrix[2, ], matrix_weighted$matrix[2, ])
 })
 
 test_that("The age-specific weight should not change the results with single year age groups", {
@@ -287,7 +287,8 @@ test_that("The age-specific weight should not change the results with single yea
         age.limits = 1:110,
         weigh.age = TRUE
       )$matrix
-    )
+    ),
+    tolerance = 2e-16
   )
 })
 
@@ -334,11 +335,11 @@ test_that("The return.part.weights option", {
     expect_type(contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE)$participants.weights, "list")
 
     # without any weight method activated, weights should be 1
-    expect_equal(contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE)$participants.weights$weight, c(1, 1))
+    expect_identical(contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE)$participants.weights$weight, c(1, 1))
     expect_true(all(contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE)$participants.weights$weight == 1))
 
     # with dayofweek weights activated, we should receive 4 weights, different from 1
-    expect_equal(length(contact_matrix(survey = polymod, age.limits = c(0, 18), weigh.dayofweek = TRUE, return.part.weights = TRUE)$participants.weights$weight), 4)
+    expect_length(contact_matrix(survey = polymod, age.limits = c(0, 18), weigh.dayofweek = TRUE, return.part.weights = TRUE)$participants.weights$weight, 4)
     expect_false(all(contact_matrix(survey = polymod, age.limits = c(0, 18), weigh.dayofweek = TRUE, return.part.weights = TRUE)$participants.weights$weight == 1))
   })
 })
@@ -350,10 +351,10 @@ test_that("The participant weights add up to the sample size", {
     weights.dayofweek <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE)$participants.weights
     weights.both <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE, weigh.dayofweek = TRUE)$participants.weights
 
-    expect_equal(sum(weights.uniform[, weight * proportion]), 1)
-    expect_equal(sum(weights.age[, weight * proportion]), 1)
-    expect_equal(sum(weights.dayofweek[, weight * proportion]), 1)
-    expect_equal(sum(weights.both[, weight * proportion]), 1)
+    expect_identical(sum(weights.uniform[, weight * proportion]), 1)
+    expect_identical(sum(weights.age[, weight * proportion]), 1)
+    expect_identical(sum(weights.dayofweek[, weight * proportion]), 1)
+    expect_identical(sum(weights.both[, weight * proportion]), 1)
   })
 })
 
@@ -366,9 +367,9 @@ test_that("The weights with threshold", {
     weights.threshold50 <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE, weigh.dayofweek = TRUE, weight.threshold = 50)$participants.weights
 
     # make sure they add up to the sample size
-    expect_equal(sum(weights.nothreshold[, weight * proportion]), 1)
-    expect_equal(sum(weights.threshold3[, weight * proportion]), 1)
-    expect_equal(sum(weights.threshold50[, weight * proportion]), 1)
+    expect_identical(sum(weights.nothreshold[, weight * proportion]), 1)
+    expect_identical(sum(weights.threshold3[, weight * proportion]), 1)
+    expect_identical(sum(weights.threshold50[, weight * proportion]), 1)
 
     # check threshold values (include 2.5% margin due to the standardisation)
     expect_gt(max(weights.nothreshold$weight), 3 * 1.025)
@@ -386,51 +387,51 @@ test_that("Country names in Zenodo datasets and the wpp package are aligned (e.g
   expect_length(suppressWarnings(contact_matrix(vietnam1, symmetric = TRUE)), 3) # country is recognized and demography data found
 })
 
-test_that("Participants that report contacts with missing age are removed/samples/ignored", {
+test_that("Participants that report contacts with missing age are removed, sampled, or ignored", {
   num.part <- nrow(polymod$participants)
   num.part.missing.age <- sum(is.na(polymod$participants$part_age))
 
   # keep missing participant and contact ages ==>> get original sample size
-  expect_equal(sum(contact_matrix(
-    survey = polymod, age.limits = c(0),
+  expect_identical(sum(contact_matrix(
+    survey = polymod, age.limits = 0,
     missing.participant.age = "keep",
     missing.contact.age = "keep"
   )$participants$participants), num.part)
 
   # remove missing participant ages ==>> get original sample size - num.part.missing.age
-  expect_equal(sum(contact_matrix(
-    survey = polymod, age.limits = c(0),
+  expect_identical(sum(contact_matrix(
+    survey = polymod, age.limits = 0,
     missing.participant.age = "remove",
     missing.contact.age = "keep"
   )$participants$participants), num.part - num.part.missing.age)
 
   # remove missing participant ages ==>> get original sample size - num.part.missing.age
   expect_lt(sum(contact_matrix(
-    survey = polymod, age.limits = c(0),
+    survey = polymod, age.limits = 0,
     missing.participant.age = "remove",
     missing.contact.age = "remove"
   )$participants$participants), num.part - num.part.missing.age)
 
   # keep missing contact ages ==>> additional column in contact matrix
-  expect_equal(ncol(contact_matrix(
-    survey = polymod, age.limits = c(0),
+  expect_identical(ncol(contact_matrix(
+    survey = polymod, age.limits = 0,
     missing.contact.age = "remove"
-  )$matrix), 1)
+  )$matrix), 1L)
 
-  expect_equal(ncol(contact_matrix(
-    survey = polymod, age.limits = c(0),
+  expect_identical(ncol(contact_matrix(
+    survey = polymod, age.limits = 0,
     missing.contact.age = "keep"
-  )$matrix), 2)
+  )$matrix), 2L)
 
-  expect_equal(ncol(contact_matrix(
-    survey = polymod, age.limits = c(0),
+  expect_identical(ncol(contact_matrix(
+    survey = polymod, age.limits = 0,
     missing.contact.age = "ignore"
-  )$matrix), 1)
+  )$matrix), 1L)
 
-  expect_equal(ncol(contact_matrix(
-    survey = polymod, age.limits = c(0),
+  expect_identical(ncol(contact_matrix(
+    survey = polymod, age.limits = 0,
     missing.contact.age = "sample"
-  )$matrix), 1)
+  )$matrix), 1L)
 })
 
 
@@ -442,14 +443,14 @@ test_that("User-defined reference populations with open ended age groups are han
     )
 
     # to handle the open ended age group in the survey.pop
-    expect_equal(nrow(contact_matrix(polymod,
+    expect_identical(nrow(contact_matrix(polymod,
       age.limits = c(0, 18, 60),
       symmetric = TRUE, # to make sure that demography is returned
       survey.pop = survey.pop
-    )$demography), 3)
+    )$demography), 3L)
 
     # to check the column names
-    expect_equal(names(contact_matrix(polymod,
+    expect_identical(names(contact_matrix(polymod,
       age.limits = c(0, 18, 60),
       symmetric = TRUE, # to make sure that demography is returned
       survey.pop = survey.pop
@@ -457,7 +458,7 @@ test_that("User-defined reference populations with open ended age groups are han
 
     expect_error(contact_matrix(polymod_nocountry,
       age.limits = c(0, 18, 60),
-      symmetric = T, # to make sure that demography is returned
+      symmetric = TRUE, # to make sure that demography is returned
       survey.pop = "dummy"
     ))
   })
@@ -469,13 +470,13 @@ test_that("The absence of reference population info is going well", {
     polymod_nocountry$participants$country <- NULL
 
     # no reference population given
-    expect_equal(nrow(contact_matrix(polymod_nocountry,
+    expect_identical(nrow(contact_matrix(polymod_nocountry,
       age.limits = c(0, 18, 60),
       symmetric = TRUE # to make sure that demography is returned
-    )$demography), 3)
+    )$demography), 3L)
 
     # to check the column names
-    expect_equal(names(contact_matrix(polymod_nocountry,
+    expect_identical(names(contact_matrix(polymod_nocountry,
       age.limits = c(0, 18, 60),
       symmetric = TRUE # to make sure that demography is returned
     )$demography)[1], "age.group")
@@ -518,7 +519,7 @@ test_that("Symmetric contact matrices per capita are actually symmetric", {
       per.capita = TRUE
     )$matrix.per.capita
 
-    expect_equal(c(matrix.per.capita), c(t(matrix.per.capita)))
+    expect_true(isSymmetric(matrix.per.capita, check.attributes = FALSE))
   })
 })
 

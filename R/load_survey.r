@@ -27,22 +27,19 @@ load_survey <- function(files, ...) {
   reference_file <- grep("json$", files, value = TRUE) # select csv files
   reference <- fromJSON(reference_file)
 
-  contact_data <- lapply(survey_files, function(x) {
-    fread(x)
-  })
+  contact_data <- lapply(survey_files, fread)
   names(contact_data) <- survey_files
 
   main_types <- c("participant", "contact")
   main_surveys <- list()
-  main_file <- c()
+  main_file <- NULL
 
   ## first, get the common files
-  for (type in main_types)
-  {
+  for (type in main_types) {
     main_file <- grep(paste0("_", type, "_common.*\\.csv$"), survey_files, value = TRUE)
     if (length(main_file) == 0) {
       stop(
-        "Need a csv file containing ", paste0("_", type, "_common.csv"),
+        "Need a csv file containing ", "_", type, "_common.csv",
         ", but no such file found."
       )
     }
@@ -68,16 +65,14 @@ load_survey <- function(files, ...) {
   }
 
   ## lastly, merge in any additional files that can be merged
-  for (type in main_types)
-  {
+  for (type in main_types) {
     can_merge <- vapply(survey_files, function(x) {
       length(intersect(colnames(contact_data[[x]]), colnames(main_surveys[[type]]))) > 0
     }, TRUE)
     merge_files <- names(can_merge[which(can_merge)])
     while (length(merge_files) > 0) {
       merged_files <- NULL
-      for (file in merge_files)
-      {
+      for (file in merge_files) {
         common_id <- intersect(colnames(contact_data[[file]]), colnames(main_surveys[[type]]))
 
         ## try a merge to see whether it can be done uniquely
