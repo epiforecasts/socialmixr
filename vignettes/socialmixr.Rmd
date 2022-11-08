@@ -34,7 +34,7 @@ install.packages("socialmixr")
 
 The latest development version of the `socialmixr` package can be installed via
 
-```{r, eval=FALSE}
+```r
 devtools::install_github("epiforecasts/socialmixr")
 ```
 
