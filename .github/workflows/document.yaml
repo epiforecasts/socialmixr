@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
