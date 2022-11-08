@@ -298,7 +298,7 @@ survey_data$w_tilde <- survey_data$w / sum(survey_data$w) * N
 
 # without population constants
 survey_data$w_dot <- NA
-for (i in seq_len((survey_data))) {
+for (i in seq_len(nrow(survey_data))) {
   day_i <- survey_data$day.of.week[i]
   survey_data$w_dot[i] <- (P_day.of.week[day_i]) / (N_day.of.week[day_i])
 }
