@@ -39,6 +39,7 @@ utils::globalVariables(c(
   ".SD", # <list_surveys>
   "title", # <list_surveys>
   "creator", # <list_surveys>
+  "fread", # <load_survey>
   ":=", # <pop_age>
   "..original.lower.age.limit", # <pop_age>
   "..segment", # <pop_age>
