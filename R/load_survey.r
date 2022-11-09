@@ -31,7 +31,6 @@ load_survey <- function(files, ...) {
 
   main_types <- c("participant", "contact")
   main_surveys <- list()
-  main_file <- NULL
 
   ## first, get the common files
   for (type in main_types) {
