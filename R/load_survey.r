@@ -77,24 +77,23 @@ load_survey <- function(files, ...) {
       for (file in merge_files) {
         common_id <- intersect(colnames(contact_data[[file]]), colnames(main_surveys[[type]]))
 
-        ## try a merge to see whether it can be done uniquely
-        test_merge <- merge(
-          main_surveys[[type]], contact_data[[file]],
-          by = common_id,
-          all.x = TRUE, allow.cartesian = TRUE
-        )
-
-        if (nrow(test_merge) > nrow(contact_data[[file]])) {
-          warning(
-            "Only ", nrow(contact_data[[file]]), " matching value",
-            ifelse(nrow(contact_data[[file]]) > 1, "s", ""), " in ",
-            paste0("'", common_id, "'", collapse = ", "),
-            " column", ifelse(length(common_id) > 1, "s", ""),
-            " when pulling ", basename(file), " into '", type, "' survey."
+        # is the id unique and can the merge be done uniquely?
+        if (anyDuplicated(main_surveys[[type]][, common_id, with = FALSE]) == 0) {
+          test_merge <- merge(
+            main_surveys[[type]], contact_data[[file]], by = common_id,
+            all.x = TRUE
           )
-        }
 
-        if (nrow(test_merge) == nrow(main_surveys[[type]])) {
+          if (nrow(test_merge) > nrow(contact_data[[file]])) {
+            warning(
+              "Only ", nrow(contact_data[[file]]), " matching value",
+              ifelse(nrow(contact_data[[file]]) > 1, "s", ""), " in ",
+              paste0("'", common_id, "'", collapse = ", "),
+              " column", ifelse(length(common_id) > 1, "s", ""),
+              " when pulling ", basename(file), " into '", type, "' survey."
+            )
+          }
+
           ## check if all IDs can be merged in
           unique_main_survey_ids <-
             unique(main_surveys[[type]][, common_id, with = FALSE])
