@@ -94,7 +94,8 @@ load_survey <- function(files, ...) {
             )
           }
 
-          ## check if all IDs can be merged in
+          ## check if file has additional rows that could not make it in the
+          ## merge
           unique_main_survey_ids <-
             unique(main_surveys[[type]][, common_id, with = FALSE])
           unique_additional_survey_ids <-
