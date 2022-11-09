@@ -73,7 +73,7 @@ load_survey <- function(files, ...) {
     can_merge <- vapply(survey_files, function(x) {
       length(intersect(colnames(contact_data[[x]]), colnames(main_surveys[[type]]))) > 0
     }, TRUE)
-    merge_files <- names(can_merge[which(can_merge)])
+    merge_files <- names(can_merge[can_merge])
     while (length(merge_files) > 0) {
       merged_files <- NULL
       for (file in merge_files)
@@ -132,7 +132,7 @@ load_survey <- function(files, ...) {
       if (is.null(merged_files)) {
         merge_files <- NULL
       } else {
-        merge_files <- names(can_merge[which(can_merge)])
+        merge_files <- names(can_merge[can_merge])
       }
     }
   }
