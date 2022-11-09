@@ -24,7 +24,7 @@ load_survey <- function(files, ...) {
     )
   }
   survey_files <- grep("csv$", files, value = TRUE) # select csv files
-  reference_file <- grep("json$", files, value = TRUE) # select csv files
+  reference_file <- grep("json$", files, value = TRUE) # select json file
   reference <- fromJSON(reference_file)
 
   contact_data <- lapply(survey_files, function(x) {
