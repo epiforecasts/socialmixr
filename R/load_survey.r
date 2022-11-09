@@ -14,7 +14,7 @@
 #' @return a survey in the correct format
 #' @export
 load_survey <- function(files, ...) {
-  exist <- vapply(files, file.exists, TRUE)
+  exist <- file.exists(files)
   missing <- files[!exist]
   if (length(missing) > 0) {
     stop(
