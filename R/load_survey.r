@@ -85,30 +85,22 @@ load_survey <- function(files, ...) {
           all.x = TRUE, allow.cartesian = TRUE
         )
 
+        if (nrow(test_merge) > nrow(contact_data[[file]])) {
+          warning(
+            "Only ", nrow(contact_data[[file]]), " matching value",
+            ifelse(nrow(contact_data[[file]]) > 1, "s", ""), " in ",
+            paste0("'", common_id, "'", collapse = ", "),
+            " column", ifelse(length(common_id) > 1, "s", ""),
+            " when pulling ", basename(file), " into '", type, "' survey."
+          )
+        }
+
         if (nrow(test_merge) == nrow(main_surveys[[type]])) {
           ## check if all IDs can be merged in
           unique_main_survey_ids <-
             unique(main_surveys[[type]][, common_id, with = FALSE])
           unique_additional_survey_ids <-
             unique(contact_data[[file]][, common_id, with = FALSE])
-
-          id_overlap <- merge(
-            unique_main_survey_ids, unique_additional_survey_ids,
-            by = common_id
-          )
-
-          if (nrow(id_overlap) < nrow(unique_main_survey_ids)) {
-            warning(
-              ifelse(nrow(id_overlap) == 0, "No matching value",
-                     paste0(
-                       "Only ", nrow(id_overlap), " matching value",
-                       ifelse(nrow(id_overlap) > 1, "s", "")
-                     )), " in ",
-              paste0("'", common_id, "'", collapse = ", "),
-              " column", ifelse(length(common_id) > 1, "s", ""),
-              " when pulling ", basename(file), " into '", type, "' survey."
-            )
-          }
 
           id_overlap_y <- merge(
             unique_main_survey_ids, unique_additional_survey_ids, by = common_id,
