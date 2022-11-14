@@ -11,3 +11,4 @@ cran-comments.md
 ^codecov\.yml$
 ^LICENSE\.md$
 ^CRAN-SUBMISSION$
+^\.lintr$
