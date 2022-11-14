@@ -75,21 +75,7 @@ download_survey <- function(survey, dir = NULL) {
 
     message("Getting ", parsed_cite$name, ".")
 
-    # find initial longest common subequence of file names
-    i <- 1
-    end <- FALSE
-    lcs <- ""
-    while (!end) {
-      initial_bits <- vapply(data$file_name, function(x) {
-        substr(x, 1, i)
-      }, "x")
-      if (length(unique(initial_bits)) > 1) {
-        end <- TRUE
-      } else {
-        lcs <- unique(initial_bits)
-        i <- i + 1
-      }
-    }
+    lcs <- find_common_prefix(data$file_name)
     reference_file_path <- file.path(dir, paste0(lcs, "reference.json"))
     reference_json <- toJSON(reference)
     write(reference_json, reference_file_path)
@@ -106,4 +92,24 @@ download_survey <- function(survey, dir = NULL) {
   }
 
   return(files)
+}
+
+find_common_prefix <- function(vec) {
+
+  # find initial longest common subequence of file names
+  i <- 1
+  end <- FALSE
+  lcs <- ""
+  while (!end) {
+    initial_bits <- vapply(vec, substr, start = 1, stop = i, "x")
+    if (length(unique(initial_bits)) > 1) {
+      end <- TRUE
+    } else {
+      lcs <- unique(initial_bits)
+      i <- i + 1
+    }
+  }
+
+  return(lcs)
+
 }
