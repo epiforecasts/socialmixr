@@ -1,5 +1,9 @@
 # socialmixr (development version)
 
+## Internal changes
+
+* [Cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity) of `download_survey()` has been reduced by externalising the `find_common_prefix()` function and failing early instead of relying on unnecessary if/else sequences 
+
 # socialmixr 0.2.0
 
 ## Major & breaking changes
