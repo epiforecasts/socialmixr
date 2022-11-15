@@ -78,7 +78,7 @@ load_survey <- function(files, ...) {
         common_id <- intersect(colnames(contact_data[[file]]), colnames(main_surveys[[type]]))
 
         # is the id unique and can the merge be done uniquely?
-        if (anyDuplicated(main_surveys[[type]][, common_id, with = FALSE]) == 0) {
+        if (anyDuplicated(contact_data[[file]][, common_id, with = FALSE]) == 0) {
           test_merge <- merge(
             main_surveys[[type]], contact_data[[file]], by = common_id,
             all.x = TRUE
