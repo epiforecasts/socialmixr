@@ -56,7 +56,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">contact_matrix</span><span class="op">(</span></span>
 <span>  <span class="va">survey</span>,</span>
-<span>  countries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  countries <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">survey.pop</span>,</span>
 <span>  <span class="va">age.limits</span>,</span>
 <span>  <span class="va">filter</span>,</span>
@@ -70,7 +70,7 @@
 <span>  estimated.contact.age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sample"</span>, <span class="st">"missing"</span><span class="op">)</span>,</span>
 <span>  missing.participant.age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"remove"</span>, <span class="st">"keep"</span><span class="op">)</span>,</span>
 <span>  missing.contact.age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"remove"</span>, <span class="st">"sample"</span>, <span class="st">"keep"</span>, <span class="st">"ignore"</span><span class="op">)</span>,</span>
-<span>  weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  weigh.dayofweek <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  weigh.age <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  weight.threshold <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -219,7 +219,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Sebastian Funk, Lander Willem.</p>
+  <p></p><p>Developed by Sebastian Funk, Lander Willem, Hugo Gruson.</p>
 </div>
 
 <div class="pkgdown-footer-right">
