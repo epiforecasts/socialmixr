@@ -42,6 +42,7 @@ load_survey <- function(files, ...) {
       )
     }
     main_surveys[[type]] <- rbindlist(contact_data[main_file], fill = TRUE)
+    main_surveys[[type]] <- main_surveys[[type]][, ..main_id := seq_len(.N)]
     survey_files <- setdiff(survey_files, main_file)
   }
 
@@ -73,49 +74,46 @@ load_survey <- function(files, ...) {
     }, TRUE)
     merge_files <- names(can_merge[can_merge])
     while (length(merge_files) > 0) {
+
       merged_files <- NULL
       for (file in merge_files) {
+        contact_data[[file]] <-
+          contact_data[[file]][, ..merge_id := seq_len(.N)]
         common_id <- intersect(colnames(contact_data[[file]]), colnames(main_surveys[[type]]))
-
-        # is the id unique and can the merge be done uniquely?
-        if (anyDuplicated(contact_data[[file]][, common_id, with = FALSE]) == 0) {
-          test_merge <- merge(
+        merged <- tryCatch({
+          merge(
             main_surveys[[type]], contact_data[[file]], by = common_id,
             all.x = TRUE
           )
+        }, error = function(cond) {
+          NULL
+        })
 
-          if (nrow(test_merge) > nrow(contact_data[[file]])) {
+        ## first if merge was unique - if not we're ditching the merge
+        if (!is.null(merged) &&
+            anyDuplicated(merged[, "..main_id", with = FALSE]) == 0) {
+          ## we're keeping the merge; now check for any warnings to issue
+          matched_main <- sum(!is.na(merged[["..merge_id"]]))
+          unmatched_main <- nrow(merged) - matched_main
+          if (unmatched_main > 0) {
             warning(
-              "Only ", nrow(contact_data[[file]]), " matching value",
-              ifelse(nrow(contact_data[[file]]) > 1, "s", ""), " in ",
+              "Only ", matched_main, " matching value",
+              ifelse(matched_main > 1, "s", ""), " in ",
               paste0("'", common_id, "'", collapse = ", "),
               " column", ifelse(length(common_id) > 1, "s", ""),
               " when pulling ", basename(file), " into '", type, "' survey."
             )
           }
-
-          ## check if file has additional rows that could not make it in the
-          ## merge
-          unique_main_survey_ids <-
-            unique(main_surveys[[type]][, common_id, with = FALSE])
-          unique_additional_survey_ids <-
-            unique(contact_data[[file]][, common_id, with = FALSE])
-
-          id_overlap_y <- merge(
-            unique_main_survey_ids, unique_additional_survey_ids,
-            by = common_id,
-            all.y = TRUE
-          )
-          if (nrow(id_overlap_y) > nrow(unique_main_survey_ids)) {
+          unmatched_merge <- nrow(contact_data[[file]]) - matched_main
+          if (unmatched_merge > 0) {
             warning(
-              nrow(id_overlap_y) - nrow(unique_main_survey_ids),
-              " row(s) could not be matched",
-              " when pulling ", basename(file), " into '", type, "' survey."
-            )
+              unmatched_merge, " row(s) could not be matched when pulling ",
+              basename(file), " into '", type, "' survey.")
           }
-
-          main_surveys[[type]] <- test_merge
+          main_surveys[[type]] <- merged[, !"..merge_id"]
           merged_files <- c(merged_files, file)
+        } else {
+          anyDuplicated(merged[, "..main_id", with = FALSE])
         }
       }
       survey_files <- setdiff(survey_files, merged_files)
@@ -128,6 +126,7 @@ load_survey <- function(files, ...) {
         merge_files <- names(can_merge[can_merge])
       }
     }
+    main_surveys[[type]] <- main_surveys[[type]][, ..main_id := NULL]
   }
 
   if (length(survey_files) > 0) {
