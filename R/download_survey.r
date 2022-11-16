@@ -65,10 +65,12 @@ download_survey <- function(survey, dir = NULL) {
   data <- data[encodingFormat == "csv"]
   data[, file_name := tolower(basename(contentUrl))]
 
-  if (length(unique(data$file_name)) < length(data$file_name)) {
-    warning("Zenodo repository contains files with names that only differ by case. ",
-            "This will cause unpredictable behaviour on case-insensitive file systems. ",
-            "Please contact the authors to get this fixed.")
+  if (anyDuplicated(data$file_name) > 0) {
+    warning(
+      "Zenodo repository contains files with names that only differ by case. ",
+      "This will cause unpredictable behaviour on case-insensitive file systems. ",
+      "Please contact the authors to get this fixed."
+    )
     data <- data[!duplicated(file_name)]
   }
 
