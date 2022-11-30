@@ -18,7 +18,7 @@ Description: Provides methods for sampling contact matrices from diary
     et al. (2008) <doi:10.1371/journal.pmed.0050074>.
 License: MIT + file LICENSE
 Depends: 
-    R (>= 3.4.0)
+    R (>= 3.5.0)
 Imports: 
     countrycode,
     curl,
