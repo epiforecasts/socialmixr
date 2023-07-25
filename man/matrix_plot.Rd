@@ -58,7 +58,7 @@ This is a function using the basic R graphics to make it easier for users of soc
 }
 \examples{
 data(polymod)
-mij <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 18,65))$matrix
+mij <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 18, 65))$matrix
 matrix_plot(mij)
 }
 \author{
