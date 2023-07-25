@@ -844,7 +844,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     }
 
     # order (from left to right)
-    part.weights <- sort(part.weights)
+    part.weights <- part.weights[order(part.weights), ] # nolint
 
     # set name of last column
     names(part.weights)[ncol(part.weights)] <- "participants"
