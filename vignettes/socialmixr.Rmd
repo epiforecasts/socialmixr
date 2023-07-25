@@ -492,11 +492,6 @@ The contact matrices can also be plotted with the `matrix_plot()` function as a 
 ```{r fig.width=4, fig.height=4}
 matrix_plot(mr)
 matrix_plot(mr, color.palette = gray.colors)
-
-usr_col <- function(x) {
-  return(grDevices::hcl.colors(x, "YlGn"))
-} # nolint
-matrix_plot(mr, num.colors = 9, color.palette = usr_col)
 ```
 
 # References

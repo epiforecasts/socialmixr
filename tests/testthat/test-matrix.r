@@ -54,7 +54,7 @@ options <-
     test4 = list(survey = polymod8, missing.contact.age = "sample", symmetric = TRUE, age.limits = c(0, 5, 15))
   )
 
-suppressMessages(contacts <- lapply(options, function(x) {
+contacts <- suppressMessages(lapply(options, function(x) {
   do.call(contact_matrix, x)
 }))
 
@@ -225,8 +225,16 @@ test_that("The order in which weights are applied do not change the results", {
 })
 
 test_that("The day.of.week weight does not affect single-year age groups that reported only during weekdays", {
-  suppressMessages(suppressWarnings(matrix_unweighted <- contact_matrix(polymod11, age.limits = 1:3, weigh.dayofweek = FALSE, symmetric = FALSE)))
-  suppressMessages(suppressWarnings(matrix_weighted <- contact_matrix(polymod11, age.limits = 1:3, weigh.dayofweek = TRUE, symmetric = FALSE)))
+  matrix_unweighted <- suppressMessages(suppressWarnings(
+    contact_matrix(
+      polymod11, age.limits = 1:3, weigh.dayofweek = FALSE, symmetric = FALSE
+    )
+  ))
+  matrix_weighted <- suppressMessages(suppressWarnings(
+    contact_matrix(
+      polymod11, age.limits = 1:3, weigh.dayofweek = TRUE, symmetric = FALSE
+    )
+  ))
 
   num_contacts_unweighted <- rowSums(matrix_unweighted$matrix)
   num_contacts_weighted <- rowSums(matrix_weighted$matrix)

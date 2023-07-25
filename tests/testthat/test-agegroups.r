@@ -30,7 +30,7 @@ test_that("pop_age doesn't change total population size", {
 
   # Even with interpolation
   expect_warning(
-    ages_it_2015_cat <- pop_age(ages_it_2015, age.limit = c(0, 18, 40, 65)),
+    pop_age(ages_it_2015, age.limit = c(0, 18, 40, 65)),
     "Linearly estimating"
   )
 

@@ -93,10 +93,10 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
         "country.name", "country.name"
       )]
     if (all(nchar(countries) == 2)) {
-      suppressWarnings(corrected_countries <-
+      corrected_countries <- suppressWarnings(
         countrycode(countries, "iso2c", "country.name"))
     } else {
-      suppressWarnings(corrected_countries <-
+      corrected_countries <- suppressWarnings(
         countrycode(countries, "country.name", "country.name"))
     }
     present_countries <- unique(as.character(survey$participants[[columns[["country"]]]]))
@@ -604,11 +604,12 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     )]
 
   ## Bootstrap
-  if (n > 1) {
-    if (!bootstrap) {
-      warning("n > 1 does not make sense if not bootstrapping. Will return just one sample.")
-      n <- 1
-    }
+  if (n > 1 && !bootstrap) {
+    warning(
+      "n > 1 does not make sense if not bootstrapping. ",
+      "Will return just one sample."
+    )
+    n <- 1
   }
   ret <- list()
   for (i in seq_len(n)) {
@@ -748,7 +749,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
         ## get rid of name but preserve row and column names
         weighted.matrix <- unname(weighted.matrix)
 
-        nb.contacts <- apply(weighted.matrix, 1, sum)
+        nb.contacts <- rowSums(weighted.matrix)
         mean.contacts <- sum(survey.pop$population * nb.contacts) /
           sum(survey.pop$population)
         spectrum.matrix <- weighted.matrix
@@ -843,7 +844,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     }
 
     # order (from left to right)
-    part.weights <- part.weights[order(part.weights), ]
+    part.weights <- sort(part.weights)
 
     # set name of last column
     names(part.weights)[ncol(part.weights)] <- "participants"
