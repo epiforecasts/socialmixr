@@ -7,14 +7,13 @@
 #' @importFrom jsonlite fromJSON
 #' @examples
 #' \dontrun{
-#'   list_surveys()
-#'   peru_files <- download_survey("https://doi.org/10.5281/zenodo.1095664")
-#'   peru_survey <- load_survey(peru_files)
+#' list_surveys()
+#' peru_files <- download_survey("https://doi.org/10.5281/zenodo.1095664")
+#' peru_survey <- load_survey(peru_files)
 #' }
 #' @return a survey in the correct format
 #' @export
 load_survey <- function(files, ...) {
-
   exist <- vapply(files, file.exists, TRUE)
   missing <- files[!exist]
   if (length(missing) > 0) {
@@ -51,10 +50,14 @@ load_survey <- function(files, ...) {
   for (file1 in survey_files) {
     if (!is.null(contact_data[[file1]])) {
       for (file2 in setdiff(survey_files, file1)) {
-        if (length(setdiff(colnames(contact_data[[file1]]),
-                           colnames(contact_data[[file2]]))) == 0 ||
-            length(setdiff(colnames(contact_data[[file2]]),
-                           colnames(contact_data[[file1]]))) == 0) {
+        if (length(setdiff(
+          colnames(contact_data[[file1]]),
+          colnames(contact_data[[file2]])
+        )) == 0 ||
+          length(setdiff(
+            colnames(contact_data[[file2]]),
+            colnames(contact_data[[file1]])
+          )) == 0) {
           contact_data[[file1]] <-
             rbindlist(list(contact_data[[file1]], contact_data[[file2]]), fill = TRUE)
           contact_data[[file2]] <- NULL
@@ -77,7 +80,8 @@ load_survey <- function(files, ...) {
 
         ## try a merge to see whether it can be done uniquely
         test_merge <- merge(
-          main_surveys[[type]], contact_data[[file]], by = common_id,
+          main_surveys[[type]], contact_data[[file]],
+          by = common_id,
           all.x = TRUE, allow.cartesian = TRUE
         )
 
@@ -96,10 +100,11 @@ load_survey <- function(files, ...) {
           if (nrow(id_overlap) < nrow(unique_main_survey_ids)) {
             warning(
               ifelse(nrow(id_overlap) == 0, "No matching value",
-                     paste0(
-                       "Only ", nrow(id_overlap), " matching value",
-                       ifelse(nrow(id_overlap) > 1, "s", "")
-                     )), " in ",
+                paste0(
+                  "Only ", nrow(id_overlap), " matching value",
+                  ifelse(nrow(id_overlap) > 1, "s", "")
+                )
+              ), " in ",
               paste0("'", common_id, "'", collapse = ", "),
               " column", ifelse(length(common_id) > 1, "s", ""),
               " when pulling ", basename(file), " into '", type, "' survey."
@@ -107,13 +112,16 @@ load_survey <- function(files, ...) {
           }
 
           id_overlap_y <- merge(
-            unique_main_survey_ids, unique_additional_survey_ids, by = common_id,
+            unique_main_survey_ids, unique_additional_survey_ids,
+            by = common_id,
             all.y = TRUE
           )
           if (nrow(id_overlap_y) > nrow(unique_main_survey_ids)) {
-            warning(nrow(id_overlap_y) - nrow(unique_main_survey_ids),
-                    " row(s) could not be matched",
-                    " when pulling ", basename(file), " into '", type, "' survey.")
+            warning(
+              nrow(id_overlap_y) - nrow(unique_main_survey_ids),
+              " row(s) could not be matched",
+              " when pulling ", basename(file), " into '", type, "' survey."
+            )
           }
 
           main_surveys[[type]] <- test_merge

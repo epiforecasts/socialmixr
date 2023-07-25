@@ -38,7 +38,6 @@
 #' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 #' @author Sebastian Funk
 contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, filter, n = 1, bootstrap, counts = FALSE, symmetric = FALSE, split = FALSE, sample.participants = FALSE, estimated.participant.age = c("mean", "sample", "missing"), estimated.contact.age = c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = NULL, weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, sample.all.age.groups = FALSE, return.part.weights = FALSE, return.demography = NA, per.capita = FALSE, ...) {
-
   surveys <- c("participants", "contacts")
 
   dot.args <- list(...)
@@ -63,20 +62,26 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   columns <- suppressMessages(check(survey, columns = TRUE, ...))
 
   if (!missing(n)) {
-    warning("The 'n' option is being deprecated and will be removed ",
-            "following version 0.2.0. Please see the ",
-            "'Bootstrapping' section in the vignette for an ",
-            "alternative approach.")
+    warning(
+      "The 'n' option is being deprecated and will be removed ",
+      "following version 0.2.0. Please see the ",
+      "'Bootstrapping' section in the vignette for an ",
+      "alternative approach."
+    )
     if (n > 1) bootstrap <- TRUE
   }
   if (!missing(bootstrap)) {
-    warning("The 'bootstrap' option is being deprecated and will be removed ",
-            "following version 0.2.0. Please use the 'sample.participants'",
-            " option instead.")
+    warning(
+      "The 'bootstrap' option is being deprecated and will be removed ",
+      "following version 0.2.0. Please use the 'sample.participants'",
+      " option instead."
+    )
     if (missing(sample.participants)) sample.participants <- bootstrap
     if (bootstrap != sample.participants) {
-      stop("'bootstrap' (if given) and 'sample.participants must have the ",
-           "same value.")
+      stop(
+        "'bootstrap' (if given) and 'sample.participants must have the ",
+        "same value."
+      )
     }
   }
 
@@ -168,11 +173,12 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   if (part_min.column %in% colnames(survey$participants) &&
     part_max.column %in% colnames(survey$participants)) {
     if (estimated.participant.age == "mean") {
-      survey$participants[is.na(get(columns[["participant.age"]])) &
-        !is.na(get(part_min.column)) & !is.na(get(part_max.column)),
-      paste(columns[["participant.age"]]) :=
-        as.integer(rowMeans(.SD)),
-      .SDcols = c(part_min.column, part_max.column)
+      survey$participants[
+        is.na(get(columns[["participant.age"]])) &
+          !is.na(get(part_min.column)) & !is.na(get(part_max.column)),
+        paste(columns[["participant.age"]]) :=
+          as.integer(rowMeans(.SD)),
+        .SDcols = c(part_min.column, part_max.column)
       ]
     } else if (estimated.participant.age == "sample") {
       survey$participants[
@@ -234,11 +240,12 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   if (min.column %in% colnames(survey$contacts) &&
     max.column %in% colnames(survey$contacts)) {
     if (estimated.contact.age == "mean") {
-      survey$contacts[is.na(get(columns[["contact.age"]])) &
-        !is.na(get(min.column)) & !is.na(get(max.column)),
-      paste(columns[["contact.age"]]) :=
-        as.integer(rowMeans(.SD)),
-      .SDcols = c(min.column, max.column)
+      survey$contacts[
+        is.na(get(columns[["contact.age"]])) &
+          !is.na(get(min.column)) & !is.na(get(max.column)),
+        paste(columns[["contact.age"]]) :=
+          as.integer(rowMeans(.SD)),
+        .SDcols = c(min.column, max.column)
       ]
     } else if (estimated.contact.age == "sample") {
       survey$contacts[
@@ -476,7 +483,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
   ## assign weights to participants, to account for age variation
   if (weigh.age) {
-      # get number and proportion of participants by age
+    # get number and proportion of participants by age
     survey$participants[, age.count := .N, by = eval(columns[["participant.age"]])]
     survey$participants[, age.proportion := age.count / .N]
 
@@ -552,13 +559,14 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
           is.na(get(columns[["contact.age"]])) &
             age.group == this.age.group,
           paste(columns[["contact.age"]]) :=
-            sample(survey$contacts[
-              !is.na(get(columns[["contact.age"]])) &
-                age.group == this.age.group,
-              get(columns[["contact.age"]])
-            ],
-            size = .N,
-            replace = TRUE
+            sample(
+              survey$contacts[
+                !is.na(get(columns[["contact.age"]])) &
+                  age.group == this.age.group,
+                get(columns[["contact.age"]])
+              ],
+              size = .N,
+              replace = TRUE
             )
         ]
       } else {
@@ -821,7 +829,6 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
   # option to return participant weights
   if (return.part.weights) {
-
     # default
     part.weights <- survey$participants[, .N, by = list(age.group, weight)]
     part.weights <- part.weights[order(age.group, weight), ]

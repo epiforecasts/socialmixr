@@ -97,7 +97,6 @@ download_survey <- function(survey, dir = NULL) {
 }
 
 find_common_prefix <- function(vec) {
-
   # find initial longest common subequence of file names
   i <- 1
   end <- FALSE
@@ -113,5 +112,4 @@ find_common_prefix <- function(vec) {
   }
 
   return(lcs)
-
 }

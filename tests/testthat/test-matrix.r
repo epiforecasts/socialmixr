@@ -192,8 +192,8 @@ test_that("If weights = added_weight, the results are not identical", {
       survey = polymod10, countries = "United Kingdom",
       age.limits = c(0, 18, 60),
       return.part.weights = TRUE
-      )
     )
+  )
   cm_weight <- suppressMessages(contact_matrix(
     survey = polymod10, countries = "United Kingdom",
     age.limits = c(0, 18, 60),
@@ -360,10 +360,9 @@ test_that("The participant weights add up to the sample size", {
 
 test_that("The weights with threshold", {
   suppressWarnings({
-
     # get weights without and with a threshold of 3 and 50
     weights.nothreshold <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE, weigh.dayofweek = TRUE, weight.threshold = NA)$participants.weights
-    weights.threshold3  <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE, weigh.dayofweek = TRUE, weight.threshold = 3)$participants.weights
+    weights.threshold3 <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE, weigh.dayofweek = TRUE, weight.threshold = 3)$participants.weights
     weights.threshold50 <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE, weigh.dayofweek = TRUE, weight.threshold = 50)$participants.weights
 
     # make sure they add up to the sample size
@@ -485,7 +484,6 @@ test_that("The absence of reference population info is going well", {
 
 test_that("Contact matrices per capita can be provided", {
   suppressWarnings({
-
     # get contact matrix per capita
     expect_type(contact_matrix(polymod,
       age.limits = c(0, 18, 60),
@@ -511,7 +509,6 @@ test_that("Contact matrices per capita can be provided", {
 
 test_that("Symmetric contact matrices per capita are actually symmetric", {
   suppressWarnings({
-
     # get contact matrix per capita
     matrix.per.capita <- contact_matrix(polymod,
       age.limits = c(0, 18, 60),
@@ -526,7 +523,6 @@ test_that("Symmetric contact matrices per capita are actually symmetric", {
 
 test_that("Contact matrices per capita are also generated when bootstrapping", {
   suppressWarnings({
-
     # get contact matrix per capita
     expect_length(contact_matrix(polymod,
       age.limits = c(0, 18, 60),

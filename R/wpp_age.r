@@ -14,14 +14,12 @@
 #' wpp_age("Italy", c(1990, 2000))
 #' @export
 wpp_age <- function(countries, years) {
-
   popM <- fread(system.file("data", "popM.txt", package = "wpp2017"))
   popF <- fread(system.file("data", "popF.txt", package = "wpp2017"))
 
   # wpp2017 is limited to 2015, so add wpp projections is e.g. 2020 data is requested
   years_included <- max(as.numeric(names(popM)[-(1:3)]))
   if (!missing(years) && any(years > years_included)) {
-
     popMprojMed <- fread(system.file("data", "popMprojMed.txt", package = "wpp2017"))
     popFprojMed <- fread(system.file("data", "popFprojMed.txt", package = "wpp2017"))
 

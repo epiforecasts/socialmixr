@@ -16,7 +16,6 @@ cite <- function(x, ...) UseMethod("cite")
 #' cite(polymod)
 #' @export
 cite.survey <- function(x, ...) {
-
   chkDots(...)
 
   survey <- get_survey(x)

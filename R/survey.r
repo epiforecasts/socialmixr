@@ -11,12 +11,13 @@
 #' new_survey <- survey(polymod$participants, polymod$contacts)
 survey <- function(participants, contacts, reference = NULL) {
   new_obj <-
-    structure(list(
-      participants = data.table(participants),
-      contacts = data.table(contacts),
-      reference = reference
-    ),
-    class = "survey"
+    structure(
+      list(
+        participants = data.table(participants),
+        contacts = data.table(contacts),
+        reference = reference
+      ),
+      class = "survey"
     )
 
   return(new_obj)

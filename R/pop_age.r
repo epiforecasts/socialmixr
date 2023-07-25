@@ -23,7 +23,6 @@
 #'
 #' @export
 pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.column = "population", ...) {
-
   chkDots(...)
 
   if (!is.data.frame(pop) || !all(hasName(pop, c(pop.age.column, pop.column)))) {

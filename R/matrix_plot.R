@@ -23,11 +23,10 @@
 #' @export
 #' @examples
 #' data(polymod)
-#' mij <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 18,65))$matrix
+#' mij <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 18, 65))$matrix
 #' matrix_plot(mij)
 #' @author Lander Willem
 matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, num.colors = 50, main, xlab, ylab, legend.width, cex.lab, cex.axis, cex.text, color.palette = heat.colors, ...) {
-
   # check funtion arguments
   xlab <- ifelse(!missing(xlab), xlab, "Age group (year)")
   ylab <- ifelse(!missing(ylab), ylab, "Contact age group (year)")
@@ -70,7 +69,6 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
 
   # add numeric values if num.digits != NA and cex.text > 0
   if (!is.na(num.digits) && !is.na(cex.text) && cex.text > 0) {
-
     # format results (rounding/scientific)
     if (any(max(mij, na.rm = TRUE) > 1)) {
       mij <- round(mij, digits = num.digits)
