@@ -5,11 +5,10 @@
 #' @autoglobal
 #' @examples
 #' \dontrun{
-#'   list_surveys()
+#' list_surveys()
 #' }
 #' @export
 list_surveys <- function() {
-
   record_list <-
     data.table(list_records("https://zenodo.org/oai2d",
       metadataPrefix = "oai_datacite",
@@ -61,7 +60,6 @@ survey_countries <- function(survey, country.column = "country", ...) {
 #' wpp_countries()
 #' @export
 wpp_countries <- function() {
-
   popF <- fread(system.file("data", "popF.txt", package = "wpp2017"))
   popM <- fread(system.file("data", "popM.txt", package = "wpp2017"))
 

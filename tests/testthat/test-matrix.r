@@ -54,7 +54,7 @@ options <-
     test4 = list(survey = polymod8, missing.contact.age = "sample", symmetric = TRUE, age.limits = c(0, 5, 15))
   )
 
-suppressMessages(contacts <- lapply(options, function(x) {
+contacts <- suppressMessages(lapply(options, function(x) {
   do.call(contact_matrix, x)
 }))
 
@@ -192,8 +192,8 @@ test_that("If weights = added_weight, the results are not identical", {
       survey = polymod10, countries = "United Kingdom",
       age.limits = c(0, 18, 60),
       return.part.weights = TRUE
-      )
     )
+  )
   cm_weight <- suppressMessages(contact_matrix(
     survey = polymod10, countries = "United Kingdom",
     age.limits = c(0, 18, 60),
@@ -225,8 +225,16 @@ test_that("The order in which weights are applied do not change the results", {
 })
 
 test_that("The day.of.week weight does not affect single-year age groups that reported only during weekdays", {
-  suppressMessages(suppressWarnings(matrix_unweighted <- contact_matrix(polymod11, age.limits = 1:3, weigh.dayofweek = FALSE, symmetric = FALSE)))
-  suppressMessages(suppressWarnings(matrix_weighted <- contact_matrix(polymod11, age.limits = 1:3, weigh.dayofweek = TRUE, symmetric = FALSE)))
+  matrix_unweighted <- suppressMessages(suppressWarnings(
+    contact_matrix(
+      polymod11, age.limits = 1:3, weigh.dayofweek = FALSE, symmetric = FALSE
+    )
+  ))
+  matrix_weighted <- suppressMessages(suppressWarnings(
+    contact_matrix(
+      polymod11, age.limits = 1:3, weigh.dayofweek = TRUE, symmetric = FALSE
+    )
+  ))
 
   num_contacts_unweighted <- rowSums(matrix_unweighted$matrix)
   num_contacts_weighted <- rowSums(matrix_weighted$matrix)
@@ -360,10 +368,9 @@ test_that("The participant weights add up to the sample size", {
 
 test_that("The weights with threshold", {
   suppressWarnings({
-
     # get weights without and with a threshold of 3 and 50
     weights.nothreshold <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE, weigh.dayofweek = TRUE, weight.threshold = NA)$participants.weights
-    weights.threshold3  <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE, weigh.dayofweek = TRUE, weight.threshold = 3)$participants.weights
+    weights.threshold3 <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE, weigh.dayofweek = TRUE, weight.threshold = 3)$participants.weights
     weights.threshold50 <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE, weigh.dayofweek = TRUE, weight.threshold = 50)$participants.weights
 
     # make sure they add up to the sample size
@@ -485,7 +492,6 @@ test_that("The absence of reference population info is going well", {
 
 test_that("Contact matrices per capita can be provided", {
   suppressWarnings({
-
     # get contact matrix per capita
     expect_type(contact_matrix(polymod,
       age.limits = c(0, 18, 60),
@@ -511,7 +517,6 @@ test_that("Contact matrices per capita can be provided", {
 
 test_that("Symmetric contact matrices per capita are actually symmetric", {
   suppressWarnings({
-
     # get contact matrix per capita
     matrix.per.capita <- contact_matrix(polymod,
       age.limits = c(0, 18, 60),
@@ -526,7 +531,6 @@ test_that("Symmetric contact matrices per capita are actually symmetric", {
 
 test_that("Contact matrices per capita are also generated when bootstrapping", {
   suppressWarnings({
-
     # get contact matrix per capita
     expect_length(contact_matrix(polymod,
       age.limits = c(0, 18, 60),

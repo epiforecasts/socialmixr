@@ -14,6 +14,6 @@ List all surveys available for download
 }
 \examples{
 \dontrun{
-  list_surveys()
+list_surveys()
 }
 }

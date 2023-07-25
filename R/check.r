@@ -20,7 +20,6 @@ check <- function(x, ...) UseMethod("check")
 #' check(polymod)
 #' @export
 check.survey <- function(x, columns = FALSE, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
-
   chkDots(...)
   if (!is.data.frame(x$participants) || !is.data.frame(x$contacts)) {
     stop("The 'participants' and 'contacts' elements of 'x' must be data.frames")

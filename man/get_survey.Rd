@@ -19,7 +19,7 @@ Downloads survey data, or extracts them from files, and returns a clean data set
 }
 \examples{
 \dontrun{
-  list_surveys()
-  peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
+list_surveys()
+peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
 }
 }

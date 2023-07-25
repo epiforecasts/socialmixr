@@ -20,7 +20,6 @@ clean <- function(x, ...) UseMethod("clean")
 #' @autoglobal
 #' @export
 clean.survey <- function(x, country.column = "country", participant.age.column = "part_age", ...) {
-
   chkDots(...)
 
   x <- survey(x$participants, x$contacts, x$reference)
@@ -39,8 +38,8 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
   }
 
   if (nrow(x$participants) > 0 &&
-        participant.age.column %in% colnames(x$participants) &&
-        !is.numeric(x$participants[, get(participant.age.column)])) {
+    participant.age.column %in% colnames(x$participants) &&
+    !is.numeric(x$participants[, get(participant.age.column)])) {
     ## set any entries not containing numbers to NA
     x$participants <- x$participants[,
       paste(participant.age.column) := fifelse(
@@ -77,7 +76,8 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
        paste(limits) :=
         tstrsplit(as.character(get(participant.age.column)), "-", fixed = TRUE)
     ]
-    x$participants <- x$participants[is.na(..high),
+    x$participants <- x$participants[
+      is.na(..high),
       ..high := fifelse(is.na(..high), ..low, ..high)
     ]
     for (limit in limits) {
