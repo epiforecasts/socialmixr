@@ -2,5 +2,3 @@ url: https://epiforecasts.io/socialmixr/
 
 template:
   bootstrap: 5
-  bslib:
-    font_weight_base : 300
