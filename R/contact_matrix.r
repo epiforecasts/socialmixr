@@ -59,7 +59,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   ## get the survey
   survey <- get_survey(survey)
   ## check and get columns
-  columns <- suppressMessages(check(survey, columns = TRUE, ...))
+  columns <- suppressMessages(check(survey, ...))
 
   if (!missing(n)) {
     warning(
