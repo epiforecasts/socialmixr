@@ -3,12 +3,6 @@
 #' @description Downloads survey data, or extracts them from files, and returns a clean data set.
 #' @param survey a DOI (see [list_surveys()]), or a character vector of file names, or a [survey()] object (in which case only cleaning is done).
 #' @param ... options for [clean()], which is called at the end of this
-#' @importFrom httr GET add_headers content status_code http_error
-#' @importFrom jsonlite fromJSON
-#' @importFrom curl curl_download
-#' @importFrom utils as.person read.csv
-#' @importFrom stringr str_extract_all
-#' @importFrom xml2 xml_text xml_find_first
 #' @autoglobal
 #' @examples
 #' \dontrun{
