@@ -3,10 +3,10 @@
 #' @description Downloads survey data
 #' @param survey a URL (see [list_surveys()])
 #' @param dir a directory to save the files to; if not given, will save to a temporary directory
-#' @importFrom httr GET content status_code http_error
+#' @importFrom httr GET content status_code http_error user_agent
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom curl curl_download
-#' @importFrom utils read.csv
+#' @importFrom utils read.csv packageVersion
 #' @importFrom xml2 xml_text xml_find_first
 #' @autoglobal
 #' @examples
@@ -33,7 +33,16 @@ download_survey <- function(survey, dir = NULL) {
     stop("'survey' is not a DOI or URL.")
   }
 
-  temp_body <- GET(url, config = list(followlocation = TRUE))
+  temp_body <- GET(
+    url,
+    config = config(
+      followlocation = 1,
+      useragent = paste0(
+        "http://github.com/epiforecasts/socialmixr R package socialmixr/v.",
+        packageVersion("socialmixr")
+      )
+    )
+  )
   if (status_code(temp_body) == 404) stop("DOI '", survey, "' not found")
   if (http_error(temp_body)) {
     stop(
