@@ -136,11 +136,11 @@ test_that("warning is thrown if country has no survey population", {
 })
 
 test_that("warning is thrown if contact survey has no age information", {
-  expect_warning(check(x = polymod6, columns = TRUE), "do not exist")
+  expect_warning(check(x = polymod6), "do not exist")
 })
 
 test_that("warning is thrown if participant data has no country", {
-  expect_warning(check(x = polymod4, columns = TRUE), "does not exist")
+  expect_warning(check(x = polymod4), "does not exist")
 })
 
 test_that("user is informed about removing missing data", {
@@ -148,7 +148,7 @@ test_that("user is informed about removing missing data", {
 })
 
 test_that("check result is reported back", {
-  expect_message(check(x = polymod6), "Check")
+  expect_message(check(x = polymod2), "Check")
 })
 
 test_that("good suggestions are made", {

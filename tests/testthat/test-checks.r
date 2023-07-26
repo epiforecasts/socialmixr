@@ -20,6 +20,6 @@ erroneous_structure3 <- copy(erroneous_survey)
 erroneous_structure3$contacts$cnt_age_est_min <- NULL
 
 test_that("incorrect structure of data frames is correctly identified", {
-  expect_warning(check(erroneous_structure1, columns = TRUE))
-  expect_warning(check(erroneous_structure2, columns = TRUE))
+  expect_warning(check(erroneous_structure1))
+  expect_warning(check(erroneous_structure2))
 })
