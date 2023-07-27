@@ -22,18 +22,7 @@ cite.survey <- function(x, ...) {
   )
   chkDots(...)
 
-  survey <- get_survey(x)
-  if (is.null(x$reference)) stop("No citation defined for ", ifelse(is.null(x$name), "survey", x$name))
-
-  ref <-
-    c(
-      list(header = gettextf("To cite %s in publications use:", x$ref$title)),
-      x$reference
-    )
-
-  bref <- do.call(bibentry, ref)
-
-  return(bref)
+  get_citation(x)
 }
 
 #' @title Citation for a survey
