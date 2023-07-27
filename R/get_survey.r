@@ -1,7 +1,7 @@
 #' Get a survey, either from its Zenodo repository, a set of files, or a survey variable
 #'
 #' @description Downloads survey data, or extracts them from files, and returns a clean data set.
-#' @param survey a DOI (see [list_surveys()]), or a character vector of file names, or a [survey()] object (in which case only cleaning is done).
+#' @param survey a DOI or url to get the survey from, or a [survey()] object (in which case only cleaning is done).
 #' @param ... options for [clean()], which is called at the end of this
 #' @autoglobal
 #' @examples
