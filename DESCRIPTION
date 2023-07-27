@@ -34,7 +34,9 @@ Imports:
     xml2
 Suggests: 
     ggplot2,
+    here,
     knitr,
+    purrr,
     reshape2,
     rmarkdown,
     roxyglobals (>= 0.2.2),
