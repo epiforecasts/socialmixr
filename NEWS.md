@@ -4,6 +4,7 @@
 
 * Code quality is now ensured through continuous integration and the lintr package (#69).
 * [Cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity) of `download_survey()` has been reduced by externalising the `find_common_prefix()` function and failing early instead of relying on unnecessary if/else sequences 
+* More generous filename checks now pass files named e.g. "..._participants_common..." an not only "...participant_common..."
 
 # socialmixr 0.2.0
 
