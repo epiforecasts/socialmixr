@@ -86,6 +86,9 @@ load_survey <- function(files, ...) {
             all.x = TRUE
           )
         }, error = function(cond) {
+          if (!grepl("cartesian", cond$message)) {
+            stop(cond$message)
+          }
           NULL
         })
 
