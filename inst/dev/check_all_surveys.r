@@ -3,7 +3,7 @@ library("purrr")
 library("here")
 
 ## load list of survey files
-survey_files <- readRDS(here::here("surveys", "survey_files.rds"))
+survey_files <- readRDS(here("surveys", "survey_files.rds"))
 
 ## define safe checking function
 safe_check <- safely(\(files) {
