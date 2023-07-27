@@ -35,7 +35,7 @@ load_survey <- function(files, ...) {
 
   ## first, get the common files
   for (type in main_types) {
-    main_file <- grep(paste0("_", type, "_common.*\\.csv$"), survey_files, value = TRUE)
+    main_file <- grep(paste0("_", type, "s?_common.*\\.csv$"), survey_files, value = TRUE)
     if (length(main_file) == 0) {
       stop(
         "Need a csv file containing ", "_", type, "_common.csv",
