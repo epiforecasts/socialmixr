@@ -1,4 +1,5 @@
 context("Survey data checks")
+library(data.table)
 
 erroneous_survey <- survey(polymod$participants, polymod$contacts, polymod$reference)
 
@@ -20,6 +21,10 @@ erroneous_structure3 <- copy(erroneous_survey)
 erroneous_structure3$contacts$cnt_age_est_min <- NULL
 
 test_that("incorrect structure of data frames is correctly identified", {
-  expect_warning(check(erroneous_structure1))
-  expect_warning(check(erroneous_structure2))
+  expect_warning(check(erroneous_structure1), "does not exist")
+  expect_warning(check(erroneous_structure2), "does not exist")
+})
+
+test_that("deprecated arguments are warned about", {
+  expect_warning(check(polymod, columns = TRUE), "deprecated")
 })
