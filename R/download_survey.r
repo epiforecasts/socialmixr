@@ -37,10 +37,10 @@ download_survey <- function(survey, dir = NULL) {
     url,
     config = config(
       followlocation = 1,
-      useragent = paste0(
+      user_agent(paste0(
         "http://github.com/epiforecasts/socialmixr R package socialmixr/v.",
         packageVersion("socialmixr")
-      )
+      ))
     )
   )
   if (status_code(temp_body) == 404) stop("DOI '", survey, "' not found")
