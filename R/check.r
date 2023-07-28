@@ -28,7 +28,8 @@ check.survey <- function(x, columns, id.column = "part_id", participant.age.colu
   if (!missing(columns)) {
     warning(
       "The 'columns' argument is deprecated and will cause an error from ",
-      "version 0.4.0."
+      "version 0.4.0. The behaviour of the function now always corresponds ",
+      "to the previous documented case for `columns = TRUE`"
     )
   }
 
