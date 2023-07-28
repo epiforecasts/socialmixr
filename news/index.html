@@ -50,12 +50,15 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="socialmixr-development-version">socialmixr (development version)<a class="anchor" aria-label="anchor" href="#socialmixr-development-version"></a></h2>
 <div class="section level3">
+<h3 id="major--breaking-changes-development-version">Major &amp; breaking changes<a class="anchor" aria-label="anchor" href="#major--breaking-changes-development-version"></a></h3>
+<ul><li>The <code>cite</code> function has been deprecated and replaced with <code>get_citation</code> (<a href="https://github.com/epiforecasts/socialmixr/issues/84" class="external-link">#84</a>).</li>
+</ul></div>
+<div class="section level3">
 <h3 id="internal-changes-development-version">Internal changes<a class="anchor" aria-label="anchor" href="#internal-changes-development-version"></a></h3>
 <ul><li>Code quality is now ensured through continuous integration and the lintr package (<a href="https://github.com/epiforecasts/socialmixr/issues/69" class="external-link">#69</a>).</li>
 <li>
 <a href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" class="external-link">Cyclomatic complexity</a> of <code><a href="../reference/download_survey.html">download_survey()</a></code> has been reduced by externalising the <code>find_common_prefix()</code> function and failing early instead of relying on unnecessary if/else sequences</li>
 <li>More generous filename checks now pass files named e.g. “…_participants_common…” an not only “…participant_common…”</li>
-<li>The <code>cite</code> function has been deprecated and replaced with <code>get_citation</code> (<a href="https://github.com/epiforecasts/socialmixr/issues/84" class="external-link">#84</a>).</li>
 </ul></div>
 </div>
     <div class="section level2">
