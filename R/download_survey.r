@@ -3,7 +3,7 @@
 #' @description Downloads survey data
 #' @param survey a URL (see [list_surveys()])
 #' @param dir a directory to save the files to; if not given, will save to a temporary directory
-#' @importFrom httr GET content status_code http_error config
+#' @importFrom httr GET content status_code http_error config user_agent
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom curl curl_download
 #' @importFrom utils read.csv packageVersion
