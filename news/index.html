@@ -54,6 +54,7 @@
 <ul><li>Code quality is now ensured through continuous integration and the lintr package (<a href="https://github.com/epiforecasts/socialmixr/issues/69" class="external-link">#69</a>).</li>
 <li>
 <a href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" class="external-link">Cyclomatic complexity</a> of <code><a href="../reference/download_survey.html">download_survey()</a></code> has been reduced by externalising the <code>find_common_prefix()</code> function and failing early instead of relying on unnecessary if/else sequences</li>
+<li>More generous filename checks now pass files named e.g. “…_participants_common…” an not only “…participant_common…”</li>
 </ul></div>
 </div>
     <div class="section level2">
