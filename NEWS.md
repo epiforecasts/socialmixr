@@ -3,7 +3,7 @@
 ## Major & breaking changes
 
 * The `cite` function has been deprecated and replaced with `get_citation` (#84).
-* the `columns` argument has been removed from `check.survey()` (#81)
+* the `columns` argument has been removed from `check.survey()` (#81).
 
 ## Internal changes
 
