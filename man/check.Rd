@@ -19,7 +19,7 @@
 \arguments{
 \item{x}{A \code{\link[=survey]{survey()}} object}
 
-\item{columns}{if given, a named character vector containing the name of the "id", "participant.age" and "contact.age" columns}
+\item{columns}{depcreated argument, ignored}
 
 \item{id.column}{the column in both the \code{participants} and \code{contacts} data frames that links contacts to participants}
 
