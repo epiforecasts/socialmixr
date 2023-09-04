@@ -7,7 +7,7 @@ check <- function(x, ...) UseMethod("check")
 #' @description Checks that a survey fulfills all the requirements to work with the 'contact_matrix' function
 #'
 #' @param x A [survey()] object
-#' @param columns depcreated argument, ignored
+#' @param columns deprecated argument, ignored
 #' @param id.column the column in both the `participants` and `contacts` data frames that links contacts to participants
 #' @param participant.age.column the column in the `participants` data frame containing participants' age
 #' @param country.column the column in the `participants` data frame containing the country in which the participant was queried
