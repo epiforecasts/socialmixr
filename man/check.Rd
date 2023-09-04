@@ -19,7 +19,7 @@
 \arguments{
 \item{x}{A \code{\link[=survey]{survey()}} object}
 
-\item{columns}{depcreated argument, ignored}
+\item{columns}{deprecated argument, ignored}
 
 \item{id.column}{the column in both the \code{participants} and \code{contacts} data frames that links contacts to participants}
 
