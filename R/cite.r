@@ -17,7 +17,7 @@ cite <- function(x, ...) UseMethod("cite")
 #' @export
 cite.survey <- function(x, ...) {
   warning(
-    "The cite function is deprecated and will stop working in version 0.4.0. ",
+    "The cite function is deprecated and will stop working in version 1.0.0. ",
     "Please use get_citation() instead."
   )
   chkDots(...)
