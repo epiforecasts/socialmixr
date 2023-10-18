@@ -17,5 +17,7 @@ Gets a full citation for a \code{\link[=survey]{survey()}}.
 }
 \examples{
 data(polymod)
-get_citation(polymod)
+citation <- get_citation(polymod)
+print(citation)
+print(citation, style = "bibtex")
 }

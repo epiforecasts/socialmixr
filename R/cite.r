@@ -35,7 +35,9 @@ cite.survey <- function(x, ...) {
 #' @importFrom httr GET content
 #' @examples
 #' data(polymod)
-#' get_citation(polymod)
+#' citation <- get_citation(polymod)
+#' print(citation)
+#' print(citation, style = "bibtex")
 #' @export
 get_citation <- function(x) {
 
