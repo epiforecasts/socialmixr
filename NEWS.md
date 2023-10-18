@@ -12,6 +12,7 @@
 * More generous filename checks now pass files named e.g. "..._participants_common..." an not only "...participant_common..."
 * The package now sets a custom user agent when downloading survey data (#82).
 * A problem was fixed where attempted joins of files could lead to blowing up memeory use (#75).
+* A problem was fixed where the updated Zenodo API caused downloading to fail (#91).
 
 # socialmixr 0.2.0
 
