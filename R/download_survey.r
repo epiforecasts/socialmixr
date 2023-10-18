@@ -2,7 +2,10 @@
 #'
 #' @description Downloads survey data
 #' @param survey a URL (see [list_surveys()])
-#' @param dir a directory to save the files to; if not given, will save to a temporary directory
+#' @param dir a directory to save the files to; if not given, will save to a
+#'   temporary directory
+#' @param sleep time to sleep between requests to avoid overloading the server
+#'   (passed on to \code{\link[base]{Sys.sleep}})
 #' @importFrom httr GET content status_code http_error config user_agent
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom curl curl_download
@@ -17,7 +20,7 @@
 #' @return a vector of filenames that can be used with [load_survey]
 #  @seealso load_survey
 #' @export
-download_survey <- function(survey, dir = NULL) {
+download_survey <- function(survey, dir = NULL, sleep = 1) {
   survey <- sub("^(https?:\\/\\/(dx\\.)?doi\\.org\\/|doi:)", "", survey)
   survey <- sub("#.*$", "", survey)
   is.doi <- (length(survey) > 0) && all(grepl("^10.[0-9.]{4,}/[-._;()/:A-z0-9]+$", survey))
@@ -101,6 +104,7 @@ download_survey <- function(survey, dir = NULL) {
     url <- data[i, ]$url
     temp <- file.path(dir, data[i, ]$file_name)
     message("Downloading ", url)
+    Sys.sleep(sleep)
     dl <- curl_download(url, temp)
     return(temp)
   }, ""))
