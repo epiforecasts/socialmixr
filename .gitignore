@@ -3,4 +3,6 @@
 .RData
 inst/doc
 .Rproj.user
-docs
+docs/
+surveys/
+revdep/
