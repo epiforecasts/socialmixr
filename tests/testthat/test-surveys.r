@@ -11,7 +11,7 @@ test_that("surveys can be downloaded", {
   skip_if_offline("zenodo.org")
   skip_on_cran()
 
-  s <- suppressMessages(suppressWarnings(get_survey("10.5281/zenodo.1059920"))) # nolint
+  s <- suppressMessages(suppressWarnings(get_survey("10.5281/zenodo.1095664"))) # nolint
 
   expect_s3_class(s, "survey")
   expect_named(
@@ -29,7 +29,7 @@ test_that("missing surveys can't be cited", {
 })
 
 test_that("multiple DOI's cannot be loaded", {
-  expect_error(suppressMessages(suppressWarnings(get_survey(c("10.5281/zenodo.1059920", "10.5281/zenodo.1059920"))))) # nolint
+  expect_error(suppressMessages(suppressWarnings(get_survey(c("10.5281/zenodo.1095664", "10.5281/zenodo.1127693"))))) # nolint
 })
 
 test_that("deprecated functions are warned about", {
