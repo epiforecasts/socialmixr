@@ -16,12 +16,16 @@ list_surveys <- function() {
     ))
   ## find common DOI for different versions, i.e. the "relation" that is a DOI
   relations <- grep("^relation(\\.|$)", colnames(record_list), value = TRUE)
-  DOIs <- apply(record_list, 1, function(x) grep("^doi:.*zenodo", x[relations], value = TRUE))
+  DOIs <- apply(
+    record_list, 1, function(x) {
+      grep("^https://doi.org/.*zenodo", x[relations], value = TRUE)
+    }
+  )
   record_list <- record_list[, common_doi := DOIs]
   record_list <- record_list[, url := sub("doi:", "https://doi.org/", common_doi, fixed = TRUE)]
   ## get number within version DOI, this is expected to be ascending by version
   record_list <-
-    record_list[, doi.nb := as.integer(sub("^.*zenodo\\.", "", identifier.1))]
+    record_list[, doi.nb := as.integer(sub("^.*zenodo\\.org:", "", identifier.1))]
   ## save date at which first entered
   record_list <- record_list[, date := min(date), by = common_doi]
   ## order by DOI number and extract newest version
