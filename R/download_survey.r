@@ -7,7 +7,7 @@
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom curl curl_download
 #' @importFrom utils read.csv packageVersion
-#' @importFrom xml2 xml_text xml_find_first
+#' @importFrom xml2 xml_text xml_find_first xml_find_all xml_attr
 #' @autoglobal
 #' @examples
 #' \dontrun{
@@ -69,10 +69,13 @@ download_survey <- function(survey, dir = NULL) {
   }
   reference[[ifelse(is.doi, "doi", "url")]] <- survey
 
-  data <- data.table(parsed_cite$distribution)
+  links <- xml_attr(
+    xml_find_all(parsed_body, "//link[@type=\"text/csv\"]"), "href"
+  )
+
+  data <- data.table(url = links)
   ## only download csv files
-  data <- data[encodingFormat == "csv"]
-  data[, file_name := tolower(basename(contentUrl))]
+  data[, file_name := tolower(basename(url))]
 
   if (anyDuplicated(data$file_name) > 0) {
     warning(
@@ -95,7 +98,7 @@ download_survey <- function(survey, dir = NULL) {
   write(reference_json, reference_file_path)
 
   files <- c(reference_file_path, vapply(seq_len(nrow(data)), function(i) {
-    url <- data[i, ]$contentUrl
+    url <- data[i, ]$url
     temp <- file.path(dir, data[i, ]$file_name)
     message("Downloading ", url)
     dl <- curl_download(url, temp)
