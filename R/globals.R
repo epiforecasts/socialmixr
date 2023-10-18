@@ -23,9 +23,7 @@ utils::globalVariables(c(
   "bootstrap.weight", # <contact_matrix>
   "proportion", # <contact_matrix>
   "participants", # <contact_matrix>
-  "encodingFormat", # <download_survey>
   "file_name", # <download_survey>
-  "contentUrl", # <download_survey>
   "common_doi", # <list_surveys>
   "doi.nb", # <list_surveys>
   "identifier.1", # <list_surveys>
