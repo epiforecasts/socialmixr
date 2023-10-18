@@ -225,10 +225,10 @@ be obtained, for example the mean:</p>
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
-<span><span class="co">#&gt;    [0,1)  0.40860333 0.6917749 1.351802 5.383942</span></span>
-<span><span class="co">#&gt;    [1,5)  0.10035717 2.0822736 1.599160 5.514305</span></span>
-<span><span class="co">#&gt;    [5,15) 0.03782407 0.4869272 7.788372 6.314007</span></span>
-<span><span class="co">#&gt;    15+    0.02822854 0.3444215 1.238077 9.627576</span></span></code></pre></div>
+<span><span class="co">#&gt;    [0,1)  0.59066986 0.7756892 1.170836 6.085532</span></span>
+<span><span class="co">#&gt;    [1,5)  0.08648421 1.7800415 1.368633 5.438455</span></span>
+<span><span class="co">#&gt;    [5,15) 0.02156529 0.4742158 7.712191 6.438748</span></span>
+<span><span class="co">#&gt;    15+    0.02507411 0.3406218 1.274843 9.463000</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
@@ -242,7 +242,7 @@ columns, <code>lower.age.limit</code> (denoting the lower end of the age
 groups) and <code>population</code> (denoting the number of people in
 each age group). If no <code>survey.pop</code> is not given,
 <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> will try to obtain the age structure of
-the population (as per the <code>countries</code> argument) from the <a href="https://esa.un.org/unpd/wpp/" class="external-link">World Population Prospects</a> of
+the population (as per the <code>countries</code> argument) from the <a href="https://population.un.org/wpp/" class="external-link">World Population Prospects</a> of
 the United Nations, using estimates from the year that closest matches
 the year in which the contact survey was conducted.</p>
 <p>If demographic information is used, this is returned by
