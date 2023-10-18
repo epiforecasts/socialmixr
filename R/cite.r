@@ -4,7 +4,7 @@ cite <- function(x, ...) UseMethod("cite")
 #' @rdname cite
 #' @title Citation for a survey
 #'
-#' @description Gets a full citation for a [survey()]. If quiet is FALSE (default)
+#' @description Gets a full citation for a [survey()].
 #'
 #' @param x a character vector of surveys to cite
 #' @param ... ignored
@@ -27,7 +27,7 @@ cite.survey <- function(x, ...) {
 
 #' @title Citation for a survey
 #'
-#' @description Gets a full citation for a [survey()]. If quiet is FALSE (default)
+#' @description Gets a full citation for a [survey()].
 #'
 #' @param x a character vector of surveys to cite
 #' @return citation as bibentry
