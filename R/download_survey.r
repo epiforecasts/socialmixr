@@ -61,7 +61,7 @@ download_survey <- function(survey, dir = NULL) {
   reference <- list(
     title = parsed_cite$name,
     bibtype = "Misc",
-    author = parsed_cite$creator$name,
+    author = parsed_cite$author$name,
     year = data.table::year(parsed_cite$datePublished)
   )
   if ("version" %in% names(parsed_cite)) {
