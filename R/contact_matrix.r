@@ -10,7 +10,7 @@
 #' @param n deprecated; number of bootstrap samples to generate
 #' @param bootstrap  deprecated; whether to bootstrap contact matrices
 #' @param counts whether to return counts (instead of means)
-#' @param symmetric whether to make matrix symmetric, such that c_{ij}N_i = c{ji}N_j.
+#' @param symmetric whether to make matrix symmetric, such that \eqn{c_{ij}N_i = c_{ji}N_j}.
 #' @param split whether to split the number of contacts and assortativity
 #' @param sample.participants whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this..
 #' @param estimated.participant.age if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
