@@ -118,7 +118,7 @@ using</p>
 <p>An example use would be</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
 <span><span class="co">#&gt; $matrix</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
@@ -169,7 +169,7 @@ without the need for an internet connection using</p>
 use the <code>survey_countries</code> function</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/survey_countries.html">survey_countries</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; [1] "Italy"          "Germany"        "Luxembourg"     "Netherlands"   </span></span>
 <span><span class="co">#&gt; [5] "Poland"         "United Kingdom" "Finland"        "Belgium"</span></span></code></pre></div>
 <p>If one wishes to get a contact matrix for one or more specific
@@ -184,7 +184,7 @@ given survey can be obtained using <code><a href="../reference/cite.html">cite()
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/cite.html">cite</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in cite.survey(polymod): The cite function is deprecated and will stop</span></span>
 <span><span class="co">#&gt; working in version 1.0.0. Please use get_citation() instead.</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Mossong J, Hens N, Jit M, Beutels P, Auranen K, Mikolajczyk R, Massari</span></span>
 <span><span class="co">#&gt; M, Salmaso S, Tomba GS, Wallinga J, Heijne J, Sadkowska-Todys M,</span></span>
 <span><span class="co">#&gt; Rosinska M, Edmunds WJ (2017). "POLYMOD social contact data."</span></span>
@@ -211,24 +211,24 @@ be obtained, for example the mean:</p>
 <span>    sample.participants <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
 <span><span class="va">mr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">m</span><span class="op">[</span><span class="st">"matrix"</span>, <span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
-<span><span class="co">#&gt;    [0,1)  0.47007576 0.8034848 1.097803 5.476439</span></span>
-<span><span class="co">#&gt;    [1,5)  0.11034408 2.1640263 1.557961 5.623145</span></span>
-<span><span class="co">#&gt;    [5,15) 0.01718184 0.5407513 7.935555 6.377674</span></span>
-<span><span class="co">#&gt;    15+    0.03278032 0.3476526 1.320934 9.723946</span></span></code></pre></div>
+<span><span class="co">#&gt;    [0,1)  0.25192308 0.8255495 1.616557 5.965366</span></span>
+<span><span class="co">#&gt;    [1,5)  0.10603625 2.0827459 1.460235 5.439678</span></span>
+<span><span class="co">#&gt;    [5,15) 0.02817356 0.5396443 7.767910 6.299928</span></span>
+<span><span class="co">#&gt;    15+    0.03247321 0.3698701 1.250496 9.443436</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
@@ -279,7 +279,7 @@ to obtain a symmetric contact matrix that fulfills it, one can use</p>
 <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> function.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, symmetric <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
 <span><span class="co">#&gt; Warning in pop_age(survey.pop, part.age.group.present, ...): Not all age groups represented in population data (5-year age band).</span></span>
 <span><span class="co">#&gt;   Linearly estimating age group sizes from the 5-year bands.</span></span>
@@ -377,7 +377,7 @@ The components of the matrix are returned as elements
 the resulting list.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, split <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'cite' function</span></span>
+<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
 <span><span class="co">#&gt; Warning in pop_age(survey.pop, part.age.group.present, ...): Not all age groups represented in population data (5-year age band).</span></span>
 <span><span class="co">#&gt;   Linearly estimating age group sizes from the 5-year bands.</span></span>
