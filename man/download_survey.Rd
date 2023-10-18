@@ -4,12 +4,16 @@
 \alias{download_survey}
 \title{Download a survey from its Zenodo repository}
 \usage{
-download_survey(survey, dir = NULL)
+download_survey(survey, dir = NULL, sleep = 1)
 }
 \arguments{
 \item{survey}{a URL (see \code{\link[=list_surveys]{list_surveys()}})}
 
-\item{dir}{a directory to save the files to; if not given, will save to a temporary directory}
+\item{dir}{a directory to save the files to; if not given, will save to a
+temporary directory}
+
+\item{sleep}{time to sleep between requests to avoid overloading the server
+(passed on to \code{\link[base]{Sys.sleep}})}
 }
 \value{
 a vector of filenames that can be used with \link{load_survey}
