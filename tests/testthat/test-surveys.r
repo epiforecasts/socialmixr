@@ -10,7 +10,6 @@ test_that("list of surveys is not empty", {
 test_that("surveys can be downloaded", {
   skip_if_offline("zenodo.org")
   skip_on_cran()
-  skip_on_ci()
 
   s <- suppressMessages(suppressWarnings(get_survey("10.5281/zenodo.1059920"))) # nolint
 
