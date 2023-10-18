@@ -13,7 +13,7 @@ get_citation(x)
 citation as bibentry
 }
 \description{
-Gets a full citation for a \code{\link[=survey]{survey()}}. If quiet is FALSE (default)
+Gets a full citation for a \code{\link[=survey]{survey()}}.
 }
 \examples{
 data(polymod)
