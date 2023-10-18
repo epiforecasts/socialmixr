@@ -38,7 +38,7 @@ Suggests:
     purrr,
     reshape2,
     rmarkdown,
-    roxyglobals (>= 0.2.2),
+    roxyglobals (>= 1.0.0),
     testthat
 VignetteBuilder: 
     knitr
@@ -49,9 +49,6 @@ RoxygenNote: 7.2.3
 URL: https://github.com/epiforecasts/socialmixr,
     https://epiforecasts.io/socialmixr/
 BugReports: https://github.com/epiforecasts/socialmixr/issues
-Config/Needs/roxygen2: anthonynorth/roxyglobals
 Roxygen: list(
     markdown = TRUE,
     roclets = c("collate", "namespace", "rd", "roxyglobals::global_roclet"))
-Remotes: 
-    anthonynorth/roxyglobals
