@@ -29,7 +29,6 @@ Imports:
     jsonlite,
     lubridate,
     oai,
-    stringr,
     wpp2017,
     xml2
 Suggests: 
