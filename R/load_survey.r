@@ -149,7 +149,7 @@ load_survey <- function(files, ...) {
   if (!is.null(new_survey$reference)) {
     message(
       "Using ", new_survey$reference$title,
-      ". To cite this in a publication, use the 'cite' function"
+      ". To cite this in a publication, use the 'get_citation()' function"
     )
   }
 
