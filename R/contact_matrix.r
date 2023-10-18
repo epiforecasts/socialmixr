@@ -64,7 +64,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   if (!missing(n)) {
     warning(
       "The 'n' option is being deprecated and will be removed ",
-      "following version 0.2.0. Please see the ",
+      "in version 1.0.0. Please see the ",
       "'Bootstrapping' section in the vignette for an ",
       "alternative approach."
     )
@@ -73,7 +73,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   if (!missing(bootstrap)) {
     warning(
       "The 'bootstrap' option is being deprecated and will be removed ",
-      "following version 0.2.0. Please use the 'sample.participants'",
+      "in version 1.0.0. Please use the 'sample.participants'",
       " option instead."
     )
     if (missing(sample.participants)) sample.participants <- bootstrap
