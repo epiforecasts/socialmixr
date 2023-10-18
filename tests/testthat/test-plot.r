@@ -5,21 +5,26 @@ suppressWarnings({
 })
 
 test_that("contact matrix can be plotted", {
+  skip_on_cran()
   expect_no_error(matrix_plot(dta$matrix))
 })
 
 test_that("contact matrix per capita can be plotted", {
+  skip_on_cran()
   expect_no_error(matrix_plot(dta$matrix.per.capita))
 })
 
 test_that("contact matrix can be plotted with different color palette", {
+  skip_on_cran()
   expect_no_error(matrix_plot(dta$matrix, color.palette = rainbow))
 })
 
 test_that("contact matrix can be plotted with ad-hoc min and max values for the legend", {
+  skip_on_cran()
   expect_no_error(matrix_plot(dta$matrix, min.legend = 4, max.legend = 40))
 })
 
 test_that("contact matrix can be plotted with (ad-hoc) min and max values for the legend", {
+  skip_on_cran()
   expect_no_error(matrix_plot(dta$matrix, min.legend = 4, max.legend = 40))
 })

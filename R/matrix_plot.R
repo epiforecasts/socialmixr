@@ -22,9 +22,11 @@
 #' @details This is a function using the basic R graphics to make it easier for users of socialmixr to visualise social contact matrices.
 #' @export
 #' @examples
+#' \dontrun{
 #' data(polymod)
 #' mij <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 18, 65))$matrix
 #' matrix_plot(mij)
+#' }
 #' @author Lander Willem
 matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, num.colors = 50, main, xlab, ylab, legend.width, cex.lab, cex.axis, cex.text, color.palette = heat.colors, ...) {
   # check funtion arguments

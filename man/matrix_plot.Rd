@@ -57,9 +57,11 @@ This function combines the R image.plot function with numeric contact rates in t
 This is a function using the basic R graphics to make it easier for users of socialmixr to visualise social contact matrices.
 }
 \examples{
+\dontrun{
 data(polymod)
 mij <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 18, 65))$matrix
 matrix_plot(mij)
+}
 }
 \author{
 Lander Willem
