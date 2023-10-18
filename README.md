@@ -31,4 +31,5 @@ remotes::install_github("epiforecasts/socialmixr")
 # Documentation
 
 For information on how to use the socialmixr package, see the
-[vignette](vignettes/socialmixr.html).
+[introduction
+vignette](https://epiforecasts.io/socialmixr/articles/socialmixr.html).
