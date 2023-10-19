@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+data.table::setDTthreads(1)
 ```
 
 [socialmixr](https://github.com/epiforecasts/socialmixr) is an `R` package to derive social mixing matrices from survey data. These are particularly useful for age-structured [infectious disease models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease). For background on age-specific mixing matrices and what data inform them, see, for example, the paper on POLYMOD by [@mossong_social_2008].
@@ -489,7 +490,7 @@ ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) +
 
 The contact matrices can also be plotted with the `matrix_plot()` function as a grid of colored rectangles with the numeric values in the cells. Heat colors are used by default, though this can be changed.
 
-```{r fig.width=4, fig.height=4, eval = FALSE}
+```{r fig.width=4, fig.height=4}
 matrix_plot(mr)
 matrix_plot(mr, color.palette = gray.colors)
 ```
