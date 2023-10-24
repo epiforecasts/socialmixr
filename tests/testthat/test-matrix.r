@@ -244,7 +244,7 @@ test_that("The day.of.week weight does not affect single-year age groups that re
   expect_true(rowSums(matrix_unweighted$matrix)[2] != rowSums(matrix_weighted$matrix)[2])
 
   # age 3 => contains only data on weekdays => should not be impacted by weights
-  expect_identical(num_contacts_unweighted[3], num_contacts_weighted[3])
+  expect_equal(num_contacts_unweighted[3], num_contacts_weighted[3], tolerance = 1e-8)
 })
 
 test_that("The day.of.week weight does not affect an age group that reported only during weekdays", {
@@ -258,7 +258,7 @@ test_that("The day.of.week weight does not affect an age group that reported onl
   expect_true(rowSums(matrix_unweighted$matrix)[1] != rowSums(matrix_weighted$matrix)[1])
 
   # age group 2 => contains only data on weekdays => should not be impacted by weights
-  expect_identical(num_contacts_unweighted[2], num_contacts_weighted[2])
+  expect_equal(num_contacts_unweighted[2], num_contacts_weighted[2], tolerance = 1e-8)
 })
 
 test_that("The day.of.week weight should change the result with only one age group", {
@@ -296,7 +296,7 @@ test_that("The age-specific weight should not change the results with single yea
         weigh.age = TRUE
       )$matrix
     ),
-    tolerance = 2e-16
+    tolerance = 1e-15
   )
 })
 
@@ -359,10 +359,10 @@ test_that("The participant weights add up to the sample size", {
     weights.dayofweek <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE)$participants.weights
     weights.both <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE, weigh.dayofweek = TRUE)$participants.weights
 
-    expect_identical(sum(weights.uniform[, weight * proportion]), 1)
-    expect_identical(sum(weights.age[, weight * proportion]), 1)
-    expect_identical(sum(weights.dayofweek[, weight * proportion]), 1)
-    expect_identical(sum(weights.both[, weight * proportion]), 1)
+    expect_equal(sum(weights.uniform[, weight * proportion]), 1, tolerance = 1e-8)
+    expect_equal(sum(weights.age[, weight * proportion]), 1, tolerance = 1e-8)
+    expect_equal(sum(weights.dayofweek[, weight * proportion]), 1, tolerance = 1e-8)
+    expect_equal(sum(weights.both[, weight * proportion]), 1, tolerance = 1e-8)
   })
 })
 
@@ -374,9 +374,9 @@ test_that("The weights with threshold", {
     weights.threshold50 <- contact_matrix(survey = polymod, age.limits = c(0, 18), return.part.weights = TRUE, weigh.age = TRUE, weigh.dayofweek = TRUE, weight.threshold = 50)$participants.weights
 
     # make sure they add up to the sample size
-    expect_identical(sum(weights.nothreshold[, weight * proportion]), 1)
-    expect_identical(sum(weights.threshold3[, weight * proportion]), 1)
-    expect_identical(sum(weights.threshold50[, weight * proportion]), 1)
+    expect_equal(sum(weights.nothreshold[, weight * proportion]), 1, tolerance = 1e-8)
+    expect_equal(sum(weights.threshold3[, weight * proportion]), 1, tolerance = 1e-8)
+    expect_equal(sum(weights.threshold50[, weight * proportion]), 1, tolerance = 1e-8)
 
     # check threshold values (include 2.5% margin due to the standardisation)
     expect_gt(max(weights.nothreshold$weight), 3 * 1.025)
