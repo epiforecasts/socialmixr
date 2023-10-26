@@ -1,3 +1,5 @@
+# socialmixr (development version)
+
 # socialmixr 0.3.1
 
 * Tests were updated to prevent failures due to machine precision issues on
