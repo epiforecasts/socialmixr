@@ -56,8 +56,8 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   missing.participant.age <- match.arg(missing.participant.age)
   missing.contact.age <- match.arg(missing.contact.age)
 
-  ## get the survey
-  survey <- get_survey(survey)
+  ## clean the survey
+  survey <- clean(survey)
   ## check and get columns
   columns <- suppressMessages(check(survey, ...))
 
