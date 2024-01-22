@@ -29,6 +29,7 @@ utils::globalVariables(c(
   "identifier.1", # <list_surveys>
   "title", # <list_surveys>
   "creator", # <list_surveys>
+  "identifier.2", # <list_surveys>
   "..main_id", # <load_survey>
   "..merge_id", # <load_survey>
   "..original.lower.age.limit", # <pop_age>
