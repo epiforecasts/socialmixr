@@ -1,6 +1,7 @@
 # socialmixr 0.3.1.9000
 
 * An error in `list_surveys()` was fixed which stopped this working
+* `contact_matrix` was updated to only accept `survey()` objects, not DOIs.
 
 # socialmixr 0.3.1
 
