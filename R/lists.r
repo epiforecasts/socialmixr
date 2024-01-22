@@ -33,7 +33,7 @@ list_surveys <- function() {
   record_list <- record_list[, .SD[1], by = common_doi]
   ## order by date
   setkey(record_list, date)
-  return(record_list[, list(date_added = date, title, creator, url = url)])
+  return(record_list[, list(date_added = date, title, creator, url = identifier.2)])
 }
 
 #' List all countries contained in a survey
