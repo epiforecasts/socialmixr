@@ -56,6 +56,9 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   missing.participant.age <- match.arg(missing.participant.age)
   missing.contact.age <- match.arg(missing.contact.age)
 
+  if (!is(survey, "survey")) {
+    stop("'survey' must be a survey object (created using `survey()`).")
+  }
   ## clean the survey
   survey <- clean(survey)
   ## check and get columns

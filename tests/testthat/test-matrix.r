@@ -87,7 +87,7 @@ test_that("demography is numeric", {
 })
 
 test_that("survey argument is validated", {
-  expect_error(contact_matrix(survey = "bogus"), "URL")
+  expect_error(contact_matrix(survey = "bogus"), "survey")
 })
 
 test_that("error is thrown if no survey population can be generated", {
