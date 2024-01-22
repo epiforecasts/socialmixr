@@ -18,7 +18,7 @@ list_surveys <- function() {
   relations <- grep("^relation(\\.|$)", colnames(record_list), value = TRUE)
   DOIs <- apply(
     record_list, 1, function(x) {
-      grep("^https://doi.org/.*zenodo", x[relations], value = TRUE)
+      min(grep("^https://doi.org/.*zenodo", x[relations], value = TRUE))
     }
   )
   record_list <- record_list[, common_doi := DOIs]
