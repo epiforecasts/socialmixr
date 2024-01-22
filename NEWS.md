@@ -1,4 +1,6 @@
-# socialmixr (development version)
+# socialmixr 0.3.1.9000
+
+* An error in `list_surveys()` was fixed which stopped this working
 
 # socialmixr 0.3.1
 
