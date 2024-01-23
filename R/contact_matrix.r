@@ -57,7 +57,10 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   missing.contact.age <- match.arg(missing.contact.age)
 
   if (!is(survey, "survey")) {
-    stop("'survey' must be a survey object (created using `survey()`).")
+    stop(
+      "'survey' must be a survey object (created using `survey()` ",
+      "or `get_survey()`)."
+    )
   }
   ## clean the survey
   survey <- clean(survey)
