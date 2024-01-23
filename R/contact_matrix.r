@@ -56,7 +56,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   missing.participant.age <- match.arg(missing.participant.age)
   missing.contact.age <- match.arg(missing.contact.age)
 
-  if (!is(survey, "survey")) {
+  if (!inherits(survey, "survey")) {
     stop(
       "'survey' must be a survey object (created using `survey()` ",
       "or `get_survey()`)."
