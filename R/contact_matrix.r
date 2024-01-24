@@ -30,6 +30,7 @@
 #' @importFrom stats xtabs runif median
 #' @importFrom utils data globalVariables
 #' @importFrom countrycode countrycode
+#' @importFrom lifecycle deprecate_warn
 #' @import data.table
 #' @export
 #' @autoglobal
@@ -56,12 +57,22 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   missing.participant.age <- match.arg(missing.participant.age)
   missing.contact.age <- match.arg(missing.contact.age)
 
-  if (!inherits(survey, "survey")) {
+  error_string <-
+    "must be a survey object (created using `survey()` or `get_survey()`)"
+
+  if (all(is_doi(survey))) {
+    deprecate_warn(
+      "0.3.2", paste0("contact_matrix(survey = '", error_string, "')"),
+      details = "Passing a DOI will be removed in version 0.4.0."
+    )
+    survey <- get_survey(survey)
+  } else if (!inherits(survey, "survey")) {
     stop(
-      "'survey' must be a survey object (created using `survey()` ",
+      "'survey' must be a survey object (created using)",
       "or `get_survey()`)."
     )
   }
+
   ## clean the survey
   survey <- clean(survey)
   ## check and get columns

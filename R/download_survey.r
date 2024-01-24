@@ -23,7 +23,7 @@
 download_survey <- function(survey, dir = NULL, sleep = 1) {
   survey <- sub("^(https?:\\/\\/(dx\\.)?doi\\.org\\/|doi:)", "", survey)
   survey <- sub("#.*$", "", survey)
-  is.doi <- (length(survey) > 0) && all(grepl("^10.[0-9.]{4,}/[-._;()/:A-z0-9]+$", survey))
+  is.doi <- (length(survey) > 0) && all(is_doi(survey))
   is.url <- (length(survey) > 0) && (is.doi || grepl("^https?:\\/\\/", survey))
 
   if (is.url && length(survey) > 1) {
@@ -128,4 +128,13 @@ find_common_prefix <- function(vec) {
   }
 
   return(lcs)
+}
+
+##' Checks if a character string is a DOI
+##'
+##' @param x Character vector; the string or strings to check
+##' @return Logical; \code{TRUE} if \code{x} is a DOI, \code{FALSE} otherwise
+##' @author Sebastian Funk
+is_doi <- function(x) {
+  is.character(x) & grepl("^10.[0-9.]{4,}/[-._;()/:A-z0-9]+$", x)
 }
