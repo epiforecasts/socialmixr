@@ -72,7 +72,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Funk</h4>
             
-            <h4 data-toc-skip class="date">2024-01-22</h4>
+            <h4 data-toc-skip class="date">2024-01-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/HEAD/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
       <div class="d-none name"><code>socialmixr.Rmd</code></div>
@@ -118,7 +118,6 @@ using</p>
 <p>An example use would be</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
 <span><span class="co">#&gt; $matrix</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
@@ -211,24 +210,19 @@ be obtained, for example the mean:</p>
 <span>    sample.participants <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
 <span><span class="va">mr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">m</span><span class="op">[</span><span class="st">"matrix"</span>, <span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
-<span><span class="co">#&gt;    [0,1)  0.40047233 0.5985560 1.322524 5.638421</span></span>
-<span><span class="co">#&gt;    [1,5)  0.12096243 1.7365368 1.396358 5.326786</span></span>
-<span><span class="co">#&gt;    [5,15) 0.01819316 0.5207887 7.383902 6.138165</span></span>
-<span><span class="co">#&gt;    15+    0.02680394 0.3705660 1.321939 9.577358</span></span></code></pre></div>
+<span><span class="co">#&gt;    [0,1)  0.50199792 0.7575980 1.301619 6.347074</span></span>
+<span><span class="co">#&gt;    [1,5)  0.14705727 2.2156738 1.388251 5.264611</span></span>
+<span><span class="co">#&gt;    [5,15) 0.02763151 0.5207851 8.190713 6.305660</span></span>
+<span><span class="co">#&gt;    15+    0.03009622 0.3665507 1.282881 9.491321</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
@@ -279,7 +273,6 @@ to obtain a symmetric contact matrix that fulfills it, one can use</p>
 <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> function.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, symmetric <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
 <span><span class="co">#&gt; Warning in pop_age(survey.pop, part.age.group.present, ...): Not all age groups represented in population data (5-year age band).</span></span>
 <span><span class="co">#&gt;   Linearly estimating age group sizes from the 5-year bands.</span></span>
@@ -377,7 +370,6 @@ The components of the matrix are returned as elements
 the resulting list.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, split <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
 <span><span class="co">#&gt; Warning in pop_age(survey.pop, part.age.group.present, ...): Not all age groups represented in population data (5-year age band).</span></span>
 <span><span class="co">#&gt;   Linearly estimating age group sizes from the 5-year bands.</span></span>
