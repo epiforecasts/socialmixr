@@ -67,10 +67,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     )
     survey <- get_survey(survey)
   } else if (!inherits(survey, "survey")) {
-    stop(
-      "'survey' must be a survey object (created using)",
-      "or `get_survey()`)."
-    )
+    stop(error_string)
   }
 
   ## clean the survey
