@@ -1,4 +1,4 @@
-# socialmixr 0.3.1.9000
+# socialmixr 0.3.2
 
 * An error in `list_surveys()` was fixed which stopped this working
 * `contact_matrix()` was updated to only accept `survey` objects, not DOIs and matches the documentation. It is still possible to get a contact matrix from a DOI but it is necessary to go through the `get_survey()` function.
