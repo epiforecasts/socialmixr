@@ -1,7 +1,6 @@
 # Test environments
 
- * local macOS install (14.0), R 4.3.1
- * R-hub
+ * local macOS install
  * winbuilder
  * GitHub actions
 
@@ -16,7 +15,6 @@ We checked 2 reverse dependencies, comparing R CMD check results across CRAN and
  * We saw 0 new problems
  * We failed to check 0 packages
 
-# Previous CRAN errors
+# Previous CRAN issues
 
-Errors in the current version on CRAN have been fixed by increasing the
-numerical tolerance in tests.
+No issues reported.
