@@ -60,7 +60,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   error_string <-
     "must be a survey object (created using `survey()` or `get_survey()`)"
 
-  if (all(is_doi(survey))) {
+  if (is_doi(survey)) {
     deprecate_warn(
       "0.3.2", paste0("contact_matrix(survey = '", error_string, "')"),
       details = "Passing a DOI will be removed in version 0.4.0."
