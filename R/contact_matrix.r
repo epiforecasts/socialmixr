@@ -94,6 +94,13 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     }
   }
 
+  if (!missing(age.limits)) {
+    age.limits <- as.integer(age.limits)
+    if (anyNA(age.limits) || any(diff(age.limits) <= 0)) {
+      stop("'age.limits' must be an increasing integer vector of lower age limits.")
+    }
+  }
+
   ## clean the survey
   survey <- clean(survey)
   ## check and get columns
@@ -146,10 +153,6 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     all.ages <- all.ages[!is.na(all.ages)]
     all.ages <- sort(all.ages)
     age.limits <- union(0, all.ages)
-  }
-  age.limits <- as.integer(age.limits)
-  if (anyNA(age.limits) || any(diff(age.limits) <= 0)) {
-    stop("'age.limits' must be an increasing integer vector of lower age limits.")
   }
 
   ## check if any filters have been requested
