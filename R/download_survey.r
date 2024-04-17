@@ -137,5 +137,5 @@ find_common_prefix <- function(vec) {
 ##' @return Logical; \code{TRUE} if \code{x} is a DOI, \code{FALSE} otherwise
 ##' @author Sebastian Funk
 is_doi <- function(x) {
-  grepl("^10.[0-9.]{4,}/[-._;()/:A-z0-9]+$", x)
+  is.character(x) && grepl("^10.[0-9.]{4,}/[-._;()/:A-z0-9]+$", x)
 }
