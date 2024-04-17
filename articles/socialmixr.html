@@ -22,11 +22,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">socialmixr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +72,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Funk</h4>
             
-            <h4 data-toc-skip class="date">2024-01-25</h4>
+            <h4 data-toc-skip class="date">2024-04-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/HEAD/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
       <div class="d-none name"><code>socialmixr.Rmd</code></div>
@@ -84,7 +84,8 @@ Funk</h4>
 is an <code>R</code> package to derive social mixing matrices from
 survey data. These are particularly useful for age-structured <a href="https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease" class="external-link">infectious
 disease models</a>. For background on age-specific mixing matrices and
-what data inform them, see, for example, the paper on POLYMOD by <span class="citation">(<a href="#ref-mossong_social_2008" role="doc-biblioref">Mossong et al. 2008</a>)</span>.</p>
+what data inform them, see, for example, the paper on POLYMOD by <span class="citation">(<a href="#ref-mossong_social_2008">Mossong et al.
+2008</a>)</span>.</p>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
@@ -129,6 +130,7 @@ using</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $participants</span></span>
 <span><span class="co">#&gt;    age.group participants proportion</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;        &lt;int&gt;      &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:     [0,1)           15 0.01483680</span></span>
 <span><span class="co">#&gt; 2:     [1,5)           80 0.07912957</span></span>
 <span><span class="co">#&gt; 3:    [5,15)          204 0.20178042</span></span>
@@ -219,10 +221,10 @@ be obtained, for example the mean:</p>
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
-<span><span class="co">#&gt;    [0,1)  0.50199792 0.7575980 1.301619 6.347074</span></span>
-<span><span class="co">#&gt;    [1,5)  0.14705727 2.2156738 1.388251 5.264611</span></span>
-<span><span class="co">#&gt;    [5,15) 0.02763151 0.5207851 8.190713 6.305660</span></span>
-<span><span class="co">#&gt;    15+    0.03009622 0.3665507 1.282881 9.491321</span></span></code></pre></div>
+<span><span class="co">#&gt;    [0,1)  0.37833333 0.9333333 1.125000 5.988333</span></span>
+<span><span class="co">#&gt;    [1,5)  0.12339843 2.0356420 1.495745 5.413850</span></span>
+<span><span class="co">#&gt;    [5,15) 0.02636051 0.4872067 7.978738 6.294043</span></span>
+<span><span class="co">#&gt;    15+    0.03875607 0.3657082 1.381436 9.651792</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
@@ -249,9 +251,10 @@ option.</p>
 <span>  countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span><span class="op">)</span>,</span>
 <span>  return.demography <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span><span class="op">$</span><span class="va">demography</span></span>
-<span><span class="co">#&gt;    age.group population proportion year</span></span>
-<span><span class="co">#&gt; 1:    [0,20)   14799290  0.2454816 2005</span></span>
-<span><span class="co">#&gt; 2:       20+   45487461  0.7545184 2005</span></span></code></pre></div>
+<span><span class="co">#&gt;    age.group population proportion  year</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;      &lt;num&gt;      &lt;num&gt; &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1:    [0,20)   14799290  0.2454816  2005</span></span>
+<span><span class="co">#&gt; 2:       20+   45487461  0.7545184  2005</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="symmetric-contact-matrices">Symmetric contact matrices<a class="anchor" aria-label="anchor" href="#symmetric-contact-matrices"></a>
@@ -285,14 +288,16 @@ to obtain a symmetric contact matrix that fulfills it, one can use</p>
 <span><span class="co">#&gt;   [4,] 0.05759306 0.3313352 1.109550 9.594101</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $demography</span></span>
-<span><span class="co">#&gt;    age.group population proportion year</span></span>
-<span><span class="co">#&gt; 1:     [0,1)     690734 0.01145748 2005</span></span>
-<span><span class="co">#&gt; 2:     [1,5)    2762936 0.04582990 2005</span></span>
-<span><span class="co">#&gt; 3:    [5,15)    7385454 0.12250542 2005</span></span>
-<span><span class="co">#&gt; 4:       15+   49447627 0.82020720 2005</span></span>
+<span><span class="co">#&gt;    age.group population proportion  year</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;      &lt;num&gt;      &lt;num&gt; &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1:     [0,1)     690734 0.01145748  2005</span></span>
+<span><span class="co">#&gt; 2:     [1,5)    2762936 0.04582990  2005</span></span>
+<span><span class="co">#&gt; 3:    [5,15)    7385454 0.12250542  2005</span></span>
+<span><span class="co">#&gt; 4:       15+   49447627 0.82020720  2005</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $participants</span></span>
 <span><span class="co">#&gt;    age.group participants proportion</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;        &lt;int&gt;      &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:     [0,1)           15 0.01483680</span></span>
 <span><span class="co">#&gt; 2:     [1,5)           80 0.07912957</span></span>
 <span><span class="co">#&gt; 3:    [5,15)          204 0.20178042</span></span>
@@ -334,12 +339,14 @@ N_j}{2N_iN_j} = c'_{ji}\]</span></p>
 <span><span class="co">#&gt;   [2,] 4.418248e-08 1.047852e-07</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $demography</span></span>
-<span><span class="co">#&gt;    age.group population proportion year</span></span>
-<span><span class="co">#&gt; 1:    [0,60)   61374868  0.7514869 2005</span></span>
-<span><span class="co">#&gt; 2:       60+   20296375  0.2485131 2005</span></span>
+<span><span class="co">#&gt;    age.group population proportion  year</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;      &lt;num&gt;      &lt;num&gt; &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1:    [0,60)   61374868  0.7514869  2005</span></span>
+<span><span class="co">#&gt; 2:       60+   20296375  0.2485131  2005</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $participants</span></span>
 <span><span class="co">#&gt;    age.group participants proportion</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;        &lt;int&gt;      &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:    [0,60)         1062  0.8329412</span></span>
 <span><span class="co">#&gt; 2:       60+          213  0.1670588</span></span></code></pre></div>
 </div>
@@ -390,14 +397,16 @@ the resulting list.</p>
 <span><span class="co">#&gt; [4,] 0.2500527 0.6930808 0.934443 1.0374170</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $demography</span></span>
-<span><span class="co">#&gt;    age.group population proportion year</span></span>
-<span><span class="co">#&gt; 1:     [0,1)     690734 0.01145748 2005</span></span>
-<span><span class="co">#&gt; 2:     [1,5)    2762936 0.04582990 2005</span></span>
-<span><span class="co">#&gt; 3:    [5,15)    7385454 0.12250542 2005</span></span>
-<span><span class="co">#&gt; 4:       15+   49447627 0.82020720 2005</span></span>
+<span><span class="co">#&gt;    age.group population proportion  year</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;      &lt;num&gt;      &lt;num&gt; &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1:     [0,1)     690734 0.01145748  2005</span></span>
+<span><span class="co">#&gt; 2:     [1,5)    2762936 0.04582990  2005</span></span>
+<span><span class="co">#&gt; 3:    [5,15)    7385454 0.12250542  2005</span></span>
+<span><span class="co">#&gt; 4:       15+   49447627 0.82020720  2005</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $participants</span></span>
 <span><span class="co">#&gt;    age.group participants proportion</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;        &lt;int&gt;      &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:     [0,1)           15 0.01483680</span></span>
 <span><span class="co">#&gt; 2:     [1,5)           80 0.07912957</span></span>
 <span><span class="co">#&gt; 3:    [5,15)          204 0.20178042</span></span>
@@ -476,9 +485,11 @@ standardized as follows: <span class="math display">\[\tilde{w}_{i}
 <p>If the social contact analysis is based on stratification by
 splitting the population into non-overlapping groups, it requires the
 weights to be standardized so that the weighted totals within mutually
-exclusive cells equal the known population totals <span class="citation">(<a href="#ref-kolenikov_post-stratification_2016" role="doc-biblioref">Kolenikov 2016</a>)</span>. The post-stratification
-cells need to be mutually exclusive and cover the whole population. The
-post-stratified (PS) weight for participant <span class="math inline">\(i\)</span> of is: <span class="math display">\[\tilde{w}^{PS}_{i}
+exclusive cells equal the known population totals <span class="citation">(<a href="#ref-kolenikov_post-stratification_2016">Kolenikov
+2016</a>)</span>. The post-stratification cells need to be mutually
+exclusive and cover the whole population. The post-stratified (PS)
+weight for participant <span class="math inline">\(i\)</span> of is:
+<span class="math display">\[\tilde{w}^{PS}_{i}
 =  \tfrac{w_{i}}{\sum_{\text{j}}^{\text{group g}} w_{j}} *
 N_g\]</span></p>
 <p>Temporal weights are activated in <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> by
@@ -499,19 +510,22 @@ via the option <code>return.part.weights = TRUE</code>.</p>
 <span><span class="co">#&gt;   60+     0.7761051  4.354554 2.4995467</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $demography</span></span>
-<span><span class="co">#&gt;    age.group population proportion year</span></span>
-<span><span class="co">#&gt; 1:    [0,18)   52955807  0.1948624 2005</span></span>
-<span><span class="co">#&gt; 2:   [18,60)  157719526  0.5803634 2005</span></span>
-<span><span class="co">#&gt; 3:       60+   61084635  0.2247742 2005</span></span>
+<span><span class="co">#&gt;    age.group population proportion  year</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;      &lt;num&gt;      &lt;num&gt; &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1:    [0,18)   52955807  0.1948624  2005</span></span>
+<span><span class="co">#&gt; 2:   [18,60)  157719526  0.5803634  2005</span></span>
+<span><span class="co">#&gt; 3:       60+   61084635  0.2247742  2005</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $participants</span></span>
 <span><span class="co">#&gt;    age.group participants proportion</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;        &lt;int&gt;      &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:    [0,18)         2462  0.3420395</span></span>
 <span><span class="co">#&gt; 2:   [18,60)         3745  0.5202834</span></span>
 <span><span class="co">#&gt; 3:       60+          991  0.1376771</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $participants.weights</span></span>
 <span><span class="co">#&gt;      age.group participant.age is.weekday    weight participants   proportion</span></span>
+<span><span class="co">#&gt;         &lt;fctr&gt;           &lt;int&gt;     &lt;lgcl&gt;     &lt;num&gt;        &lt;int&gt;        &lt;num&gt;</span></span>
 <span><span class="co">#&gt;   1:    [0,18)               0      FALSE 1.4566422           27 0.0037510420</span></span>
 <span><span class="co">#&gt;   2:    [0,18)               0       TRUE 1.3087772           66 0.0091692137</span></span>
 <span><span class="co">#&gt;   3:    [0,18)               1      FALSE 1.1288977           32 0.0044456794</span></span>
@@ -543,6 +557,7 @@ participant data you want to use to weight the reported contacts via the
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $participants</span></span>
 <span><span class="co">#&gt;    age.group participants proportion</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;        &lt;int&gt;      &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:    [0,18)         2462  0.3420395</span></span>
 <span><span class="co">#&gt; 2:   [18,60)         3745  0.5202834</span></span>
 <span><span class="co">#&gt; 3:       60+          991  0.1376771</span></span></code></pre></div>
@@ -573,19 +588,22 @@ given threshold value.</p>
 <span><span class="co">#&gt;   60+     0.7720958  4.410151 2.5401091</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $demography</span></span>
-<span><span class="co">#&gt;    age.group population proportion year</span></span>
-<span><span class="co">#&gt; 1:    [0,18)   52955807  0.1948624 2005</span></span>
-<span><span class="co">#&gt; 2:   [18,60)  157719526  0.5803634 2005</span></span>
-<span><span class="co">#&gt; 3:       60+   61084635  0.2247742 2005</span></span>
+<span><span class="co">#&gt;    age.group population proportion  year</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;      &lt;num&gt;      &lt;num&gt; &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1:    [0,18)   52955807  0.1948624  2005</span></span>
+<span><span class="co">#&gt; 2:   [18,60)  157719526  0.5803634  2005</span></span>
+<span><span class="co">#&gt; 3:       60+   61084635  0.2247742  2005</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $participants</span></span>
 <span><span class="co">#&gt;    age.group participants proportion</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;        &lt;int&gt;      &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:    [0,18)         2462  0.3420395</span></span>
 <span><span class="co">#&gt; 2:   [18,60)         3745  0.5202834</span></span>
 <span><span class="co">#&gt; 3:       60+          991  0.1376771</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $participants.weights</span></span>
 <span><span class="co">#&gt;      age.group participant.age is.weekday    weight participants   proportion</span></span>
+<span><span class="co">#&gt;         &lt;fctr&gt;           &lt;int&gt;     &lt;lgcl&gt;     &lt;num&gt;        &lt;int&gt;        &lt;num&gt;</span></span>
 <span><span class="co">#&gt;   1:    [0,18)               0      FALSE 1.4566422           27 0.0037510420</span></span>
 <span><span class="co">#&gt;   2:    [0,18)               0       TRUE 1.3087772           66 0.0091692137</span></span>
 <span><span class="co">#&gt;   3:    [0,18)               1      FALSE 1.1288977           32 0.0044456794</span></span>
@@ -1314,7 +1332,7 @@ this can be changed.</p>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-hens_estimating_2009" class="csl-entry">
 Hens, Niel, Girma Minalu Ayele, Nele Goeyvaerts, Marc Aerts, Joel
 Mossong, John W. Edmunds, and Philippe Beutels. 2009. <span>“Estimating
@@ -1355,7 +1373,7 @@ Transmission.”</span> <em><span>PLOS</span> <span>ONE</span></em> 7
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer>
