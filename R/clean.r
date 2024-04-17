@@ -80,6 +80,7 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
       is.na(..high),
       ..high := fifelse(is.na(..high), ..low, ..high)
     ]
+    seconds_in_year <- period_to_seconds(years(1))
     for (limit in limits) {
       x$participants <- x$participants[,
         paste(limit) := fifelse(!is.na(get(limit)), as.numeric(get(limit)), NA_real_)
@@ -88,7 +89,7 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
         paste(limit) := fifelse(
           !is.na(get(limit)),
           period_to_seconds(period(get(limit), ..age.unit)) /
-            period_to_seconds(years(1)),
+            seconds_in_year,
           NA_real_
         ),
         by = seq_len(nrow(x$participants))
