@@ -128,12 +128,9 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     survey$participants[, paste(columns[["participant.age"]]) := NA_integer_]
   }
 
-  if (!(part_max.column %in% colnames(survey$participants)) &&
-    (columns[["participant.age"]] %in% colnames(survey$participants))
-  ) {
+  if (!part_max.column %in% colnames(survey$participants)) {
     max.age <- max(survey$participants[, get(columns[["participant.age"]])], na.rm = TRUE) + 1
-  } else if (part_max.column %in% colnames(survey$participants) &&
-    (columns[["participant.age"]] %in% colnames(survey$participants))) {
+  } else {
     max.age <- max(
       c(
         survey$participants[, get(columns[["participant.age"]])],
@@ -141,8 +138,6 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       ),
       na.rm = TRUE
     ) + 1
-  } else if (part_max.column %in% colnames(survey$participants)) {
-    max.age <- max(survey$participants[, get(columns[["participant.age"]])], na.rm = TRUE) + 1
   }
 
   if (missing(age.limits)) {
