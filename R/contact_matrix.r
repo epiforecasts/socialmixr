@@ -70,11 +70,6 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     stop(error_string)
   }
 
-  ## clean the survey
-  survey <- clean(survey)
-  ## check and get columns
-  columns <- suppressMessages(check(survey, ...))
-
   if (!missing(n)) {
     warning(
       "The 'n' option is being deprecated and will be removed ",
@@ -98,6 +93,11 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       )
     }
   }
+
+  ## clean the survey
+  survey <- clean(survey)
+  ## check and get columns
+  columns <- suppressMessages(check(survey, ...))
 
   ## check if specific countries are requested (if a survey contains data from multiple countries)
   if (length(countries) > 0 && columns[["country"]] %in% colnames(survey$participants)) {
