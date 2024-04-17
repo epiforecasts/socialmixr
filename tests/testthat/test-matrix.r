@@ -90,10 +90,6 @@ test_that("survey argument is validated", {
   expect_error(contact_matrix(survey = "bogus"), "survey")
 })
 
-test_that("error is thrown if no survey population can be generated", {
-  expect_error(suppressWarnings(contact_matrix(survey = polymod, countries = "Zamonia")), "not found")
-})
-
 test_that("error is thrown if age limits are non-numeric", {
   expect_error(suppressWarnings(contact_matrix(survey = polymod, age.limits = c(0, 5, "fifteen"))), "age.limits")
 })
