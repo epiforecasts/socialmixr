@@ -21,7 +21,7 @@
 #  @seealso load_survey
 #' @export
 download_survey <- function(survey, dir = NULL, sleep = 1) {
-  
+
   if (!is.character(survey) || length(survey) > 1) {
     stop("'survey' must be a character of length 1")
   }
