@@ -18,3 +18,7 @@ We checked 2 reverse dependencies, comparing R CMD check results across CRAN and
 # Previous CRAN issues
 
 No issues reported.
+
+# Response to CRAN checks
+
+Code efficieny has been improved to reduce the time taken for tests.
