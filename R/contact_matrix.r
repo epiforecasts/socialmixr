@@ -136,14 +136,16 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   }
 
   if (!part_max.column %in% colnames(survey$participants)) {
-    max.age <- max(survey$participants[, get(columns[["participant.age"]])], na.rm = TRUE) + 1
-  } else {
     max.age <- max(
       c(
         survey$participants[, get(columns[["participant.age"]])],
         survey$participants[, get(part_max.column)]
       ),
       na.rm = TRUE
+    ) + 1
+  } else {
+    max.age <- max(
+      survey$participants[, get(columns[["participant.age"]])], na.rm = TRUE
     ) + 1
   }
 
