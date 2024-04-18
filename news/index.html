@@ -49,18 +49,14 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.2" id="socialmixr-032">socialmixr 0.3.2<a class="anchor" aria-label="anchor" href="#socialmixr-032"></a></h2>
-<ul><li><p>An error in <code><a href="../reference/list_surveys.html">list_surveys()</a></code> was fixed which stopped this working</p></li>
+<ul><li><p>An error in <code><a href="../reference/list_surveys.html">list_surveys()</a></code> was fixed which stopped this working.</p></li>
 <li>
 <p><code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> was updated to only accept <code>survey</code> objects, not DOIs and matches the documentation. It is still possible to get a contact matrix from a DOI but it is necessary to go through the <code><a href="../reference/get_survey.html">get_survey()</a></code> function.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># No longer works!</span></span>
-<span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="st">"10.5281/zenodo.1095664"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Recommended workflow</span></span>
-<span><span class="fu"><a href="../reference/get_survey.html">get_survey</a></span><span class="op">(</span><span class="st">"10.5281/zenodo.1095664"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>```r # No longer works! contact_matrix(“10.5281/zenodo.1095664”)</p>
+<h2 id="recommended-workflow" class="pkg-version" data-toc-text="0.3.2">Recommended workflow</h2>
+<p>get_survey(“10.5281/zenodo.1095664”) |&gt; contact_matrix()</p>
 </li>
+<li><p>The efficiency of the <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> was improved.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.1" id="socialmixr-031">socialmixr 0.3.1<a class="anchor" aria-label="anchor" href="#socialmixr-031"></a></h2><p class="text-muted">CRAN release: 2023-10-26</p>
