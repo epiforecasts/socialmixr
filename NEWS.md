@@ -1,6 +1,6 @@
 # socialmixr 0.3.2
 
-* An error in `list_surveys()` was fixed which stopped this working
+* An error in `list_surveys()` was fixed which stopped this working.
 * `contact_matrix()` was updated to only accept `survey` objects, not DOIs and matches the documentation. It is still possible to get a contact matrix from a DOI but it is necessary to go through the `get_survey()` function.
 
   ```r
@@ -10,7 +10,8 @@
   # Recommended workflow
   get_survey("10.5281/zenodo.1095664") |>
     contact_matrix()
-  ```
+
+* The efficiency of the `contact_matrix()` was improved.
 
 # socialmixr 0.3.1
 
