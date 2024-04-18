@@ -53,7 +53,7 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
       paste(participant.age.column) := sub("Under ", "0-", get(participant.age.column), fixed = TRUE)
     ]
     ## split off units
-    if (any(grepl(" ", x$participant[, get(participant.age.column)], fixed = TRUE))) {
+    if (any(grepl(" ", x$participants[, get(participant.age.column)], fixed = TRUE))) {
       x$participants <- x$participants[,
         ..age.unit :=
           tstrsplit(as.character(get(participant.age.column)), " ", keep = 2L, fixed = TRUE)
