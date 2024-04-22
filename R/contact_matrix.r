@@ -667,6 +667,12 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
     dims <- dim(weighted.matrix)
     dim.names <- dimnames(weighted.matrix)
+    
+    weighted.matrix <- array(
+      weighted.matrix,
+      dim = dims,
+      dimnames = dim.names
+    )
 
     if (!counts) { ## normalise to give mean number of contacts
       ## calculate normalisation vector
