@@ -733,9 +733,9 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       } else {
         ## set c_{ij} N_i and c_{ji} N_j (which should both be equal) to
         ## 0.5 * their sum; then c_{ij} is that sum / N_i
-        normalised.weighted.matrix <- diag(survey.pop$population) %*% weighted.matrix
-        weighted.matrix <- 0.5 * diag(1 / survey.pop$population) %*%
-          (normalised.weighted.matrix + t(normalised.weighted.matrix))
+        normalised.weighted.matrix <- survey.pop$population * weighted.matrix
+        weighted.matrix <- 0.5 / survey.pop$population *
+          (normalised.weighted.matrix + t(normalised.weighted.matrix)) 
       }
     }
 
