@@ -13,7 +13,7 @@
 #' @param symmetric whether to make matrix symmetric, such that \eqn{c_{ij}N_i = c_{ji}N_j}.
 #' @param split whether to split the number of contacts and assortativity
 #' @param sample.participants whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this..
-#' @param estimated.participant.age if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
+#' @param estimated.participant.age if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (if the "part_age" column contains NA) will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
 #' @param estimated.contact.age if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
 #' @param missing.participant.age if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group
 #' @param missing.contact.age if set to "remove" (default), participants that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group; if set to "ignore", contact with missing age are ignored in the contact analysis
@@ -24,7 +24,7 @@
 #' @param sample.all.age.groups what to do if bootstrapping fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead
 #' @param return.part.weights boolean to return the participant weights
 #' @param return.demography boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters)
-#' @param per.capita wheter to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE')
+#' @param per.capita whether to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE')
 #' @param ... further arguments to pass to [get_survey()], [check()] and [pop_age()] (especially column names)
 #' @return a contact matrix, and the underlying demography of the surveyed population
 #' @importFrom stats xtabs runif median
@@ -202,6 +202,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
           ))
       ]
     }
+    # note: do nothing when "missing" is specified
   }
 
 
@@ -269,6 +270,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
           ))
       ]
     }
+    # note: do nothing when "missing" is specified
   }
 
   if (missing.contact.age == "remove" &&
