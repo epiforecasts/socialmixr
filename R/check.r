@@ -46,11 +46,18 @@ check.survey <- function(x, columns, id.column = "part_id", participant.age.colu
   }
 
   if (!(participant.age.column %in% colnames(x$participants))) {
-    warning(
-      "participant age column '", participant.age.column, "' does not exist ",
-      "in the participant data frame"
-    )
-    success <- FALSE
+    min.column <- paste(participant.age.column, "est_min", sep = "_")
+    max.column <- paste(participant.age.column, "est_max", sep = "_")
+    
+    if (!(min.column %in% colnames(x$participant) && 
+           max.column %in% colnames(x$participant))) {
+      warning(
+        "participant age column '", participant.age.column,
+        "' or columns to estimate participant age ('", min.column, "' and '", 
+        max.column, "') do not exist in the participant data frame"
+      )
+      success <- FALSE
+    }
   }
 
   if (!(contact.age.column %in% colnames(x$contacts))) {
