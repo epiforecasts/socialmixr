@@ -430,6 +430,8 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
     # add upper.age.limit after sorting the survey.pop ages (and add maximum age > given ages)
     survey.pop <- survey.pop[order(lower.age.limit), ]
+    # if any lower age limits are missing remove them
+    survey.pop <- survey.pop[!is.na(population)]
     survey.pop$upper.age.limit <- unlist(c(
       survey.pop[-1, "lower.age.limit"],
       1 + max(
