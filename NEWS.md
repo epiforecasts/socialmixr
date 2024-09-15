@@ -1,5 +1,8 @@
 # socialmixr (development version)
 
+* The speed of loading surveys has been increased.
+* An error has been fixed causing NA contact matrices if any 5-year age band in the population data was missing.
+
 # socialmixr 0.3.2
 
 * An error in `list_surveys()` was fixed which stopped this working.
