@@ -3,7 +3,7 @@
 #' This function combines the R image.plot function with numeric contact rates in the matrix cells.
 #'
 #' @param mij a contact matrix containing contact rates between participants of age i (rows) with contacts of age j (columns). This is the default matrix format of [contact_matrix()].
-#' @param min.legend the color scale minimum (default = 0). Set to NA to use the minimium value of `mij`.
+#' @param min.legend the color scale minimum (default = 0). Set to NA to use the minimum value of `mij`.
 #' @param max.legend the color scale maximum (default = NA). Set to NA to use the maximum value of `mij`.
 #' @param num.digits the number of digits when rounding the contact rates (default = 2). Use NA to disable this.
 #' @param num.colors the number of color breaks (default = 50)
@@ -15,8 +15,8 @@
 #' @param xlab a title for the x axis (default: "Age group (years)")
 #' @param ylab a title for the y axis (default: "Contact age group (years)")
 #' @param color.palette the color palette to use (default: [heat.colors()]). Other examples are [topo.colors()], [terrain.colors()] and [hcl.colors()]. User-defined functions are also possible if they take the number of colors to be in the palette as function argument.
-#' @param ... further arguments to pass to [image.plot()]
-#' @importFrom fields image.plot
+#' @param ... further arguments to pass to [imagePlot()]
+#' @importFrom fields imagePlot
 #' @importFrom grDevices heat.colors
 #' @importFrom graphics axis text
 #' @details This is a function using the basic R graphics to make it easier for users of socialmixr to visualise social contact matrices.
@@ -29,7 +29,7 @@
 #' }
 #' @author Lander Willem
 matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, num.colors = 50, main, xlab, ylab, legend.width, cex.lab, cex.axis, cex.text, color.palette = heat.colors, ...) {
-  # check funtion arguments
+  # check function arguments
   xlab <- ifelse(!missing(xlab), xlab, "Age group (year)")
   ylab <- ifelse(!missing(ylab), ylab, "Contact age group (year)")
   main <- ifelse(!missing(main), main, "Contact rates")
@@ -50,7 +50,7 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
   breaks <- seq(legend_scale[1], legend_scale[2], length = num.colors + 1)
 
   # plot matrix
-  image.plot(mij,
+  imagePlot(mij,
     col = redc,
     xlab = xlab,
     ylab = ylab,
