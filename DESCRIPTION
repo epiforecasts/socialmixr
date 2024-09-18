@@ -28,6 +28,7 @@ Imports:
     httr,
     jsonlite,
     lubridate,
+    memoise,
     oai,
     wpp2017,
     xml2,
