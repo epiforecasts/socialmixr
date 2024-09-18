@@ -1,9 +1,9 @@
 #' Get a survey, either from its Zenodo repository, a set of files, or a survey variable
 #'
 #' @description Downloads survey data, or extracts them from files, and returns a clean data set.
-#' @param survey a DOI or url to get the survey from, or a [survey()] object (in which case only cleaning is done).
-#' @param ... options for [clean()], which is called at the end of this
-#' @autoglobal
+#' @param clear_cache logical, whether to clear the cache before downloading the survey; by default, the cache is not cleared and so multiple calls of this function to access the same survey will not result in repeated downloads
+#' @importFrom memoise memoise
+#' @inheritParams .get_survey
 #' @examples
 #' \dontrun{
 #' list_surveys()
@@ -11,7 +11,20 @@
 #' }
 #' @return a survey in the correct format
 #' @export
-get_survey <- function(survey, ...) {
+get_survey <- function(survey, clear_cache = FALSE, ...) {
+  if (!("get_survey" %in% names(.socialmixr.env$cached_functions)) ||
+      clear_cache) {
+    .socialmixr.env$cached_functions$get_survey <- memoise(.get_survey)
+  }
+  .socialmixr.env$cached_functions$get_survey(survey, ...)
+}
+
+#' Internal function to get survey data
+#' @autoglobal
+#' @param survey a DOI or url to get the survey from, or a [survey()] object (in which case only cleaning is done).
+#' @param ... options for [clean()], which is called at the end of this
+#' @keywords internal
+.get_survey <- function(survey, ...) {
   if (inherits(survey, "survey")) {
     new_survey <- survey
   } else {

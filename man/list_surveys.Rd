@@ -4,7 +4,10 @@
 \alias{list_surveys}
 \title{List all surveys available for download}
 \usage{
-list_surveys()
+list_surveys(clear_cache = FALSE)
+}
+\arguments{
+\item{clear_cache}{logical, whether to clear the cache before downloading the survey; by default, the cache is not cleared and so multiple calls of this function to access the same survey will not result in repeated downloads}
 }
 \value{
 character vector of surveys

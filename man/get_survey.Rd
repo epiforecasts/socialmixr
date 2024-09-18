@@ -4,10 +4,12 @@
 \alias{get_survey}
 \title{Get a survey, either from its Zenodo repository, a set of files, or a survey variable}
 \usage{
-get_survey(survey, ...)
+get_survey(survey, clear_cache = FALSE, ...)
 }
 \arguments{
 \item{survey}{a DOI or url to get the survey from, or a \code{\link[=survey]{survey()}} object (in which case only cleaning is done).}
+
+\item{clear_cache}{logical, whether to clear the cache before downloading the survey; by default, the cache is not cleared and so multiple calls of this function to access the same survey will not result in repeated downloads}
 
 \item{...}{options for \code{\link[=clean]{clean()}}, which is called at the end of this}
 }
