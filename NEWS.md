@@ -2,6 +2,7 @@
 
 * The speed of loading surveys has been increased.
 * An error has been fixed causing NA contact matrices if any 5-year age band in the population data was missing.
+* Results of function calls accessing Zenodo repository are now cached for speedup and to avoid multiple web requests
 
 # socialmixr 0.3.2
 
