@@ -17,7 +17,10 @@ get_survey(survey, clear_cache = FALSE, ...)
 a survey in the correct format
 }
 \description{
-Downloads survey data, or extracts them from files, and returns a clean data set.
+Downloads survey data, or extracts them from files, and returns a clean data set. If a survey URL is accessed multiple times, the data will be cached (unless \code{clear_cache} is set to \code{TRUE}) to avoid repeated downloads.
+}
+\details{
+If survey objects are used repeatedly the downloaded files can be saved and reloaded between sessions then survey objects can be saved/loaded using \code{\link[base:readRDS]{base::saveRDS()}} and \code{\link[base:readRDS]{base::readRDS()}}, or via the individual survey files that can be downloaded using \code{\link[=download_survey]{download_survey()}} and subsequently loaded using \code{\link[=load_survey]{load_survey()}}.
 }
 \examples{
 \dontrun{
