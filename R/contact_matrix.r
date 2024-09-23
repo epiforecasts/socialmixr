@@ -779,6 +779,9 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       }
     }
 
+    # make sure the dim.names are retained after symmetric or split procedure
+    dimnames(weighted.matrix) <- dim.names
+    
     ret[[i]][["matrix"]] <- weighted.matrix
 
     # option to add matrix per capita, i.e. the contact rate of age i with one individual of age j in the population.
