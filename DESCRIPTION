@@ -23,7 +23,6 @@ Imports:
     countrycode,
     curl,
     data.table,
-    fields,
     grDevices,
     httr,
     jsonlite,
