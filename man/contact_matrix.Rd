@@ -54,7 +54,7 @@ contact_matrix(
 
 \item{sample.participants}{whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this..}
 
-\item{estimated.participant.age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
+\item{estimated.participant.age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (if the "part_age" column contains NA) will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
 
 \item{estimated.contact.age}{if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
 
@@ -76,7 +76,7 @@ contact_matrix(
 
 \item{return.demography}{boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters)}
 
-\item{per.capita}{wheter to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE')}
+\item{per.capita}{whether to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE')}
 
 \item{...}{further arguments to pass to \code{\link[=get_survey]{get_survey()}}, \code{\link[=check]{check()}} and \code{\link[=pop_age]{pop_age()}} (especially column names)}
 }
