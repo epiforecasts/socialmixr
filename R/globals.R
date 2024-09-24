@@ -24,12 +24,12 @@ utils::globalVariables(c(
   "proportion", # <contact_matrix>
   "participants", # <contact_matrix>
   "file_name", # <download_survey>
-  "common_doi", # <list_surveys>
-  "doi.nb", # <list_surveys>
-  "identifier.1", # <list_surveys>
-  "title", # <list_surveys>
-  "creator", # <list_surveys>
-  "identifier.2", # <list_surveys>
+  "common_doi", # <.list_surveys>
+  "doi.nb", # <.list_surveys>
+  "identifier.1", # <.list_surveys>
+  "title", # <.list_surveys>
+  "creator", # <.list_surveys>
+  "identifier.2", # <.list_surveys>
   "..main_id", # <load_survey>
   "..merge_id", # <load_survey>
   "..original.lower.age.limit", # <pop_age>
