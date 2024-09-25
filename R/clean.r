@@ -89,11 +89,18 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
           seconds_in_year,
       ]
     }
-
+    # include mean, though it would be better not to assign an average to an "exact age column"
     x$participants <- x$participants[,
       paste(participant.age.column) := (..low + ..high) / 2
     ]
-
+    # include included min and max age
+    x$participants <- x$participants[,
+      paste0(participant.age.column,'_est_min') := ..low
+    ]
+    x$participants <- x$participants[,
+    paste0(participant.age.column,'_est_max') := ..high
+    ]
+    
     x$participants[, ..high := NULL]
     x$participants[, ..low := NULL]
     x$participants[, ..age.unit := NULL]

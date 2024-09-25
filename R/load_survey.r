@@ -24,8 +24,12 @@ load_survey <- function(files, ...) {
   }
   survey_files <- grep("csv$", files, value = TRUE) # select csv files
   reference_file <- grep("json$", files, value = TRUE) # select json file
-  reference <- fromJSON(reference_file)
-
+  if(length(reference_file)>0){
+    reference <- fromJSON(reference_file)
+  } else {
+    reference <- NULL
+  }
+  
   contact_data <- lapply(survey_files, fread)
   names(contact_data) <- survey_files
 

@@ -18,11 +18,13 @@ erroneous_structure1$participants$part_id <- NULL
 erroneous_structure2 <- copy(erroneous_survey)
 erroneous_structure2$participants$part_age <- NULL
 erroneous_structure3 <- copy(erroneous_survey)
+erroneous_structure3$contacts$cnt_age_exact <- NULL 
 erroneous_structure3$contacts$cnt_age_est_min <- NULL
 
 test_that("incorrect structure of data frames is correctly identified", {
   expect_warning(check(erroneous_structure1), "does not exist")
-  expect_warning(check(erroneous_structure2), "does not exist")
+  expect_warning(check(erroneous_structure2), "do not exist") 
+  expect_warning(check(erroneous_structure3), "do not exist") 
 })
 
 test_that("deprecated arguments are warned about", {
