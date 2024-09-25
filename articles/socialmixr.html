@@ -55,7 +55,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Funk</h4>
             
-            <h4 data-toc-skip class="date">2024-09-24</h4>
+            <h4 data-toc-skip class="date">2024-09-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
       <div class="d-none name"><code>socialmixr.Rmd</code></div>
@@ -268,12 +268,12 @@ to obtain a symmetric contact matrix that fulfills it, one can use</p>
 <span><span class="co">#&gt; Warning in pop_age(survey.pop, part.age.group.present, ...): Not all age groups represented in population data (5-year age band).</span></span>
 <span><span class="co">#&gt;   Linearly estimating age group sizes from the 5-year bands.</span></span>
 <span><span class="co">#&gt; $matrix</span></span>
-<span><span class="co">#&gt;       contact.age.group</span></span>
-<span><span class="co">#&gt;             [0,1)     [1,5)   [5,15)      15+</span></span>
-<span><span class="co">#&gt;   [1,] 0.40000000 0.6250000 0.764365 4.122919</span></span>
-<span><span class="co">#&gt;   [2,] 0.15625000 1.9375000 1.406063 5.929829</span></span>
-<span><span class="co">#&gt;   [3,] 0.07148821 0.5260153 7.946078 7.428739</span></span>
-<span><span class="co">#&gt;   [4,] 0.05759306 0.3313352 1.109550 9.594101</span></span>
+<span><span class="co">#&gt;          contact.age.group</span></span>
+<span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
+<span><span class="co">#&gt;    [0,1)  0.40000000 0.6250000 0.764365 4.122919</span></span>
+<span><span class="co">#&gt;    [1,5)  0.15625000 1.9375000 1.406063 5.929829</span></span>
+<span><span class="co">#&gt;    [5,15) 0.07148821 0.5260153 7.946078 7.428739</span></span>
+<span><span class="co">#&gt;    15+    0.05759306 0.3313352 1.109550 9.594101</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $demography</span></span>
 <span><span class="co">#&gt;    age.group population proportion  year</span></span>
@@ -321,16 +321,16 @@ contact matrix per capita will be fully symmetric:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span>survey <span class="op">=</span> <span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"Germany"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">60</span><span class="op">)</span>, symmetric <span class="op">=</span> <span class="cn">TRUE</span>, per.capita <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $matrix</span></span>
-<span><span class="co">#&gt;       contact.age.group</span></span>
-<span><span class="co">#&gt;          [0,60)       60+</span></span>
-<span><span class="co">#&gt;   [1,] 7.743879 0.8967442</span></span>
-<span><span class="co">#&gt;   [2,] 2.711694 2.1267606</span></span>
+<span><span class="co">#&gt;          contact.age.group</span></span>
+<span><span class="co">#&gt; age.group   [0,60)       60+</span></span>
+<span><span class="co">#&gt;    [0,60) 7.743879 0.8967442</span></span>
+<span><span class="co">#&gt;    60+    2.711694 2.1267606</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $matrix.per.capita</span></span>
-<span><span class="co">#&gt;       contact.age.group</span></span>
-<span><span class="co">#&gt;              [0,60)          60+</span></span>
-<span><span class="co">#&gt;   [1,] 1.261735e-07 4.418248e-08</span></span>
-<span><span class="co">#&gt;   [2,] 4.418248e-08 1.047852e-07</span></span>
+<span><span class="co">#&gt;          contact.age.group</span></span>
+<span><span class="co">#&gt; age.group       [0,60)          60+</span></span>
+<span><span class="co">#&gt;    [0,60) 1.261735e-07 4.418248e-08</span></span>
+<span><span class="co">#&gt;    60+    4.418248e-08 1.047852e-07</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $demography</span></span>
 <span><span class="co">#&gt;    age.group population proportion  year</span></span>
@@ -397,11 +397,12 @@ of the resulting list.</p>
 <span><span class="co">#&gt; [1] 0.6995727 0.7464190 1.2235173 0.9390331</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $matrix</span></span>
-<span><span class="co">#&gt;           [,1]      [,2]     [,3]      [,4]</span></span>
-<span><span class="co">#&gt; [1,] 4.1561551 2.0780776 1.230914 0.8611839</span></span>
-<span><span class="co">#&gt; [2,] 1.0955555 4.7169752 1.332022 0.7413849</span></span>
-<span><span class="co">#&gt; [3,] 0.1456110 0.7498969 4.415104 0.5158328</span></span>
-<span><span class="co">#&gt; [4,] 0.2500527 0.6930808 0.934443 1.0374170</span></span>
+<span><span class="co">#&gt;          contact.age.group</span></span>
+<span><span class="co">#&gt; age.group     [0,1)     [1,5)   [5,15)       15+</span></span>
+<span><span class="co">#&gt;    [0,1)  4.1561551 2.0780776 1.230914 0.8611839</span></span>
+<span><span class="co">#&gt;    [1,5)  1.0955555 4.7169752 1.332022 0.7413849</span></span>
+<span><span class="co">#&gt;    [5,15) 0.1456110 0.7498969 4.415104 0.5158328</span></span>
+<span><span class="co">#&gt;    15+    0.2500527 0.6930808 0.934443 1.0374170</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $demography</span></span>
 <span><span class="co">#&gt;    age.group population proportion  year</span></span>

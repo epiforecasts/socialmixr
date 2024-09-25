@@ -50,11 +50,12 @@
 <span>  <span class="va">xlab</span>,</span>
 <span>  <span class="va">ylab</span>,</span>
 <span>  <span class="va">legend.width</span>,</span>
+<span>  <span class="va">legend.mar</span>,</span>
+<span>  <span class="va">legend.shrink</span>,</span>
 <span>  <span class="va">cex.lab</span>,</span>
 <span>  <span class="va">cex.axis</span>,</span>
 <span>  <span class="va">cex.text</span>,</span>
-<span>  color.palette <span class="op">=</span> <span class="va">heat.colors</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  color.palette <span class="op">=</span> <span class="va">heat.colors</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -67,7 +68,7 @@
 
 
 <dt id="arg-min-legend">min.legend<a class="anchor" aria-label="anchor" href="#arg-min-legend"></a></dt>
-<dd><p>the color scale minimum (default = 0). Set to NA to use the minimium value of <code>mij</code>.</p></dd>
+<dd><p>the color scale minimum (default = 0). Set to NA to use the minimum value of <code>mij</code>.</p></dd>
 
 
 <dt id="arg-max-legend">max.legend<a class="anchor" aria-label="anchor" href="#arg-max-legend"></a></dt>
@@ -98,6 +99,14 @@
 <dd><p>width of the legend strip in characters. Default is 1.</p></dd>
 
 
+<dt id="arg-legend-mar">legend.mar<a class="anchor" aria-label="anchor" href="#arg-legend-mar"></a></dt>
+<dd><p>width in characters of legend margin. Default is 5.1.</p></dd>
+
+
+<dt id="arg-legend-shrink">legend.shrink<a class="anchor" aria-label="anchor" href="#arg-legend-shrink"></a></dt>
+<dd><p>amount to shrink the size of legend relative to the full height or width of the plot. Default is 0.9.</p></dd>
+
+
 <dt id="arg-cex-lab">cex.lab<a class="anchor" aria-label="anchor" href="#arg-cex-lab"></a></dt>
 <dd><p>size of the x and y labels (default: 1.2)</p></dd>
 
@@ -113,14 +122,10 @@
 <dt id="arg-color-palette">color.palette<a class="anchor" aria-label="anchor" href="#arg-color-palette"></a></dt>
 <dd><p>the color palette to use (default: <code><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">heat.colors()</a></code>). Other examples are <code><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">topo.colors()</a></code>, <code><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">terrain.colors()</a></code> and <code><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors()</a></code>. User-defined functions are also possible if they take the number of colors to be in the palette as function argument.</p></dd>
 
-
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>further arguments to pass to <code>image.plot()</code></p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This is a function using the basic R graphics to make it easier for users of socialmixr to visualise social contact matrices.</p>
+    <p>This is a function using basic R graphics to visualise a social contact matrix.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
