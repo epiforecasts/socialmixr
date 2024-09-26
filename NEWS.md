@@ -3,6 +3,7 @@
 * The speed of loading surveys has been increased.
 * An error has been fixed causing NA contact matrices if any 5-year age band in the population data was missing.
 * Results of function calls accessing Zenodo repository are now cached for speedup and to avoid multiple web requests
+* The `limits_to_agegroups` has been changed to return bracket notated age ranges by default
 
 # socialmixr 0.3.2
 
