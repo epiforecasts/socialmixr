@@ -171,11 +171,11 @@ contact_matrix(survey = polymod, countries = "Germany", age.limits = c(0, 60), s
 
 The `contact_matrix()` contains a simple model for the elements of the contact matrix, by which it is split into a _global_ component, as well as three components representing _contacts_, _assortativity_ and _demography_. In other words, the elements $m_{ij}$ of the contact matrix are modeled as
 
-$$ m_{ij} = q d_i a_{ij} n_j $$
+$$ m_{ij} = c q d_i a_{ij} n_j $$
 
-where $q d_i$ is the number of contacts that a member of group $i$ makes across age groups, $n_j$ is the proportion of the surveyed population in age group $j$. The constant $q$ is set to the value of the largest eigenvalue of $m_{ij}$; if used in an infectious disease model, it can be replaced by the basic reproduction number $R_0$.
+where $c$ is the mean number of contacts across the whole population, $c q d_i$ is the number of contacts that a member of group $i$ makes across age groups, $n_j$ is the proportion of the surveyed population in age group $j$. The constant $q$ is set so that $c q$ is equal to the value of the largest eigenvalue of $m_{ij}$; if used in an infectious disease model and assumed that every contact leads to infection, $c q$ can be replaced by the basic reproduction number $R_0$.
 
-To model the contact matrix in this way with the `contact_matrix()` function, set `split = TRUE`. The components of the matrix are returned as elements `normalisation` ($q$), `contacts` ($d_i$), `matrix` ($a_{ij}$) and `demography` ($n_j$) of the resulting list.
+To model the contact matrix in this way with the `contact_matrix()` function, set `split = TRUE`. The components of the matrix are returned as elements `mean.contacts` ($c$), `normalisation` ($q$), `contacts` ($d_i$), `matrix` ($a_{ij}$) and `demography` ($n_j$) of the resulting list.
 
 ```{r}
 contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), split = TRUE)
