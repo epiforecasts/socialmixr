@@ -13,7 +13,7 @@
 #' @param symmetric whether to make matrix symmetric, such that \eqn{c_{ij}N_i = c_{ji}N_j}.
 #' @param split whether to split the number of contacts and assortativity
 #' @param sample.participants whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this..
-#' @param estimated.participant.age if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (if the "part_age" column contains NA) will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
+#' @param estimated.participant.age if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
 #' @param estimated.contact.age if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
 #' @param missing.participant.age if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group
 #' @param missing.contact.age if set to "remove" (default), participants that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group; if set to "ignore", contact with missing age are ignored in the contact analysis
@@ -128,54 +128,16 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   }
 
   ## check maximum participant age in the data
+  part_exact.column <- paste(columns[["participant.age"]], "exact", sep = "_")
   part_min.column <- paste(columns[["participant.age"]], "est_min", sep = "_")
   part_max.column <- paste(columns[["participant.age"]], "est_max", sep = "_")
 
-  if (!(columns[["participant.age"]] %in% colnames(survey$participants))) {
+  if (part_exact.column %in% colnames(survey$participants)) {
+    survey$participants[,
+      paste(columns[["participant.age"]]) := as.integer(get(part_exact.column))
+    ]
+  } else if (!(columns[["participant.age"]] %in% colnames(survey$participants))) {
     survey$participants[, paste(columns[["participant.age"]]) := NA_integer_]
-  }
-
-  if (part_max.column %in% colnames(survey$participants)) {
-    max.age <- max(
-      c(
-        survey$participants[, get(columns[["participant.age"]])],
-        survey$participants[, get(part_max.column)]
-      ),
-      na.rm = TRUE
-    ) + 1
-  } else {
-    max.age <- max(
-      survey$participants[, get(columns[["participant.age"]])], na.rm = TRUE
-    ) + 1
-  }
-
-  if (missing(age.limits)) {
-    all.ages <-
-      unique(as.integer(survey$participants[, get(columns[["participant.age"]])]))
-    all.ages <- all.ages[!is.na(all.ages)]
-    all.ages <- sort(all.ages)
-    age.limits <- union(0, all.ages)
-  }
-
-  ## check if any filters have been requested
-  if (!missing(filter)) {
-    missing_columns <- list()
-    for (table in surveys) {
-      if (nrow(survey[[table]]) > 0) {
-        missing_columns <-
-          c(missing_columns, list(setdiff(names(filter), colnames(survey[[table]]))))
-        ## filter contact data
-        for (column in names(filter)) {
-          if (column %in% colnames(survey[[table]])) {
-            survey[[table]] <- survey[[table]][get(column) == filter[[column]]]
-          }
-        }
-      }
-    }
-    missing_all <- do.call(intersect, missing_columns)
-    if (length(missing_all) > 0) {
-      warning("filter column(s) ", toString(missing_all), " not found")
-    }
   }
 
   ## sample estimated participant ages
@@ -183,7 +145,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     part_max.column %in% colnames(survey$participants)) {
     if (estimated.participant.age == "mean") {
       survey$participants[
-        is.na(get(columns[["participant.age"]])) &
+        is.na(get(part_exact.column)) &
           !is.na(get(part_min.column)) & !is.na(get(part_max.column)),
         paste(columns[["participant.age"]]) :=
           as.integer(rowMeans(.SD)),
@@ -205,6 +167,27 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     # note: do nothing when "missing" is specified
   }
 
+  if (part_max.column %in% colnames(survey$participants)) {
+    max.age <- max(
+      c(
+        survey$participants[, get(part_exact.column)],
+        survey$participants[, get(part_max.column)]
+      ),
+      na.rm = TRUE
+    ) + 1
+  } else {
+    max.age <- max(
+      survey$participants[, get(columns[["participant.age"]])], na.rm = TRUE
+    ) + 1
+  }
+
+  if (missing(age.limits)) {
+    all.ages <-
+      unique(as.integer(survey$participants[, get(columns[["participant.age"]])]))
+    all.ages <- all.ages[!is.na(all.ages)]
+    all.ages <- sort(all.ages)
+    age.limits <- union(0, all.ages)
+  }
 
   if (missing.participant.age == "remove" &&
     nrow(survey$participants[is.na(get(columns[["participant.age"]])) |
@@ -225,15 +208,12 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   max.column <- paste(columns[["contact.age"]], "est_max", sep = "_")
 
   ## set contact age if it's not in the data
-  if (!(columns[["contact.age"]] %in% colnames(survey$contacts))) {
+  if (exact.column %in% colnames(survey$contacts)) {
+    survey$contacts[,
+      paste(columns[["contact.age"]]) := as.integer(get(exact.column))
+    ]
+  } else {
     survey$contacts[, paste(columns[["contact.age"]]) := NA_integer_]
-
-    if (exact.column %in% colnames(survey$contacts)) {
-      survey$contacts[
-        !is.na(get(exact.column)),
-        paste(columns[["contact.age"]]) := get(exact.column)
-      ]
-    }
   }
 
   ## convert factors to integers
@@ -291,7 +271,6 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     survey$participants <- survey$participants[!(get(columns[["id"]]) %in% missing.age.id)]
   }
 
-
   if (missing.contact.age == "ignore" &&
     nrow(survey$contacts[is.na(get(columns[["contact.age"]])) |
       get(columns[["contact.age"]]) < min(age.limits)]) > 0) {
@@ -303,6 +282,27 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     }
     survey$contacts <- survey$contacts[!is.na(get(columns[["contact.age"]])) &
       get(columns[["contact.age"]]) >= min(age.limits), ]
+  }
+
+  ## check if any filters have been requested
+  if (!missing(filter)) {
+    missing_columns <- list()
+    for (table in surveys) {
+      if (nrow(survey[[table]]) > 0) {
+        missing_columns <-
+          c(missing_columns, list(setdiff(names(filter), colnames(survey[[table]]))))
+        ## filter contact data
+        for (column in names(filter)) {
+          if (column %in% colnames(survey[[table]])) {
+            survey[[table]] <- survey[[table]][get(column) == filter[[column]]]
+          }
+        }
+      }
+    }
+    missing_all <- do.call(intersect, missing_columns)
+    if (length(missing_all) > 0) {
+      warning("filter column(s) ", toString(missing_all), " not found")
+    }
   }
 
   # adjust age.group.brakes to the lower and upper ages in the survey
