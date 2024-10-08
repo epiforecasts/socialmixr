@@ -55,7 +55,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Funk</h4>
             
-            <h4 data-toc-skip class="date">2024-10-01</h4>
+            <h4 data-toc-skip class="date">2024-10-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
       <div class="d-none name"><code>socialmixr.Rmd</code></div>
@@ -354,9 +354,11 @@ elements of the contact matrix, by which it is split into a
 other words, the elements
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">m_{ij}</annotation></semantics></math>
 of the contact matrix are modeled as</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mi>q</mi><msub><mi>d</mi><mi>i</mi></msub><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>n</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex"> m_{ij} = q d_i a_{ij} n_j </annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mi>c</mi><mi>q</mi><msub><mi>d</mi><mi>i</mi></msub><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>n</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex"> m_{ij} = c q d_i a_{ij} n_j </annotation></semantics></math></p>
 <p>where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><msub><mi>d</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">q d_i</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
+is the mean number of contacts across the whole population,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>q</mi><msub><mi>d</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">c q d_i</annotation></semantics></math>
 is the number of contacts that a member of group
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
 makes across age groups,
@@ -365,14 +367,20 @@ is the proportion of the surveyed population in age group
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>.
 The constant
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math>
-is set to the value of the largest eigenvalue of
+is set so that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>q</mi></mrow><annotation encoding="application/x-tex">c q</annotation></semantics></math>
+is equal to the value of the largest eigenvalue of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">m_{ij}</annotation></semantics></math>;
-if used in an infectious disease model, it can be replaced by the basic
-reproduction number
+if used in an infectious disease model and assumed that every contact
+leads to infection,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>q</mi></mrow><annotation encoding="application/x-tex">c q</annotation></semantics></math>
+can be replaced by the basic reproduction number
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>R</mi><mn>0</mn></msub><annotation encoding="application/x-tex">R_0</annotation></semantics></math>.</p>
 <p>To model the contact matrix in this way with the
 <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> function, set <code>split = TRUE</code>.
 The components of the matrix are returned as elements
+<code>mean.contacts</code>
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>),
 <code>normalisation</code>
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math>),
 <code>contacts</code>
