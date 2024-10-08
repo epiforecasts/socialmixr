@@ -22,9 +22,7 @@ limits_to_agegroups <- function(x, limits = sort(unique(x)),
   limits <- limits[!is.na(limits)]
   agegroups <- if (length(limits) > 1) {
     if (notation == "brackets") {
-      vapply(seq(1, length(limits) - 1), function(y) {
-        paste0("[", limits[y], ",", limits[y + 1], ")")
-      }, "")
+      sprintf("[%s,%s)", limits[-length(limits)], limits[-1])
     } else if (notation == "dashes") {
       vapply(seq(1, length(limits) - 1), function(y) {
         if ((limits[y + 1] - 1) > limits[y]) {
