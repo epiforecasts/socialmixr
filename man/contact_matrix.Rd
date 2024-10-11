@@ -50,11 +50,11 @@ contact_matrix(
 
 \item{symmetric}{whether to make matrix symmetric, such that \eqn{c_{ij}N_i = c_{ji}N_j}.}
 
-\item{split}{whether to split the number of contacts and assortativity}
+\item{split}{whether to split the contact matrix into the mean number of contacts, in each age group (split further into the product of the mean number of contacts across the whole population (\code{mean.contacts}), a normalisation constant (\code{normalisation}) and age-specific variation in contacts (\code{contacts})), multiplied with an assortativity matrix (\code{assortativity}) and a population multiplier (\code{demograpy}). For more detail on this, see the "Getting Started" vignette.}
 
 \item{sample.participants}{whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this..}
 
-\item{estimated.participant.age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (if the "part_age" column contains NA) will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
+\item{estimated.participant.age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
 
 \item{estimated.contact.age}{if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
 

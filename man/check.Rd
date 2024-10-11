@@ -23,7 +23,7 @@
 
 \item{id.column}{the column in both the \code{participants} and \code{contacts} data frames that links contacts to participants}
 
-\item{participant.age.column}{the column in the \code{participants} data frame containing participants' age}
+\item{participant.age.column}{the column in the \code{participants} data frame containing participants' age; if this does not exist, at least columns "..._exact", "..._est_min" and "..._est_max" must (see the \code{estimated.participant.age} option in \code{\link[=contact_matrix]{contact_matrix()}})}
 
 \item{country.column}{the column in the \code{participants} data frame containing the country in which the participant was queried}
 

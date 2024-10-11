@@ -39,12 +39,14 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
 
   if (nrow(x$participants) > 0 &&
     participant.age.column %in% colnames(x$participants) &&
-    !is.numeric(x$participants[, get(participant.age.column)])) {
+    (!is.numeric(x$participants[, get(participant.age.column)]) ||
+       anyNA(x$participants[, get(participant.age.column)]))
+  ) {
     ## set any entries not containing numbers to NA
     x$participants <- x$participants[,
       paste(participant.age.column) := fifelse(
         grepl("[0-9]", get(participant.age.column)),
-        get(participant.age.column),
+        as.character(get(participant.age.column)),
         NA_character_
       )
     ]
@@ -89,18 +91,14 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
           seconds_in_year,
       ]
     }
-    # include mean, though it would be better not to assign an average to an "exact age column"
+
     x$participants <- x$participants[,
-      paste(participant.age.column) := (..low + ..high) / 2
+      paste(participant.age.column, "exact", sep = "_") := suppressWarnings(
+        as.integer(get(participant.age.column))
+      )
     ]
-    # include included min and max age
-    x$participants <- x$participants[,
-      paste0(participant.age.column,'_est_min') := ..low
-    ]
-    x$participants <- x$participants[,
-    paste0(participant.age.column,'_est_max') := ..high
-    ]
-    
+    x$participants[, paste(participant.age.column) := NULL]
+
     x$participants[, ..high := NULL]
     x$participants[, ..low := NULL]
     x$participants[, ..age.unit := NULL]
