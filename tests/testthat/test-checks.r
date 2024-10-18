@@ -26,7 +26,3 @@ test_that("incorrect structure of data frames is correctly identified", {
   expect_warning(check(erroneous_structure2), "do not exist")
   expect_warning(check(erroneous_structure3), "do not exist")
 })
-
-test_that("deprecated arguments are warned about", {
-  expect_warning(check(polymod, columns = TRUE), "deprecated")
-})

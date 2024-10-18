@@ -7,7 +7,6 @@
 \usage{
 \method{check}{survey}(
   x,
-  columns,
   id.column = "part_id",
   participant.age.column = "part_age",
   country.column = "country",
@@ -18,8 +17,6 @@
 }
 \arguments{
 \item{x}{A \code{\link[=survey]{survey()}} object}
-
-\item{columns}{deprecated argument, ignored}
 
 \item{id.column}{the column in both the \code{participants} and \code{contacts} data frames that links contacts to participants}
 

@@ -540,12 +540,3 @@ test_that("Contact matrices per capita are also generated when bootstrapping", {
     ), 2)
   })
 })
-
-test_that("passing a DOI for survey is deprecated", {
-  skip_if_offline("zenodo.org")
-  skip_on_cran()
-  skip_on_ci()
-  lifecycle::expect_deprecated(
-    contact_matrix(survey = "10.5281/zenodo.1095664") # nolint
-  )
-})
