@@ -17,4 +17,4 @@ We checked 2 reverse dependencies, comparing R CMD check results across CRAN and
 
 # Previous CRAN issues
 
-NOTEs have been fixed.
+A NOTE has been fixed.
