@@ -16,6 +16,8 @@ vignette: >
 
 ```{r setup, include = FALSE}
 library("knitr")
+library("socialmixr")
+library("ggplot2")
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -26,28 +28,6 @@ data.table::setDTthreads(1)
 [socialmixr](https://github.com/epiforecasts/socialmixr) is an `R` package to derive social mixing matrices from survey data. These are particularly useful for age-structured [infectious disease models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease). For background on age-specific mixing matrices and what data inform them, see, for example, the paper on POLYMOD by [@mossong_social_2008].
 
 # Usage
-
-The latest stable version of the `socialmixr` package is installed via
-
-```{r, eval=FALSE}
-install.packages("socialmixr")
-```
-
-The latest development version of the `socialmixr` package can be installed via
-
-```r
-devtools::install_github("epiforecasts/socialmixr")
-```
-
-To load the package, use
-
-```{r, eval=FALSE}
-library("socialmixr")
-```
-```{r, echo=FALSE}
-suppressWarnings(library("socialmixr"))
-```
-
 
 At the heart of the `socialmixr` package is the `contact_matrix()` function. This extracts a contact matrix from survey data. You can use the `R` help to find out about usage of the `contact_matrix()` function, including a list of examples:
 
@@ -336,7 +316,7 @@ survey_data["m_i * w_tilde"] <- survey_data$m_i * survey_data$w_tilde
 kable(survey_data)
 
 # remove the weighted number of contacts
-survey_data$"m_i * w_tilde" <- NULL
+survey_data$`m_i * w_tilde` <- NULL
 
 print(paste("weighted average number of contacts:", round(mean(survey_data$m_i * survey_data$w_tilde), digits = 2)))
 ```
@@ -478,9 +458,7 @@ print(paste("weighted average number of contacts after truncation:", round(mean(
 The contact matrices can be plotted by using the `geom_tile()` function of the `ggplot2` package.
 
 ```{r fig.width=4, fig.height=4}
-library("reshape2")
-library("ggplot2")
-df <- melt(mr, varnames = c("age.group", "age.group.contact"), value.name = "contacts")
+df <- reshape2::melt(mr, varnames = c("age.group", "age.group.contact"), value.name = "contacts")
 ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) +
   theme(legend.position = "bottom") +
   geom_tile()
