@@ -49,7 +49,7 @@ check.survey <- function(x, columns, id.column = "part_id", participant.age.colu
     exact.column <- paste(participant.age.column, "exact", sep = "_")
     min.column <- paste(participant.age.column, "est_min", sep = "_")
     max.column <- paste(participant.age.column, "est_max", sep = "_")
-    
+
     if (!((exact.column %in% colnames(x$participants)) ||
       (min.column %in% colnames(x$participants) && max.column %in% colnames(x$participants)))) {
       warning(

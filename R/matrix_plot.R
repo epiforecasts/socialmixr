@@ -29,7 +29,7 @@
 #' }
 #' @author Lander Willem
 matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, num.colors = 50, main, xlab, ylab, legend.width, legend.mar, legend.shrink, cex.lab, cex.axis, cex.text, color.palette = heat.colors) {
-  
+
   # check function arguments
   xlab <- ifelse(!missing(xlab), xlab, "Age group (year)")
   ylab <- ifelse(!missing(ylab), ylab, "Contact age group (year)")
@@ -40,7 +40,7 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
   legend.width <- ifelse(!missing(legend.width), legend.width, 1)
   legend.mar <- ifelse(!missing(legend.mar), legend.mar, 5.1)
   legend.shrink <- ifelse(!missing(legend.shrink), legend.shrink, 0.9)
-  
+
   # set colors
   redc <- rev(color.palette(num.colors))
 
@@ -51,47 +51,51 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
 
   # set breaks and midpoints
   breaks <- seq(zlim[1], zlim[2], length = num.colors + 1)
-  midpoints <- matrix(breaks[-length(breaks)] + diff(breaks)/2, nrow = 1, ncol = length(breaks)-1)
-  
+  midpoints <- matrix(
+    breaks[-length(breaks)] + diff(breaks) / 2,
+    nrow = 1, ncol = length(breaks) - 1
+  )
+
   # get plot region for matrix and legend based on current graphical parameters
   # note: based on layout from fields::imagePlot
-  char.size <- par()$cin[1]/par()$din[1] # get text character size
+  char.size <- par()$cin[1] / par()$din[1] # get text character size
   offset <- char.size * par()$mar[4] # space between legend and main plot
 
   # set legends' plot region
   legend_plot_region <- par()$plt
   legend_plot_region[2] <- 1 - (legend.mar * char.size)
   legend_plot_region[1] <- legend_plot_region[2] - (legend.width * char.size)
-  
+
   # account for legend.shrink
-  pr <- (legend_plot_region[4] - legend_plot_region[3]) * ((1 - legend.shrink)/2)
+  pr <- (legend_plot_region[4] - legend_plot_region[3]) *
+    ((1 - legend.shrink) / 2)
   legend_plot_region[4] <- legend_plot_region[4] - pr
   legend_plot_region[3] <- legend_plot_region[3] + pr
-  
-  # set main matrix' plot region 
+
+  # set main matrix' plot region
   main_plot_region    <- par()$plt
   main_plot_region[2] <- min(main_plot_region[2], legend_plot_region[1] - offset)
-  
-  # defensive check for main and legends' plot region 
+
+  # defensive check for main and legends' plot region
   dp <- legend_plot_region[2] - legend_plot_region[1]
   legend_plot_region[1] <- min(main_plot_region[2] + offset, legend_plot_region[1])
   legend_plot_region[2] <- legend_plot_region[1] + dp
-  
+
   # store old graphical parameters, and initiate the ones for the main plot
   old.par <- par(no.readonly = TRUE)
   par(plt = main_plot_region)
-  
+
   # add image plot
-  image(mij, 
+  image(mij,
         xlab = xlab,
         ylab = ylab,
         main = main,
         cex.lab = cex.lab,
         breaks = breaks,
-        col = redc, 
+        col = redc,
         xaxt = "n",
         yaxt = "n")
-  
+
   # add axis labels
   plt_ticks <- seq(0, 1, length = nrow(mij))
   axis(2, at = plt_ticks, labels = c(colnames(mij)), cex.axis = cex.axis, tick = FALSE, las = 1)
@@ -110,17 +114,17 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
     e_grid <- expand.grid(plt_ticks, plt_ticks)
     text(e_grid, labels = mij, cex = cex.text)
   }
-  
-  # set graphical parameters for the legend 
+
+  # set graphical parameters for the legend
   par(new = TRUE, pty = "m", plt = legend_plot_region, err = -1)
-  
+
   # include legend bar with axis
-  image(x = 1:2, y=breaks, z=midpoints, 
-        xaxt = "n", yaxt = "n", xlab = "", 
-        ylab = "", col = redc, 
-        breaks=breaks)
+  image(x = 1:2, y = breaks, z = midpoints,
+        xaxt = "n", yaxt = "n", xlab = "",
+        ylab = "", col = redc,
+        breaks = breaks)
   axis(side = 4, mgp = c(3, 1, 0), las = 2)
-  
+
   # restore original graphical parameters
-  par(old.par) 
+  par(old.par)
 }
