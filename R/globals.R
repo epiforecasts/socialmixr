@@ -4,7 +4,6 @@ utils::globalVariables(c(
   "..age.unit", # <clean.survey>
   "..high", # <clean.survey>
   "..low", # <clean.survey>
-  "n", # <contact_matrix>
   "lower.age.limit", # <contact_matrix>
   "age.group", # <contact_matrix>
   "population", # <contact_matrix>
