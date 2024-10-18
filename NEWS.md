@@ -1,3 +1,5 @@
+# socialmixr (development version)
+
 # socialmixr 0.4.0
 
 * The speed of loading surveys has been increased.
