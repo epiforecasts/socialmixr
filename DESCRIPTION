@@ -30,9 +30,8 @@ Imports:
     memoise,
     oai,
     wpp2017,
-    xml2,
-    lifecycle
-Suggests: 
+    xml2
+Suggests:
     ggplot2,
     here,
     knitr,
