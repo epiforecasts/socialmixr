@@ -72,35 +72,19 @@ what data inform them, see, for example, the paper on POLYMOD by <span class="ci
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>The latest stable version of the <code>socialmixr</code> package is
-installed via</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"socialmixr"</span><span class="op">)</span></span></code></pre></div>
-<p>The latest development version of the <code>socialmixr</code> package
-can be installed via</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"epiforecasts/socialmixr"</span><span class="op">)</span></span></code></pre></div>
-<p>To load the package, use</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/epiforecasts/socialmixr" class="external-link">"socialmixr"</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'socialmixr'</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:utils':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     cite</span></span></code></pre>
 <p>At the heart of the <code>socialmixr</code> package is the
 <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> function. This extracts a contact matrix
 from survey data. You can use the <code>R</code> help to find out about
 usage of the <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> function, including a list of
 examples:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">?</span><span class="va">contact_matrix</span></span></code></pre></div>
 <p>The POLYMOD data are included with the package and can be loaded
 using</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span></code></pre></div>
 <p>An example use would be</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
 <span><span class="co">#&gt; $matrix</span></span>
@@ -133,7 +117,7 @@ specified. It also provides access to all surveys in the <a href="https://zenodo
 data</a> community on <a href="https://zenodo.org" class="external-link">Zenodo</a>. The
 available surveys can be listed (if an internet connection is available)
 with</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/list_surveys.html">list_surveys</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>A survey can be downloaded using the <code><a href="../reference/get_survey.html">get_survey()</a></code>
 command. This will get the relevant data of a survey given its Zenodo
@@ -142,16 +126,16 @@ commands in the <code>socialmixr</code> package accept a DOI, but if a
 survey is to be used repeatedly it is worth downloading it and storing
 it locally to avoid the need for a network connection and speed up
 processing.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peru_survey</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_survey.html">get_survey</a></span><span class="op">(</span><span class="st">"https://doi.org/10.5281/zenodo.1095664"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">peru_survey</span>, <span class="st">"peru.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>This way, the <code>peru</code> data set can be loaded in the future
 without the need for an internet connection using</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peru_survey</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"peru.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>Some surveys may contain data from multiple countries. To check this,
 use the <code>survey_countries</code> function</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/survey_countries.html">survey_countries</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; [1] "Italy"          "Germany"        "Luxembourg"     "Netherlands"   </span></span>
@@ -163,11 +147,9 @@ surveys contained in a dataset are combined as if they were one single
 sample (i.e., not applying any population-weighting by country or other
 correction).</p>
 <p>By default, socialmixr uses the POLYMOD survey. A reference for any
-given survey can be obtained using <code><a href="../reference/cite.html">cite()</a></code>, e.g.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/cite.html">cite</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in cite.survey(polymod): The cite function is deprecated and will stop</span></span>
-<span><span class="co">#&gt; working in version 1.0.0. Please use get_citation() instead.</span></span>
+given survey can be obtained using <code><a href="../reference/get_citation.html">get_citation()</a></code>, e.g.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_citation.html">get_citation</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Mossong J, Hens N, Jit M, Beutels P, Auranen K, Mikolajczyk R, Massari</span></span>
 <span><span class="co">#&gt; M, Salmaso S, Tomba GS, Wallinga J, Heijne J, Sadkowska-Todys M,</span></span>
 <span><span class="co">#&gt; Rosinska M, Edmunds WJ (2017). "POLYMOD social contact data."</span></span>
@@ -185,7 +167,7 @@ participants of the original study) every time the
 <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> function is called, and thus a different
 matrix returned every time. From these matrices, derived quantities can
 be obtained, for example the mean:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span></span>
 <span>  n <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  <span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span></span>
@@ -228,7 +210,7 @@ the year in which the contact survey was conducted.</p>
 the results list. It is possible to enforce or prevent the function to
 return demography data by using the <code>return.demography</code>
 option.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>,</span>
 <span>  countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span><span class="op">)</span>,</span>
 <span>  return.demography <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -262,7 +244,7 @@ to obtain a symmetric contact matrix that fulfills it, one can use</p>
 <p>To get this version of the contact matrix, use
 <code>symmetric = TRUE</code> when calling the
 <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> function.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, symmetric <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
 <span><span class="co">#&gt; Warning in pop_age(survey.pop, part.age.group.present, ...): Not all age groups represented in population data (5-year age band).</span></span>
@@ -318,7 +300,7 @@ The contact rates per capita are calculated as follows:</p>
 can show asymmetry if the sub-population sizes are different, but the
 contact matrix per capita will be fully symmetric:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><msub><mi>′</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mfrac><mrow><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>N</mi><mi>i</mi></msub><mo>+</mo><msub><mi>m</mi><mrow><mi>j</mi><mi>i</mi></mrow></msub><msub><mi>N</mi><mi>j</mi></msub></mrow><mrow><mn>2</mn><msub><mi>N</mi><mi>i</mi></msub><msub><mi>N</mi><mi>j</mi></msub></mrow></mfrac><mo>=</mo><mi>c</mi><msub><mi>′</mi><mrow><mi>j</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}</annotation></semantics></math></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span>survey <span class="op">=</span> <span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"Germany"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">60</span><span class="op">)</span>, symmetric <span class="op">=</span> <span class="cn">TRUE</span>, per.capita <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $matrix</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
@@ -390,7 +372,7 @@ The components of the matrix are returned as elements
 and <code>demography</code>
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mi>j</mi></msub><annotation encoding="application/x-tex">n_j</annotation></semantics></math>)
 of the resulting list.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, split <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
 <span><span class="co">#&gt; Warning in pop_age(survey.pop, part.age.group.present, ...): Not all age groups represented in population data (5-year age band).</span></span>
@@ -441,7 +423,7 @@ contact occurred. Any filter can be applied to the data, if given as a
 list of the form (column=filter_value). As such, only contacts that have
 ‘filter_value’ in ‘column’ will be considered for the generated contact
 matrix:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># contact matrix for school-related contacts</span></span>
 <span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, <span class="fl">60</span><span class="op">)</span>, filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cnt_school <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">matrix</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
@@ -530,7 +512,7 @@ of is:
 <code>weight.age = TRUE</code>. The post-stratification weights are
 calculated by default. It is possible to obtain the participant weights
 via the option <code>return.part.weights = TRUE</code>.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span></span>
 <span>  survey <span class="op">=</span> <span class="va">polymod</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span>, weigh.dayofweek <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  weigh.age <span class="op">=</span> <span class="cn">TRUE</span>, return.part.weights <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -578,7 +560,7 @@ via the option <code>return.part.weights = TRUE</code>.</p>
 participant weights. Therefore, provide the names of the columns of the
 participant data you want to use to weight the reported contacts via the
 <code>weights</code> argument.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># e.g. use household size as (dummy) weight to provide more importance to participant data from large households</span></span>
 <span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span>survey <span class="op">=</span> <span class="va">polymod</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span>, weights <span class="op">=</span> <span class="st">"hh_size"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $matrix</span></span>
@@ -608,7 +590,7 @@ applied on the standardized weights, followed by another standardization
 to make sure that the sum of the weights still equals the sample size.
 The latter can lead to final weights of which some little exceed the
 given threshold value.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span></span>
 <span>  survey <span class="op">=</span> <span class="va">polymod</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span>, weigh.dayofweek <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  weigh.age <span class="op">=</span> <span class="cn">TRUE</span>, return.part.weights <span class="op">=</span> <span class="cn">TRUE</span>, weight.threshold <span class="op">=</span> <span class="fl">3</span></span>
@@ -717,7 +699,7 @@ represented by
 </table>
 <p>The summary statistics for the sample (N) and reference population
 (P) are as follows</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">6</span></span>
 <span><span class="va">N_age</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">N_age.group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span></span>
@@ -1349,16 +1331,14 @@ at 3. As such, the weighted population average equals:</p>
 <h3 id="using-ggplot2">Using ggplot2<a class="anchor" aria-label="anchor" href="#using-ggplot2"></a>
 </h3>
 <p>The contact matrices can be plotted by using the
-<code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a></code> function of the <code>ggplot2</code>
+<code>geom_tile()</code> function of the <code>ggplot2</code>
 package.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/hadley/reshape" class="external-link">"reshape2"</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org" class="external-link">"ggplot2"</a></span><span class="op">)</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/melt.html" class="external-link">melt</a></span><span class="op">(</span><span class="va">mr</span>, varnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age.group"</span>, <span class="st">"age.group.contact"</span><span class="op">)</span>, value.name <span class="op">=</span> <span class="st">"contacts"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age.group</span>, y <span class="op">=</span> <span class="va">age.group.contact</span>, fill <span class="op">=</span> <span class="va">contacts</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="socialmixr_files/figure-html/unnamed-chunk-38-1.png" width="384"></p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">reshape2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/melt.html" class="external-link">melt</a></span><span class="op">(</span><span class="va">mr</span>, varnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age.group"</span>, <span class="st">"age.group.contact"</span><span class="op">)</span>, value.name <span class="op">=</span> <span class="st">"contacts"</span><span class="op">)</span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">age.group</span>, y <span class="op">=</span> <span class="va">age.group.contact</span>, fill <span class="op">=</span> <span class="va">contacts</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_tile</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="socialmixr_files/figure-html/unnamed-chunk-35-1.png" width="384"></p>
 </div>
 <div class="section level3">
 <h3 id="using-r-base">Using R base<a class="anchor" aria-label="anchor" href="#using-r-base"></a>
@@ -1367,12 +1347,12 @@ package.</p>
 <code><a href="../reference/matrix_plot.html">matrix_plot()</a></code> function as a grid of colored rectangles with
 the numeric values in the cells. Heat colors are used by default, though
 this can be changed.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/matrix_plot.html">matrix_plot</a></span><span class="op">(</span><span class="va">mr</span><span class="op">)</span></span></code></pre></div>
-<p><img src="socialmixr_files/figure-html/unnamed-chunk-39-1.png" width="384"></p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<p><img src="socialmixr_files/figure-html/unnamed-chunk-36-1.png" width="384"></p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/matrix_plot.html">matrix_plot</a></span><span class="op">(</span><span class="va">mr</span>, color.palette <span class="op">=</span> <span class="va">gray.colors</span><span class="op">)</span></span></code></pre></div>
-<p><img src="socialmixr_files/figure-html/unnamed-chunk-39-2.png" width="384"></p>
+<p><img src="socialmixr_files/figure-html/unnamed-chunk-36-2.png" width="384"></p>
 </div>
 </div>
 <div class="section level2">
