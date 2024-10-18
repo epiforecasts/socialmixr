@@ -10,8 +10,6 @@ contact_matrix(
   survey.pop,
   age.limits,
   filter,
-  n = 1,
-  bootstrap,
   counts = FALSE,
   symmetric = FALSE,
   split = FALSE,
@@ -66,7 +64,7 @@ contact_matrix(
 
 \item{weight.threshold}{threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff)}
 
-\item{sample.all.age.groups}{what to do if bootstrapping fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead}
+\item{sample.all.age.groups}{what to do if sampling participants (with \code{sample.participants = TRUE}) fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead}
 
 \item{return.part.weights}{boolean to return the participant weights}
 
@@ -80,7 +78,7 @@ contact_matrix(
 a contact matrix, and the underlying demography of the surveyed population
 }
 \description{
-Samples a contact survey using a bootstrap
+Samples a contact survey
 }
 \examples{
 data(polymod)

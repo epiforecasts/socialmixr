@@ -21,7 +21,7 @@ test_that("age groups are ordered factors", {
   ages <- seq_len(50)
   age_limits <- c(0, 5, 10)
   groups <- reduce_agegroups(ages, age_limits)
-  age_groups <- limits_to_agegroups(groups)
+  age_groups <- limits_to_agegroups(groups, notation = "dashes")
   expect_s3_class(age_groups, "ordered")
   expect_s3_class(age_groups, "factor")
 })
