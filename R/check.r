@@ -7,7 +7,6 @@ check <- function(x, ...) UseMethod("check")
 #' @description Checks that a survey fulfills all the requirements to work with the 'contact_matrix' function
 #'
 #' @param x A [survey()] object
-#' @param columns deprecated argument, ignored
 #' @param id.column the column in both the `participants` and `contacts` data frames that links contacts to participants
 #' @param participant.age.column the column in the `participants` data frame containing participants' age; if this does not exist, at least columns "..._exact", "..._est_min" and "..._est_max" must (see the `estimated.participant.age` option in [contact_matrix()])
 #' @param country.column the column in the `participants` data frame containing the country in which the participant was queried
@@ -19,18 +18,10 @@ check <- function(x, ...) UseMethod("check")
 #' data(polymod)
 #' check(polymod)
 #' @export
-check.survey <- function(x, columns, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
+check.survey <- function(x, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
   chkDots(...)
   if (!is.data.frame(x$participants) || !is.data.frame(x$contacts)) {
     stop("The 'participants' and 'contacts' elements of 'x' must be data.frames")
-  }
-
-  if (!missing(columns)) {
-    warning(
-      "The 'columns' argument is deprecated and will cause an error from ",
-      "version 1.0.0. The behaviour of the function now always corresponds ",
-      "to the previous documented case for `columns = TRUE`"
-    )
   }
 
   x <- clean(x)

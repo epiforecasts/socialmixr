@@ -42,10 +42,6 @@ contact_matrix(
 
 \item{filter}{any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given.}
 
-\item{n}{deprecated; number of bootstrap samples to generate}
-
-\item{bootstrap}{deprecated; whether to bootstrap contact matrices}
-
 \item{counts}{whether to return counts (instead of means)}
 
 \item{symmetric}{whether to make matrix symmetric, such that \eqn{c_{ij}N_i = c_{ji}N_j}.}

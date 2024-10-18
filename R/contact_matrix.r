@@ -7,8 +7,6 @@
 #' @param survey.pop survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via `wpp_countries`; if not given, will use the country populations from the chosen countries, or all countries in the survey if `countries` is not given
 #' @param age.limits lower limits of the age groups over which to construct the matrix
 #' @param filter any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given.
-#' @param n deprecated; number of bootstrap samples to generate
-#' @param bootstrap  deprecated; whether to bootstrap contact matrices
 #' @param counts whether to return counts (instead of means)
 #' @param symmetric whether to make matrix symmetric, such that \eqn{c_{ij}N_i = c_{ji}N_j}.
 #' @param split whether to split the contact matrix into the mean number of contacts, in each age group (split further into the product of the mean number of contacts across the whole population (`mean.contacts`), a normalisation constant (`normalisation`) and age-specific variation in contacts (`contacts`)), multiplied with an assortativity matrix (`assortativity`) and a population multiplier (`demograpy`). For more detail on this, see the "Getting Started" vignette.
@@ -30,7 +28,6 @@
 #' @importFrom stats xtabs runif median
 #' @importFrom utils data globalVariables
 #' @importFrom countrycode countrycode
-#' @importFrom lifecycle deprecate_warn
 #' @import data.table
 #' @export
 #' @autoglobal
@@ -57,41 +54,11 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   missing.participant.age <- match.arg(missing.participant.age)
   missing.contact.age <- match.arg(missing.contact.age)
 
-  error_string <-
-    "must be a survey object (created using `survey()` or `get_survey()`)"
-
-  if (is_doi(survey)) {
-    deprecate_warn(
-      "0.3.2", paste0("contact_matrix(survey = '", error_string, "')"),
-      details = "Passing a DOI will be removed in version 0.4.0."
+  if (!inherits(survey, "survey")) {
+    stop(
+      "`survey` must be a survey object (created using `survey()` ",
+      "or `get_survey()`)"
     )
-    survey <- get_survey(survey)
-  } else if (!inherits(survey, "survey")) {
-    stop(error_string)
-  }
-
-  if (!missing(n)) {
-    warning(
-      "The 'n' option is being deprecated and will be removed ",
-      "in version 1.0.0. Please see the ",
-      "'Bootstrapping' section in the vignette for an ",
-      "alternative approach."
-    )
-    if (n > 1) bootstrap <- TRUE
-  }
-  if (!missing(bootstrap)) {
-    warning(
-      "The 'bootstrap' option is being deprecated and will be removed ",
-      "in version 1.0.0. Please use the 'sample.participants'",
-      " option instead."
-    )
-    if (missing(sample.participants)) sample.participants <- bootstrap
-    if (bootstrap != sample.participants) {
-      stop(
-        "'bootstrap' (if given) and 'sample.participants must have the ",
-        "same value."
-      )
-    }
   }
 
   if (!missing(age.limits)) {
