@@ -99,10 +99,10 @@ survey_countries(polymod)
 If one wishes to get a contact matrix for one or more specific countries, a `countries` argument can be passed to `contact_matrix()`. If this is not done, the different surveys contained in a dataset are combined as if they were one single sample (i.e., not applying any population-weighting by country or other correction).
 
 
-By default, socialmixr uses the POLYMOD survey. A reference for any given survey can be obtained using `cite()`, e.g.
+By default, socialmixr uses the POLYMOD survey. A reference for any given survey can be obtained using `get_citation()`, e.g.
 
 ```{r}
-cite(polymod)
+get_citation(polymod)
 ```
 
 # Bootstrapping
