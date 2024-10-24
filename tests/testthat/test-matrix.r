@@ -540,3 +540,8 @@ test_that("Contact matrices per capita are also generated when bootstrapping", {
     ), 2)
   })
 })
+
+
+test_that("Symmetric contact matrices with large normalisation weights throw a warning", {
+  expect_warning(contact_matrix(survey = polymod, age.limits = c(0, 90),symmetric = TRUE), "artefacts after making the matrix symmetric")
+})
