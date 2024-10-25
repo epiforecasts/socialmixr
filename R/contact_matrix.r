@@ -697,12 +697,11 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       normalised.weighted.matrix <- diag(survey.pop$population) %*% weighted.matrix
       normalised.weighted.matrix <- 0.5 * diag(1 / survey.pop$population) %*%
         (normalised.weighted.matrix + t(normalised.weighted.matrix))
-      
       # show warning if normalisation factors exceed the symmetric.norm.threshold
       normalisation_fctr <- c(normalised.weighted.matrix / weighted.matrix, weighted.matrix / normalised.weighted.matrix)
       normalisation_fctr <- normalisation_fctr[!is.infinite(normalisation_fctr) & !is.na(normalisation_fctr)]
       if (any(normalisation_fctr > symmetric.norm.threshold)) {
-        warning("Large differences in the size of the sub-populations with the current age breaks are likely to result in artefacts after making the matrix symmetric. Please reconsider the age breaks to obtain more equally sized sub-populations. Normalization factors: [", paste(round(range(normalisation_fctr, na.rm = TRUE), digits=1), collapse=";"), "]")
+        warning("Large differences in the size of the sub-populations with the current age breaks are likely to result in artefacts after making the matrix symmetric. Please reconsider the age breaks to obtain more equally sized sub-populations. Normalization factors: [", paste(round(range(normalisation_fctr, na.rm = TRUE), digits = 1), collapse = ";"), "]")
       }
       # update weighted.matrix
       weighted.matrix <- normalised.weighted.matrix
