@@ -58,6 +58,7 @@
 <span>  weigh.dayofweek <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  weigh.age <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  weight.threshold <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  symmetric.norm.threshold <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  sample.all.age.groups <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  return.part.weights <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  return.demography <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -136,6 +137,10 @@
 
 <dt id="arg-weight-threshold">weight.threshold<a class="anchor" aria-label="anchor" href="#arg-weight-threshold"></a></dt>
 <dd><p>threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff)</p></dd>
+
+
+<dt id="arg-symmetric-norm-threshold">symmetric.norm.threshold<a class="anchor" aria-label="anchor" href="#arg-symmetric-norm-threshold"></a></dt>
+<dd><p>threshold value for the normalization weights when <code>symmetric = TRUE</code> before showing a warning that that large differences in the size of the sub-populations are likely to result in artefacts when making the matrix symmetric (default 2).</p></dd>
 
 
 <dt id="arg-sample-all-age-groups">sample.all.age.groups<a class="anchor" aria-label="anchor" href="#arg-sample-all-age-groups"></a></dt>

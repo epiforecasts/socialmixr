@@ -249,6 +249,11 @@ to obtain a symmetric contact matrix that fulfills it, one can use</p>
 <span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
 <span><span class="co">#&gt; Warning in pop_age(survey.pop, part.age.group.present, ...): Not all age groups represented in population data (5-year age band).</span></span>
 <span><span class="co">#&gt;   Linearly estimating age group sizes from the 5-year bands.</span></span>
+<span><span class="co">#&gt; Warning in contact_matrix(polymod, countries = "United Kingdom", age.limits =</span></span>
+<span><span class="co">#&gt; c(0, : Large differences in the size of the sub-populations with the current</span></span>
+<span><span class="co">#&gt; age breaks are likely to result in artefacts after making the matrix symmetric.</span></span>
+<span><span class="co">#&gt; Please reconsider the age breaks to obtain more equally sized sub-populations.</span></span>
+<span><span class="co">#&gt; Normalization factors: [0.3;2.9]</span></span>
 <span><span class="co">#&gt; $matrix</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
