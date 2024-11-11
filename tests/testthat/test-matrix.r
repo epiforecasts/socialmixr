@@ -50,7 +50,7 @@ options <-
     test1 = list(survey = polymod, countries = "United Kingdom", counts = TRUE, weigh.dayofweek = TRUE, age.limits = seq(0, 80, by = 5), missing.contact.age = "remove"),
     test2 = list(survey = polymod2, age.limits = c(0, 5), weights = "added_weight", symmetric = TRUE, sample.participants = TRUE),
     test3 = list(survey = polymod, survey.pop = "Australia", countries = "GB", split = TRUE, filter = c(cnt_home = 1), age.limits = c(0, 5, 10), estimated.contact.age = "sample", symmetric = TRUE, missing.contact.age = "remove"),
-    test4 = list(survey = polymod8, missing.contact.age = "sample", symmetric = TRUE, age.limits = c(0, 5, 15))
+    test4 = list(survey = polymod8, missing.contact.age = "sample", symmetric = TRUE, age.limits = c(0, 5, 15), symmetric.norm.threshold = 4)
   )
 
 contacts <- suppressMessages(lapply(options, function(x) {
@@ -539,4 +539,9 @@ test_that("Contact matrices per capita are also generated when bootstrapping", {
       per.capita = FALSE
     ), 2)
   })
+})
+
+
+test_that("Symmetric contact matrices with large normalisation weights throw a warning", {
+  expect_warning(contact_matrix(survey = polymod, age.limits = c(0, 90), symmetric = TRUE), "artefacts after making the matrix symmetric")
 })

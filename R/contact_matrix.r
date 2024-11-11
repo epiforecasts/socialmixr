@@ -19,6 +19,7 @@
 #' @param weigh.dayofweek whether to weigh social contacts data by the day of the week (weight (5/7 / N_week / N) for weekdays and (2/7 / N_weekend / N) for weekends)
 #' @param weigh.age whether to weigh social contacts data by the age of the participants (vs. the populations' age distribution)
 #' @param weight.threshold threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff)
+#' @param symmetric.norm.threshold threshold value for the normalization weights when `symmetric = TRUE` before showing a warning that that large differences in the size of the sub-populations are likely to result in artefacts when making the matrix symmetric (default 2).
 #' @param sample.all.age.groups what to do if sampling participants (with `sample.participants = TRUE`) fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead
 #' @param return.part.weights boolean to return the participant weights
 #' @param return.demography boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters)
@@ -35,7 +36,7 @@
 #' data(polymod)
 #' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 #' @author Sebastian Funk
-contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, filter, counts = FALSE, symmetric = FALSE, split = FALSE, sample.participants = FALSE, estimated.participant.age = c("mean", "sample", "missing"), estimated.contact.age = c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = NULL, weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, sample.all.age.groups = FALSE, return.part.weights = FALSE, return.demography = NA, per.capita = FALSE, ...) {
+contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, filter, counts = FALSE, symmetric = FALSE, split = FALSE, sample.participants = FALSE, estimated.participant.age = c("mean", "sample", "missing"), estimated.contact.age = c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = NULL, weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, symmetric.norm.threshold = 2, sample.all.age.groups = FALSE, return.part.weights = FALSE, return.demography = NA, per.capita = FALSE, ...) {
   surveys <- c("participants", "contacts")
 
   dot.args <- list(...)
@@ -694,8 +695,16 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       ## set c_{ij} N_i and c_{ji} N_j (which should both be equal) to
       ## 0.5 * their sum; then c_{ij} is that sum / N_i
       normalised.weighted.matrix <- diag(survey.pop$population) %*% weighted.matrix
-      weighted.matrix <- 0.5 * diag(1 / survey.pop$population) %*%
+      normalised.weighted.matrix <- 0.5 * diag(1 / survey.pop$population) %*%
         (normalised.weighted.matrix + t(normalised.weighted.matrix))
+      # show warning if normalisation factors exceed the symmetric.norm.threshold
+      normalisation_fctr <- c(normalised.weighted.matrix / weighted.matrix, weighted.matrix / normalised.weighted.matrix)
+      normalisation_fctr <- normalisation_fctr[!is.infinite(normalisation_fctr) & !is.na(normalisation_fctr)]
+      if (any(normalisation_fctr > symmetric.norm.threshold)) {
+        warning("Large differences in the size of the sub-populations with the current age breaks are likely to result in artefacts after making the matrix symmetric. Please reconsider the age breaks to obtain more equally sized sub-populations. Normalization factors: [", paste(round(range(normalisation_fctr, na.rm = TRUE), digits = 1), collapse = ";"), "]")
+      }
+      # update weighted.matrix
+      weighted.matrix <- normalised.weighted.matrix
     }
   }
 

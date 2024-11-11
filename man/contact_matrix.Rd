@@ -22,6 +22,7 @@ contact_matrix(
   weigh.dayofweek = FALSE,
   weigh.age = FALSE,
   weight.threshold = NA,
+  symmetric.norm.threshold = 2,
   sample.all.age.groups = FALSE,
   return.part.weights = FALSE,
   return.demography = NA,
@@ -63,6 +64,8 @@ contact_matrix(
 \item{weigh.age}{whether to weigh social contacts data by the age of the participants (vs. the populations' age distribution)}
 
 \item{weight.threshold}{threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff)}
+
+\item{symmetric.norm.threshold}{threshold value for the normalization weights when \code{symmetric = TRUE} before showing a warning that that large differences in the size of the sub-populations are likely to result in artefacts when making the matrix symmetric (default 2).}
 
 \item{sample.all.age.groups}{what to do if sampling participants (with \code{sample.participants = TRUE}) fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead}
 
