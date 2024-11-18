@@ -38,7 +38,6 @@
 #' @author Sebastian Funk
 contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, filter, counts = FALSE, symmetric = FALSE, split = FALSE, sample.participants = FALSE, estimated.participant.age = c("mean", "sample", "missing"), estimated.contact.age = c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = NULL, weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, symmetric.norm.threshold = 2, sample.all.age.groups = FALSE, return.part.weights = FALSE, return.demography = NA, per.capita = FALSE, ...) {
   ## === check arguments and define variables
-  surveys <- c("participants", "contacts")
 
   dot.args <- list(...)
   unknown.args <- setdiff(names(dot.args), union(names(formals(check.survey)), names(formals(pop_age))))
@@ -266,7 +265,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   ## === check if any filters have been requested
   if (!missing(filter)) {
     missing_columns <- list()
-    for (table in surveys) {
+    for (table in c("participants", "contacts")) {
       if (nrow(survey[[table]]) > 0) {
         missing_columns <-
           c(missing_columns, list(setdiff(names(filter), colnames(survey[[table]]))))
