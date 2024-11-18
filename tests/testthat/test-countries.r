@@ -1,5 +1,3 @@
-context("Getting list of countries")
-
 test_that("list of countries is not empty", {
   expect_gt(length(wpp_countries()), 0)
   expect_gt(length(survey_countries(polymod)), 0)

@@ -1,4 +1,3 @@
-context("Survey data checks")
 library(data.table)
 
 erroneous_survey <- survey(polymod$participants, polymod$contacts, polymod$reference)
