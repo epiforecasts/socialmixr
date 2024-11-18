@@ -8,9 +8,9 @@
 #' @export
 survey <- function(participants, contacts, reference = NULL) {
   lifecycle::deprecate_warn(
-    "new_survey()",
+    "survey()",
     "1.0.0",
-    "Use `as_survey()` instead."
+    "Use `as_contact_survey()` instead."
   )
   new_obj <-
     structure(
@@ -19,7 +19,7 @@ survey <- function(participants, contacts, reference = NULL) {
         contacts = data.table(contacts),
         reference = reference
       ),
-      class = "survey"
+      class = "contact_survey"
     )
 
   return(new_obj)

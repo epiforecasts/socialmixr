@@ -22,9 +22,9 @@ check.survey <- function(x, id.column = "part_id", participant.age.column = "par
   lifecycle::deprecate_warn(
     "check()",
     "1.0.0",
-    paste0(
-      "Use `as_survey()` instead to construct a `<survey>` object. ",
-      "This will also perform necessary checks."
+    paste(
+      "Use `as_contact_survey()` instead to construct a `<contact_survey>`",
+      "object. This will perform necessary checks."
     )
   )
   chkDots(...)

@@ -17,7 +17,7 @@ new_survey <- function(participants, contacts, reference = NULL) {
         contacts = data.table(contacts),
         reference = reference
       ),
-      class = "survey"
+      class = "contact_survey"
     )
 
   return(new_obj)

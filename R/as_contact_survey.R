@@ -18,8 +18,9 @@
 #' data(polymod)
 #' check(polymod)
 #' @export
-as_survey <- function(x, reference = NULL, id.column = "part_id",
-                      country.column = "country", year.column = "year") {
+as_contact_survey <- function(x, reference = NULL, id.column = "part_id",
+                              country.column = "country",
+                              year.column = "year") {
   ## check arguments
   assert_list(x, names = "named")
   assert_names(names(x), must.include = c("participants", "contacts"))
