@@ -163,7 +163,10 @@ test_that("nonsensical operations are warned about", {
 })
 
 test_that("warning is thrown if it is assumed that the survey is representative", {
-  expect_warning(contact_matrix(survey = polymod4, symmetric = TRUE), "Assuming the survey is representative")
+  warning <- capture_warnings(
+    contact_matrix(survey = polymod4, symmetric = TRUE, age.limits = c(0, 5, 15))
+  )
+  expect_match(warning[2], "Assuming the survey is representative")
 })
 
 
