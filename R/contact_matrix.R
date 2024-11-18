@@ -78,10 +78,12 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   if (length(countries) > 0 && columns[["country"]] %in% colnames(survey$participants)) {
     if (all(nchar(countries) == 2)) {
       corrected_countries <- suppressWarnings(
-        countrycode(countries, "iso2c", "country.name"))
+        countrycode(countries, "iso2c", "country.name")
+      )
     } else {
       corrected_countries <- suppressWarnings(
-        countrycode(countries, "country.name", "country.name"))
+        countrycode(countries, "country.name", "country.name")
+      )
     }
     present_countries <- unique(as.character(survey$participants[[columns[["country"]]]]))
     missing_countries <- countries[which(is.na(corrected_countries))]
@@ -101,7 +103,8 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   part_max.column <- paste(columns[["participant.age"]], "est_max", sep = "_")
 
   if (part_exact.column %in% colnames(survey$participants)) {
-    survey$participants[,
+    survey$participants[
+      ,
       paste(columns[["participant.age"]]) := as.integer(get(part_exact.column))
     ]
   } else if (!(columns[["participant.age"]] %in% colnames(survey$participants))) {
@@ -145,7 +148,8 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     ) + 1
   } else {
     max.age <- max(
-      survey$participants[, get(columns[["participant.age"]])], na.rm = TRUE
+      survey$participants[, get(columns[["participant.age"]])],
+      na.rm = TRUE
     ) + 1
   }
 
@@ -177,7 +181,8 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
   ## set contact age if it's not in the data
   if (exact.column %in% colnames(survey$contacts)) {
-    survey$contacts[,
+    survey$contacts[
+      ,
       paste(columns[["contact.age"]]) := as.integer(get(exact.column))
     ]
   } else {
@@ -729,7 +734,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
       nb.contacts <- rowSums(weighted.matrix)
       mean.contacts <- sum(survey.pop$population * nb.contacts) /
-          sum(survey.pop$population)
+        sum(survey.pop$population)
       spectrum.matrix <- weighted.matrix
       spectrum.matrix[is.na(spectrum.matrix)] <- 0
       spectrum <- as.numeric(eigen(spectrum.matrix, only.values = TRUE)$values[1])
