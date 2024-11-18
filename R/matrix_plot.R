@@ -29,7 +29,6 @@
 #' }
 #' @author Lander Willem
 matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, num.colors = 50, main, xlab, ylab, legend.width, legend.mar, legend.shrink, cex.lab, cex.axis, cex.text, color.palette = heat.colors) {
-
   # check function arguments
   xlab <- ifelse(!missing(xlab), xlab, "Age group (year)")
   ylab <- ifelse(!missing(ylab), ylab, "Contact age group (year)")
@@ -73,7 +72,7 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
   legend_plot_region[3] <- legend_plot_region[3] + pr
 
   # set main matrix' plot region
-  main_plot_region    <- par()$plt
+  main_plot_region <- par()$plt
   main_plot_region[2] <- min(main_plot_region[2], legend_plot_region[1] - offset)
 
   # defensive check for main and legends' plot region
@@ -87,14 +86,15 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
 
   # add image plot
   image(mij,
-        xlab = xlab,
-        ylab = ylab,
-        main = main,
-        cex.lab = cex.lab,
-        breaks = breaks,
-        col = redc,
-        xaxt = "n",
-        yaxt = "n")
+    xlab = xlab,
+    ylab = ylab,
+    main = main,
+    cex.lab = cex.lab,
+    breaks = breaks,
+    col = redc,
+    xaxt = "n",
+    yaxt = "n"
+  )
 
   # add axis labels
   plt_ticks <- seq(0, 1, length = nrow(mij))
@@ -119,10 +119,12 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
   par(new = TRUE, pty = "m", plt = legend_plot_region, err = -1)
 
   # include legend bar with axis
-  image(x = 1:2, y = breaks, z = midpoints,
-        xaxt = "n", yaxt = "n", xlab = "",
-        ylab = "", col = redc,
-        breaks = breaks)
+  image(
+    x = 1:2, y = breaks, z = midpoints,
+    xaxt = "n", yaxt = "n", xlab = "",
+    ylab = "", col = redc,
+    breaks = breaks
+  )
   axis(side = 4, mgp = c(3, 1, 0), las = 2)
 
   # restore original graphical parameters

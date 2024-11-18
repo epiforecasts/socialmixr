@@ -9,7 +9,7 @@
 #' @export
 list_surveys <- function(clear_cache = FALSE) {
   if (!("list_surveys" %in% names(.socialmixr.env$cached_functions)) ||
-      clear_cache) {
+    clear_cache) {
     .socialmixr.env$cached_functions$list_surveys <- memoise(.list_surveys)
   }
   .socialmixr.env$cached_functions$list_surveys()
