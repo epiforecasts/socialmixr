@@ -222,12 +222,14 @@ test_that("The order in which weights are applied do not change the results", {
 test_that("The day.of.week weight does not affect single-year age groups that reported only during weekdays", {
   matrix_unweighted <- suppressMessages(suppressWarnings(
     contact_matrix(
-      polymod11, age.limits = 1:3, weigh.dayofweek = FALSE, symmetric = FALSE
+      polymod11,
+      age.limits = 1:3, weigh.dayofweek = FALSE, symmetric = FALSE
     )
   ))
   matrix_weighted <- suppressMessages(suppressWarnings(
     contact_matrix(
-      polymod11, age.limits = 1:3, weigh.dayofweek = TRUE, symmetric = FALSE
+      polymod11,
+      age.limits = 1:3, weigh.dayofweek = TRUE, symmetric = FALSE
     )
   ))
 

@@ -78,27 +78,30 @@ load_survey <- function(files, ...) {
     }, TRUE)
     merge_files <- names(can_merge[can_merge])
     while (length(merge_files) > 0) {
-
       merged_files <- NULL
       for (file in merge_files) {
         contact_data[[file]] <-
           contact_data[[file]][, ..merge_id := seq_len(.N)]
         common_id <- intersect(colnames(contact_data[[file]]), colnames(main_surveys[[type]]))
-        merged <- tryCatch({
-          merge(
-            main_surveys[[type]], contact_data[[file]], by = common_id,
-            all.x = TRUE
-          )
-        }, error = function(cond) {
-          if (!grepl("cartesian", cond$message, fixed = TRUE)) {
-            stop(cond$message)
+        merged <- tryCatch(
+          {
+            merge(
+              main_surveys[[type]], contact_data[[file]],
+              by = common_id,
+              all.x = TRUE
+            )
+          },
+          error = function(cond) {
+            if (!grepl("cartesian", cond$message, fixed = TRUE)) {
+              stop(cond$message)
+            }
+            NULL
           }
-          NULL
-        })
+        )
 
         ## first if merge was unique - if not we're ditching the merge
         if (!is.null(merged) &&
-            anyDuplicated(merged[, "..main_id", with = FALSE]) == 0) {
+          anyDuplicated(merged[, "..main_id", with = FALSE]) == 0) {
           ## we're keeping the merge; now check for any warnings to issue
           matched_main <- sum(!is.na(merged[["..merge_id"]]))
           unmatched_main <- nrow(merged) - matched_main
@@ -115,7 +118,8 @@ load_survey <- function(files, ...) {
           if (unmatched_merge > 0) {
             warning(
               unmatched_merge, " row(s) could not be matched when pulling ",
-              basename(file), " into '", type, "' survey.")
+              basename(file), " into '", type, "' survey."
+            )
           }
           main_surveys[[type]] <- merged[, !"..merge_id"]
           merged_files <- c(merged_files, file)
