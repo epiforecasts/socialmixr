@@ -19,13 +19,15 @@ Description: Provides methods for sampling contact matrices from diary
 License: MIT + file LICENSE
 Depends: 
     R (>= 3.5.0)
-Imports: 
+Imports:
+    checkmate,
     countrycode,
     curl,
     data.table,
     grDevices,
     httr,
     jsonlite,
+    lifecycle,
     lubridate,
     memoise,
     oai,
