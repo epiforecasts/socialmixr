@@ -636,23 +636,26 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   dims <- dim(weighted.matrix)
   dim.names <- dimnames(weighted.matrix)
 
+  weighted.matrix <- array(
+    weighted.matrix,
+    dim = dims,
+    dimnames = dim.names
+  )
+
   if (!counts) { ## normalise to give mean number of contacts
     ## calculate normalisation vector
-    norm.vector <-
-      xtabs(
-        data = sampled.participants,
-        formula = sampled.weight ~ age.group, addNA = TRUE
-      )
+    norm.vector <- c(xtabs(
+      data = sampled.participants,
+      formula = sampled.weight ~ age.group, addNA = TRUE
+    ))
 
     ## normalise contact matrix
-    weighted.matrix <-
-      array(apply(weighted.matrix, 2, function(x) x / norm.vector),
-        dim = dims,
-        dimnames = dim.names
-      )
+    weighted.matrix <- weighted.matrix / norm.vector
+
     ## set non-existent data to NA
     weighted.matrix[is.nan(weighted.matrix)] <- NA_real_
   }
+
 
   ## construct a warning in case there are NAs
   na.headers <- anyNA(dimnames(weighted.matrix), recursive = TRUE)
@@ -699,8 +702,8 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     } else {
       ## set c_{ij} N_i and c_{ji} N_j (which should both be equal) to
       ## 0.5 * their sum; then c_{ij} is that sum / N_i
-      normalised.weighted.matrix <- diag(survey.pop$population) %*% weighted.matrix
-      normalised.weighted.matrix <- 0.5 * diag(1 / survey.pop$population) %*%
+      normalised.weighted.matrix <- survey.pop$population * weighted.matrix
+      normalised.weighted.matrix <- 0.5 / survey.pop$population *
         (normalised.weighted.matrix + t(normalised.weighted.matrix))
       # show warning if normalisation factors exceed the symmetric.norm.threshold
       normalisation_fctr <- c(normalised.weighted.matrix / weighted.matrix, weighted.matrix / normalised.weighted.matrix)

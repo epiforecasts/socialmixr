@@ -1,5 +1,9 @@
 # socialmixr (development version)
 
+## Breaking changes 
+
+* `contact_matrix(counts = TRUE)$matrix` is now an array rather than an xtabs object. This matches the existing output format of `contact_matrix(counts = FALSE)$matrix` (#118).
+
 # socialmixr 0.4.0
 
 * The speed of loading surveys has been increased.
