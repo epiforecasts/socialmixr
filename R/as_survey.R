@@ -43,7 +43,7 @@ as_survey <- function(x, reference = NULL, id.column = "part_id",
 
   walk(names(to_check), \(column) {
     if (!is.null(to_check[[column]]) &&
-        !(to_check[[column]] %in% colnames(x$participants))) {
+      !(to_check[[column]] %in% colnames(x$participants))) {
       stop(
         column, " column '", to_check[[column]], "' does not exist ",
         "in the participant data frame"
