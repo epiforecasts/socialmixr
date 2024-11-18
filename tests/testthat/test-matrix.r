@@ -106,7 +106,7 @@ test_that("warning is thrown if filter column is not found", {
 })
 
 test_that("warning is thrown if missing data exist", {
-  expect_warning(contact_matrix(survey = polymod, missing.contact.age = "keep", symmetric = TRUE), "missing.contact.age")
+  expect_warning(contact_matrix(survey = polymod, missing.contact.age = "keep", symmetric = TRUE, age.limits = c(0, 5, 15)), "missing.contact.age")
   expect_warning(contact_matrix(survey = polymod, split = TRUE), "age groups")
 })
 
@@ -123,7 +123,7 @@ test_that("error is thrown if there are no participants after selection the coun
 })
 
 test_that("warning is thrown if population needed but no 'year' column present", {
-  expect_warning(contact_matrix(survey = polymod3, symmetric = TRUE), "No 'year' column")
+  expect_warning(contact_matrix(survey = polymod3, symmetric = TRUE, age.limits = c(0, 5, 15)), "No 'year' column")
 })
 
 test_that("warning is thrown if day of week is asked to be weighed but not present", {
