@@ -1,5 +1,3 @@
-context("Manipulating age groups")
-
 test_that("age groups can be created and manipulated", {
   ages <- seq_len(50)
   age_limits <- c(0, 5, 10)

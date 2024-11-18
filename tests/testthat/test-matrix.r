@@ -1,4 +1,3 @@
-context("Generating contact matrices")
 set.seed(123)
 
 polymod2 <- get_survey(polymod)
