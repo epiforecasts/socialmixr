@@ -69,13 +69,8 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     }
   }
 
-  ## clean the survey
-  survey <- clean(survey)
-  ## check and get columns
-  columns <- suppressMessages(check(survey, ...))
-
   ## check if specific countries are requested (if a survey contains data from multiple countries)
-  if (length(countries) > 0 && columns[["country"]] %in% colnames(survey$participants)) {
+  if (length(countries) > 0 && "country" %in% colnames(survey$participants)) {
     if (all(nchar(countries) == 2)) {
       corrected_countries <- suppressWarnings(
         countrycode(countries, "iso2c", "country.name")
@@ -85,85 +80,80 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
         countrycode(countries, "country.name", "country.name")
       )
     }
-    present_countries <- unique(as.character(survey$participants[[columns[["country"]]]]))
+    present_countries <- unique(as.character(survey$participants$country))
     missing_countries <- countries[which(is.na(corrected_countries))]
     if (length(missing_countries) > 0) {
       stop("Survey data not found for ", paste(missing_countries, sep = ", "), ".")
     }
     countries <- corrected_countries
-    survey$participants <- survey$participants[get(columns[["country"]]) %in% countries]
+    survey$participants <- survey$participants[country %in% countries]
     if (nrow(survey$participants) == 0) {
       stop("No participants left after selecting countries.")
     }
   }
 
-  ## check maximum participant age in the data
-  part_exact.column <- paste(columns[["participant.age"]], "exact", sep = "_")
-  part_min.column <- paste(columns[["participant.age"]], "est_min", sep = "_")
-  part_max.column <- paste(columns[["participant.age"]], "est_max", sep = "_")
-
-  if (part_exact.column %in% colnames(survey$participants)) {
+  if ("part_age_exact" %in% colnames(survey$participants)) {
     survey$participants[
       ,
-      paste(columns[["participant.age"]]) := as.integer(get(part_exact.column))
+      paste(part_age) := as.integer(part_age_exact)
     ]
-  } else if (!(columns[["participant.age"]] %in% colnames(survey$participants))) {
-    survey$participants[, paste(columns[["participant.age"]]) := NA_integer_]
+  } else if (!(part_age %in% colnames(survey$participants))) {
+    survey$participants[, paste(part_age) := NA_integer_]
   }
 
   ## sample estimated participant ages
-  if (part_min.column %in% colnames(survey$participants) &&
-    part_max.column %in% colnames(survey$participants)) {
+  if ("part_age_est_min" %in% colnames(survey$participants) &&
+      "part_age_est_max" %in% colnames(survey$participants)) {
     if (estimated.participant.age == "mean") {
       survey$participants[
-        is.na(get(part_exact.column)) &
-          !is.na(get(part_min.column)) & !is.na(get(part_max.column)),
-        paste(columns[["participant.age"]]) :=
+        is.na(part_age_exact) &
+          !is.na(part_age_est_min) & !is.na(part_age_est_max),
+        paste(part_age) :=
           as.integer(rowMeans(.SD)),
-        .SDcols = c(part_min.column, part_max.column)
+        .SDcols = c("part_age_est_min", "part_age_est_max")
       ]
     } else if (estimated.participant.age == "sample") {
       survey$participants[
-        is.na(get(columns[["participant.age"]])) &
-          !is.na(get(part_min.column)) & !is.na(get(part_max.column)) &
-          get(part_min.column) <= get(part_max.column),
-        paste(columns[["participant.age"]]) :=
+        is.na(part_age) &
+          !is.na(part_age_est_min) & !is.na(part_age_est_max) &
+          part_age_est_min <= part_age_est_max,
+        paste(part_age) :=
           as.integer(runif(
             .N,
-            get(part_min.column),
-            get(part_max.column)
+            part_age_est_min,
+            part_age_est_max
           ))
       ]
     }
     # note: do nothing when "missing" is specified
   }
 
-  if (part_max.column %in% colnames(survey$participants)) {
+  if ("part_age_est_max" %in% colnames(survey$participants)) {
     max.age <- max(
       c(
-        survey$participants[, get(part_exact.column)],
-        survey$participants[, get(part_max.column)]
+        survey$participants[, part_age_exact],
+        survey$participants[, part_age_est_max]
       ),
       na.rm = TRUE
     ) + 1
   } else {
     max.age <- max(
-      survey$participants[, get(columns[["participant.age"]])],
+      survey$participants[, part_age],
       na.rm = TRUE
     ) + 1
   }
 
   if (missing(age.limits)) {
     all.ages <-
-      unique(as.integer(survey$participants[, get(columns[["participant.age"]])]))
+      unique(as.integer(survey$participants[, part_age]))
     all.ages <- all.ages[!is.na(all.ages)]
     all.ages <- sort(all.ages)
     age.limits <- union(0, all.ages)
   }
 
   if (missing.participant.age == "remove" &&
-    nrow(survey$participants[is.na(get(columns[["participant.age"]])) |
-      get(columns[["participant.age"]]) < min(age.limits)]) > 0) {
+    nrow(survey$participants[is.na(part_age) |
+      part_age < min(age.limits)]) > 0) {
     if (!missing.participant.age.set) {
       message(
         "Removing participants without age information. ",
@@ -171,27 +161,23 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       )
     }
     survey$participants <-
-      survey$participants[!is.na(get(columns[["participant.age"]])) &
-        get(columns[["participant.age"]]) >= min(age.limits)]
+      survey$participants[!is.na(part_age) &
+        part_age >= min(age.limits)]
   }
 
-  exact.column <- paste(columns[["contact.age"]], "exact", sep = "_")
-  min.column <- paste(columns[["contact.age"]], "est_min", sep = "_")
-  max.column <- paste(columns[["contact.age"]], "est_max", sep = "_")
-
   ## set contact age if it's not in the data
-  if (exact.column %in% colnames(survey$contacts)) {
+  if ("cnt_age_exact" %in% colnames(survey$contacts)) {
     survey$contacts[
       ,
-      paste(columns[["contact.age"]]) := as.integer(get(exact.column))
+      cnt_age := as.integer(cnt_age_exact)
     ]
   } else {
-    survey$contacts[, paste(columns[["contact.age"]]) := NA_integer_]
+    survey$contacts[, cnt_age := NA_integer_]
   }
 
   ## convert factors to integers
   for (age_column in
-    c(columns[["contact.age"]], min.column, max.column, exact.column)) {
+    c("cnt_age", "cnt_age_min", "cnt_age_max", "cnt_age_exact")) {
     if (age_column %in% colnames(survey$contacts) &&
       is.factor(survey$contacts[[age_column]])) {
       survey$contacts[, paste(age_column) :=
@@ -200,26 +186,26 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   }
 
   ## sample estimated contact ages
-  if (min.column %in% colnames(survey$contacts) &&
-    max.column %in% colnames(survey$contacts)) {
+  if ("cnt_age_min" %in% colnames(survey$contacts) &&
+    "cnt_age_max" %in% colnames(survey$contacts)) {
     if (estimated.contact.age == "mean") {
       survey$contacts[
-        is.na(get(columns[["contact.age"]])) &
-          !is.na(get(min.column)) & !is.na(get(max.column)),
-        paste(columns[["contact.age"]]) :=
+        is.na(cnt_age) &
+          !is.na(cnt_age_min) & !is.na(cnt_age_max),
+        cnt_age :=
           as.integer(rowMeans(.SD)),
-        .SDcols = c(min.column, max.column)
+        .SDcols = c("cnt_age_min", "cnt_age_max")
       ]
     } else if (estimated.contact.age == "sample") {
       survey$contacts[
-        is.na(get(columns[["contact.age"]])) &
-          !is.na(get(min.column)) & !is.na(get(max.column)) &
-          get(min.column) <= get(max.column),
-        paste(columns[["contact.age"]]) :=
+        is.na(cnt_age) &
+          !is.na(cnt_age_min) & !is.na(cnt_age_max) &
+          cnt_age_min <= cnt_age_max,
+        cnt_age :=
           as.integer(runif(
             .N,
-            get(min.column),
-            get(max.column)
+            cnt_age_min,
+            cnt_age_max
           ))
       ]
     }
@@ -227,8 +213,8 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   }
 
   if (missing.contact.age == "remove" &&
-    nrow(survey$contacts[is.na(get(columns[["contact.age"]])) |
-      get(columns[["contact.age"]]) < min(age.limits)]) > 0) {
+    nrow(survey$contacts[is.na(cnt_age) |
+      cnt_age < min(age.limits)]) > 0) {
     if (!missing.contact.age.set) {
       message(
         "Removing participants that have contacts without age information. ",
@@ -237,24 +223,24 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     }
     missing.age.id <-
       survey$contacts[
-        is.na(get(columns[["contact.age"]])) |
-          get(columns[["contact.age"]]) < min(age.limits),
-        get(columns[["id"]])
+        is.na(cnt_age) |
+          cnt_age < min(age.limits),
+        part_id
       ]
-    survey$participants <- survey$participants[!(get(columns[["id"]]) %in% missing.age.id)]
+    survey$participants <- survey$participants[!(part_id %in% missing.age.id)]
   }
 
   if (missing.contact.age == "ignore" &&
-    nrow(survey$contacts[is.na(get(columns[["contact.age"]])) |
-      get(columns[["contact.age"]]) < min(age.limits)]) > 0) {
+    nrow(survey$contacts[is.na(cnt_age) |
+      cnt_age < min(age.limits)]) > 0) {
     if (!missing.contact.age.set) {
       message(
         "Ignore contacts without age information. ",
         "To change this behaviour, set the 'missing.contact.age' option"
       )
     }
-    survey$contacts <- survey$contacts[!is.na(get(columns[["contact.age"]])) &
-      get(columns[["contact.age"]]) >= min(age.limits), ]
+    survey$contacts <- survey$contacts[!is.na(cnt_age) &
+      cnt_age >= min(age.limits), ]
   }
 
   ## check if any filters have been requested
@@ -280,13 +266,13 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
   # adjust age.group.brakes to the lower and upper ages in the survey
   survey$participants[, lower.age.limit := reduce_agegroups(
-    get(columns[["participant.age"]]),
+    part_age,
     age.limits[age.limits < max.age]
   )]
   part.age.group.breaks <- c(age.limits[age.limits < max.age], max.age)
   part.age.group.present <- age.limits[age.limits < max.age]
   survey$participants[, age.group :=
-    cut(survey$participants[, get(columns[["participant.age"]])],
+    cut(survey$participants[, part_age],
       breaks = part.age.group.breaks,
       right = FALSE
     )]
@@ -321,11 +307,11 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       } else {
         ## neither survey population nor country names given - try to
         ## guess country or countries surveyed from participant data
-        if (columns[["country"]] %in% colnames(survey$participants)) {
-          survey.countries <- unique(survey$participants[, get(columns[["country"]])])
+        if ("country" %in% colnames(survey$participants)) {
+          survey.countries <- unique(survey$participants[, country])
         } else {
           warning(
-            "No 'survey.pop' or 'countries' given, and no '", columns[["country"]],
+            "No 'survey.pop' or 'countries' given, and no '", "country",
             "' column found in the data. ",
             "I don't know which population this is from. ",
             "Assuming the survey is representative"
@@ -378,7 +364,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
         survey.pop <-
           survey$participants[, lower.age.limit :=
             reduce_agegroups(
-              get(columns[["participant.age"]]),
+              part_age,
               age.limits
             )]
         survey.pop <- survey.pop[, list(population = .N), by = lower.age.limit]
@@ -470,17 +456,17 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   ## assign weights to participants, to account for age variation
   if (weigh.age) {
     # get number and proportion of participants by age
-    survey$participants[, age.count := .N, by = eval(columns[["participant.age"]])]
+    survey$participants[, age.count := .N, by = eval(part_age)]
     survey$participants[, age.proportion := age.count / .N]
 
     # get reference population by age (absolute and proportional)
-    part.age.all <- range(unique(survey$participants[, get(columns[["participant.age"]])]))
+    part.age.all <- range(unique(survey$participants[, part_age]))
     survey.pop.detail <- data.table(pop_age(survey.pop.full, seq(part.age.all[1], part.age.all[2] + 1)))
-    names(survey.pop.detail) <- c(columns[["participant.age"]], "population.count")
+    names(survey.pop.detail) <- c(part_age, "population.count")
     survey.pop.detail[, population.proportion := population.count / sum(population.count)]
 
     # merge reference and survey population data
-    survey$participants <- merge(survey$participants, survey.pop.detail, by = eval(columns[["participant.age"]]))
+    survey$participants <- merge(survey$participants, survey.pop.detail, by = eval(part_age))
 
     # calculate age-specific weights
     survey$participants[, weight.age := population.proportion / age.proportion]
@@ -521,35 +507,35 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   }
 
   ## merge participants and contacts into a single data table
-  setkeyv(survey$participants, columns[["id"]])
-  participant_ids <- unique(survey$participants[[columns[["id"]]]])
+  setkey(survey$participants, part_id)
+  participant_ids <- unique(survey$participants$part_id)
 
   survey$contacts <-
     merge(survey$contacts, survey$participants,
-      by = columns[["id"]], all = FALSE,
+      by = "part_id", all = FALSE,
       allow.cartesian = TRUE, suffixes = c(".cont", ".part")
     )
 
-  setkeyv(survey$contacts, columns[["id"]])
+  setkey(survey$contacts, part_id)
 
   ## sample contacts
   if (missing.contact.age == "sample" &&
-    nrow(survey$contacts[is.na(get(columns[["contact.age"]]))]) > 0) {
+    nrow(survey$contacts[is.na(cnt_age)]) > 0) {
     for (this.age.group in
-      unique(survey$contacts[is.na(get(columns[["contact.age"]])), age.group])) {
+      unique(survey$contacts[is.na(cnt_age), age.group])) {
       ## first, deal with missing age
-      if (nrow(survey$contacts[!is.na(get(columns[["contact.age"]])) &
+      if (nrow(survey$contacts[!is.na(cnt_age) &
         age.group == this.age.group]) > 0) {
         ## some contacts in the age group have an age, sample from these
         survey$contacts[
-          is.na(get(columns[["contact.age"]])) &
+          is.na(cnt_age) &
             age.group == this.age.group,
-          paste(columns[["contact.age"]]) :=
+          cnt_age :=
             sample(
               survey$contacts[
-                !is.na(get(columns[["contact.age"]])) &
+                !is.na(cnt_age) &
                   age.group == this.age.group,
-                get(columns[["contact.age"]])
+                cnt_age
               ],
               size = .N,
               replace = TRUE
@@ -558,13 +544,13 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       } else {
         ## no contacts in the age group have an age, sample uniformly between limits
         min.contact.age <-
-          survey$contacts[, min(get(columns[["contact.age"]]), na.rm = TRUE)]
+          survey$contacts[, min(cnt_age, na.rm = TRUE)]
         max.contact.age <-
-          survey$contacts[, max(get(columns[["contact.age"]]), na.rm = TRUE)]
+          survey$contacts[, max(cnt_age, na.rm = TRUE)]
         survey$contacts[
-          is.na(get(columns[["contact.age"]])) &
+          is.na(cnt_age) &
             age.group == this.age.group,
-          paste(columns[["contact.age"]]) :=
+          cnt_age :=
             as.integer(floor(runif(.N,
               min = min.contact.age,
               max = max.contact.age + 1
@@ -576,14 +562,14 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
   ## set contact age groups
   max.contact.age <-
-    survey$contacts[, max(get(columns[["contact.age"]]), na.rm = TRUE) + 1]
+    survey$contacts[, max(get(cnt_age), na.rm = TRUE) + 1]
 
   contact.age.group.breaks <- part.age.group.breaks
   if (max.contact.age > max(contact.age.group.breaks)) {
     contact.age.group.breaks[length(contact.age.group.breaks)] <- max.contact.age
   }
   survey$contacts[, contact.age.group :=
-    cut(get(columns[["contact.age"]]),
+    cut(get(cnt_age),
       breaks = contact.age.group.breaks,
       labels = age.groups,
       right = FALSE
@@ -597,7 +583,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       part.sample <- sample(participant_ids, replace = TRUE)
       part.age.limits <-
         unique(survey$participants[
-          get(columns[["id"]]) %in% part.sample,
+          part_id %in% part.sample,
           lower.age.limit
         ])
       good.sample <- !sample.all.age.groups ||
@@ -607,8 +593,8 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
         data.table(id = part.sample, weight = 1)
       sample.table <-
         sample.table[, list(bootstrap.weight = sum(weight)), by = id]
-      setnames(sample.table, "id", columns[["id"]])
-      setkeyv(sample.table, columns[["id"]])
+      setnames(sample.table, "id", "part_id")
+      setkey(sample.table, part_id)
 
       sampled.contacts <- merge(survey$contacts, sample.table)
       sampled.contacts[, sampled.weight := weight * bootstrap.weight]
@@ -816,9 +802,9 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
     # add age and/or dayofweek info
     if (weigh.age && weigh.dayofweek) {
-      part.weights <- survey$participants[, .N, by = list(age.group, participant.age = get(columns[["participant.age"]]), is.weekday, weight)]
+      part.weights <- survey$participants[, .N, by = list(age.group, participant.age = part_age, is.weekday, weight)]
     } else if (weigh.age) {
-      part.weights <- survey$participants[, .N, by = list(age.group, participant.age = get(columns[["participant.age"]]), weight)]
+      part.weights <- survey$participants[, .N, by = list(age.group, participant.age = part_age, weight)]
     } else if (weigh.dayofweek) {
       part.weights <- survey$participants[, .N, by = list(age.group, is.weekday, weight)]
     }
