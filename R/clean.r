@@ -39,12 +39,14 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
 
   if (nrow(x$participants) > 0 &&
     participant.age.column %in% colnames(x$participants) &&
-    !is.numeric(x$participants[, get(participant.age.column)])) {
+    (!is.numeric(x$participants[, get(participant.age.column)]) ||
+       anyNA(x$participants[, get(participant.age.column)]))
+  ) {
     ## set any entries not containing numbers to NA
     x$participants <- x$participants[,
       paste(participant.age.column) := fifelse(
         grepl("[0-9]", get(participant.age.column)),
-        get(participant.age.column),
+        as.character(get(participant.age.column)),
         NA_character_
       )
     ]
@@ -82,23 +84,20 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
     ]
     seconds_in_year <- period_to_seconds(years(1))
     for (limit in limits) {
-      x$participants <- x$participants[,
-        paste(limit) := fifelse(!is.na(get(limit)), as.numeric(get(limit)), NA_real_)
-      ]
-      x$participants <- x$participants[,
-        paste(limit) := fifelse(
-          !is.na(get(limit)),
-          period_to_seconds(period(get(limit), ..age.unit)) /
-            seconds_in_year,
-          NA_real_
-        ),
-        by = seq_len(nrow(x$participants))
+      x$participants <- x$participants[, paste(limit) := as.numeric(get(limit))]
+      x$participants <-
+        x$participants[..age.unit != "years" & !is.na(get(limit)),
+        paste(limit) := period_to_seconds(period(get(limit), ..age.unit)) /
+          seconds_in_year,
       ]
     }
 
     x$participants <- x$participants[,
-      paste(participant.age.column) := (..low + ..high) / 2
+      paste(participant.age.column, "exact", sep = "_") := suppressWarnings(
+        as.integer(get(participant.age.column))
+      )
     ]
+    x$participants[, paste(participant.age.column) := NULL]
 
     x$participants[, ..high := NULL]
     x$participants[, ..low := NULL]

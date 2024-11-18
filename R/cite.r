@@ -1,30 +1,3 @@
-#' @export
-cite <- function(x, ...) UseMethod("cite")
-#' @name cite
-#' @rdname cite
-#' @title Citation for a survey
-#'
-#' @description Gets a full citation for a [survey()].
-#'
-#' @param x a character vector of surveys to cite
-#' @param ... ignored
-#' @return citation as bibentry
-#' @importFrom utils bibentry
-#' @importFrom httr GET content
-#' @examples
-#' data(polymod)
-#' cite(polymod)
-#' @export
-cite.survey <- function(x, ...) {
-  warning(
-    "The cite function is deprecated and will stop working in version 1.0.0. ",
-    "Please use get_citation() instead."
-  )
-  chkDots(...)
-
-  get_citation(x)
-}
-
 #' @title Citation for a survey
 #'
 #' @description Gets a full citation for a [survey()].

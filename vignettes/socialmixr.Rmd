@@ -16,6 +16,8 @@ vignette: >
 
 ```{r setup, include = FALSE}
 library("knitr")
+library("socialmixr")
+library("ggplot2")
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -26,28 +28,6 @@ data.table::setDTthreads(1)
 [socialmixr](https://github.com/epiforecasts/socialmixr) is an `R` package to derive social mixing matrices from survey data. These are particularly useful for age-structured [infectious disease models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease). For background on age-specific mixing matrices and what data inform them, see, for example, the paper on POLYMOD by [@mossong_social_2008].
 
 # Usage
-
-The latest stable version of the `socialmixr` package is installed via
-
-```{r, eval=FALSE}
-install.packages("socialmixr")
-```
-
-The latest development version of the `socialmixr` package can be installed via
-
-```r
-devtools::install_github("epiforecasts/socialmixr")
-```
-
-To load the package, use
-
-```{r, eval=FALSE}
-library("socialmixr")
-```
-```{r, echo=FALSE}
-suppressWarnings(library("socialmixr"))
-```
-
 
 At the heart of the `socialmixr` package is the `contact_matrix()` function. This extracts a contact matrix from survey data. You can use the `R` help to find out about usage of the `contact_matrix()` function, including a list of examples:
 
@@ -99,10 +79,10 @@ survey_countries(polymod)
 If one wishes to get a contact matrix for one or more specific countries, a `countries` argument can be passed to `contact_matrix()`. If this is not done, the different surveys contained in a dataset are combined as if they were one single sample (i.e., not applying any population-weighting by country or other correction).
 
 
-By default, socialmixr uses the POLYMOD survey. A reference for any given survey can be obtained using `cite()`, e.g.
+By default, socialmixr uses the POLYMOD survey. A reference for any given survey can be obtained using `get_citation()`, e.g.
 
 ```{r}
-cite(polymod)
+get_citation(polymod)
 ```
 
 # Bootstrapping
@@ -171,11 +151,11 @@ contact_matrix(survey = polymod, countries = "Germany", age.limits = c(0, 60), s
 
 The `contact_matrix()` contains a simple model for the elements of the contact matrix, by which it is split into a _global_ component, as well as three components representing _contacts_, _assortativity_ and _demography_. In other words, the elements $m_{ij}$ of the contact matrix are modeled as
 
-$$ m_{ij} = q d_i a_{ij} n_j $$
+$$ m_{ij} = c q d_i a_{ij} n_j $$
 
-where $q d_i$ is the number of contacts that a member of group $i$ makes across age groups, $n_j$ is the proportion of the surveyed population in age group $j$. The constant $q$ is set to the value of the largest eigenvalue of $m_{ij}$; if used in an infectious disease model, it can be replaced by the basic reproduction number $R_0$.
+where $c$ is the mean number of contacts across the whole population, $c q d_i$ is the number of contacts that a member of group $i$ makes across age groups, $n_j$ is the proportion of the surveyed population in age group $j$. The constant $q$ is set so that $c q$ is equal to the value of the largest eigenvalue of $m_{ij}$; if used in an infectious disease model and assumed that every contact leads to infection, $c q$ can be replaced by the basic reproduction number $R_0$.
 
-To model the contact matrix in this way with the `contact_matrix()` function, set `split = TRUE`. The components of the matrix are returned as elements `normalisation` ($q$), `contacts` ($d_i$), `matrix` ($a_{ij}$) and `demography` ($n_j$) of the resulting list.
+To model the contact matrix in this way with the `contact_matrix()` function, set `split = TRUE`. The components of the matrix are returned as elements `mean.contacts` ($c$), `normalisation` ($q$), `contacts` ($d_i$), `matrix` ($a_{ij}$) and `demography` ($n_j$) of the resulting list.
 
 ```{r}
 contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), split = TRUE)
@@ -336,7 +316,7 @@ survey_data["m_i * w_tilde"] <- survey_data$m_i * survey_data$w_tilde
 kable(survey_data)
 
 # remove the weighted number of contacts
-survey_data$"m_i * w_tilde" <- NULL
+survey_data$`m_i * w_tilde` <- NULL
 
 print(paste("weighted average number of contacts:", round(mean(survey_data$m_i * survey_data$w_tilde), digits = 2)))
 ```
@@ -478,9 +458,7 @@ print(paste("weighted average number of contacts after truncation:", round(mean(
 The contact matrices can be plotted by using the `geom_tile()` function of the `ggplot2` package.
 
 ```{r fig.width=4, fig.height=4}
-library("reshape2")
-library("ggplot2")
-df <- melt(mr, varnames = c("age.group", "age.group.contact"), value.name = "contacts")
+df <- reshape2::melt(mr, varnames = c("age.group", "age.group.contact"), value.name = "contacts")
 ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) +
   theme(legend.position = "bottom") +
   geom_tile()

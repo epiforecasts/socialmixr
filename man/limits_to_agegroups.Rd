@@ -4,15 +4,22 @@
 \alias{limits_to_agegroups}
 \title{Convert lower age limits to age groups.}
 \usage{
-limits_to_agegroups(x, limits = sort(unique(x)))
+limits_to_agegroups(
+  x,
+  limits = sort(unique(x)),
+  notation = c("dashes", "brackets")
+)
 }
 \arguments{
 \item{x}{age limits to transform}
 
 \item{limits}{lower age limits; if not given, will use all limits in \code{x}}
+
+\item{notation}{whether to use bracket notation, e.g. [0,4) or dash
+notation, e.g. 0-4)}
 }
 \value{
-Age groups (limits separated by dashes)
+Age groups as specified in \code{notation}
 }
 \description{
 Mostly used for plot labelling

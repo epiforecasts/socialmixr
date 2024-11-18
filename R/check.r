@@ -7,9 +7,8 @@ check <- function(x, ...) UseMethod("check")
 #' @description Checks that a survey fulfills all the requirements to work with the 'contact_matrix' function
 #'
 #' @param x A [survey()] object
-#' @param columns deprecated argument, ignored
 #' @param id.column the column in both the `participants` and `contacts` data frames that links contacts to participants
-#' @param participant.age.column the column in the `participants` data frame containing participants' age
+#' @param participant.age.column the column in the `participants` data frame containing participants' age; if this does not exist, at least columns "..._exact", "..._est_min" and "..._est_max" must (see the `estimated.participant.age` option in [contact_matrix()])
 #' @param country.column the column in the `participants` data frame containing the country in which the participant was queried
 #' @param year.column the column in the `participants` data frame containing the year in which the participant was queried
 #' @param contact.age.column the column in the `contacts` data frame containing the age of contacts; if this does not exist, at least columns "..._exact", "..._est_min" and "..._est_max" must (see the `estimated.contact.age` option in [contact_matrix()])
@@ -19,18 +18,10 @@ check <- function(x, ...) UseMethod("check")
 #' data(polymod)
 #' check(polymod)
 #' @export
-check.survey <- function(x, columns, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
+check.survey <- function(x, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
   chkDots(...)
   if (!is.data.frame(x$participants) || !is.data.frame(x$contacts)) {
     stop("The 'participants' and 'contacts' elements of 'x' must be data.frames")
-  }
-
-  if (!missing(columns)) {
-    warning(
-      "The 'columns' argument is deprecated and will cause an error from ",
-      "version 1.0.0. The behaviour of the function now always corresponds ",
-      "to the previous documented case for `columns = TRUE`"
-    )
   }
 
   x <- clean(x)
@@ -46,11 +37,19 @@ check.survey <- function(x, columns, id.column = "part_id", participant.age.colu
   }
 
   if (!(participant.age.column %in% colnames(x$participants))) {
-    warning(
-      "participant age column '", participant.age.column, "' does not exist ",
-      "in the participant data frame"
-    )
-    success <- FALSE
+    exact.column <- paste(participant.age.column, "exact", sep = "_")
+    min.column <- paste(participant.age.column, "est_min", sep = "_")
+    max.column <- paste(participant.age.column, "est_max", sep = "_")
+
+    if (!((exact.column %in% colnames(x$participants)) ||
+      (min.column %in% colnames(x$participants) && max.column %in% colnames(x$participants)))) {
+      warning(
+        "participant age column '", participant.age.column,
+        "' or columns to estimate participant age ('", exact.column, "' or '",
+        min.column, "' and '", max.column, "') do not exist in the participant data frame"
+      )
+      success <- FALSE
+    }
   }
 
   if (!(contact.age.column %in% colnames(x$contacts))) {

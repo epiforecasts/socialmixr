@@ -1,14 +1,24 @@
 #' List all surveys available for download
 #'
 #' @return character vector of surveys
-#' @importFrom oai list_records
-#' @autoglobal
+#' @inheritParams get_survey
 #' @examples
 #' \dontrun{
 #' list_surveys()
 #' }
 #' @export
-list_surveys <- function() {
+list_surveys <- function(clear_cache = FALSE) {
+  if (!("list_surveys" %in% names(.socialmixr.env$cached_functions)) ||
+      clear_cache) {
+    .socialmixr.env$cached_functions$list_surveys <- memoise(.list_surveys)
+  }
+  .socialmixr.env$cached_functions$list_surveys()
+}
+
+#' @autoglobal
+#' @importFrom oai list_records
+#' @keywords internal
+.list_surveys <- function() {
   record_list <-
     data.table(list_records("https://zenodo.org/oai2d",
       metadataPrefix = "oai_datacite",

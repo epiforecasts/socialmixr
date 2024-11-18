@@ -4,6 +4,14 @@
 
 * `contact_matrix(counts = TRUE)$matrix` is now an array rather than an xtabs object. This matches the existing output format of `contact_matrix(counts = FALSE)$matrix` (#118).
 
+# socialmixr 0.4.0
+
+* The speed of loading surveys has been increased.
+* An error has been fixed causing NA contact matrices if any 5-year age band in the population data was missing.
+* Results of function calls accessing Zenodo repository are now cached for speedup and to avoid multiple web requests
+* A bug was fixed where ages given as ranges had been set to the average of estimated ones
+* The `limits_to_agegroups` has been changed to return bracket notated age ranges by default
+
 # socialmixr 0.3.2
 
 * An error in `list_surveys()` was fixed which stopped this working.
