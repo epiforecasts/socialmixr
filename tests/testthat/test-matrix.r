@@ -1,4 +1,5 @@
 context("Generating contact matrices")
+set.seed(123)
 
 polymod2 <- get_survey(polymod)
 polymod3 <- get_survey(polymod)
@@ -83,6 +84,10 @@ test_that("demography has been returned", {
 
 test_that("demography is numeric", {
   expect_type(contacts[[3]]$demography$population, "double")
+})
+
+test_that("contact matrices look as expected", {
+  expect_snapshot(contacts)
 })
 
 test_that("survey argument is validated", {
