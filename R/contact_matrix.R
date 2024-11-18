@@ -37,6 +37,8 @@
 #' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 #' @author Sebastian Funk
 contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, filter, counts = FALSE, symmetric = FALSE, split = FALSE, sample.participants = FALSE, estimated.participant.age = c("mean", "sample", "missing"), estimated.contact.age = c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = NULL, weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, symmetric.norm.threshold = 2, sample.all.age.groups = FALSE, return.part.weights = FALSE, return.demography = NA, per.capita = FALSE, ...) {
+
+  ## === check arguments and define variables
   surveys <- c("participants", "contacts")
 
   dot.args <- list(...)
@@ -69,12 +71,14 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     }
   }
 
+  ## === check and clean survey
+
   ## clean the survey
   survey <- clean(survey)
   ## check and get columns
   columns <- suppressMessages(check(survey, ...))
 
-  ## check if specific countries are requested (if a survey contains data from multiple countries)
+  ## === check if specific countries are requested (if a survey contains data from multiple countries)
   if (length(countries) > 0 && columns[["country"]] %in% colnames(survey$participants)) {
     if (all(nchar(countries) == 2)) {
       corrected_countries <- suppressWarnings(
@@ -96,6 +100,9 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       stop("No participants left after selecting countries.")
     }
   }
+
+
+  ## === age processing: deal with ranges and missing data
 
   ## check maximum participant age in the data
   part_exact.column <- paste(columns[["participant.age"]], "exact", sep = "_")
@@ -257,7 +264,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       get(columns[["contact.age"]]) >= min(age.limits), ]
   }
 
-  ## check if any filters have been requested
+  ## === check if any filters have been requested
   if (!missing(filter)) {
     missing_columns <- list()
     for (table in surveys) {
@@ -278,7 +285,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     }
   }
 
-  # adjust age.group.brakes to the lower and upper ages in the survey
+  ## === adjust age.group.brakes to the lower and upper ages in the survey
   survey$participants[, lower.age.limit := reduce_agegroups(
     get(columns[["participant.age"]]),
     age.limits[age.limits < max.age]
@@ -304,7 +311,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   survey$participants <-
     merge(survey$participants, lower.upper.age.limits, by = "lower.age.limit", all.x = TRUE)
 
-  ## if split, symmetric or age weights are requested, get demographic data (survey population)
+  ## === if split, symmetric or age weights are requested, get demographic data (survey population)
   need.survey.pop <- split || symmetric || weigh.age ||
     (!is.na(return.demography) && return.demography) || per.capita
   if (need.survey.pop) {
@@ -436,7 +443,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     survey.pop[, upper.age.limit := c(part.age.group.present[-1], survey.pop.max)]
   }
 
-  ## weights
+  ## === process weights
   survey$participants[, weight := 1]
 
   ## assign weights to participants to account for weekend/weekday variation
@@ -520,7 +527,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     ]
   }
 
-  ## merge participants and contacts into a single data table
+  ## === merge participants and contacts into a single data table
   setkeyv(survey$participants, columns[["id"]])
   participant_ids <- unique(survey$participants[[columns[["id"]]]])
 
@@ -532,7 +539,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
   setkeyv(survey$contacts, columns[["id"]])
 
-  ## sample contacts
+  ## === process contact age ranges / missing ages
   if (missing.contact.age == "sample" &&
     nrow(survey$contacts[is.na(get(columns[["contact.age"]]))]) > 0) {
     for (this.age.group in
@@ -589,6 +596,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       right = FALSE
     )]
 
+  ## === sample participants randomly (if requested)
   ret <- list()
   if (sample.participants) {
     good.sample <- FALSE
@@ -625,7 +633,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     sampled.participants[, sampled.weight := weight]
   }
 
-  ## calculate weighted contact matrix
+  ## === calculate weighted contact matrix
   weighted.matrix <-
     xtabs(
       data = sampled.contacts,
@@ -655,7 +663,6 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     ## set non-existent data to NA
     weighted.matrix[is.nan(weighted.matrix)] <- NA_real_
   }
-
 
   ## construct a warning in case there are NAs
   na.headers <- anyNA(dimnames(weighted.matrix), recursive = TRUE)
@@ -716,6 +723,8 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     }
   }
 
+  ## === split contact matrx
+
   if (split) {
     if (counts) {
       warning(
@@ -756,7 +765,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
   ret[["matrix"]] <- weighted.matrix
 
-  # option to add matrix per capita, i.e. the contact rate of age i with one individual of age j in the population.
+  # === option to add matrix per capita, i.e. the contact rate of age i with one individual of age j in the population.
   if (per.capita) {
     if (counts) {
       warning(
@@ -808,7 +817,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     ret[["participants"]] <- part.pop[]
   }
 
-  # option to return participant weights
+  # === option to return participant weights
   if (return.part.weights) {
     # default
     part.weights <- survey$participants[, .N, by = list(age.group, weight)]
