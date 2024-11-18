@@ -1,5 +1,3 @@
-context("Manipulating age groups")
-
 test_that("age groups can be created and manipulated", {
   ages <- seq_len(50)
   age_limits <- c(0, 5, 10)
@@ -7,10 +5,10 @@ test_that("age groups can be created and manipulated", {
   expect_identical(unique(groups), age_limits)
   expect_warning(limits_to_agegroups(groups), "default")
   age_groups <-
-  expect_identical(
-    as.character(unique(limits_to_agegroups(groups, notation = "brackets"))),
-    c("[0,5)", "[5,10)", "10+")
-  )
+    expect_identical(
+      as.character(unique(limits_to_agegroups(groups, notation = "brackets"))),
+      c("[0,5)", "[5,10)", "10+")
+    )
   expect_identical(
     as.character(unique(limits_to_agegroups(groups, notation = "dashes"))),
     c("0-4", "5-9", "10+")

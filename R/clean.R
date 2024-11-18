@@ -40,10 +40,11 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
   if (nrow(x$participants) > 0 &&
     participant.age.column %in% colnames(x$participants) &&
     (!is.numeric(x$participants[, get(participant.age.column)]) ||
-       anyNA(x$participants[, get(participant.age.column)]))
+      anyNA(x$participants[, get(participant.age.column)]))
   ) {
     ## set any entries not containing numbers to NA
-    x$participants <- x$participants[,
+    x$participants <- x$participants[
+      ,
       paste(participant.age.column) := fifelse(
         grepl("[0-9]", get(participant.age.column)),
         as.character(get(participant.age.column)),
@@ -51,12 +52,14 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
       )
     ]
     ## fix "under 1"
-    x$participants <- x$participants[,
+    x$participants <- x$participants[
+      ,
       paste(participant.age.column) := sub("Under ", "0-", get(participant.age.column), fixed = TRUE)
     ]
     ## split off units
     if (any(grepl(" ", x$participants[, get(participant.age.column)], fixed = TRUE))) {
-      x$participants <- x$participants[,
+      x$participants <- x$participants[
+        ,
         ..age.unit :=
           tstrsplit(as.character(get(participant.age.column)), " ", keep = 2L, fixed = TRUE)
       ]
@@ -68,14 +71,16 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
         )
       ]
     } else {
-      x$participants <- x$participants[,
+      x$participants <- x$participants[
+        ,
         ..age.unit := "years"
       ]
     }
 
     limits <- c("..low", "..high")
-    x$participants <- x$participants[,
-       paste(limits) :=
+    x$participants <- x$participants[
+      ,
+      paste(limits) :=
         tstrsplit(as.character(get(participant.age.column)), "-", fixed = TRUE)
     ]
     x$participants <- x$participants[
@@ -86,13 +91,15 @@ clean.survey <- function(x, country.column = "country", participant.age.column =
     for (limit in limits) {
       x$participants <- x$participants[, paste(limit) := as.numeric(get(limit))]
       x$participants <-
-        x$participants[..age.unit != "years" & !is.na(get(limit)),
-        paste(limit) := period_to_seconds(period(get(limit), ..age.unit)) /
-          seconds_in_year,
-      ]
+        x$participants[
+          ..age.unit != "years" & !is.na(get(limit)),
+          paste(limit) := period_to_seconds(period(get(limit), ..age.unit)) /
+            seconds_in_year,
+        ]
     }
 
-    x$participants <- x$participants[,
+    x$participants <- x$participants[
+      ,
       paste(participant.age.column, "exact", sep = "_") := suppressWarnings(
         as.integer(get(participant.age.column))
       )

@@ -52,3 +52,4 @@ BugReports: https://github.com/epiforecasts/socialmixr/issues
 Roxygen: list(
     markdown = TRUE,
     roclets = c("collate", "namespace", "rd", "roxyglobals::global_roclet"))
+Config/testthat/edition: 3
