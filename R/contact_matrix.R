@@ -95,10 +95,10 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   if ("part_age_exact" %in% colnames(survey$participants)) {
     survey$participants[
       ,
-      paste(part_age) := as.integer(part_age_exact)
+      part_age := as.integer(part_age_exact)
     ]
   } else if (!(part_age %in% colnames(survey$participants))) {
-    survey$participants[, paste(part_age) := NA_integer_]
+    survey$participants[, part_age := NA_integer_]
   }
 
   ## sample estimated participant ages
@@ -108,8 +108,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       survey$participants[
         is.na(part_age_exact) &
           !is.na(part_age_est_min) & !is.na(part_age_est_max),
-        paste(part_age) :=
-          as.integer(rowMeans(.SD)),
+        part_age := as.integer(rowMeans(.SD)),
         .SDcols = c("part_age_est_min", "part_age_est_max")
       ]
     } else if (estimated.participant.age == "sample") {
@@ -117,12 +116,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
         is.na(part_age) &
           !is.na(part_age_est_min) & !is.na(part_age_est_max) &
           part_age_est_min <= part_age_est_max,
-        paste(part_age) :=
-          as.integer(runif(
-            .N,
-            part_age_est_min,
-            part_age_est_max
-          ))
+        part_age := as.integer(runif(.N, part_age_est_min, part_age_est_max))
       ]
     }
     # note: do nothing when "missing" is specified
