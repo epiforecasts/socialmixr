@@ -6,7 +6,6 @@
 \usage{
 as_contact_survey(
   x,
-  reference = NULL,
   id.column = "part_id",
   country.column = "country",
   year.column = "year"
@@ -22,8 +21,6 @@ information
 information needed to reference the survey, in particular it can contain$a
 "title", "bibtype", "author", "doi", "publisher", "note", "year"
 }}
-
-\item{reference}{a \code{list} containing information needed to reference the survey, in particular it can contain$a "title", "bibtype", "author", "doi", "publisher", "note", "year"}
 
 \item{id.column}{the column in both the \code{participants} and \code{contacts} data frames that links contacts to participants}
 
