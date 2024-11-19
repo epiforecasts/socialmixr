@@ -28,6 +28,7 @@
 #' @return a contact matrix, and the underlying demography of the surveyed population
 #' @importFrom stats xtabs runif median
 #' @importFrom utils data globalVariables
+#' @importFrom data.table copy
 #' @importFrom countrycode countrycode
 #' @import data.table
 #' @export
@@ -54,6 +55,8 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   estimated.contact.age <- match.arg(estimated.contact.age)
   missing.participant.age <- match.arg(missing.participant.age)
   missing.contact.age <- match.arg(missing.contact.age)
+
+  survey <- copy(survey)
 
   if (!inherits(survey, "contact_survey")) {
     stop(
