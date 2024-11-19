@@ -18,7 +18,15 @@ check <- function(x, ...) UseMethod("check")
 #' data(polymod)
 #' check(polymod)
 #' @export
-check.survey <- function(x, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
+check.contact_survey <- function(x, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
+  lifecycle::deprecate_warn(
+    "1.0.0",
+    "check()",
+    details = paste(
+      "Use `as_contact_survey()` instead to construct a `<contact_survey>`",
+      "object. This will perform necessary checks."
+    )
+  )
   chkDots(...)
   if (!is.data.frame(x$participants) || !is.data.frame(x$contacts)) {
     stop("The 'participants' and 'contacts' elements of 'x' must be data.frames")

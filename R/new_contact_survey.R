@@ -1,17 +1,12 @@
 #' @title Contact survey
-#' @description Deprecated. Use `as_survey` instead.
+#' @description Deprecated. A `survey` object contains the results of a contact survey. In particular, it contains two data frames called `participants` and `contacts` that are linked by a column specified as `id.column`
 #' @param participants a `data.frame` containing information on participants
 #' @param contacts a `data.frame` containing information on contacts
 #' @param reference a `list` containing information needed to reference the survey, in particular it can contain$a "title", "bibtype", "author", "doi", "publisher", "note", "year"
 #' @return a new survey object
 #' @author Sebastian Funk
-#' @export
-survey <- function(participants, contacts, reference = NULL) {
-  lifecycle::deprecate_warn(
-    "1.0.0",
-    "survey()",
-    details = "Use `as_contact_survey()` instead."
-  )
+#' @keywords internal
+new_contact_survey <- function(participants, contacts, reference = NULL) {
   new_obj <-
     structure(
       list(

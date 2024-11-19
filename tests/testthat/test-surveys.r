@@ -11,7 +11,7 @@ test_that("surveys can be downloaded", {
 
   s <- suppressMessages(suppressWarnings(get_survey("10.5281/zenodo.1095664"))) # nolint
 
-  expect_s3_class(s, "survey")
+  expect_s3_class(s, "contact_survey")
   expect_named(
     s$reference,
     c("title", "bibtype", "author", "year", "note", "doi")

@@ -19,15 +19,18 @@ Description: Provides methods for sampling contact matrices from diary
 License: MIT + file LICENSE
 Depends: 
     R (>= 3.5.0)
-Imports: 
+Imports:
+    checkmate,
     countrycode,
     curl,
     data.table,
     grDevices,
     httr,
     jsonlite,
+    lifecycle,
     lubridate,
     memoise,
+    purrr,
     oai,
     wpp2017,
     xml2
@@ -35,11 +38,12 @@ Suggests:
     ggplot2,
     here,
     knitr,
-    purrr,
+    quarto,
     reshape2,
     rmarkdown,
     roxyglobals (>= 1.0.0),
-    testthat
+    testthat,
+    withr
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

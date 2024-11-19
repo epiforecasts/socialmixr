@@ -2,10 +2,10 @@
 % Please edit documentation in R/check.R
 \name{check}
 \alias{check}
-\alias{check.survey}
+\alias{check.contact_survey}
 \title{Check contact survey data}
 \usage{
-\method{check}{survey}(
+\method{check}{contact_survey}(
   x,
   id.column = "part_id",
   participant.age.column = "part_age",
