@@ -38,12 +38,12 @@ Suggests:
     ggplot2,
     here,
     knitr,
-    purrr,
     quarto,
     reshape2,
     rmarkdown,
     roxyglobals (>= 1.0.0),
-    testthat
+    testthat,
+    withr
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
