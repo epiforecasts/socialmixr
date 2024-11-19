@@ -13,7 +13,15 @@ as_contact_survey(
 )
 }
 \arguments{
-\item{x}{list containing two data frames named 'participants' and 'contacts'}
+\item{x}{list containing
+\itemize{
+\item an element named 'participants', a data frame containing participant
+information
+\item an element named 'contacts', a data frame containing contact information
+\item (optionally) an element named 'reference, a list containing information
+information needed to reference the survey, in particular it can contain$a
+"title", "bibtype", "author", "doi", "publisher", "note", "year"
+}}
 
 \item{reference}{a \code{list} containing information needed to reference the survey, in particular it can contain$a "title", "bibtype", "author", "doi", "publisher", "note", "year"}
 

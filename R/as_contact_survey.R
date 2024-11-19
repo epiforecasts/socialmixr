@@ -2,7 +2,13 @@
 #'
 #' @description Checks that a survey fulfills all the requirements to work with the 'contact_matrix' function
 #'
-#' @param x list containing two data frames named 'participants' and 'contacts'
+#' @param x list containing
+#'  - an element named 'participants', a data frame containing participant
+#'   information
+#'  - an element named 'contacts', a data frame containing contact information
+#'  - (optionally) an element named 'reference, a list containing information
+#'   information needed to reference the survey, in particular it can contain$a
+#'   "title", "bibtype", "author", "doi", "publisher", "note", "year"
 #' @param id.column the column in both the `participants` and `contacts` data frames that links contacts to participants
 #' @param participant.age.column the column in the `participants` data frame containing participants' age; if this does not exist, at least columns "..._exact", "..._est_min" and "..._est_max" must (see the `estimated.participant.age` option in [contact_matrix()])
 #' @param country.column the column in the `participants` data frame containing the country in which the participant was queried
