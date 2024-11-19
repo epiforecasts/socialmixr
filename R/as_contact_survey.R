@@ -10,10 +10,8 @@
 #'   information needed to reference the survey, in particular it can contain$a
 #'   "title", "bibtype", "author", "doi", "publisher", "note", "year"
 #' @param id.column the column in both the `participants` and `contacts` data frames that links contacts to participants
-#' @param participant.age.column the column in the `participants` data frame containing participants' age; if this does not exist, at least columns "..._exact", "..._est_min" and "..._est_max" must (see the `estimated.participant.age` option in [contact_matrix()])
 #' @param country.column the column in the `participants` data frame containing the country in which the participant was queried
 #' @param year.column the column in the `participants` data frame containing the year in which the participant was queried
-#' @param contact.age.column the column in the `contacts` data frame containing the age of contacts; if this does not exist, at least columns "..._exact", "..._est_min" and "..._est_max" must (see the `estimated.contact.age` option in [contact_matrix()])
 #' @param ... ignored
 #' @importFrom checkmate assert_list assert_names assert_data_frame
 #'   assert_character
