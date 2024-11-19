@@ -5,12 +5,10 @@
 \alias{clean.contact_survey}
 \title{Clean contact survey data}
 \usage{
-\method{clean}{contact_survey}(x, country.column = "country", participant.age.column = "part_age", ...)
+\method{clean}{contact_survey}(x, participant.age.column = "part_age", ...)
 }
 \arguments{
 \item{x}{A \code{\link[=survey]{survey()}} object}
-
-\item{country.column}{the name of the country in which the survey participant was interviewed}
 
 \item{participant.age.column}{the column in \code{x$participants} containing participants' age}
 
