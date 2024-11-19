@@ -59,7 +59,6 @@ as_contact_survey <- function(x, reference = NULL, id.column = "part_id",
   }
 
   survey <- new_contact_survey(x$participant, x$contacts, reference)
-
   survey <- clean(survey)
 
   return(survey)

@@ -39,14 +39,5 @@ get_survey <- function(survey, clear_cache = FALSE, ...) {
     }
   }
 
-  new_survey <- clean(new_survey, ...)
-
-  if (!is.null(new_survey$reference)) {
-    message(
-      "Using ", new_survey$reference$title,
-      ". To cite this in a publication, use the 'get_citation()' function"
-    )
-  }
-
   return(new_survey)
 }

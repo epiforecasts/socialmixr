@@ -154,8 +154,6 @@ load_survey <- function(files, ...) {
     reference = reference
   )
 
-  new_survey <- clean(new_survey, ...)
-
   if (!is.null(new_survey$reference)) {
     message(
       "Using ", new_survey$reference$title,

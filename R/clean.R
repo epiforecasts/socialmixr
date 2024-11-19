@@ -22,8 +22,6 @@ clean <- function(x, ...) UseMethod("clean")
 clean.contact_survey <- function(x, country.column = "country", participant.age.column = "part_age", ...) {
   chkDots(...)
 
-  x <- new_contact_survey(x$participants, x$contacts, x$reference)
-
   ## update country names
   if (country.column %in% colnames(x$participants)) {
     countries <- x$participants[[country.column]]
