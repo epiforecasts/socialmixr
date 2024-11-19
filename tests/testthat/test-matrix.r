@@ -13,7 +13,7 @@ polymod11 <- get_survey(polymod)
 
 polymod2$participants$added_weight <- 0.5
 polymod2$contacts$cnt_age_exact <- factor(polymod2$contacts$cnt_age_exact)
-polymod2$participants$part_age[1] <- "3-5"
+polymod2$participants$part_age_exact[1] <- NA_real_
 polymod3$participants$dayofweek <- NULL
 polymod3$participants$year <- NULL
 polymod4$participants$country <- NULL
@@ -107,7 +107,8 @@ test_that("warning is thrown if filter column is not found", {
 
 test_that("warning is thrown if missing data exist", {
   expect_warning(contact_matrix(survey = polymod, missing.contact.age = "keep", symmetric = TRUE, age.limits = c(0, 5, 15)), "missing.contact.age")
-  expect_warning(contact_matrix(survey = polymod, split = TRUE), "age groups")
+  warning <- capture_warnings(contact_matrix(survey = polymod, missing.participant.age = "keep", split = TRUE))
+  expect_match(warning[2], "missing.participant.age")
 })
 
 test_that("error is thrown if an unknown argument is passed", {
@@ -123,7 +124,7 @@ test_that("error is thrown if there are no participants after selection the coun
 })
 
 test_that("warning is thrown if population needed but no 'year' column present", {
-  expect_warning(contact_matrix(survey = polymod3, symmetric = TRUE, age.limits = c(0, 5, 15)), "No 'year' column")
+  expect_warning(contact_matrix(survey = polymod3, symmetric = TRUE, age.limits = c(0, 5, 15)), "No information on year")
 })
 
 test_that("warning is thrown if day of week is asked to be weighed but not present", {
@@ -135,10 +136,12 @@ test_that("warning is thrown if country has no survey population", {
 })
 
 test_that("warning is thrown if contact survey has no age information", {
+  withr::local_options(lifecycle_verbosity = "quiet")
   expect_warning(check(x = polymod6), "do not exist")
 })
 
 test_that("warning is thrown if participant data has no country", {
+  withr::local_options(lifecycle_verbosity = "quiet")
   expect_warning(check(x = polymod4), "does not exist")
 })
 
@@ -147,6 +150,7 @@ test_that("user is informed about removing missing data", {
 })
 
 test_that("check result is reported back", {
+  withr::local_options(lifecycle_verbosity = "quiet")
   expect_message(check(x = polymod2), "Check")
 })
 
@@ -163,10 +167,7 @@ test_that("nonsensical operations are warned about", {
 })
 
 test_that("warning is thrown if it is assumed that the survey is representative", {
-  warning <- capture_warnings(
-    contact_matrix(survey = polymod4, symmetric = TRUE, age.limits = c(0, 5, 15))
-  )
-  expect_match(warning[2], "Assuming the survey is representative")
+  expect_warning(contact_matrix(survey = polymod4, symmetric = TRUE, age.limits = c(0, 5, 15)), "Assuming the survey is representative")
 })
 
 
