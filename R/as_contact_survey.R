@@ -31,7 +31,7 @@ as_contact_survey <- function(x, id.column = "part_id",
   assert_names(names(x), must.include = c("participants", "contacts"))
   assert_data_frame(x$participants)
   assert_data_frame(x$contacts)
-  assert_list(reference, names = "named", null.ok = TRUE)
+  assert_list(x$reference, names = "named", null.ok = TRUE)
   assert_character(id.column)
   assert_character(year.column, null.ok = TRUE)
   assert_character(country.column, null.ok = TRUE)
@@ -59,11 +59,11 @@ as_contact_survey <- function(x, id.column = "part_id",
     }
   })
 
-  if (is.null(reference)) {
+  if (is.null(x$reference)) {
     warning("No reference provided")
   }
 
-  survey <- new_contact_survey(x$participant, x$contacts, reference)
+  survey <- new_contact_survey(x$participant, x$contacts, x$reference)
   survey <- clean(survey)
 
   return(survey)
