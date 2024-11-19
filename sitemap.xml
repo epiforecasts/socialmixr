@@ -3,10 +3,12 @@
 <url><loc>https://epiforecasts.io/socialmixr/LICENSE-text.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/LICENSE.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/articles/index.html</loc></url>
+<url><loc>https://epiforecasts.io/socialmixr/articles/intro.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/articles/socialmixr.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/authors.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/index.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/news/index.html</loc></url>
+<url><loc>https://epiforecasts.io/socialmixr/reference/as_contact_survey.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/check.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/clean.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/contact_matrix.html</loc></url>
@@ -20,6 +22,7 @@
 <url><loc>https://epiforecasts.io/socialmixr/reference/list_surveys.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/load_survey.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/matrix_plot.html</loc></url>
+<url><loc>https://epiforecasts.io/socialmixr/reference/new_contact_survey.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/polymod.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/pop_age.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/reduce_agegroups.html</loc></url>

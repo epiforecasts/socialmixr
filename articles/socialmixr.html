@@ -31,6 +31,12 @@
       <ul class="navbar-nav me-auto">
 <li class="active nav-item"><a class="nav-link" href="../articles/socialmixr.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/intro.html">The socialmixr pakge</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -55,7 +61,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Funk</h4>
             
-            <h4 data-toc-skip class="date">2024-11-18</h4>
+            <h4 data-toc-skip class="date">2024-11-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
       <div class="d-none name"><code>socialmixr.Rmd</code></div>
@@ -137,7 +143,6 @@ without the need for an internet connection using</p>
 use the <code>survey_countries</code> function</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/survey_countries.html">survey_countries</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using POLYMOD social contact data. To cite this in a publication, use the 'get_citation()' function</span></span>
 <span><span class="co">#&gt; [1] "Italy"          "Germany"        "Luxembourg"     "Netherlands"   </span></span>
 <span><span class="co">#&gt; [5] "Poland"         "United Kingdom" "Finland"        "Belgium"</span></span></code></pre></div>
 <p>If one wishes to get a contact matrix for one or more specific
