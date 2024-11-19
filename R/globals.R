@@ -11,12 +11,11 @@ utils::globalVariables(c(
   "part_age_est_max", # <contact_matrix>
   "cnt_age", # <contact_matrix>
   "cnt_age_exact", # <contact_matrix>
-  "cnt_age_min", # <contact_matrix>
-  "cnt_age_max", # <contact_matrix>
+  "cnt_age_est_min", # <contact_matrix>
+  "cnt_age_est_max", # <contact_matrix>
   "part_id", # <contact_matrix>
   "lower.age.limit", # <contact_matrix>
   "age.group", # <contact_matrix>
-  ".ESSBP.", # <contact_matrix>
   "population", # <contact_matrix>
   "upper.age.limit", # <contact_matrix>
   "weight", # <contact_matrix>
@@ -35,7 +34,6 @@ utils::globalVariables(c(
   "proportion", # <contact_matrix>
   "participants", # <contact_matrix>
   "file_name", # <download_survey>
-  ".ESSBP.", # <.get_survey>
   "common_doi", # <.list_surveys>
   "doi.nb", # <.list_surveys>
   "identifier.1", # <.list_surveys>
@@ -44,7 +42,6 @@ utils::globalVariables(c(
   "identifier.2", # <.list_surveys>
   "..main_id", # <load_survey>
   "..merge_id", # <load_survey>
-  ".ESSBP.", # <load_survey>
   "..original.lower.age.limit", # <pop_age>
   "..segment", # <pop_age>
   "..upper.age.limit", # <pop_age>
