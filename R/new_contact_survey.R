@@ -5,10 +5,7 @@
 #' @param reference a `list` containing information needed to reference the survey, in particular it can contain$a "title", "bibtype", "author", "doi", "publisher", "note", "year"
 #' @return a new survey object
 #' @author Sebastian Funk
-#' @export
-#' @examples
-#' data(polymod)
-#' survey <- new_contact_survey(polymod$participants, polymod$contacts)
+#' @keywords internal
 new_contact_survey <- function(participants, contacts, reference = NULL) {
   new_obj <-
     structure(

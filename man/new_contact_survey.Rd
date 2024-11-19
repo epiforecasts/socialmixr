@@ -19,10 +19,7 @@ a new survey object
 \description{
 Deprecated. A \code{survey} object contains the results of a contact survey. In particular, it contains two data frames called \code{participants} and \code{contacts} that are linked by a column specified as \code{id.column}
 }
-\examples{
-data(polymod)
-survey <- new_survey(polymod$participants, polymod$contacts)
-}
 \author{
 Sebastian Funk
 }
+\keyword{internal}
