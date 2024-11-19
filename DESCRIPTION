@@ -30,6 +30,7 @@ Imports:
     lifecycle,
     lubridate,
     memoise,
+    purrr,
     oai,
     wpp2017,
     xml2
@@ -38,6 +39,7 @@ Suggests:
     here,
     knitr,
     purrr,
+    quarto,
     reshape2,
     rmarkdown,
     roxyglobals (>= 1.0.0),

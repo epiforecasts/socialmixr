@@ -23,6 +23,6 @@ erroneous_structure1$participants$part_id <- NULL
 test_that("incorrect structure of data frames is correctly identified", {
   expect_error(
     as_contact_survey(erroneous_structure1),
-    "Names must include the elements \\{'part_id'\\}"
+    "Names must include the elements \\{'part_id'\\}" ## nolint: nonportable_path_linter
   )
 })

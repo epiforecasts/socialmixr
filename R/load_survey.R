@@ -151,7 +151,7 @@ load_survey <- function(files, ...) {
       participants = main_surveys[["participant"]],
       contacts = main_surveys[["contact"]],
       reference = reference
-    ),
+    )
   )
 
   if (!is.null(new_survey$reference)) {

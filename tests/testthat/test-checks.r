@@ -1,6 +1,6 @@
 library(data.table)
 
-erroneous_survey <- new_contact_survey(polymod$participants, polymod$contacts, polymod$reference)
+erroneous_survey <- as_contact_survey(polymod)
 
 erroneous_type1 <- copy(erroneous_survey)
 erroneous_type1$participants <- "test"
