@@ -16,7 +16,7 @@ test_that("error is thrown if survey contains false data types", {
 erroneous_structure1 <- copy(erroneous_survey)
 erroneous_structure1$participants$part_id <- NULL
 erroneous_structure2 <- copy(erroneous_survey)
-erroneous_structure2$participants$part_age <- NULL
+erroneous_structure2$participants$part_age_exact <- NULL
 erroneous_structure3 <- copy(erroneous_survey)
 erroneous_structure3$contacts$cnt_age_exact <- NULL
 erroneous_structure3$contacts$cnt_age_est_min <- NULL
