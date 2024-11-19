@@ -8,9 +8,9 @@
 #' @export
 survey <- function(participants, contacts, reference = NULL) {
   lifecycle::deprecate_warn(
-    "survey()",
     "1.0.0",
-    "Use `as_contact_survey()` instead."
+    "survey()",
+    details = "Use `as_contact_survey()` instead."
   )
   new_obj <-
     structure(

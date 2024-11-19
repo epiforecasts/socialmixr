@@ -8,8 +8,8 @@
 #' @export
 #' @examples
 #' data(polymod)
-#' survey <- new_survey(polymod$participants, polymod$contacts)
-new_survey <- function(participants, contacts, reference = NULL) {
+#' survey <- new_contact_survey(polymod$participants, polymod$contacts)
+new_contact_survey <- function(participants, contacts, reference = NULL) {
   new_obj <-
     structure(
       list(

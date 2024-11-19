@@ -28,14 +28,14 @@ get_survey <- function(survey, clear_cache = FALSE, ...) {
 #' @param ... options for [clean()], which is called at the end of this
 #' @keywords internal
 .get_survey <- function(survey, ...) {
-  if (inherits(survey, "survey")) {
+  if (inherits(survey, "contact_survey")) {
     new_survey <- survey
   } else {
     if (is.character(survey)) {
       files <- download_survey(survey)
       new_survey <- load_survey(files)
     } else {
-      stop("'survey' must be an 'survey' object or character")
+      stop("'survey' must be an 'contact_survey' object or character")
     }
   }
 

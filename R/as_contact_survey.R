@@ -12,7 +12,7 @@
 #' @importFrom checkmate assert_list assert_names assert_data_frame
 #'   assert_character
 #' @importFrom purrr walk
-#' @inheritParams new_survey
+#' @inheritParams new_contact_survey
 #' @return invisibly returns a character vector of the relevant columns
 #' @examples
 #' data(polymod)
@@ -58,7 +58,9 @@ as_contact_survey <- function(x, reference = NULL, id.column = "part_id",
     warning("No reference provided")
   }
 
-  x <- clean(x)
+  survey <- new_contact_survey(x$participant, x$contacts, reference)
 
-  return(new_survey(x$participant, x$contacts, reference))
+  survey <- clean(survey)
+
+  return(survey)
 }

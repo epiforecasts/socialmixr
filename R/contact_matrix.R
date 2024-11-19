@@ -40,7 +40,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   surveys <- c("participants", "contacts")
 
   dot.args <- list(...)
-  unknown.args <- setdiff(names(dot.args), union(names(formals(check.survey)), names(formals(pop_age))))
+  unknown.args <- setdiff(names(dot.args), union(names(formals(check.contact_survey)), names(formals(pop_age))))
   if (length(unknown.args) > 0) {
     stop("Unknown argument(s): ", paste(unknown.args, sep = ", "), ".")
   }
@@ -55,7 +55,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   missing.participant.age <- match.arg(missing.participant.age)
   missing.contact.age <- match.arg(missing.contact.age)
 
-  if (!inherits(survey, "survey")) {
+  if (!inherits(survey, "contact_survey")) {
     stop(
       "`survey` must be a survey object (created using `survey()` ",
       "or `get_survey()`)"

@@ -19,10 +19,10 @@ clean <- function(x, ...) UseMethod("clean")
 #' cleaned <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
 #' @autoglobal
 #' @export
-clean.survey <- function(x, country.column = "country", participant.age.column = "part_age", ...) {
+clean.contact_survey <- function(x, country.column = "country", participant.age.column = "part_age", ...) {
   chkDots(...)
 
-  x <- new_survey(x$participants, x$contacts, x$reference)
+  x <- new_contact_survey(x$participants, x$contacts, x$reference)
 
   ## update country names
   if (country.column %in% colnames(x$participants)) {

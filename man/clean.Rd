@@ -2,10 +2,10 @@
 % Please edit documentation in R/clean.R
 \name{clean}
 \alias{clean}
-\alias{clean.survey}
+\alias{clean.contact_survey}
 \title{Clean contact survey data}
 \usage{
-\method{clean}{survey}(x, country.column = "country", participant.age.column = "part_age", ...)
+\method{clean}{contact_survey}(x, country.column = "country", participant.age.column = "part_age", ...)
 }
 \arguments{
 \item{x}{A \code{\link[=survey]{survey()}} object}
