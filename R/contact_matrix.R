@@ -40,6 +40,21 @@
 contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, filter, counts = FALSE, symmetric = FALSE, split = FALSE, sample.participants = FALSE, estimated.participant.age = c("mean", "sample", "missing"), estimated.contact.age = c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = NULL, weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, symmetric.norm.threshold = 2, sample.all.age.groups = FALSE, return.part.weights = FALSE, return.demography = NA, per.capita = FALSE, ...) {
   surveys <- c("participants", "contacts")
 
+
+  lifecycle::deprecate_warn(
+    "1.0.0",
+    "contact_matrix(filter)",
+    "filter_survey()"
+  )
+  lifecycle::deprecate_warn(
+    "1.0.0",
+    "contact_matrix(countries)",
+    details = paste(
+      "Use the `filter_survey()` function instead to filter for certain",
+      "countries"
+    )
+  )
+
   dot.args <- list(...)
   unknown.args <- setdiff(names(dot.args), union(names(formals(check.contact_survey)), names(formals(pop_age))))
   if (length(unknown.args) > 0) {
@@ -73,6 +88,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   }
 
   ## check if specific countries are requested (if a survey contains data from multiple countries)
+  ## deprecated and to be removed
   if (length(countries) > 0 && "country" %in% colnames(survey$participants)) {
     if (all(nchar(countries) == 2)) {
       corrected_countries <- suppressWarnings(
@@ -222,7 +238,8 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       cnt_age >= min(age.limits), ]
   }
 
-  ## check if any filters have been requested
+  ## === check if any filters have been requested
+  ## deprecated functionality to be removed
   if (!missing(filter)) {
     missing_columns <- list()
     for (table in surveys) {
