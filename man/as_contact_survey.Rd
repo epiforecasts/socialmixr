@@ -27,8 +27,6 @@ information needed to reference the survey, in particular it can contain$a
 \item{country.column}{the column in the \code{participants} data frame containing the country in which the participant was queried}
 
 \item{year.column}{the column in the \code{participants} data frame containing the year in which the participant was queried}
-
-\item{...}{ignored}
 }
 \value{
 invisibly returns a character vector of the relevant columns

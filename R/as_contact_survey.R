@@ -12,7 +12,6 @@
 #' @param id.column the column in both the `participants` and `contacts` data frames that links contacts to participants
 #' @param country.column the column in the `participants` data frame containing the country in which the participant was queried
 #' @param year.column the column in the `participants` data frame containing the year in which the participant was queried
-#' @param ... ignored
 #' @importFrom checkmate assert_list assert_names assert_data_frame
 #'   assert_character
 #' @importFrom purrr walk
