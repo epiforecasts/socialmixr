@@ -20,9 +20,9 @@ check <- function(x, ...) UseMethod("check")
 #' @export
 check.contact_survey <- function(x, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
   lifecycle::deprecate_warn(
-    "check()",
     "1.0.0",
-    paste(
+    "check()",
+    details = paste(
       "Use `as_contact_survey()` instead to construct a `<contact_survey>`",
       "object. This will perform necessary checks."
     )
