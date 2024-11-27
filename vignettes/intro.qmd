@@ -1,5 +1,5 @@
 ---
-title: "The socialmixr pakge"
+title: "The socialmixr package"
 author: "Sebastian Funk"
 institute: https://epiforecasts.io
 date: "`r Sys.Date()`"
