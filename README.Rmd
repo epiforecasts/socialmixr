@@ -34,6 +34,7 @@ For information on how to use the socialmixr package, see the [introduction vign
 
 
 
+
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
@@ -50,6 +51,7 @@ All contributions to this project are gratefully acknowledged using the [`allcon
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=Degoot-AM">Degoot-AM</a>, 
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=pearsonca">pearsonca</a>, 
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=jarvisc1">jarvisc1</a>, 
+<a href="https://github.com/epiforecasts/socialmixr/commits?author=jamesmbaazam">jamesmbaazam</a>, 
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=mariabnd">mariabnd</a>, 
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=samclifford">samclifford</a>, 
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=TimTaylor">TimTaylor</a>
@@ -89,5 +91,6 @@ All contributions to this project are gratefully acknowledged using the [`allcon
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
 
 
