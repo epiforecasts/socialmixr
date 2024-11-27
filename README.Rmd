@@ -33,6 +33,7 @@ For information on how to use the socialmixr package, see the [introduction vign
 ## Contributors
 
 
+
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
@@ -46,6 +47,7 @@ All contributions to this project are gratefully acknowledged using the [`allcon
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=Bisaloo">Bisaloo</a>, 
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=lwillem">lwillem</a>, 
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=alxsrobert">alxsrobert</a>, 
+<a href="https://github.com/epiforecasts/socialmixr/commits?author=Degoot-AM">Degoot-AM</a>, 
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=pearsonca">pearsonca</a>, 
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=jarvisc1">jarvisc1</a>, 
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=mariabnd">mariabnd</a>, 
@@ -71,8 +73,7 @@ All contributions to this project are gratefully acknowledged using the [`allcon
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3ANaomiWaterlow">NaomiWaterlow</a>, 
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Aaakhmetz">aakhmetz</a>, 
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Aadamkucharski">adamkucharski</a>, 
-<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Achitrams">chitrams</a>, 
-<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3ADegoot-AM">Degoot-AM</a>
+<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Achitrams">chitrams</a>
 
 
 
@@ -80,10 +81,13 @@ All contributions to this project are gratefully acknowledged using the [`allcon
 
 
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Avikkytom">vikkytom</a>, 
-<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Anjtierney">njtierney</a>
+<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Anjtierney">njtierney</a>, 
+<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Abahadzie">bahadzie</a>, 
+<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Ajoshwlambert">joshwlambert</a>
 
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
 
