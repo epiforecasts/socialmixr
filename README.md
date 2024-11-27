@@ -51,6 +51,7 @@ specification. Contributions of any kind are welcome!
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=Bisaloo">Bisaloo</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=lwillem">lwillem</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=alxsrobert">alxsrobert</a>,
+<a href="https://github.com/epiforecasts/socialmixr/commits?author=Degoot-AM">Degoot-AM</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=pearsonca">pearsonca</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=jarvisc1">jarvisc1</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=mariabnd">mariabnd</a>,
@@ -73,13 +74,14 @@ specification. Contributions of any kind are welcome!
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3ANaomiWaterlow">NaomiWaterlow</a>,
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Aaakhmetz">aakhmetz</a>,
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Aadamkucharski">adamkucharski</a>,
-<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Achitrams">chitrams</a>,
-<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3ADegoot-AM">Degoot-AM</a>
+<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Achitrams">chitrams</a>
 
 ### Issue Contributors
 
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Avikkytom">vikkytom</a>,
-<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Anjtierney">njtierney</a>
+<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Anjtierney">njtierney</a>,
+<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Abahadzie">bahadzie</a>,
+<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Ajoshwlambert">joshwlambert</a>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
