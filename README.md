@@ -54,6 +54,7 @@ specification. Contributions of any kind are welcome!
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=Degoot-AM">Degoot-AM</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=pearsonca">pearsonca</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=jarvisc1">jarvisc1</a>,
+<a href="https://github.com/epiforecasts/socialmixr/commits?author=jamesmbaazam">jamesmbaazam</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=mariabnd">mariabnd</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=samclifford">samclifford</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=TimTaylor">TimTaylor</a>
