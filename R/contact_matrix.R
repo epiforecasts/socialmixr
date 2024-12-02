@@ -28,9 +28,8 @@
 #' @return a contact matrix, and the underlying demography of the surveyed population
 #' @importFrom stats xtabs runif median
 #' @importFrom utils data globalVariables
-#' @importFrom data.table copy
+#' @importFrom data.table copy setkey
 #' @importFrom countrycode countrycode
-#' @import data.table
 #' @export
 #' @autoglobal
 #' @examples
@@ -38,7 +37,7 @@
 #' contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
 #' @author Sebastian Funk
 contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, filter, counts = FALSE, symmetric = FALSE, split = FALSE, sample.participants = FALSE, estimated.participant.age = c("mean", "sample", "missing"), estimated.contact.age = c("mean", "sample", "missing"), missing.participant.age = c("remove", "keep"), missing.contact.age = c("remove", "sample", "keep", "ignore"), weights = NULL, weigh.dayofweek = FALSE, weigh.age = FALSE, weight.threshold = NA, symmetric.norm.threshold = 2, sample.all.age.groups = FALSE, return.part.weights = FALSE, return.demography = NA, per.capita = FALSE, ...) {
-  surveys <- c("participants", "contacts")
+  ## === check arguments and define variables
 
   dot.args <- list(...)
   unknown.args <- setdiff(names(dot.args), union(names(formals(check.contact_survey)), names(formals(pop_age))))
@@ -72,7 +71,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     }
   }
 
-  ## check if specific countries are requested (if a survey contains data from multiple countries)
+  ## === check if specific countries are requested (if a survey contains data from multiple countries)
   if (length(countries) > 0 && "country" %in% colnames(survey$participants)) {
     if (all(nchar(countries) == 2)) {
       corrected_countries <- suppressWarnings(
@@ -95,6 +94,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     }
   }
 
+  ## === age processing: deal with ranges and missing data
   if ("part_age_exact" %in% colnames(survey$participants)) {
     survey$participants[
       ,
@@ -222,10 +222,10 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       cnt_age >= min(age.limits), ]
   }
 
-  ## check if any filters have been requested
+  ## === check if any filters have been requested
   if (!missing(filter)) {
     missing_columns <- list()
-    for (table in surveys) {
+    for (table in c("participants", "contacts")) {
       if (nrow(survey[[table]]) > 0) {
         missing_columns <-
           c(missing_columns, list(setdiff(names(filter), colnames(survey[[table]]))))
@@ -243,7 +243,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     }
   }
 
-  # adjust age.group.brakes to the lower and upper ages in the survey
+  ## === adjust age.group.brakes to the lower and upper ages in the survey
   survey$participants[, lower.age.limit := reduce_agegroups(
     part_age, age.limits[age.limits < max.age]
   )]
@@ -268,7 +268,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   survey$participants <-
     merge(survey$participants, lower.upper.age.limits, by = "lower.age.limit", all.x = TRUE)
 
-  ## if split, symmetric or age weights are requested, get demographic data (survey population)
+  ## === if split, symmetric or age weights are requested, get demographic data (survey population)
   need.survey.pop <- split || symmetric || weigh.age ||
     (!is.na(return.demography) && return.demography) || per.capita
   if (need.survey.pop) {
@@ -394,7 +394,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     survey.pop[, upper.age.limit := c(part.age.group.present[-1], survey.pop.max)]
   }
 
-  ## weights
+  ## === process weights
   survey$participants[, weight := 1]
 
   ## assign weights to participants to account for weekend/weekday variation
@@ -478,7 +478,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     ]
   }
 
-  ## merge participants and contacts into a single data table
+  ## === merge participants and contacts into a single data table
   setkey(survey$participants, part_id)
   participant_ids <- unique(survey$participants$part_id)
 
@@ -490,7 +490,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
   setkey(survey$contacts, part_id)
 
-  ## sample contacts
+  ## === process contact age ranges / missing ages
   if (missing.contact.age == "sample" &&
     nrow(survey$contacts[is.na(cnt_age)]) > 0) {
     for (this.age.group in
@@ -546,6 +546,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       right = FALSE
     )]
 
+  ## === sample participants randomly (if requested)
   ret <- list()
   if (sample.participants) {
     good.sample <- FALSE
@@ -582,7 +583,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     sampled.participants[, sampled.weight := weight]
   }
 
-  ## calculate weighted contact matrix
+  ## === calculate weighted contact matrix
   weighted.matrix <-
     xtabs(
       data = sampled.contacts,
@@ -612,7 +613,6 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     ## set non-existent data to NA
     weighted.matrix[is.nan(weighted.matrix)] <- NA_real_
   }
-
 
   ## construct a warning in case there are NAs
   na.headers <- anyNA(dimnames(weighted.matrix), recursive = TRUE)
@@ -673,6 +673,8 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     }
   }
 
+  ## === split contact matrx
+
   if (split) {
     if (counts) {
       warning(
@@ -713,7 +715,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
   ret[["matrix"]] <- weighted.matrix
 
-  # option to add matrix per capita, i.e. the contact rate of age i with one individual of age j in the population.
+  # === option to add matrix per capita, i.e. the contact rate of age i with one individual of age j in the population.
   if (per.capita) {
     if (counts) {
       warning(
@@ -765,7 +767,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     ret[["participants"]] <- part.pop[]
   }
 
-  # option to return participant weights
+  # === option to return participant weights
   if (return.part.weights) {
     # default
     part.weights <- survey$participants[, .N, by = list(age.group, weight)]
