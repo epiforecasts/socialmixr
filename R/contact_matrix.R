@@ -45,6 +45,19 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     "contact_matrix(filter)",
     "filter_survey()"
   )
+  lifecycle::deprecate_warn(
+    "1.0.0",
+    "contact_matrix(countries)",
+    details = paste(
+      "Use the `filter_survey()` function instead to filter for certain",
+      "countries"
+    )
+  )
+  lifecycle::deprecate_warn(
+    "1.0.0",
+    "contact_matrix(return.demography)",
+    "get_demography()"
+  )
 
   dot.args <- list(...)
   unknown.args <- setdiff(names(dot.args), union(names(formals(check.contact_survey)), names(formals(pop_age))))
