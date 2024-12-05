@@ -6,9 +6,9 @@
 \usage{
 as_contact_survey(
   x,
-  id.column = "part_id",
-  country.column = "country",
-  year.column = "year"
+  participant_id = "part_id",
+  country = "country",
+  year = "year"
 )
 }
 \arguments{
@@ -17,16 +17,14 @@ as_contact_survey(
 \item an element named 'participants', a data frame containing participant
 information
 \item an element named 'contacts', a data frame containing contact information
-\item (optionally) an element named 'reference, a list containing information
-information needed to reference the survey, in particular it can contain$a
-"title", "bibtype", "author", "doi", "publisher", "note", "year"
+\item (optionally) an element named 'reference, a \code{\link[utils:bibentry]{utils::bibentry()}} object
 }}
 
-\item{id.column}{the column in both the \code{participants} and \code{contacts} data frames that links contacts to participants}
+\item{participant_id}{the column in both the \code{participants} and \code{contacts} data frames that links contacts to participants}
 
-\item{country.column}{the column in the \code{participants} data frame containing the country in which the participant was queried}
+\item{country}{the column in the \code{participants} data frame containing the country in which the participant was queried}
 
-\item{year.column}{the column in the \code{participants} data frame containing the year in which the participant was queried}
+\item{year}{the column in the \code{participants} data frame containing the year in which the participant was queried}
 }
 \value{
 invisibly returns a character vector of the relevant columns

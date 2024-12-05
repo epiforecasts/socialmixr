@@ -35,7 +35,7 @@ contact_matrix(
 
 \item{countries}{limit to one or more countries; if not given, will use all countries in the survey; these can be given as country names or 2-letter (ISO Alpha-2) country codes}
 
-\item{survey.pop}{survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if not given, will use the country populations from the chosen countries, or all countries in the survey if \code{countries} is not given}
+\item{survey.pop}{survey population as either a data frame with columns 'lower.age.limit' and 'population'.}
 
 \item{age.limits}{lower limits of the age groups over which to construct the matrix}
 
