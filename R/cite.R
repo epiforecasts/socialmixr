@@ -13,16 +13,11 @@
 #' print(citation, style = "bibtex")
 #' @export
 get_citation <- function(x) {
-  survey <- get_survey(x)
-  if (is.null(x$reference)) stop("No citation defined for ", ifelse(is.null(x$name), "survey", x$name))
+  assert_class(x, "contact_survey", null.ok = TRUE)
 
-  ref <-
-    c(
-      list(header = gettextf("To cite %s in publications use:", x$ref$title)),
-      x$reference
-    )
+  if (is.null(x$reference)) {
+    stop("No citation defined")
+  }
 
-  bref <- do.call(bibentry, ref)
-
-  return(bref)
+  return(x$reference)
 }
