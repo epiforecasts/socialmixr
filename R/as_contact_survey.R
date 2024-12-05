@@ -6,59 +6,61 @@
 #'  - an element named 'participants', a data frame containing participant
 #'   information
 #'  - an element named 'contacts', a data frame containing contact information
-#' @param id.column the column in both the `participants` and `contacts` data frames that links contacts to participants
-#' @param country.column the column in the `participants` data frame containing the country in which the participant was queried
-#' @param year.column the column in the `participants` data frame containing the year in which the participant was queried
 #'  - (optionally) an element named 'reference, a [utils::bibentry()] object
+#' @param participant_id the column in both the `participants` and `contacts` data frames that links contacts to participants
+#' @param country the column in the `participants` data frame containing the country in which the participant was queried
+#' @param year the column in the `participants` data frame containing the year in which the participant was queried
 #' @importFrom checkmate assert_list assert_names assert_data_frame
 #'   assert_character
 #' @importFrom purrr walk
+#' @importFrom data.table setnames copy
 #' @return invisibly returns a character vector of the relevant columns
 #' @examples
 #' data(polymod)
 #' check(polymod)
 #' @export
-as_contact_survey <- function(x, id.column = "part_id",
-                              country.column = "country",
-                              year.column = "year") {
+as_contact_survey <- function(x, participant_id = "part_id",
+                              country = "country", year = "year") {
   ## check arguments
   assert_list(x, names = "named")
   assert_names(names(x), must.include = c("participants", "contacts"))
   assert_data_frame(x$participants)
   assert_data_frame(x$contacts)
-  assert_character(id.column)
-  assert_character(year.column, null.ok = TRUE)
-  assert_character(country.column, null.ok = TRUE)
-  assert_names(colnames(x$participants), must.include = id.column)
-  assert_names(colnames(x$contacts), must.include = id.column)
   assert_class(x$reference, "bibentry", null.ok = TRUE)
+  assert_character(participant_id)
+  assert_character(year, null.ok = TRUE)
+  assert_character(country, null.ok = TRUE)
+  assert_names(colnames(x$participants), must.include = participant_id)
+  assert_names(colnames(x$contacts), must.include = participant_id)
 
-  setnames(x$participants, id.column, "part_id")
-  setnames(x$contacts, id.column, "part_id")
+  participants <- copy(x$participants)
+  contacts <- copy(x$contacts)
 
-  ## check optional columns exist if provided
-  to_check <- list(
-    country = country.column,
-    year = year.column
-  )
+  setnames(participants, participant_id, "part_id")
+  setnames(contacts, participant_id, "part_id")
 
-  walk(names(to_check), \(column) {
-    if (!is.null(to_check[[column]]) &&
-      !(to_check[[column]] %in% colnames(x$participants))) {
-      stop(
-        column, " column '", to_check[[column]], "' does not exist ",
-        "in the participant data frame"
-      )
-    } else {
-      setnames(x$participants, to_check[[column]], column)
-    }
-  })
+  if (country %in% colnames(participants)) {
+    setnames(participants, country, "country")
+  } else if (!missing(country)) {
+    stop(
+      column, " column '", country, "' does not exist ",
+      "in the participant data frame"
+    )
+  }
+  if (year %in% colnames(participants)) {
+    setnames(participants, year, "year")
+  } else if (!missing(year)) {
+    stop(
+      column, " column '", year, "' does not exist ",
+      "in the participant data frame"
+    )
+  }
 
   if (is.null(x$reference)) {
     warning("No reference provided")
   }
 
-  survey <- new_contact_survey(x$participant, x$contacts, x$reference)
+  survey <- new_contact_survey(participants, contacts, x$reference)
   survey <- clean(survey)
 
   return(survey)
