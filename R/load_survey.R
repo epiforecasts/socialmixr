@@ -5,6 +5,7 @@
 #' @param ... options for [clean()], which is called at the end of this
 #' @autoglobal
 #' @importFrom jsonlite fromJSON
+#' @importFrom data.table rbindlist
 #' @examples
 #' \dontrun{
 #' list_surveys()
@@ -25,7 +26,7 @@ load_survey <- function(files, ...) {
   survey_files <- grep("csv$", files, value = TRUE) # select csv files
   reference_file <- grep("json$", files, value = TRUE) # select json file
   if (length(reference_file) > 0) {
-    reference <- fromJSON(reference_file)
+    reference <- do.call(bibentry, fromJSON(reference_file))
   } else {
     reference <- NULL
   }
