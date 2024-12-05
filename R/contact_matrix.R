@@ -4,7 +4,7 @@
 #'
 #' @param survey a [survey()] object
 #' @param countries limit to one or more countries; if not given, will use all countries in the survey; these can be given as country names or 2-letter (ISO Alpha-2) country codes
-#' @param survey.pop survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via `wpp_countries`; if not given, will use the country populations from the chosen countries, or all countries in the survey if `countries` is not given
+#' @param survey.pop survey population as either a data frame with columns 'lower.age.limit' and 'population'.
 #' @param age.limits lower limits of the age groups over which to construct the matrix
 #' @param filter any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given.
 #' @param counts whether to return counts (instead of means)
@@ -92,6 +92,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   }
 
   ## === check if specific countries are requested (if a survey contains data from multiple countries)
+  ## deprecated and to be removed
   if (length(countries) > 0 && "country" %in% colnames(survey$participants)) {
     if (all(nchar(countries) == 2)) {
       corrected_countries <- suppressWarnings(
@@ -290,6 +291,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     merge(survey$participants, lower.upper.age.limits, by = "lower.age.limit", all.x = TRUE)
 
   ## === if split, symmetric or age weights are requested, get demographic data (survey population)
+  ## deprecated functionality to be removed
   need.survey.pop <- split || symmetric || weigh.age ||
     (!is.na(return.demography) && return.demography) || per.capita
   if (need.survey.pop) {
