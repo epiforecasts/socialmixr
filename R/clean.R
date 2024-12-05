@@ -9,7 +9,7 @@ clean <- function(x, ...) UseMethod("clean")
 #' @param x A [survey()] object
 #' @param participant.age.column the column in `x$participants` containing participants' age
 #' @param ... ignored
-#' @importFrom data.table fcase
+#' @importFrom data.table fcase fifelse tstrsplit fifelse
 #' @importFrom countrycode countrycode
 #' @importFrom lubridate period_to_seconds period years
 #' @return a cleaned survey in the correct format

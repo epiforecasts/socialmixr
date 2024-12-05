@@ -30,7 +30,6 @@
 #' @importFrom utils data globalVariables
 #' @importFrom data.table copy
 #' @importFrom countrycode countrycode
-#' @import data.table
 #' @export
 #' @autoglobal
 #' @examples
