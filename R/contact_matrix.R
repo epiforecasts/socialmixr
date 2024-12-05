@@ -26,7 +26,7 @@
 #' @param per.capita whether to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE')
 #' @param ... further arguments to pass to [get_survey()], [check()] and [pop_age()] (especially column names)
 #' @return a contact matrix, and the underlying demography of the surveyed population
-#' @importFrom stats xtabs runif median
+#' @importFrom stats xtabs median
 #' @importFrom utils data globalVariables
 #' @importFrom data.table copy setkey
 #' @importFrom countrycode countrycode
@@ -130,7 +130,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     "part_age_est_max" %in% colnames(survey$participants)) {
     if (estimated.participant.age == "mean") {
       survey$participants[
-        is.na(part_age_exact) &
+        is.na(part_age) &
           !is.na(part_age_est_min) & !is.na(part_age_est_max),
         part_age := as.integer(rowMeans(.SD)),
         .SDcols = c("part_age_est_min", "part_age_est_max")
@@ -140,7 +140,9 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
         is.na(part_age) &
           !is.na(part_age_est_min) & !is.na(part_age_est_max) &
           part_age_est_min <= part_age_est_max,
-        part_age := as.integer(runif(.N, part_age_est_min, part_age_est_max))
+        part_age := as.integer(
+          runif(.N, part_age_est_min, part_age_est_max + 1)
+        )
       ]
     }
     # note: do nothing when "missing" is specified
@@ -149,7 +151,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   if ("part_age_est_max" %in% colnames(survey$participants)) {
     max.age <- max(
       c(
-        survey$participants[, part_age_exact],
+        survey$participants[, part_age],
         survey$participants[, part_age_est_max]
       ),
       na.rm = TRUE
@@ -189,7 +191,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
   ## convert factors to integers
   for (age_column in
-    c("cnt_age", "cnt_age_est_min", "cnt_age_est_max", "cnt_age_exact")) {
+    c("cnt_age", "cnt_age_est_min", "cnt_age_est_max")) {
     if (age_column %in% colnames(survey$contacts) &&
       is.factor(survey$contacts[[age_column]])) {
       survey$contacts[, paste(age_column) :=
