@@ -128,5 +128,5 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
   axis(side = 4, mgp = c(3, 1, 0), las = 2)
 
   # restore original graphical parameters
-  par(old.par)
+  par(plt = old.par$plt, err = old.par$err)
 }
