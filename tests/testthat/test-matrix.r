@@ -555,3 +555,14 @@ test_that("Contact matrices per capita are also generated when bootstrapping", {
 test_that("Symmetric contact matrices with large normalisation weights throw a warning", {
   expect_warning(contact_matrix(survey = polymod, age.limits = c(0, 90), symmetric = TRUE), "artefacts after making the matrix symmetric")
 })
+
+test_that("Contacts with an age below the age limits are excluded regardless of the missing.contact.age setting", {
+  expect_equal(ncol(contact_matrix(polymod,age.limits = c(10,50), missing.contact.age = 'remove')$matrix), 2)
+  expect_equal(ncol(contact_matrix(polymod,age.limits = c(10,50), missing.contact.age = 'sample')$matrix), 2)
+  expect_equal(ncol(contact_matrix(polymod,age.limits = c(10,50), missing.contact.age = 'keep')$matrix), 3) # extra column for ages outside age limits (= NA)
+  expect_equal(ncol(contact_matrix(polymod,age.limits = c(10,50), missing.contact.age = 'ignore')$matrix), 2)
+})
+
+
+
+
