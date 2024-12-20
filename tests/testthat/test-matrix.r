@@ -557,8 +557,8 @@ test_that("Symmetric contact matrices with large normalisation weights throw a w
 })
 
 test_that("Contacts with an age below the age limits are excluded regardless of the missing.contact.age setting", {
-  expect_identical(ncol(contact_matrix(polymod,age.limits = c(10, 50), missing.contact.age = "remove")$matrix), as.integer(2))
-  expect_identical(ncol(contact_matrix(polymod,age.limits = c(10, 50), missing.contact.age = "sample")$matrix), as.integer(2))
-  expect_identical(ncol(contact_matrix(polymod,age.limits = c(10, 50), missing.contact.age = "keep")$matrix), as.integer(3)) # extra column for ages outside age limits (= NA)
-  expect_identical(ncol(contact_matrix(polymod,age.limits = c(10, 50), missing.contact.age = "ignore")$matrix), as.integer(2))
+  expect_identical(ncol(contact_matrix(polymod, age.limits = c(10, 50), missing.contact.age = "remove")$matrix), as.integer(2))
+  expect_identical(ncol(contact_matrix(polymod, age.limits = c(10, 50), missing.contact.age = "sample")$matrix), as.integer(2))
+  expect_identical(ncol(contact_matrix(polymod, age.limits = c(10, 50), missing.contact.age = "keep")$matrix), as.integer(3)) # extra column for ages outside age limits (= NA)
+  expect_identical(ncol(contact_matrix(polymod, age.limits = c(10, 50), missing.contact.age = "ignore")$matrix), as.integer(2))
 })
