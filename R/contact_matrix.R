@@ -195,9 +195,12 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     # note: do nothing when "missing" is specified
   }
 
+  # remove contact ages below the age limit, before dealing with missing contact ages
+  survey$contacts <- survey$contacts[is.na(cnt_age) |
+    cnt_age >= min(age.limits), ]
+
   if (missing.contact.age == "remove" &&
-    nrow(survey$contacts[is.na(cnt_age) |
-      cnt_age < min(age.limits)]) > 0) {
+    nrow(survey$contacts[is.na(cnt_age)]) > 0) {
     if (!missing.contact.age.set) {
       message(
         "Removing participants that have contacts without age information. ",
@@ -205,21 +208,20 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
       )
     }
     missing.age.id <- survey$contacts[
-      is.na(cnt_age) | cnt_age < min(age.limits), part_id
+      is.na(cnt_age), part_id
     ]
     survey$participants <- survey$participants[!(part_id %in% missing.age.id)]
   }
 
   if (missing.contact.age == "ignore" &&
-    nrow(survey$contacts[is.na(cnt_age) | cnt_age < min(age.limits)]) > 0) {
+    nrow(survey$contacts[is.na(cnt_age)]) > 0) {
     if (!missing.contact.age.set) {
       message(
         "Ignore contacts without age information. ",
         "To change this behaviour, set the 'missing.contact.age' option"
       )
     }
-    survey$contacts <- survey$contacts[!is.na(cnt_age) &
-      cnt_age >= min(age.limits), ]
+    survey$contacts <- survey$contacts[!is.na(cnt_age), ]
   }
 
   ## check if any filters have been requested
@@ -513,7 +515,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
               replace = TRUE
             )
         ]
-      } else {
+      } else if (nrow(survey$contacts[!is.na(cnt_age), ]) > 0) {
         ## no contacts in the age group have an age, sample uniformly between limits
         min.contact.age <-
           survey$contacts[, min(cnt_age, na.rm = TRUE)]
@@ -530,6 +532,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
         ]
       }
     }
+    survey$contacts <- survey$contacts[!is.na(cnt_age), ] # make sure the final set does not contain NA's anymore
   }
 
   ## set contact age groups
