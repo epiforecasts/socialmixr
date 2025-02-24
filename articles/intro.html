@@ -55,10 +55,10 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1></h1>
+      <h1>The socialmixr package</h1>
 
       <p class="author">Sebastian Funk</p>
-      <p class="date">2024-12-02</p>
+      <p class="date">2025-02-24</p>
 
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/vignettes/intro.qmd" class="external-link"><code>vignettes/intro.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -69,7 +69,7 @@
 
 
 
-    <header id="title-block-header" class="quarto-title-block"><h1 class="title">The socialmixr package</h1></header><p><a href="https://github.com/epiforecasts/socialmixr" class="external-link">socialmixr</a> is an <code>R</code> package to derive social mixing matrices from survey data. These are particularly useful for age-structured <a href="https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease" class="external-link">infectious disease models</a>. For background on age-specific mixing matrices and what data inform them, see, for example, the paper on POLYMOD by <span class="citation" data-cites="mossong_social_2008">[@mossong_social_2008]</span>.</p>
+    <p><a href="https://github.com/epiforecasts/socialmixr" class="external-link">socialmixr</a> is an <code>R</code> package to derive social mixing matrices from survey data. These are particularly useful for age-structured <a href="https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease" class="external-link">infectious disease models</a>. For background on age-specific mixing matrices and what data inform them, see, for example, the paper on POLYMOD by <span class="citation" data-cites="mossong_social_2008">[@mossong_social_2008]</span>.</p>
 <section class="section level2"><h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <p>At the heart of the <code>socialmixr</code> package is the <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> function. This extracts a contact matrix from survey data. You can use the <code>R</code> help to find out about usage of the <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> function, including a list of examples:</p>
@@ -162,10 +162,10 @@
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
-<span><span class="co">#&gt;    [0,1)  0.38000000 0.7944444 1.498889 6.195556</span></span>
-<span><span class="co">#&gt;    [1,5)  0.11134843 2.1623860 1.345804 5.579314</span></span>
-<span><span class="co">#&gt;    [5,15) 0.03201647 0.4668209 7.913510 6.155528</span></span>
-<span><span class="co">#&gt;    15+    0.03190322 0.3629183 1.270805 9.678632</span></span></code></pre></div>
+<span><span class="co">#&gt;    [0,1)  0.36346405 0.9349020 1.239281 5.727908</span></span>
+<span><span class="co">#&gt;    [1,5)  0.15033217 2.0197320 1.460081 5.292289</span></span>
+<span><span class="co">#&gt;    [5,15) 0.01915758 0.4790149 7.999715 6.330878</span></span>
+<span><span class="co">#&gt;    15+    0.03443483 0.3646956 1.328339 9.778929</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
 </h2>
