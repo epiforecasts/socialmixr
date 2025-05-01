@@ -44,6 +44,10 @@
 <ul><li>
 <code>contact_matrix(counts = TRUE)$matrix</code> is now an array rather than an xtabs object. This matches the existing output format of <code>contact_matrix(counts = FALSE)$matrix</code> (<a href="https://github.com/epiforecasts/socialmixr/issues/118" class="external-link">#118</a>).</li>
 </ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<ul><li>A bug was fixed leading to excess contacts with <code>NA</code> age if the lowest age group did not start at 0.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0" id="socialmixr-040">socialmixr 0.4.0<a class="anchor" aria-label="anchor" href="#socialmixr-040"></a></h2><p class="text-muted">CRAN release: 2024-10-18</p>
@@ -181,7 +185,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
 </div>
 
     </footer></div>
