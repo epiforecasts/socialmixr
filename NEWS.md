@@ -4,6 +4,10 @@
 
 * `contact_matrix(counts = TRUE)$matrix` is now an array rather than an xtabs object. This matches the existing output format of `contact_matrix(counts = FALSE)$matrix` (#118).
 
+## Bug fixes
+
+* A bug was fixed leading to excess contacts with `NA` age if the lowest age group did not start at 0.
+
 # socialmixr 0.4.0
 
 * The speed of loading surveys has been increased.
