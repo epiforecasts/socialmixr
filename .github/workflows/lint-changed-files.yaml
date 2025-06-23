@@ -25,7 +25,6 @@ jobs:
             any::gh
             any::lintr
             any::purrr
-            epiverse-trace/etdev
           needs: check
 
       - name: Add lintr options
