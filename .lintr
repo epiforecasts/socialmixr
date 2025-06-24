@@ -3,11 +3,9 @@ linters: linters_with_tags(
     object_name_linter = NULL,
     undesirable_function_linter = NULL,
     implicit_integer_linter = NULL,
-    extraction_operator_linter = NULL,
     todo_comment_linter = NULL,
     function_argument_linter = NULL,
-    # Use minimum R declared in DESCRIPTION or fall back to current R version
-    backport_linter(if (length(x <- etdev::extract_min_r_version())) x else getRversion()),
+    backport_linter("3.5.0"),
     # Extra exclusions for socialmixr.
     # These exclusions should ideally be removed at some point.
     line_length_linter = NULL,
