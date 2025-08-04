@@ -17,10 +17,7 @@ load_survey <- function(files, ...) {
   exist <- file.exists(files)
   missing <- files[!exist]
   if (length(missing) > 0) {
-    stop(
-      "File", ifelse(length(missing) > 1, "s", ""), " ",
-      paste(paste0("'", missing, "'", collapse = ""), sep = ", "), " not found."
-    )
+    cli::cli_abort("File{?s} {.file {missing}} not found.")
   }
   survey_files <- grep("csv$", files, value = TRUE) # select csv files
   reference_file <- grep("json$", files, value = TRUE) # select json file
@@ -40,10 +37,9 @@ load_survey <- function(files, ...) {
   for (type in main_types) {
     main_file <- grep(paste0("_", type, "s?_common.*\\.csv$"), survey_files, value = TRUE)
     if (length(main_file) == 0) {
-      stop(
-        "Need a csv file containing ", "_", type, "_common.csv",
-        ", but no such file found."
-      )
+      cli::cli_abort(
+  "Need a csv file containing _{type}_common.csv, but no such file found."
+)
     }
     main_surveys[[type]] <- rbindlist(contact_data[main_file], fill = TRUE)
     main_surveys[[type]] <- main_surveys[[type]][, ..main_id := seq_len(.N)]
@@ -93,7 +89,7 @@ load_survey <- function(files, ...) {
           },
           error = function(cond) {
             if (!grepl("cartesian", cond$message, fixed = TRUE)) {
-              stop(cond$message)
+              cli::cli_abort(cond$message)
             }
             NULL
           }
@@ -106,19 +102,17 @@ load_survey <- function(files, ...) {
           matched_main <- sum(!is.na(merged[["..merge_id"]]))
           unmatched_main <- nrow(merged) - matched_main
           if (unmatched_main > 0) {
-            warning(
-              "Only ", matched_main, " matching value",
-              ifelse(matched_main > 1, "s", ""), " in ",
-              paste0("'", common_id, "'", collapse = ", "),
-              " column", ifelse(length(common_id) > 1, "s", ""),
-              " when pulling ", basename(file), " into '", type, "' survey."
+            cli::cli_warn(
+              "Only {matched_main} matching value{?s} in {.val {common_id}} \\
+              column{?s} when pulling {.file {basename(file)}} into \\
+              {.val {type}} survey."
             )
           }
           unmatched_merge <- nrow(contact_data[[file]]) - matched_main
           if (unmatched_merge > 0) {
-            warning(
-              unmatched_merge, " row(s) could not be matched when pulling ",
-              basename(file), " into '", type, "' survey."
+            cli::cli_warn(
+              "{unmatched_merge} row{?s} could not be matched when pulling \\
+              {.file {basename(file)}} into {.val {type}} survey."
             )
           }
           main_surveys[[type]] <- merged[, !"..merge_id"]
@@ -142,7 +136,7 @@ load_survey <- function(files, ...) {
 
   if (length(survey_files) > 0) {
     for (file in survey_files) {
-      warning("Could not merge ", file)
+      cli::cli_warn("Could not merge {.file {file}}.")
     }
   }
 
@@ -155,9 +149,9 @@ load_survey <- function(files, ...) {
   )
 
   if (!is.null(new_survey$reference)) {
-    message(
-      "Using ", new_survey$reference$title,
-      ". To cite this in a publication, use the 'get_citation()' function"
+    cli::cli_inform(
+      "Using {new_survey$reference$title}. To cite this in a publication,\\
+      use the {.fn get_citation} function."
     )
   }
 

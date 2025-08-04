@@ -47,9 +47,9 @@ as_contact_survey <- function(x, id.column = "part_id",
   walk(names(to_check), \(column) {
     if (!is.null(to_check[[column]]) &&
       !(to_check[[column]] %in% colnames(x$participants))) {
-      stop(
-        column, " column '", to_check[[column]], "' does not exist ",
-        "in the participant data frame"
+      cli::cli_abort(
+        "{.arg {column}} column {.val {to_check[[column]]}} does not exist
+        in the participant data frame."
       )
     } else {
       setnames(x$participants, to_check[[column]], column)
@@ -57,7 +57,7 @@ as_contact_survey <- function(x, id.column = "part_id",
   })
 
   if (is.null(x$reference)) {
-    warning("No reference provided")
+    cli::cli_warn("No reference provided.")
   }
 
   survey <- new_contact_survey(x$participant, x$contacts, x$reference)
