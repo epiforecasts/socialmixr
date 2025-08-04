@@ -1,81 +1,46 @@
-# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
-# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+# Workflow derived from https://github.com/posit-dev/setup-air/tree/main/examples
+
 on:
-  push:
-    paths: ["**.[rR]", "**.[qrR]md", "**.[rR]markdown", "**.[rR]nw", "**.[rR]profile"]
+  # Using `pull_request_target` over `pull_request` for elevated `GITHUB_TOKEN`
+  # privileges, otherwise we can't set `pull-requests: write` when the pull
+  # request comes from a fork, which is our main use case (external contributors).
+  #
+  # `pull_request_target` runs in the context of the target branch (`main`, usually),
+  # rather than in the context of the pull request like `pull_request` does. Due
+  # to this, we must explicitly checkout `ref: ${{ github.event.pull_request.head.sha }}`.
+  # This is typically frowned upon by GitHub, as it exposes you to potentially running
+  # untrusted code in a context where you have elevated privileges, but they explicitly
+  # call out the use case of reformatting and committing back / commenting on the PR
+  # as a situation that should be safe (because we aren't actually running the untrusted
+  # code, we are just treating it as passive data).
+  # https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/
+  pull_request_target:
 
-name: style.yaml
-
-permissions: read-all
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+name: format-suggest.yaml
 
 jobs:
-  style:
+  format-suggest:
+    name: format-suggest
     runs-on: ubuntu-latest
+
     permissions:
-      contents: write
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      # Required to push suggestion comments to the PR
+      pull-requests: write
+
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Setup R
-        uses: r-lib/actions/setup-r@v2
+      - name: Install
+        uses: posit-dev/setup-air@v1
+
+      - name: Format
+        run: air format .
+
+      - name: Suggest
+        uses: reviewdog/action-suggester@v1
         with:
-          use-public-rspm: true
-
-      - name: Install dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::styler, any::roxygen2
-          needs: styler
-
-      - name: Enable styler cache
-        run: styler::cache_activate()
-        shell: Rscript {0}
-
-      - name: Determine cache location
-        id: styler-location
-        run: |
-          cat(
-            "location=",
-            styler::cache_info(format = "tabular")$location,
-            "\n",
-            file = Sys.getenv("GITHUB_OUTPUT"),
-            append = TRUE,
-            sep = ""
-          )
-        shell: Rscript {0}
-
-      - name: Cache styler
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.styler-location.outputs.location }}
-          key: ${{ runner.os }}-styler-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-styler-
-            ${{ runner.os }}-
-
-      - name: Style
-        run: styler::style_pkg()
-        shell: Rscript {0}
-
-      - name: Commit and push changes
-        run: |
-          if FILES_TO_COMMIT=($(git diff-index --name-only ${{ github.sha }} \
-              | egrep --ignore-case '\.(R|[qR]md|Rmarkdown|Rnw|Rprofile)$'))
-          then
-            git config --local user.name "$GITHUB_ACTOR"
-            git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
-            git commit ${FILES_TO_COMMIT[*]} -m "Style code (GHA)"
-            git pull --ff-only
-            git push origin
-          else
-            echo "No changes to commit."
-          fi
+          level: error
+          fail_level: error
+          tool_name: air
