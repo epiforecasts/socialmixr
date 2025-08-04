@@ -20,9 +20,12 @@
 #' data(polymod)
 #' check(polymod)
 #' @export
-as_contact_survey <- function(x, id.column = "part_id",
-                              country.column = "country",
-                              year.column = "year") {
+as_contact_survey <- function(
+  x,
+  id.column = "part_id",
+  country.column = "country",
+  year.column = "year"
+) {
   ## check arguments
   assert_list(x, names = "named")
   assert_names(names(x), must.include = c("participants", "contacts"))
@@ -45,10 +48,15 @@ as_contact_survey <- function(x, id.column = "part_id",
   )
 
   walk(names(to_check), \(column) {
-    if (!is.null(to_check[[column]]) &&
-      !(to_check[[column]] %in% colnames(x$participants))) {
+    if (
+      !is.null(to_check[[column]]) &&
+        !(to_check[[column]] %in% colnames(x$participants))
+    ) {
       stop(
-        column, " column '", to_check[[column]], "' does not exist ",
+        column,
+        " column '",
+        to_check[[column]],
+        "' does not exist ",
         "in the participant data frame"
       )
     } else {

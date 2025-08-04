@@ -15,8 +15,10 @@
 #' @return a survey in the correct format
 #' @export
 get_survey <- function(survey, clear_cache = FALSE, ...) {
-  if (!("get_survey" %in% names(.socialmixr.env$cached_functions)) ||
-    clear_cache) {
+  if (
+    !("get_survey" %in% names(.socialmixr.env$cached_functions)) ||
+      clear_cache
+  ) {
     .socialmixr.env$cached_functions$get_survey <- memoise(.get_survey)
   }
   .socialmixr.env$cached_functions$get_survey(survey, ...)
