@@ -46,14 +46,14 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
       packageVersion("socialmixr")
     ))
   )
-  if (status_code(temp_body) == 404)cli::cli_abort("DOI {.val {survey}} not found.")
+  if (status_code(temp_body) == 404) cli::cli_abort("DOI {.val {survey}} not found.")
   if (http_error(temp_body)) {
     cli::cli_abort(
-  c(
-    "Could not fetch the resource.",
-    "i" = "This could an issue with the website server or your own connection."
-  )
-)
+      c(
+        "Could not fetch the resource.",
+        "i" = "This could an issue with the website server or your own connection."
+      )
+    )
   }
 
   parsed_body <- content(temp_body, encoding = "UTF-8")

@@ -60,9 +60,9 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
 
   if (!inherits(survey, "contact_survey")) {
     cli::cli_abort(
-  "{.arg survey} must be a survey object created using {.fn survey} or 
+      "{.arg survey} must be a survey object created using {.fn survey} or
    {.fn get_survey}."
-)
+    )
   }
 
   if (!missing(age.limits)) {
@@ -298,7 +298,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
         } else {
           cli::cli_warn(
             c(
-              "No {.arg survey.pop} or {.arg countries} given, and no 
+              "No {.arg survey.pop} or {.arg countries} given, and no
               {.arg country} column found in the data.",
               "i" = "I don't know which population this is from.",
               "i" = "Assuming the survey is representative."
@@ -323,7 +323,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
         } else {
           survey.year <- country.pop[, max(year, na.rm = TRUE)]
           cli::cli_warn(
-            "No information on year found in the data. Will use 
+            "No information on year found in the data. Will use
             {survey.year} population data."
           )
         }
@@ -662,9 +662,9 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
   if (symmetric && prod(dim(as.matrix(weighted.matrix))) > 1) {
     if (counts) {
       cli::cli_warn(
-        "{.code symmetric = TRUE} does not make sense with 
+        "{.code symmetric = TRUE} does not make sense with
         {.code counts = TRUE}; will not make matrix symmetric."
-)
+      )
     } else if (na.present) {
       cli::cli_warn(
         c(
@@ -709,7 +709,7 @@ contact_matrix <- function(survey, countries = NULL, survey.pop, age.limits, fil
     } else if (na.present) {
       cli::cli_warn(
         c(
-          "{.code split = TRUE} does not work with missing data; will not 
+          "{.code split = TRUE} does not work with missing data; will not
           split contact.matrix.",
           "i" = "{warning.suggestion}"
         )

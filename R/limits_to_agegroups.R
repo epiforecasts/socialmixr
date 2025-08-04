@@ -13,7 +13,7 @@ limits_to_agegroups <- function(x, limits = sort(unique(x)),
                                 notation = c("dashes", "brackets")) {
   if (missing(notation)) {
     cli::cli_warn(
-      "In the next version of socialmixr the default notation will \\ 
+      "In the next version of socialmixr the default notation will \\
       become \"brackets\" instead of \"dashes\". To prevent this, use \\
       {.code notation = \"dashes\"} in the call to {.fn limits_to_agegroups}."
     )

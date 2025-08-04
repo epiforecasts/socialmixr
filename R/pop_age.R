@@ -27,7 +27,7 @@ pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.col
 
   if (!is.data.frame(pop) || !all(hasName(pop, c(pop.age.column, pop.column)))) {
     cli::cli_abort(
-      "Expecting {.arg pop} to be a data.frame with columns 
+      "Expecting {.arg pop} to be a data.frame with columns
       {.arg {pop.age.column}} and {.arg {pop.column}}."
     )
   }

@@ -38,8 +38,8 @@ load_survey <- function(files, ...) {
     main_file <- grep(paste0("_", type, "s?_common.*\\.csv$"), survey_files, value = TRUE)
     if (length(main_file) == 0) {
       cli::cli_abort(
-  "Need a csv file containing _{type}_common.csv, but no such file found."
-)
+        "Need a csv file containing _{type}_common.csv, but no such file found."
+      )
     }
     main_surveys[[type]] <- rbindlist(contact_data[main_file], fill = TRUE)
     main_surveys[[type]] <- main_surveys[[type]][, ..main_id := seq_len(.N)]

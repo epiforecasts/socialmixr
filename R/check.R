@@ -40,9 +40,9 @@ check.contact_survey <- function(x, id.column = "part_id", participant.age.colum
   if (!(id.column %in% colnames(x$participants) &&
     id.column %in% colnames(x$contacts))) {
     cli::cli_warn(
-  "{.arg id.columns} {.val {id.column}} does not exist in both the 
+      "{.arg id.columns} {.val {id.column}} does not exist in both the
    participants and contacts data frames."
-)
+    )
     success <- FALSE
   }
 
@@ -54,10 +54,10 @@ check.contact_survey <- function(x, id.column = "part_id", participant.age.colum
     if (!((exact.column %in% colnames(x$participants)) ||
       (min.column %in% colnames(x$participants) && max.column %in% colnames(x$participants)))) {
       cli::cli_warn(
-  "Participant age column {.arg {participant.age.column}} or columns to 
-   estimate participant age ({.arg {exact.column}} or {.arg {min.column}} 
+        "Participant age column {.arg {participant.age.column}} or columns to
+   estimate participant age ({.arg {exact.column}} or {.arg {min.column}}
    and {.arg {max.column}}) do not exist in the participant data frame."
-)
+      )
       success <- FALSE
     }
   }
@@ -70,10 +70,10 @@ check.contact_survey <- function(x, id.column = "part_id", participant.age.colum
     if (!((exact.column %in% colnames(x$contacts)) ||
       (min.column %in% colnames(x$contacts) && max.column %in% colnames(x$contacts)))) {
       cli::cli_warn(
-  "Contact age column {.var {contact.age.column}} or columns to 
-   estimate contact age ({.var {exact.column}} or {.var {min.column}} 
+        "Contact age column {.var {contact.age.column}} or columns to
+   estimate contact age ({.var {exact.column}} or {.var {min.column}}
    and {.var {max.column}}) do not exist in the contact data frame."
-)
+      )
       success <- FALSE
     }
   }
@@ -86,7 +86,7 @@ check.contact_survey <- function(x, id.column = "part_id", participant.age.colum
     success <- FALSE
   }
   if (success) {
-    cli::cli_alert("Check OK.") 
+    cli::cli_alert("Check OK.")
   } else {
     cli::cli_alert("Check FAILED.")
   }
