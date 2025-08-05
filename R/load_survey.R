@@ -35,7 +35,11 @@ load_survey <- function(files, ...) {
 
   ## first, get the common files
   for (type in main_types) {
-    main_file <- grep(paste0("_", type, "s?_common.*\\.csv$"), survey_files, value = TRUE)
+    main_file <- grep(
+      paste0("_", type, "s?_common.*\\.csv$"),
+      survey_files,
+      value = TRUE
+    )
     if (length(main_file) == 0) {
       cli::cli_abort(
         "Need a csv file containing _{type}_common.csv, but no such file found."
@@ -50,16 +54,23 @@ load_survey <- function(files, ...) {
   for (file1 in survey_files) {
     if (!is.null(contact_data[[file1]])) {
       for (file2 in setdiff(survey_files, file1)) {
-        if (length(setdiff(
-          colnames(contact_data[[file1]]),
-          colnames(contact_data[[file2]])
-        )) == 0 ||
+        if (
           length(setdiff(
-            colnames(contact_data[[file2]]),
-            colnames(contact_data[[file1]])
-          )) == 0) {
+            colnames(contact_data[[file1]]),
+            colnames(contact_data[[file2]])
+          )) ==
+            0 ||
+            length(setdiff(
+              colnames(contact_data[[file2]]),
+              colnames(contact_data[[file1]])
+            )) ==
+              0
+        ) {
           contact_data[[file1]] <-
-            rbindlist(list(contact_data[[file1]], contact_data[[file2]]), fill = TRUE)
+            rbindlist(
+              list(contact_data[[file1]], contact_data[[file2]]),
+              fill = TRUE
+            )
           contact_data[[file2]] <- NULL
           survey_files <- setdiff(survey_files, file2)
         }
@@ -69,20 +80,32 @@ load_survey <- function(files, ...) {
 
   ## lastly, merge in any additional files that can be merged
   for (type in main_types) {
-    can_merge <- vapply(survey_files, function(x) {
-      length(intersect(colnames(contact_data[[x]]), colnames(main_surveys[[type]]))) > 0
-    }, TRUE)
+    can_merge <- vapply(
+      survey_files,
+      function(x) {
+        length(intersect(
+          colnames(contact_data[[x]]),
+          colnames(main_surveys[[type]])
+        )) >
+          0
+      },
+      TRUE
+    )
     merge_files <- names(can_merge[can_merge])
     while (length(merge_files) > 0) {
       merged_files <- NULL
       for (file in merge_files) {
         contact_data[[file]] <-
           contact_data[[file]][, ..merge_id := seq_len(.N)]
-        common_id <- intersect(colnames(contact_data[[file]]), colnames(main_surveys[[type]]))
+        common_id <- intersect(
+          colnames(contact_data[[file]]),
+          colnames(main_surveys[[type]])
+        )
         merged <- tryCatch(
           {
             merge(
-              main_surveys[[type]], contact_data[[file]],
+              main_surveys[[type]],
+              contact_data[[file]],
               by = common_id,
               all.x = TRUE
             )
@@ -96,8 +119,10 @@ load_survey <- function(files, ...) {
         )
 
         ## first if merge was unique - if not we're ditching the merge
-        if (!is.null(merged) &&
-          anyDuplicated(merged[, "..main_id", with = FALSE]) == 0) {
+        if (
+          !is.null(merged) &&
+            anyDuplicated(merged[, "..main_id", with = FALSE]) == 0
+        ) {
           ## we're keeping the merge; now check for any warnings to issue
           matched_main <- sum(!is.na(merged[["..merge_id"]]))
           unmatched_main <- nrow(merged) - matched_main
@@ -122,9 +147,17 @@ load_survey <- function(files, ...) {
         }
       }
       survey_files <- setdiff(survey_files, merged_files)
-      can_merge <- vapply(survey_files, function(x) {
-        length(intersect(colnames(contact_data[[x]]), colnames(main_surveys[[type]]))) > 0
-      }, TRUE)
+      can_merge <- vapply(
+        survey_files,
+        function(x) {
+          length(intersect(
+            colnames(contact_data[[x]]),
+            colnames(main_surveys[[type]])
+          )) >
+            0
+        },
+        TRUE
+      )
       if (is.null(merged_files)) {
         merge_files <- NULL
       } else {

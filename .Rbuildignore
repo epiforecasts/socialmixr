@@ -15,3 +15,5 @@ cran-comments.md
 ^surveys$
 ^revdep$
 ^README.Rmd$
+^[\.]?air\.toml$
+^\.vscode$

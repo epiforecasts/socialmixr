@@ -18,7 +18,15 @@ check <- function(x, ...) UseMethod("check")
 #' data(polymod)
 #' check(polymod)
 #' @export
-check.contact_survey <- function(x, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
+check.contact_survey <- function(
+  x,
+  id.column = "part_id",
+  participant.age.column = "part_age",
+  country.column = "country",
+  year.column = "year",
+  contact.age.column = "cnt_age",
+  ...
+) {
   lifecycle::deprecate_warn(
     "1.0.0",
     "check()",
@@ -37,8 +45,11 @@ check.contact_survey <- function(x, id.column = "part_id", participant.age.colum
   x <- clean(x)
 
   success <- TRUE
-  if (!(id.column %in% colnames(x$participants) &&
-    id.column %in% colnames(x$contacts))) {
+  if (
+    !(id.column %in%
+      colnames(x$participants) &&
+      id.column %in% colnames(x$contacts))
+  ) {
     cli::cli_warn(
       "{.arg id.columns} {.val {id.column}} does not exist in both the
    participants and contacts data frames."
@@ -51,8 +62,12 @@ check.contact_survey <- function(x, id.column = "part_id", participant.age.colum
     min.column <- paste(participant.age.column, "est_min", sep = "_")
     max.column <- paste(participant.age.column, "est_max", sep = "_")
 
-    if (!((exact.column %in% colnames(x$participants)) ||
-      (min.column %in% colnames(x$participants) && max.column %in% colnames(x$participants)))) {
+    if (
+      !((exact.column %in% colnames(x$participants)) ||
+        (min.column %in%
+          colnames(x$participants) &&
+          max.column %in% colnames(x$participants)))
+    ) {
       cli::cli_warn(
         "Participant age column {.arg {participant.age.column}} or columns to
    estimate participant age ({.arg {exact.column}} or {.arg {min.column}}
@@ -67,8 +82,12 @@ check.contact_survey <- function(x, id.column = "part_id", participant.age.colum
     min.column <- paste(contact.age.column, "est_min", sep = "_")
     max.column <- paste(contact.age.column, "est_max", sep = "_")
 
-    if (!((exact.column %in% colnames(x$contacts)) ||
-      (min.column %in% colnames(x$contacts) && max.column %in% colnames(x$contacts)))) {
+    if (
+      !((exact.column %in% colnames(x$contacts)) ||
+        (min.column %in%
+          colnames(x$contacts) &&
+          max.column %in% colnames(x$contacts)))
+    ) {
       cli::cli_warn(
         "Contact age column {.var {contact.age.column}} or columns to
    estimate contact age ({.var {exact.column}} or {.var {min.column}}
@@ -92,8 +111,10 @@ check.contact_survey <- function(x, id.column = "part_id", participant.age.colum
   }
 
   invisible(c(
-    id = id.column, participant.age = participant.age.column,
-    country = country.column, year = year.column,
+    id = id.column,
+    participant.age = participant.age.column,
+    country = country.column,
+    year = year.column,
     contact.age = contact.age.column
   ))
 }

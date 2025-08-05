@@ -22,10 +22,18 @@
 #' pop_age(ages_it_2015, age.limit = c(0, 18, 40, 65))
 #'
 #' @export
-pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.column = "population", ...) {
+pop_age <- function(
+  pop,
+  age.limits,
+  pop.age.column = "lower.age.limit",
+  pop.column = "population",
+  ...
+) {
   chkDots(...)
 
-  if (!is.data.frame(pop) || !all(hasName(pop, c(pop.age.column, pop.column)))) {
+  if (
+    !is.data.frame(pop) || !all(hasName(pop, c(pop.age.column, pop.column)))
+  ) {
     cli::cli_abort(
       "Expecting {.arg pop} to be a data.frame with columns
       {.arg {pop.age.column}} and {.arg {pop.column}}."
@@ -50,26 +58,41 @@ pop_age <- function(pop, age.limits, pop.age.column = "lower.age.limit", pop.col
         )
       )
       ..original.upper.age.limit <- NULL
-      pop <- pop[, ..original.upper.age.limit := c(pop[[pop.age.column]][-1], NA)]
+      pop <- pop[,
+        ..original.upper.age.limit := c(pop[[pop.age.column]][-1], NA)
+      ]
       pop <- pop[, ..original.lower.age.limit := get(pop.age.column)]
-      all.ages <- data.frame(age.limits[age.limits <= max(pop[[pop.age.column]])])
+      all.ages <- data.frame(age.limits[
+        age.limits <= max(pop[[pop.age.column]])
+      ])
       colnames(all.ages) <- pop.age.column
       pop <- merge(pop, all.ages, all = TRUE, by = pop.age.column)
       pop <- pop[, ..segment := cumsum(!is.na(..original.lower.age.limit))]
-      pop <- pop[, ..original.lower.age.limit := ..original.lower.age.limit[1], by = ..segment]
-      pop <- pop[, ..original.upper.age.limit := ..original.upper.age.limit[1], by = ..segment]
+      pop <- pop[,
+        ..original.lower.age.limit := ..original.lower.age.limit[1],
+        by = ..segment
+      ]
+      pop <- pop[,
+        ..original.upper.age.limit := ..original.upper.age.limit[1],
+        by = ..segment
+      ]
       pop <- pop[, paste(pop.column) := get(pop.column)[1], by = ..segment]
       pop <- pop[, ..upper.age.limit := c(pop[[pop.age.column]][-1], NA)]
       pop[
         !is.na(..original.upper.age.limit),
-        population := round(population * (..upper.age.limit - get(pop.age.column)) /
-          (..original.upper.age.limit - ..original.lower.age.limit))
+        population := round(
+          population *
+            (..upper.age.limit - get(pop.age.column)) /
+            (..original.upper.age.limit - ..original.lower.age.limit)
+        )
       ]
       pop <- pop[, c(pop.age.column, pop.column), with = FALSE]
     }
 
     pop <- pop[get(pop.age.column) >= min(age.limits)]
-    pop <- pop[, paste(pop.age.column) := reduce_agegroups(get(pop.age.column), age.limits)]
+    pop <- pop[,
+      paste(pop.age.column) := reduce_agegroups(get(pop.age.column), age.limits)
+    ]
     pop <- pop[, list(..population = sum(get(pop.column))), by = pop.age.column]
     setnames(pop, "..population", pop.column)
   }

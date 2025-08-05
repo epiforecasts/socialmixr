@@ -20,8 +20,16 @@ wpp_age <- function(countries, years) {
   # wpp2017 is limited to 2015, so add wpp projections is e.g. 2020 data is requested
   years_included <- max(as.numeric(names(popM)[-(1:3)]))
   if (!missing(years) && any(years > years_included)) {
-    popMprojMed <- fread(system.file("data", "popMprojMed.txt", package = "wpp2017"))
-    popFprojMed <- fread(system.file("data", "popFprojMed.txt", package = "wpp2017"))
+    popMprojMed <- fread(system.file(
+      "data",
+      "popMprojMed.txt",
+      package = "wpp2017"
+    ))
+    popFprojMed <- fread(system.file(
+      "data",
+      "popFprojMed.txt",
+      package = "wpp2017"
+    ))
 
     popM <- merge(popM, popMprojMed)
     popF <- merge(popF, popFprojMed)
@@ -44,12 +52,22 @@ wpp_age <- function(countries, years) {
 
   if (!missing(countries)) {
     ## match by UN country code
-    pop <- suppressWarnings(pop[country_code %in% countrycode(countries, "country.name", "un")])
+    pop <- suppressWarnings(pop[
+      country_code %in% countrycode(countries, "country.name", "un")
+    ])
   }
 
   if (nrow(pop) > 0) {
-    pop <- melt(pop, id.vars = c("country", "country_code", "age", "sex"), variable.name = "year")
-    pop <- dcast(pop, country + country_code + age + year ~ sex, value.var = "value")
+    pop <- melt(
+      pop,
+      id.vars = c("country", "country_code", "age", "sex"),
+      variable.name = "year"
+    )
+    pop <- dcast(
+      pop,
+      country + country_code + age + year ~ sex,
+      value.var = "value"
+    )
 
     pop[, year := as.integer(as.character(year))]
 
@@ -68,7 +86,12 @@ wpp_age <- function(countries, years) {
     }
 
     pop <- pop[, lower.age.limit := as.integer(sub("[-+].*$", "", age))]
-    pop <- pop[, list(country, lower.age.limit, year, population = (female + male) * 1000)] # reorder columns
+    pop <- pop[, list(
+      country,
+      lower.age.limit,
+      year,
+      population = (female + male) * 1000
+    )] # reorder columns
     pop <- pop[order(lower.age.limit), ] # sort by lower.age.limit
   }
 
