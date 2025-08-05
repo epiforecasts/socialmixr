@@ -61,8 +61,11 @@ check_any_missing_countries <- function(
   }
 }
 
-check_missing_countries <- function(countries, call = rlang::caller_env()) {
-  corrected_countries <- flexible_countrycode(countries)
+check_missing_countries <- function(
+  countries,
+  corrected_countries,
+  call = rlang::caller_env()
+) {
   missing_countries <- countries[which(is.na(corrected_countries))]
   any_missing_countries <- length(missing_countries) > 0
   if (any_missing_countries) {

@@ -89,7 +89,7 @@ contact_matrix <- function(
     corrected_countries <- flexible_countrycode(countries)
     present_countries <- unique(as.character(survey$participants$country))
     missing_countries <- countries[which(is.na(corrected_countries))]
-    check_missing_countries(countries)
+    check_missing_countries(countries, corrected_countries)
     countries <- corrected_countries
     survey$participants <- survey$participants[country %in% countries]
     if (nrow(survey$participants) == 0) {
@@ -337,21 +337,19 @@ contact_matrix <- function(
         ## survey population not given but countries requested from
         ## survey - get population data from those countries
         survey.countries <- countries
-      } else {
+      } else if ("country" %in% colnames(survey$participants)) {
         ## neither survey population nor country names given - try to
         ## guess country or countries surveyed from participant data
-        if ("country" %in% colnames(survey$participants)) {
-          survey.countries <- unique(survey$participants[, country])
-        } else {
-          warning(
-            "No 'survey.pop' or 'countries' given, and no '",
-            "country",
-            "' column found in the data. ",
-            "I don't know which population this is from. ",
-            "Assuming the survey is representative"
-          )
-          survey.representative <- TRUE
-        }
+        survey.countries <- unique(survey$participants[, country])
+      } else {
+        warning(
+          "No 'survey.pop' or 'countries' given, and no '",
+          "country",
+          "' column found in the data. ",
+          "I don't know which population this is from. ",
+          "Assuming the survey is representative"
+        )
+        survey.representative <- TRUE
       }
 
       if (!survey.representative) {
