@@ -28,7 +28,23 @@
 #' matrix_plot(mij)
 #' }
 #' @author Lander Willem
-matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, num.colors = 50, main, xlab, ylab, legend.width, legend.mar, legend.shrink, cex.lab, cex.axis, cex.text, color.palette = heat.colors) {
+matrix_plot <- function(
+  mij,
+  min.legend = 0,
+  max.legend = NA,
+  num.digits = 2,
+  num.colors = 50,
+  main,
+  xlab,
+  ylab,
+  legend.width,
+  legend.mar,
+  legend.shrink,
+  cex.lab,
+  cex.axis,
+  cex.text,
+  color.palette = heat.colors
+) {
   # check function arguments
   xlab <- ifelse(!missing(xlab), xlab, "Age group (year)")
   ylab <- ifelse(!missing(ylab), ylab, "Contact age group (year)")
@@ -52,7 +68,8 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
   breaks <- seq(zlim[1], zlim[2], length = num.colors + 1)
   midpoints <- matrix(
     breaks[-length(breaks)] + diff(breaks) / 2,
-    nrow = 1, ncol = length(breaks) - 1
+    nrow = 1,
+    ncol = length(breaks) - 1
   )
 
   # get plot region for matrix and legend based on current graphical parameters
@@ -73,11 +90,17 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
 
   # set main matrix' plot region
   main_plot_region <- par()$plt
-  main_plot_region[2] <- min(main_plot_region[2], legend_plot_region[1] - offset)
+  main_plot_region[2] <- min(
+    main_plot_region[2],
+    legend_plot_region[1] - offset
+  )
 
   # defensive check for main and legends' plot region
   dp <- legend_plot_region[2] - legend_plot_region[1]
-  legend_plot_region[1] <- min(main_plot_region[2] + offset, legend_plot_region[1])
+  legend_plot_region[1] <- min(
+    main_plot_region[2] + offset,
+    legend_plot_region[1]
+  )
   legend_plot_region[2] <- legend_plot_region[1] + dp
 
   # store old graphical parameters, and initiate the ones for the main plot
@@ -85,7 +108,8 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
   par(plt = main_plot_region)
 
   # add image plot
-  image(mij,
+  image(
+    mij,
     xlab = xlab,
     ylab = ylab,
     main = main,
@@ -98,8 +122,21 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
 
   # add axis labels
   plt_ticks <- seq(0, 1, length = nrow(mij))
-  axis(2, at = plt_ticks, labels = c(colnames(mij)), cex.axis = cex.axis, tick = FALSE, las = 1)
-  axis(1, at = plt_ticks, labels = c(colnames(mij)), cex.axis = cex.axis, tick = FALSE)
+  axis(
+    2,
+    at = plt_ticks,
+    labels = c(colnames(mij)),
+    cex.axis = cex.axis,
+    tick = FALSE,
+    las = 1
+  )
+  axis(
+    1,
+    at = plt_ticks,
+    labels = c(colnames(mij)),
+    cex.axis = cex.axis,
+    tick = FALSE
+  )
 
   # add numeric values if num.digits != NA and cex.text > 0
   if (!is.na(num.digits) && !is.na(cex.text) && cex.text > 0) {
@@ -120,9 +157,14 @@ matrix_plot <- function(mij, min.legend = 0, max.legend = NA, num.digits = 2, nu
 
   # include legend bar with axis
   image(
-    x = 1:2, y = breaks, z = midpoints,
-    xaxt = "n", yaxt = "n", xlab = "",
-    ylab = "", col = redc,
+    x = 1:2,
+    y = breaks,
+    z = midpoints,
+    xaxt = "n",
+    yaxt = "n",
+    xlab = "",
+    ylab = "",
+    col = redc,
     breaks = breaks
   )
   axis(side = 4, mgp = c(3, 1, 0), las = 2)

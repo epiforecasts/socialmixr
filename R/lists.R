@@ -8,8 +8,10 @@
 #' }
 #' @export
 list_surveys <- function(clear_cache = FALSE) {
-  if (!("list_surveys" %in% names(.socialmixr.env$cached_functions)) ||
-    clear_cache) {
+  if (
+    !("list_surveys" %in% names(.socialmixr.env$cached_functions)) ||
+      clear_cache
+  ) {
     .socialmixr.env$cached_functions$list_surveys <- memoise(.list_surveys)
   }
   .socialmixr.env$cached_functions$list_surveys()
@@ -20,22 +22,29 @@ list_surveys <- function(clear_cache = FALSE) {
 #' @keywords internal
 .list_surveys <- function() {
   record_list <-
-    data.table(list_records("https://zenodo.org/oai2d",
+    data.table(list_records(
+      "https://zenodo.org/oai2d",
       metadataPrefix = "oai_datacite",
       set = "user-social_contact_data"
     ))
   ## find common DOI for different versions, i.e. the "relation" that is a DOI
   relations <- grep("^relation(\\.|$)", colnames(record_list), value = TRUE)
   DOIs <- apply(
-    record_list, 1, function(x) {
+    record_list,
+    1,
+    function(x) {
       min(grep("^https://doi.org/.*zenodo", x[relations], value = TRUE))
     }
   )
   record_list <- record_list[, common_doi := DOIs]
-  record_list <- record_list[, url := sub("doi:", "https://doi.org/", common_doi, fixed = TRUE)]
+  record_list <- record_list[,
+    url := sub("doi:", "https://doi.org/", common_doi, fixed = TRUE)
+  ]
   ## get number within version DOI, this is expected to be ascending by version
   record_list <-
-    record_list[, doi.nb := as.integer(sub("^.*zenodo\\.org:", "", identifier.1))]
+    record_list[,
+      doi.nb := as.integer(sub("^.*zenodo\\.org:", "", identifier.1))
+    ]
   ## save date at which first entered
   record_list <- record_list[, date := min(date), by = common_doi]
   ## order by DOI number and extract newest version
@@ -43,7 +52,12 @@ list_surveys <- function(clear_cache = FALSE) {
   record_list <- record_list[, .SD[1], by = common_doi]
   ## order by date
   setkey(record_list, date)
-  return(record_list[, list(date_added = date, title, creator, url = identifier.2)])
+  return(record_list[, list(
+    date_added = date,
+    title,
+    creator,
+    url = identifier.2
+  )])
 }
 
 #' List all countries contained in a survey

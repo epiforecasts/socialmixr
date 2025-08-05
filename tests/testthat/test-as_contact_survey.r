@@ -10,10 +10,12 @@ erroneous_type2$participants <- 17
 
 test_that("error is thrown if survey contains false data types", {
   expect_error(
-    as_contact_survey(erroneous_type1), "Must be of type 'data.frame'"
+    as_contact_survey(erroneous_type1),
+    "Must be of type 'data.frame'"
   )
   expect_error(
-    as_contact_survey(erroneous_type2), "Must be of type 'data.frame'"
+    as_contact_survey(erroneous_type2),
+    "Must be of type 'data.frame'"
   )
 })
 

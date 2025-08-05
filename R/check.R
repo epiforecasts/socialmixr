@@ -18,7 +18,15 @@ check <- function(x, ...) UseMethod("check")
 #' data(polymod)
 #' check(polymod)
 #' @export
-check.contact_survey <- function(x, id.column = "part_id", participant.age.column = "part_age", country.column = "country", year.column = "year", contact.age.column = "cnt_age", ...) {
+check.contact_survey <- function(
+  x,
+  id.column = "part_id",
+  participant.age.column = "part_age",
+  country.column = "country",
+  year.column = "year",
+  contact.age.column = "cnt_age",
+  ...
+) {
   lifecycle::deprecate_warn(
     "1.0.0",
     "check()",
@@ -29,16 +37,23 @@ check.contact_survey <- function(x, id.column = "part_id", participant.age.colum
   )
   chkDots(...)
   if (!is.data.frame(x$participants) || !is.data.frame(x$contacts)) {
-    stop("The 'participants' and 'contacts' elements of 'x' must be data.frames")
+    stop(
+      "The 'participants' and 'contacts' elements of 'x' must be data.frames"
+    )
   }
 
   x <- clean(x)
 
   success <- TRUE
-  if (!(id.column %in% colnames(x$participants) &&
-    id.column %in% colnames(x$contacts))) {
+  if (
+    !(id.column %in%
+      colnames(x$participants) &&
+      id.column %in% colnames(x$contacts))
+  ) {
     warning(
-      "id.columns '", id.column, "' does not exist in both the ",
+      "id.columns '",
+      id.column,
+      "' does not exist in both the ",
       "participants and contacts data frames"
     )
     success <- FALSE
@@ -49,12 +64,22 @@ check.contact_survey <- function(x, id.column = "part_id", participant.age.colum
     min.column <- paste(participant.age.column, "est_min", sep = "_")
     max.column <- paste(participant.age.column, "est_max", sep = "_")
 
-    if (!((exact.column %in% colnames(x$participants)) ||
-      (min.column %in% colnames(x$participants) && max.column %in% colnames(x$participants)))) {
+    if (
+      !((exact.column %in% colnames(x$participants)) ||
+        (min.column %in%
+          colnames(x$participants) &&
+          max.column %in% colnames(x$participants)))
+    ) {
       warning(
-        "participant age column '", participant.age.column,
-        "' or columns to estimate participant age ('", exact.column, "' or '",
-        min.column, "' and '", max.column, "') do not exist in the participant data frame"
+        "participant age column '",
+        participant.age.column,
+        "' or columns to estimate participant age ('",
+        exact.column,
+        "' or '",
+        min.column,
+        "' and '",
+        max.column,
+        "') do not exist in the participant data frame"
       )
       success <- FALSE
     }
@@ -65,12 +90,22 @@ check.contact_survey <- function(x, id.column = "part_id", participant.age.colum
     min.column <- paste(contact.age.column, "est_min", sep = "_")
     max.column <- paste(contact.age.column, "est_max", sep = "_")
 
-    if (!((exact.column %in% colnames(x$contacts)) ||
-      (min.column %in% colnames(x$contacts) && max.column %in% colnames(x$contacts)))) {
+    if (
+      !((exact.column %in% colnames(x$contacts)) ||
+        (min.column %in%
+          colnames(x$contacts) &&
+          max.column %in% colnames(x$contacts)))
+    ) {
       warning(
-        "contact age column '", contact.age.column,
-        "' or columns to estimate contact age ('", exact.column, "' or '",
-        min.column, "' and '", max.column, "') do not exist in the contact data frame"
+        "contact age column '",
+        contact.age.column,
+        "' or columns to estimate contact age ('",
+        exact.column,
+        "' or '",
+        min.column,
+        "' and '",
+        max.column,
+        "') do not exist in the contact data frame"
       )
       success <- FALSE
     }
@@ -78,7 +113,9 @@ check.contact_survey <- function(x, id.column = "part_id", participant.age.colum
 
   if (!(country.column %in% colnames(x$participants))) {
     warning(
-      "country column '", country.column, "' does not exist ",
+      "country column '",
+      country.column,
+      "' does not exist ",
       "in the participant data frame"
     )
     success <- FALSE
@@ -86,8 +123,10 @@ check.contact_survey <- function(x, id.column = "part_id", participant.age.colum
   if (success) message("Check OK.") else message("Check FAILED.")
 
   invisible(c(
-    id = id.column, participant.age = participant.age.column,
-    country = country.column, year = year.column,
+    id = id.column,
+    participant.age = participant.age.column,
+    country = country.column,
+    year = year.column,
     contact.age = contact.age.column
   ))
 }

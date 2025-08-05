@@ -73,7 +73,8 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
   reference[[ifelse(is.doi, "doi", "url")]] <- survey
 
   links <- xml_attr(
-    xml_find_all(parsed_body, "//link[@type=\"text/csv\"]"), "href"
+    xml_find_all(parsed_body, "//link[@type=\"text/csv\"]"),
+    "href"
   )
 
   data <- data.table(url = links)
@@ -100,14 +101,21 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
   reference_json <- toJSON(reference)
   write(reference_json, reference_file_path)
 
-  files <- c(reference_file_path, vapply(seq_len(nrow(data)), function(i) {
-    url <- data[i, ]$url
-    temp <- file.path(dir, data[i, ]$file_name)
-    message("Downloading ", url)
-    Sys.sleep(sleep)
-    dl <- curl_download(url, temp)
-    return(temp)
-  }, ""))
+  files <- c(
+    reference_file_path,
+    vapply(
+      seq_len(nrow(data)),
+      function(i) {
+        url <- data[i, ]$url
+        temp <- file.path(dir, data[i, ]$file_name)
+        message("Downloading ", url)
+        Sys.sleep(sleep)
+        dl <- curl_download(url, temp)
+        return(temp)
+      },
+      ""
+    )
+  )
 
   return(files)
 }
