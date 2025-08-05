@@ -2,7 +2,7 @@
 check_arg_dots_in <- function(dots, fun_one, fun_two) {
   unknown.args <- setdiff(
     names(dots),
-    union(formalArgs(fun_one), formalArgs(pop_age))
+    union(formalArgs(fun_one), formalArgs(fun_two))
   )
   any_unknown_args <- length(unknown.args) > 0
   if (any_unknown_args) {
