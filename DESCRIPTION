@@ -33,7 +33,8 @@ Imports:
     purrr,
     oai,
     wpp2017,
-    xml2
+    xml2,
+    cli
 Suggests:
     ggplot2,
     here,
