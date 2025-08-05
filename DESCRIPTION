@@ -33,7 +33,10 @@ Imports:
     purrr,
     oai,
     wpp2017,
-    xml2
+    xml2,
+    cli,
+    rlang,
+    methods
 Suggests:
     ggplot2,
     here,

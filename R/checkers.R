@@ -1,4 +1,5 @@
 # check if the arguments match from dots to fun_one or fun_two
+#' @importFrom methods formalArgs
 check_arg_dots_in <- function(dots, fun_one, fun_two) {
   unknown.args <- setdiff(
     names(dots),
