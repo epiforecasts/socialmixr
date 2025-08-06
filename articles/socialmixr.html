@@ -61,7 +61,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Funk</h4>
             
-            <h4 data-toc-skip class="date">2025-08-05</h4>
+            <h4 data-toc-skip class="date">2025-08-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
       <div class="d-none name"><code>socialmixr.Rmd</code></div>
@@ -92,7 +92,8 @@ using</p>
 <p>An example use would be</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the 'missing.contact.age' option.</span></span>
 <span><span class="co">#&gt; $matrix</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
@@ -181,11 +182,16 @@ be obtained, for example the mean:</p>
 <span>    sample.participants <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the 'missing.contact.age' option.</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the 'missing.contact.age' option.</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the 'missing.contact.age' option.</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the 'missing.contact.age' option.</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the 'missing.contact.age' option.</span></span>
 <span><span class="va">mr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">m</span><span class="op">[</span><span class="st">"matrix"</span>, <span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
@@ -251,14 +257,15 @@ to obtain a symmetric contact matrix that fulfills it, one can use</p>
 <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> function.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, symmetric <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Warning in pop_age(survey.pop, part.age.group.present, ...): Not all age groups represented in population data (5-year age band).</span></span>
-<span><span class="co">#&gt;   Linearly estimating age group sizes from the 5-year bands.</span></span>
-<span><span class="co">#&gt; Warning in contact_matrix(polymod, countries = "United Kingdom", age.limits =</span></span>
-<span><span class="co">#&gt; c(0, : Large differences in the size of the sub-populations with the current</span></span>
-<span><span class="co">#&gt; age breaks are likely to result in artefacts after making the matrix symmetric.</span></span>
-<span><span class="co">#&gt; Please reconsider the age breaks to obtain more equally sized sub-populations.</span></span>
-<span><span class="co">#&gt; Normalization factors: [0.3;2.9]</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the 'missing.contact.age' option.</span></span>
+<span><span class="co">#&gt; Warning: Not all age groups represented in population data (5-year age band).</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Linearly estimating age group sizes from the 5-year bands.</span></span>
+<span><span class="co">#&gt; Warning: Large differences in the size of the sub-populations with the current age</span></span>
+<span><span class="co">#&gt; breaks are likely to result in artefacts after making the matrix symmetric.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please reconsider the age breaks to obtain more equally sized</span></span>
+<span><span class="co">#&gt;   sub-populations.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalization factors: [0.3 and 2.9]</span></span>
 <span><span class="co">#&gt; $matrix</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
@@ -384,9 +391,10 @@ and <code>demography</code>
 of the resulting list.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, split <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Warning in pop_age(survey.pop, part.age.group.present, ...): Not all age groups represented in population data (5-year age band).</span></span>
-<span><span class="co">#&gt;   Linearly estimating age group sizes from the 5-year bands.</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the 'missing.contact.age' option.</span></span>
+<span><span class="co">#&gt; Warning: Not all age groups represented in population data (5-year age band).</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Linearly estimating age group sizes from the 5-year bands.</span></span>
 <span><span class="co">#&gt; $mean.contacts</span></span>
 <span><span class="co">#&gt; [1] 11.55481</span></span>
 <span><span class="co">#&gt; </span></span>

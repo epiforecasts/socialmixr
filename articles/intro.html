@@ -58,7 +58,7 @@
       <h1>The socialmixr package</h1>
 
       <p class="author">Sebastian Funk</p>
-      <p class="date">2025-08-05</p>
+      <p class="date">2025-08-06</p>
 
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/vignettes/intro.qmd" class="external-link"><code>vignettes/intro.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -86,7 +86,8 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; ℹ To change this behaviour, set the 'missing.contact.age' option.</span></span>
 <span><span class="co">#&gt; $matrix</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
@@ -153,19 +154,24 @@
 <span>    sample.participants <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; ℹ To change this behaviour, set the 'missing.contact.age' option.</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; ℹ To change this behaviour, set the 'missing.contact.age' option.</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; ℹ To change this behaviour, set the 'missing.contact.age' option.</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; ℹ To change this behaviour, set the 'missing.contact.age' option.</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; ℹ To change this behaviour, set the 'missing.contact.age' option.</span></span>
 <span><span class="va">mr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">m</span><span class="op">[</span><span class="st">"matrix"</span>, <span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
-<span><span class="co">#&gt;    [0,1)  0.55447726 0.8255267 1.287929 6.529973</span></span>
-<span><span class="co">#&gt;    [1,5)  0.09832211 1.6539518 1.331056 5.243288</span></span>
-<span><span class="co">#&gt;    [5,15) 0.02894289 0.4937892 8.173687 6.350974</span></span>
-<span><span class="co">#&gt;    15+    0.03648118 0.3642803 1.332362 9.652625</span></span></code></pre></div>
+<span><span class="co">#&gt;    [0,1)  0.12619048 0.9220879 1.397216 5.362088</span></span>
+<span><span class="co">#&gt;    [1,5)  0.11038925 2.1722236 1.478357 5.529785</span></span>
+<span><span class="co">#&gt;    [5,15) 0.02542806 0.5016377 7.634662 6.086969</span></span>
+<span><span class="co">#&gt;    15+    0.03024146 0.3550540 1.277747 9.583792</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
 </h2>
@@ -192,14 +198,15 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, symmetric <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Warning in pop_age(survey.pop, part.age.group.present, ...): Not all age groups represented in population data (5-year age band).</span></span>
-<span><span class="co">#&gt;   Linearly estimating age group sizes from the 5-year bands.</span></span>
-<span><span class="co">#&gt; Warning in contact_matrix(polymod, countries = "United Kingdom", age.limits =</span></span>
-<span><span class="co">#&gt; c(0, : Large differences in the size of the sub-populations with the current</span></span>
-<span><span class="co">#&gt; age breaks are likely to result in artefacts after making the matrix symmetric.</span></span>
-<span><span class="co">#&gt; Please reconsider the age breaks to obtain more equally sized sub-populations.</span></span>
-<span><span class="co">#&gt; Normalization factors: [0.3;2.9]</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; ℹ To change this behaviour, set the 'missing.contact.age' option.</span></span>
+<span><span class="co">#&gt; Warning: Not all age groups represented in population data (5-year age band).</span></span>
+<span><span class="co">#&gt; ℹ Linearly estimating age group sizes from the 5-year bands.</span></span>
+<span><span class="co">#&gt; Warning: Large differences in the size of the sub-populations with the current age</span></span>
+<span><span class="co">#&gt; breaks are likely to result in artefacts after making the matrix symmetric.</span></span>
+<span><span class="co">#&gt; ℹ Please reconsider the age breaks to obtain more equally sized</span></span>
+<span><span class="co">#&gt;   sub-populations.</span></span>
+<span><span class="co">#&gt; ℹ Normalization factors: [0.3 and 2.9]</span></span>
 <span><span class="co">#&gt; $matrix</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
@@ -266,9 +273,10 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contact_matrix.html">contact_matrix</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, split <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Removing participants that have contacts without age information. To change this behaviour, set the 'missing.contact.age' option</span></span>
-<span><span class="co">#&gt; Warning in pop_age(survey.pop, part.age.group.present, ...): Not all age groups represented in population data (5-year age band).</span></span>
-<span><span class="co">#&gt;   Linearly estimating age group sizes from the 5-year bands.</span></span>
+<span><span class="co">#&gt; Removing participants that have contacts without age information.</span></span>
+<span><span class="co">#&gt; ℹ To change this behaviour, set the 'missing.contact.age' option.</span></span>
+<span><span class="co">#&gt; Warning: Not all age groups represented in population data (5-year age band).</span></span>
+<span><span class="co">#&gt; ℹ Linearly estimating age group sizes from the 5-year bands.</span></span>
 <span><span class="co">#&gt; $mean.contacts</span></span>
 <span><span class="co">#&gt; [1] 11.55481</span></span>
 <span><span class="co">#&gt; </span></span>
