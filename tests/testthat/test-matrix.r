@@ -198,9 +198,8 @@ test_that("warning is thrown if population needed but no 'year' column present",
 })
 
 test_that("warning is thrown if day of week is asked to be weighed but not present", {
-  expect_warning(
-    contact_matrix(survey = polymod3, weigh.dayofweek = TRUE),
-    "no 'dayofweek' column"
+  expect_snapshot(
+    tmp <- contact_matrix(survey = polymod3, weigh.dayofweek = TRUE),
   )
 })
 
@@ -261,23 +260,21 @@ test_that("good suggestions are made", {
 })
 
 test_that("nonsensical operations are warned about", {
-  expect_warning(
-    contact_matrix(
+  expect_snapshot(
+    tmp <- contact_matrix(
       survey = polymod,
       counts = TRUE,
       split = TRUE,
       age.limits = c(0, 5)
-    ),
-    "'split=TRUE' does not make sense with 'counts=TRUE'"
+    )
   )
-  expect_warning(
-    contact_matrix(
+  expect_snapshot(
+    tmp <- contact_matrix(
       survey = polymod,
       counts = TRUE,
       symmetric = TRUE,
       age.limits = c(0, 5)
-    ),
-    "'symmetric=TRUE' does not make sense with 'counts=TRUE'"
+    )
   )
   expect_warning(
     contact_matrix(

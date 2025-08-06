@@ -37,8 +37,8 @@ check.contact_survey <- function(
   )
   chkDots(...)
   if (!is.data.frame(x$participants) || !is.data.frame(x$contacts)) {
-    stop(
-      "The 'participants' and 'contacts' elements of 'x' must be data.frames"
+    cli::cli_abort(
+      "The {.field participants} and {.field contacts} elements of {.arg x} must be data.frames."
     )
   }
 
@@ -50,11 +50,9 @@ check.contact_survey <- function(
       colnames(x$participants) &&
       id.column %in% colnames(x$contacts))
   ) {
-    warning(
-      "id.columns '",
-      id.column,
-      "' does not exist in both the ",
-      "participants and contacts data frames"
+    cli::cli_warn(
+      "{.arg id.columns} {.val {id.column}} does not exist in both the
+   participants and contacts data frames."
     )
     success <- FALSE
   }
@@ -70,16 +68,10 @@ check.contact_survey <- function(
           colnames(x$participants) &&
           max.column %in% colnames(x$participants)))
     ) {
-      warning(
-        "participant age column '",
-        participant.age.column,
-        "' or columns to estimate participant age ('",
-        exact.column,
-        "' or '",
-        min.column,
-        "' and '",
-        max.column,
-        "') do not exist in the participant data frame"
+      cli::cli_warn(
+        "Participant age column {.arg {participant.age.column}} or columns to
+   estimate participant age ({.arg {exact.column}} or {.arg {min.column}}
+   and {.arg {max.column}}) do not exist in the participant data frame."
       )
       success <- FALSE
     }
@@ -96,31 +88,27 @@ check.contact_survey <- function(
           colnames(x$contacts) &&
           max.column %in% colnames(x$contacts)))
     ) {
-      warning(
-        "contact age column '",
-        contact.age.column,
-        "' or columns to estimate contact age ('",
-        exact.column,
-        "' or '",
-        min.column,
-        "' and '",
-        max.column,
-        "') do not exist in the contact data frame"
+      cli::cli_warn(
+        "Contact age column {.var {contact.age.column}} or columns to
+   estimate contact age ({.var {exact.column}} or {.var {min.column}}
+   and {.var {max.column}}) do not exist in the contact data frame."
       )
       success <- FALSE
     }
   }
 
   if (!(country.column %in% colnames(x$participants))) {
-    warning(
-      "country column '",
-      country.column,
-      "' does not exist ",
-      "in the participant data frame"
+    cli::cli_warn(
+      "Country column {.arg {country.column}} does not exist in the \\
+      participant data frame."
     )
     success <- FALSE
   }
-  if (success) message("Check OK.") else message("Check FAILED.")
+  if (success) {
+    cli::cli_alert("Check OK.")
+  } else {
+    cli::cli_alert("Check FAILED.")
+  }
 
   invisible(c(
     id = id.column,

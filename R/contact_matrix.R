@@ -93,7 +93,7 @@ contact_matrix <- function(
     countries <- corrected_countries
     survey$participants <- survey$participants[country %in% countries]
     if (nrow(survey$participants) == 0) {
-      stop("No participants left after selecting countries.")
+      cli::cli_abort("No participants left after selecting countries.")
     }
   }
 
@@ -159,9 +159,11 @@ contact_matrix <- function(
         0
   ) {
     if (!missing.participant.age.set) {
-      message(
-        "Removing participants without age information. ",
-        "To change this behaviour, set the 'missing.participant.age' option"
+      cli::cli_inform(
+        c(
+          "Removing participants without age information.",
+          "i" = "To change this behaviour, set the {.code missing.participant.age} option."
+        )
       )
     }
     survey$participants <- survey$participants[
@@ -231,9 +233,11 @@ contact_matrix <- function(
       nrow(survey$contacts[is.na(cnt_age)]) > 0
   ) {
     if (!missing.contact.age.set) {
-      message(
-        "Removing participants that have contacts without age information. ",
-        "To change this behaviour, set the 'missing.contact.age' option"
+      cli::cli_inform(
+        c(
+          "Removing participants that have contacts without age information.",
+          "i" = "To change this behaviour, set the 'missing.contact.age' option."
+        )
       )
     }
     missing.age.id <- survey$contacts[
@@ -248,9 +252,11 @@ contact_matrix <- function(
       nrow(survey$contacts[is.na(cnt_age)]) > 0
   ) {
     if (!missing.contact.age.set) {
-      message(
-        "Ignore contacts without age information. ",
-        "To change this behaviour, set the 'missing.contact.age' option"
+      cli::cli_inform(
+        c(
+          "Ignore contacts without age information.",
+          "i" = "To change this behaviour, set the 'missing.contact.age' option."
+        )
       )
     }
     survey$contacts <- survey$contacts[!is.na(cnt_age), ]
@@ -276,7 +282,7 @@ contact_matrix <- function(
     }
     missing_all <- do.call(intersect, missing_columns)
     if (length(missing_all) > 0) {
-      warning("filter column(s) ", toString(missing_all), " not found")
+      cli::cli_warn("Filter columns {missing_all} not found.")
     }
   }
 
@@ -340,6 +346,7 @@ contact_matrix <- function(
       } else if ("country" %in% colnames(survey$participants)) {
         ## neither survey population nor country names given - try to
         ## guess country or countries surveyed from participant data
+
         survey.countries <- unique(survey$participants[, country])
       } else {
         warning(
@@ -370,10 +377,9 @@ contact_matrix <- function(
           survey.year <- survey$participants[, median(year, na.rm = TRUE)]
         } else {
           survey.year <- country.pop[, max(year, na.rm = TRUE)]
-          warning(
-            "No information on year found in the data. Will use ",
-            survey.year,
-            " population data."
+          cli::cli_warn(
+            "No information on year found in the data. Will use
+            {survey.year} population data."
           )
         }
 
@@ -474,9 +480,12 @@ contact_matrix <- function(
       survey$participants[, is.weekday := dayofweek %in% 1:5]
     }
     if (!found.dayofweek) {
-      warning(
-        "'weigh.dayofweek' is TRUE, but no 'dayofweek' column in the data. ",
-        "Will ignore."
+      cli::cli_warn(
+        c(
+          "{.code weigh.dayofweek} is {.val TRUE}, but no {.col dayofweek} \\
+          column in the data.",
+          "i" = "Will ignore."
+        )
       )
     }
   }
@@ -725,15 +734,17 @@ contact_matrix <- function(
 
   if (symmetric && prod(dim(as.matrix(weighted.matrix))) > 1) {
     if (counts) {
-      warning(
-        "'symmetric=TRUE' does not make sense with 'counts=TRUE'; ",
-        "will not make matrix symmetric."
+      cli::cli_warn(
+        "{.code symmetric = TRUE} does not make sense with
+        {.code counts = TRUE}; will not make matrix symmetric."
       )
     } else if (na.present) {
-      warning(
-        "'symmetric=TRUE' does not work with missing data; ",
-        "will not make matrix symmetric\n",
-        warning.suggestion
+      cli::cli_warn(
+        c(
+          "{.code symmetric = TRUE} does not work with missing data; will \\
+          not make matrix symmetric.",
+          "i" = "{warning.suggestion}"
+        )
       )
     } else {
       ## set c_{ij} N_i and c_{ji} N_j (which should both be equal) to
@@ -751,13 +762,16 @@ contact_matrix <- function(
         !is.infinite(normalisation_fctr) & !is.na(normalisation_fctr)
       ]
       if (any(normalisation_fctr > symmetric.norm.threshold)) {
-        warning(
-          "Large differences in the size of the sub-populations with the current age breaks are likely to result in artefacts after making the matrix symmetric. Please reconsider the age breaks to obtain more equally sized sub-populations. Normalization factors: [",
-          paste(
-            round(range(normalisation_fctr, na.rm = TRUE), digits = 1),
-            collapse = ";"
-          ),
-          "]"
+        cli::cli_warn(
+          c(
+            "Large differences in the size of the sub-populations with the \\
+            current age breaks are likely to result in artefacts after making \\
+            the matrix symmetric.",
+            "i" = "Please reconsider the age breaks to obtain more equally \\
+            sized sub-populations.",
+            "i" = "Normalization factors: [{round(range(normalisation_fctr, \\
+            na.rm = TRUE), digits = 1)}]"
+          )
         )
       }
       # update weighted.matrix
@@ -767,15 +781,17 @@ contact_matrix <- function(
 
   if (split) {
     if (counts) {
-      warning(
-        "'split=TRUE' does not make sense with 'counts=TRUE'; ",
-        "will not split the contact matrix."
+      cli::cli_warn(
+        "{.code split = TRUE} does not make sense with {.code counts = TRUE}; \\
+        will not split the contact matrix."
       )
     } else if (na.present) {
-      warning(
-        "'split=TRUE' does not work with missing data; ",
-        "will not split contact.matrix.\n",
-        warning.suggestion
+      cli::cli_warn(
+        c(
+          "{.code split = TRUE} does not work with missing data; will not
+          split contact.matrix.",
+          "i" = "{warning.suggestion}"
+        )
       )
       ret[["mean.contacts"]] <- NA
       ret[["normalisation"]] <- NA
@@ -810,14 +826,14 @@ contact_matrix <- function(
   # option to add matrix per capita, i.e. the contact rate of age i with one individual of age j in the population.
   if (per.capita) {
     if (counts) {
-      warning(
-        "'per.capita=TRUE' does not make sense with 'counts=TRUE'; ",
-        "will not return the contact matrix per capita."
+      cli::cli_warn(
+        "{.arg per.capita = TRUE} does not make sense with {.arg counts = TRUE}; \\
+        will not return the contact matrix per capita."
       )
     } else if (split) {
-      warning(
-        "'per.capita=TRUE' does not make sense with 'split=TRUE'; ",
-        "will not return the contact matrix per capita."
+      cli::cli_warn(
+        "{.code per.capita = TRUE} does not make sense with {.code split = TRUE}; \\
+        will not return the contact matrix per capita."
       )
     } else {
       survey.pop$population

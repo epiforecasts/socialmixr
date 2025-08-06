@@ -38,7 +38,9 @@ get_survey <- function(survey, clear_cache = FALSE, ...) {
       files <- download_survey(survey)
       new_survey <- load_survey(files)
     } else {
-      stop("'survey' must be an 'contact_survey' object or character")
+      cli::cli_abort(
+        "{.arg survey} must be a {.cls contact_survey} object or character."
+      )
     }
   }
 

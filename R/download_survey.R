@@ -22,7 +22,7 @@
 #' @export
 download_survey <- function(survey, dir = NULL, sleep = 1) {
   if (!is.character(survey) || length(survey) > 1) {
-    stop("'survey' must be a character of length 1")
+    cli::cli_abort("{.arg survey} must be a character of length 1.")
   }
 
   survey <- sub("^(https?:\\/\\/(dx\\.)?doi\\.org\\/|doi:)", "", survey)
@@ -31,10 +31,14 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
   is.url <- is.doi || grepl("^https?:\\/\\/", survey)
 
   if (!is.url) {
-    stop("'survey' is not a DOI or URL.")
+    cli::cli_abort("{.arg survey} is not a DOI or URL.")
   }
 
-  if (is.doi) url <- paste0("https://doi.org/", survey) else url <- survey
+  if (is.doi) {
+    url <- paste0("https://doi.org/", survey)
+  } else {
+    url <- survey
+  }
 
   temp_body <- GET(
     url,
@@ -46,11 +50,15 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
       packageVersion("socialmixr")
     ))
   )
-  if (status_code(temp_body) == 404) stop("DOI '", survey, "' not found")
+  if (status_code(temp_body) == 404) {
+    cli::cli_abort("DOI {.val {survey}} not found.")
+  }
   if (http_error(temp_body)) {
-    stop(
-      "Could not fetch the resource. ",
-      "This could an issue with the website server or your own connection."
+    cli::cli_abort(
+      c(
+        "Could not fetch the resource.",
+        "i" = "This could an issue with the website server or your own connection."
+      )
     )
   }
 
@@ -82,10 +90,13 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
   data[, file_name := tolower(basename(url))]
 
   if (anyDuplicated(data$file_name) > 0) {
-    warning(
-      "Zenodo repository contains files with names that only differ by case. ",
-      "This will cause unpredictable behaviour on case-insensitive file systems. ",
-      "Please contact the authors to get this fixed."
+    cli::cli_warn(
+      c(
+        "Zenodo repository contains files with names that only differ by case.",
+        "i" = "This will cause unpredictable behaviour on case-insensitive \\
+        file systems.",
+        "i" = "Please contact the authors to get this fixed."
+      )
     )
     data <- data[!duplicated(file_name)]
   }
@@ -94,7 +105,7 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
     dir <- tempdir()
   }
 
-  message("Getting ", parsed_cite$name, ".")
+  cli::cli_inform("Getting {parsed_cite$name}.")
 
   lcs <- find_common_prefix(data$file_name)
   reference_file_path <- file.path(dir, paste0(lcs, "reference.json"))
