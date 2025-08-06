@@ -33,10 +33,11 @@ wpp_age <- function(countries, years) {
 
     popM <- merge(popM, popMprojMed)
     popF <- merge(popF, popFprojMed)
-    warning(
-      "Don't have historial population data available after ",
-      years_included,
-      ". Will make use of the median projection of population counts from the WPP2017 package."
+
+    cli::cli_warn(
+      "Don't have historial population data available after {years_included}. \\
+      Will make use of the median projection of population counts from the \\
+      {.pkg WPP2017} package."
     )
   }
 
@@ -76,12 +77,9 @@ wpp_age <- function(countries, years) {
       } else {
         available.years <- unique(pop$year)
         nearest.year <- available.years[which.min(abs(available.years - years))]
-        warning(
-          "Don't have population data available for ",
-          years,
-          ". Will return nearest year (",
-          nearest.year,
-          ")."
+        cli::cli_warn(
+          "Don't have population data available for {years}. \\
+          Will return nearest year ({nearest.year})."
         )
         pop <- pop[year %in% nearest.year]
       }

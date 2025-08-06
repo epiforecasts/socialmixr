@@ -34,11 +34,9 @@ pop_age <- function(
   if (
     !is.data.frame(pop) || !all(hasName(pop, c(pop.age.column, pop.column)))
   ) {
-    stop(
-      "Expecting 'pop' to be a data.frame with columns ",
-      pop.age.column,
-      " and ",
-      pop.column
+    cli::cli_abort(
+      "Expecting {.arg pop} to be a data.frame with columns
+      {.arg {pop.age.column}} and {.arg {pop.column}}."
     )
   }
 
@@ -53,8 +51,11 @@ pop_age <- function(
       pop[[pop.age.column]]
     )
     if (length(missing.ages) > 0) {
-      warning(
-        "Not all age groups represented in population data (5-year age band).\n  Linearly estimating age group sizes from the 5-year bands."
+      cli::cli_warn(
+        c(
+          "Not all age groups represented in population data (5-year age band).",
+          "i" = "Linearly estimating age group sizes from the 5-year bands."
+        )
       )
       ..original.upper.age.limit <- NULL
       pop <- pop[,
