@@ -34,7 +34,11 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
     cli::cli_abort("{.arg survey} is not a DOI or URL.")
   }
 
-  if (is.doi) url <- paste0("https://doi.org/", survey) else url <- survey
+  if (is.doi) {
+    url <- paste0("https://doi.org/", survey)
+  } else {
+    url <- survey
+  }
 
   temp_body <- GET(
     url,
@@ -46,8 +50,9 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
       packageVersion("socialmixr")
     ))
   )
-  if (status_code(temp_body) == 404)
+  if (status_code(temp_body) == 404) {
     cli::cli_abort("DOI {.val {survey}} not found.")
+  }
   if (http_error(temp_body)) {
     cli::cli_abort(
       c(
