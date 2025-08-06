@@ -393,7 +393,7 @@ contact_matrix <- function(
           )
         )
         survey.representative <- TRUE
-      } # where line 380 open brace should close
+      }
 
       if (!survey.representative) {
         ## get population data for countries from 'wpp' package

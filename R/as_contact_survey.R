@@ -58,7 +58,7 @@ as_contact_survey <- function(
           "{.arg {column}} column {.val {to_check[[column]]}} does not exist
         in the participant data frame."
         )
-      } else {
+      } else if (!is.null(to_check[[column]])) {
         setnames(x$participants, to_check[[column]], column)
       }
     }
