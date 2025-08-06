@@ -1,14 +1,12 @@
-library("socialmixr")
-library("purrr")
-library("here")
+library(socialmixr)
+library(purrr)
+library(here)
 
 ## load list of survey files
 survey_files <- readRDS(here("surveys", "survey_files.rds"))
 
 ## define safe checking function
-safe_check <- safely(\(files) {
-  check(load_survey(files))
-})
+safe_check <- safely(\(files) check(load_survey(files)))
 
 ## check all surveys
 checks <- map(survey_files, safe_check)

@@ -95,5 +95,5 @@ wpp_age <- function(countries, years) {
     pop <- pop[order(lower.age.limit), ] # sort by lower.age.limit
   }
 
-  return(as.data.frame(pop))
+  as.data.frame(pop)
 }

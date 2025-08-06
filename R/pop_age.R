@@ -54,7 +54,9 @@ pop_age <- function(
       cli::cli_warn(
         c(
           "Not all age groups represented in population data (5-year age band).",
+          # nolint start
           "i" = "Linearly estimating age group sizes from the 5-year bands."
+          # nolint end
         )
       )
       ..original.upper.age.limit <- NULL

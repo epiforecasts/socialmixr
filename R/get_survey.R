@@ -33,16 +33,14 @@ get_survey <- function(survey, clear_cache = FALSE, ...) {
 .get_survey <- function(survey, ...) {
   if (inherits(survey, "contact_survey")) {
     new_survey <- copy(survey)
+  } else if (is.character(survey)) {
+    files <- download_survey(survey)
+    new_survey <- load_survey(files)
   } else {
-    if (is.character(survey)) {
-      files <- download_survey(survey)
-      new_survey <- load_survey(files)
-    } else {
-      cli::cli_abort(
-        "{.arg survey} must be a {.cls contact_survey} object or character."
-      )
-    }
+    cli::cli_abort(
+      "{.arg survey} must be a {.cls contact_survey} object or character."
+    )
   }
 
-  return(new_survey)
+  new_survey
 }

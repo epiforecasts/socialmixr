@@ -15,9 +15,9 @@
 #' @export
 load_survey <- function(files, ...) {
   exist <- file.exists(files)
-  missing <- files[!exist]
-  if (length(missing) > 0) {
-    cli::cli_abort("File{?s} {.file {missing}} not found.")
+  files_missing <- files[!exist]
+  if (length(files_missing) > 0) {
+    cli::cli_abort("File{?s} {.file {files_missing}} not found.")
   }
   survey_files <- grep("csv$", files, value = TRUE) # select csv files
   reference_file <- grep("json$", files, value = TRUE) # select json file
@@ -188,5 +188,5 @@ load_survey <- function(files, ...) {
     )
   }
 
-  return(new_survey)
+  new_survey
 }

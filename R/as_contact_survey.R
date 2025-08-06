@@ -47,19 +47,22 @@ as_contact_survey <- function(
     year = year.column
   )
 
-  walk(names(to_check), \(column) {
-    if (
-      !is.null(to_check[[column]]) &&
-        !(to_check[[column]] %in% colnames(x$participants))
-    ) {
-      cli::cli_abort(
-        "{.arg {column}} column {.val {to_check[[column]]}} does not exist
+  walk(
+    .x = names(to_check),
+    .f = function(column) {
+      if (
+        !is.null(to_check[[column]]) &&
+          !(to_check[[column]] %in% colnames(x$participants))
+      ) {
+        cli::cli_abort(
+          "{.arg {column}} column {.val {to_check[[column]]}} does not exist
         in the participant data frame."
-      )
-    } else {
-      setnames(x$participants, to_check[[column]], column)
+        )
+      } else {
+        setnames(x$participants, to_check[[column]], column)
+      }
     }
-  })
+  )
 
   if (is.null(x$reference)) {
     cli::cli_warn("No reference provided.")

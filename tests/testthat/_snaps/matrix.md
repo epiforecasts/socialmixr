@@ -199,3 +199,18 @@
       Warning:
       `symmetric = TRUE` does not make sense with `counts = TRUE`; will not make matrix symmetric.
 
+# warning is thrown if it is assumed that the survey is representative
+
+    Code
+      tmp <- contact_matrix(survey = polymod4, symmetric = TRUE, age.limits = c(0, 5,
+        15))
+    Message
+      Removing participants without age information.
+      i To change this behaviour, set the `missing.participant.age` option.
+      Removing participants that have contacts without age information.
+      i To change this behaviour, set the 'missing.contact.age' option.
+    Condition
+      Warning:
+      No `survey.pop` or `countries` given, and no `country` column found in the data.
+      i I don't know which population this is from (assuming the survey is representative).
+
