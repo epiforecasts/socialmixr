@@ -1,4 +1,4 @@
-library("data.table")
+library(data.table)
 
 erroneous_survey <-
   new_contact_survey(polymod$participants, polymod$contacts, polymod$reference)
