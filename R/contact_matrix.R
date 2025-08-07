@@ -65,13 +65,7 @@ contact_matrix <- function(
   surveys <- c("participants", "contacts")
 
   dot.args <- list(...)
-  unknown.args <- setdiff(
-    names(dot.args),
-    union(names(formals(check.contact_survey)), names(formals(pop_age)))
-  )
-  if (length(unknown.args) > 0) {
-    cli::cli_abort("Unknown argument{?s}: {unknown.args}.")
-  }
+  check_arg_dots_in(dot.args, check.contact_survey, pop_age)
 
   ## record if 'missing.participant.age' and 'missing.contact.age' are set, for later
   missing.participant.age.set <- !missing(missing.participant.age)
@@ -85,38 +79,17 @@ contact_matrix <- function(
 
   survey <- copy(survey)
 
-  if (!inherits(survey, "contact_survey")) {
-    cli::cli_abort(
-      "{.arg survey} must be a survey object created using {.fn survey} or
-   {.fn get_survey}."
-    )
-  }
-
-  if (!missing(age.limits)) {
-    age.limits <- as.integer(age.limits)
-    if (anyNA(age.limits) || any(diff(age.limits) <= 0)) {
-      cli::cli_abort(
-        "{.arg age.limits} must be an increasing integer vector of lower age limits."
-      )
-    }
-  }
+  check_if_contact_survey(survey)
+  check_age_limits_increasing(age.limits)
 
   ## check if specific countries are requested (if a survey contains data from multiple countries)
-  if (length(countries) > 0 && "country" %in% colnames(survey$participants)) {
-    if (all(nchar(countries) == 2)) {
-      corrected_countries <- suppressWarnings(
-        countrycode(countries, "iso2c", "country.name")
-      )
-    } else {
-      corrected_countries <- suppressWarnings(
-        countrycode(countries, "country.name", "country.name")
-      )
-    }
+  multiple_countries <- length(countries) > 0
+  country_col_in_participants <- "country" %in% colnames(survey$participants)
+  if (multiple_countries && country_col_in_participants) {
+    corrected_countries <- flexible_countrycode(countries)
     present_countries <- unique(as.character(survey$participants$country))
     missing_countries <- countries[which(is.na(corrected_countries))]
-    if (length(missing_countries) > 0) {
-      cli::cli_abort("Survey data not found for {missing_countries}.")
-    }
+    check_missing_countries(countries, corrected_countries)
     countries <- corrected_countries
     survey$participants <- survey$participants[country %in% countries]
     if (nrow(survey$participants) == 0) {
@@ -420,20 +393,7 @@ contact_matrix <- function(
         }
 
         ## check if any survey countries are not in wpp
-        missing.countries <- setdiff(
-          survey.countries,
-          unique(country.pop$country)
-        )
-        if (length(missing.countries) > 0) {
-          cli::cli_abort(
-            c(
-              "Could not find population data for {missing.countries}.",
-              # nolint start
-              "i" = "Use {.fn wpp_countries} to get a list of country names."
-              # nolint end
-            )
-          )
-        }
+        check_any_missing_countries(survey.countries, country.pop)
 
         ## get demographic data closest to survey year
         country.pop.year <- unique(country.pop[, year])
