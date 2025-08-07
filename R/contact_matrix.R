@@ -80,7 +80,7 @@ contact_matrix <- function(
   survey <- copy(survey)
 
   check_if_contact_survey(survey)
-  check_lower_age_limits_increasing(age.limits)
+  check_age_limits_increasing(age.limits)
 
   ## check if specific countries are requested (if a survey contains data from multiple countries)
   multiple_countries <- length(countries) > 0
