@@ -181,25 +181,21 @@ contact_matrix <- function(
     survey$contacts[, cnt_age := NA_integer_]
   }
 
-  ## convert factors to integers
-  for (age_column in c(
+  ## convert factors to integers, preserving numeric values
+  age_columns <- c(
     "cnt_age",
     "cnt_age_est_min",
     "cnt_age_est_max",
     "cnt_age_exact"
-  )) {
-    if (
-      age_column %in%
-        colnames(survey$contacts) &&
-        is.factor(survey$contacts[[age_column]])
-    ) {
-      survey$contacts[,
-        paste(age_column) := as.integer(levels(get(age_column)))[get(
-          age_column
-        )]
-      ]
-    }
-  }
+  )
+
+  which_factors <- sapply(survey$contacts, is.factor)
+  factor_cols <- intersect(age_columns, names(survey$contacts)[which_factors])
+
+  survey$contacts[,
+    (factor_cols) := lapply(.SD, function(x) as.integer(levels(x))[x]),
+    .SDcols = factor_cols
+  ]
 
   ## sample estimated contact ages
   if (
