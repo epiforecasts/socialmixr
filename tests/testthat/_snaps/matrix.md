@@ -159,58 +159,19 @@
 
 # warning is thrown if day of week is asked to be weighed but not present
 
-    Code
-      tmp <- contact_matrix(survey = polymod3, weigh.dayofweek = TRUE)
-    Message
-      Removing participants without age information.
-      i To change this behaviour, set the `missing.participant.age` option.
-      Removing participants that have contacts without age information.
-      i To change this behaviour, set the 'missing.contact.age' option.
-    Condition
-      Warning:
-      `weigh.dayofweek` is "TRUE", but no `dayofweek` column in the data.
-      i Will ignore.
+    `weigh.dayofweek` is "TRUE", but no `dayofweek` column in the data.
+    i Will ignore.
 
 # nonsensical operations are warned about
 
-    Code
-      tmp <- contact_matrix(survey = polymod, counts = TRUE, split = TRUE,
-        age.limits = c(0, 5))
-    Message
-      Removing participants without age information.
-      i To change this behaviour, set the `missing.participant.age` option.
-      Removing participants that have contacts without age information.
-      i To change this behaviour, set the 'missing.contact.age' option.
-    Condition
-      Warning:
-      `split = TRUE` does not make sense with `counts = TRUE`; will not split the contact matrix.
+    `split = TRUE` does not make sense with `counts = TRUE`; will not split the contact matrix.
 
 ---
 
-    Code
-      tmp <- contact_matrix(survey = polymod, counts = TRUE, symmetric = TRUE,
-        age.limits = c(0, 5))
-    Message
-      Removing participants without age information.
-      i To change this behaviour, set the `missing.participant.age` option.
-      Removing participants that have contacts without age information.
-      i To change this behaviour, set the 'missing.contact.age' option.
-    Condition
-      Warning:
-      `symmetric = TRUE` does not make sense with `counts = TRUE`; will not make matrix symmetric.
+    `symmetric = TRUE` does not make sense with `counts = TRUE`; will not make matrix symmetric.
 
 # warning is thrown if it is assumed that the survey is representative
 
-    Code
-      tmp <- contact_matrix(survey = polymod4, symmetric = TRUE, age.limits = c(0, 5,
-        15))
-    Message
-      Removing participants without age information.
-      i To change this behaviour, set the `missing.participant.age` option.
-      Removing participants that have contacts without age information.
-      i To change this behaviour, set the 'missing.contact.age' option.
-    Condition
-      Warning:
-      No `survey.pop` or `countries` given, and no `country` column found in the data.
-      i I don't know which population this is from (assuming the survey is representative).
+    No `survey.pop` or `countries` given, and no `country` column found in the data.
+    i I don't know which population this is from (assuming the survey is representative).
 
