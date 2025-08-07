@@ -52,12 +52,12 @@ list_surveys <- function(clear_cache = FALSE) {
   record_list <- record_list[, .SD[1], by = common_doi]
   ## order by date
   setkey(record_list, date)
-  return(record_list[, list(
+  record_list[, list(
     date_added = date,
     title,
     creator,
     url = identifier.2
-  )])
+  )]
 }
 
 #' List all countries contained in a survey
@@ -98,6 +98,5 @@ wpp_countries <- function() {
       "un",
       "country.name"
     ))
-  found_countries <- found_countries[!is.na(found_countries)]
-  return(found_countries)
+  found_countries[!is.na(found_countries)]
 }

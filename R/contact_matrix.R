@@ -189,7 +189,10 @@ contact_matrix <- function(
       cli::cli_inform(
         c(
           "Removing participants without age information.",
-          "i" = "To change this behaviour, set the {.code missing.participant.age} option."
+          # nolint start
+          "i" = "To change this behaviour, set the \\
+          {.code missing.participant.age} option."
+          # nolint end
         )
       )
     }
@@ -263,7 +266,9 @@ contact_matrix <- function(
       cli::cli_inform(
         c(
           "Removing participants that have contacts without age information.",
+          # nolint start
           "i" = "To change this behaviour, set the 'missing.contact.age' option."
+          # nolint end
         )
       )
     }
@@ -282,7 +287,9 @@ contact_matrix <- function(
       cli::cli_inform(
         c(
           "Ignore contacts without age information.",
+          # nolint start
           "i" = "To change this behaviour, set the 'missing.contact.age' option."
+          # nolint end
         )
       )
     }
@@ -370,22 +377,22 @@ contact_matrix <- function(
         ## survey population not given but countries requested from
         ## survey - get population data from those countries
         survey.countries <- countries
-      } else {
+      } else if ("country" %in% colnames(survey$participants)) {
         ## neither survey population nor country names given - try to
         ## guess country or countries surveyed from participant data
-        if ("country" %in% colnames(survey$participants)) {
-          survey.countries <- unique(survey$participants[, country])
-        } else {
-          cli::cli_warn(
-            c(
-              "No {.arg survey.pop} or {.arg countries} given, and no
+        survey.countries <- unique(survey$participants[, country])
+      } else {
+        cli::cli_warn(
+          c(
+            "No {.arg survey.pop} or {.arg countries} given, and no
               {.arg country} column found in the data.",
-              "i" = "I don't know which population this is from.",
-              "i" = "Assuming the survey is representative."
-            )
+            # nolint start
+            "i" = "I don't know which population this is from (assuming the \\
+              survey is representative)."
+            # nolint end
           )
-          survey.representative <- TRUE
-        }
+        )
+        survey.representative <- TRUE
       }
 
       if (!survey.representative) {
@@ -421,7 +428,9 @@ contact_matrix <- function(
           cli::cli_abort(
             c(
               "Could not find population data for {missing.countries}.",
+              # nolint start
               "i" = "Use {.fn wpp_countries} to get a list of country names."
+              # nolint end
             )
           )
         }
@@ -524,7 +533,9 @@ contact_matrix <- function(
         c(
           "{.code weigh.dayofweek} is {.val TRUE}, but no {.col dayofweek} \\
           column in the data.",
+          # nolint start
           "i" = "Will ignore."
+          # nolint end
         )
       )
     }
@@ -783,7 +794,9 @@ contact_matrix <- function(
         c(
           "{.code symmetric = TRUE} does not work with missing data; will \\
           not make matrix symmetric.",
+          # nolint start
           "i" = "{warning.suggestion}"
+          # nolint end
         )
       )
     } else {
@@ -807,10 +820,12 @@ contact_matrix <- function(
             "Large differences in the size of the sub-populations with the \\
             current age breaks are likely to result in artefacts after making \\
             the matrix symmetric.",
-            "i" = "Please reconsider the age breaks to obtain more equally \\
+            "!" = "Please reconsider the age breaks to obtain more equally \\
             sized sub-populations.",
+            # nolint start
             "i" = "Normalization factors: [{round(range(normalisation_fctr, \\
             na.rm = TRUE), digits = 1)}]"
+            # nolint end
           )
         )
       }
@@ -830,7 +845,7 @@ contact_matrix <- function(
         c(
           "{.code split = TRUE} does not work with missing data; will not
           split contact.matrix.",
-          "i" = "{warning.suggestion}"
+          "i" = "{warning.suggestion}" # nolint
         )
       )
       ret[["mean.contacts"]] <- NA
@@ -845,16 +860,19 @@ contact_matrix <- function(
         sum(survey.pop$population)
       spectrum.matrix <- weighted.matrix
       spectrum.matrix[is.na(spectrum.matrix)] <- 0
-      spectrum <- as.numeric(eigen(spectrum.matrix, only.values = TRUE)$values[
+      spectrum_val <- as.numeric(eigen(
+        spectrum.matrix,
+        only.values = TRUE
+      )$values[
         1
       ])
       ret[["mean.contacts"]] <- mean.contacts
-      ret[["normalisation"]] <- spectrum / mean.contacts
+      ret[["normalisation"]] <- spectrum_val / mean.contacts
 
       age.proportions <- survey.pop$population / sum(survey.pop$population)
       weighted.matrix <-
         diag(1 / nb.contacts) %*% weighted.matrix %*% diag(1 / age.proportions)
-      nb.contacts <- nb.contacts / spectrum
+      nb.contacts <- nb.contacts / spectrum_val
       ret[["contacts"]] <- nb.contacts
     }
   }

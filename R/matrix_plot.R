@@ -75,7 +75,7 @@ matrix_plot <- function(
   # get plot region for matrix and legend based on current graphical parameters
   # note: based on layout from fields::imagePlot
   char.size <- par()$cin[1] / par()$din[1] # get text character size
-  offset <- char.size * par()$mar[4] # space between legend and main plot
+  plot_offset <- char.size * par()$mar[4] # space between legend and main plot
 
   # set legends' plot region
   legend_plot_region <- par()$plt
@@ -92,13 +92,13 @@ matrix_plot <- function(
   main_plot_region <- par()$plt
   main_plot_region[2] <- min(
     main_plot_region[2],
-    legend_plot_region[1] - offset
+    legend_plot_region[1] - plot_offset
   )
 
   # defensive check for main and legends' plot region
   dp <- legend_plot_region[2] - legend_plot_region[1]
   legend_plot_region[1] <- min(
-    main_plot_region[2] + offset,
+    main_plot_region[2] + plot_offset,
     legend_plot_region[1]
   )
   legend_plot_region[2] <- legend_plot_region[1] + dp
