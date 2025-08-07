@@ -25,7 +25,7 @@ check_if_contact_survey <- function(
   }
 }
 
-check_lower_age_limits_increasing <- function(
+check_age_limits_increasing <- function(
   x,
   arg = rlang::caller_arg(x),
   call = rlang::caller_env()
