@@ -61,7 +61,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Funk</h4>
             
-            <h4 data-toc-skip class="date">2025-08-06</h4>
+            <h4 data-toc-skip class="date">2025-08-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
       <div class="d-none name"><code>socialmixr.Rmd</code></div>
@@ -263,7 +263,7 @@ to obtain a symmetric contact matrix that fulfills it, one can use</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Linearly estimating age group sizes from the 5-year bands.</span></span>
 <span><span class="co">#&gt; Warning: Large differences in the size of the sub-populations with the current age</span></span>
 <span><span class="co">#&gt; breaks are likely to result in artefacts after making the matrix symmetric.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please reconsider the age breaks to obtain more equally sized</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Please reconsider the age breaks to obtain more equally sized</span></span>
 <span><span class="co">#&gt;   sub-populations.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalization factors: [0.3 and 2.9]</span></span>
 <span><span class="co">#&gt; $matrix</span></span>
@@ -730,7 +730,7 @@ represented by
 <span><span class="va">P_day.of.week</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span> <span class="op">/</span> <span class="fl">7</span>, <span class="fl">2</span> <span class="op">/</span> <span class="fl">7</span><span class="op">)</span> <span class="op">*</span> <span class="fl">3000</span></span></code></pre></div>
 <p>This survey data results in an unweighted average number of
 contacts:</p>
-<pre><code><span><span class="co">#&gt; [1] "unweighted average number of contacts: 7.83"</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; unweighted average number of contacts: 7.83</span></span></code></pre>
 <p>and age-specific unweighted averages on the number of contacts:</p>
 <table class="table">
 <thead><tr class="header">
@@ -920,7 +920,7 @@ contacts:</p>
 </tr>
 </tbody>
 </table>
-<pre><code><span><span class="co">#&gt; [1] "weighted average number of contacts: 9.2"</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; weighted average number of contacts: 9.2</span></span></code></pre>
 <p>If the population-based weights are directly used in age-specific
 groups, the contact behavior of the 3 year-old participant, which
 participated during week day, is inflated due to the
@@ -1134,7 +1134,7 @@ weights on the population and age-group level:</p>
 </tr>
 </tbody>
 </table>
-<pre><code><span><span class="co">#&gt; [1] "weighted average number of contacts: 8.85"</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; weighted average number of contacts: 8.85</span></span></code></pre>
 <p>If the age-specific weights are directly used within the age groups,
 the contact behavior for age group B is inflated to unrealistic levels
 and the number of contacts for age group A is artificially low:</p>
@@ -1331,14 +1331,14 @@ average number of contacts, we end up with:</p>
 </tr>
 </tbody>
 </table>
-<pre><code><span><span class="co">#&gt; [1] "unweighted average number of contacts: 5.86"</span></span>
-<span><span class="co">#&gt; [1] "weighted average number of contacts: 13.86"</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; unweighted average number of contacts: 5.86</span></span>
+<span><span class="co">#&gt; weighted average number of contacts: 13.86</span></span></code></pre>
 <p>The single participant of 3 years of age has a very large influence
 on the weighted population average. As such, we propose to truncate the
 relative age-specific weights
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>
 at 3. As such, the weighted population average equals:</p>
-<pre><code><span><span class="co">#&gt; [1] "weighted average number of contacts after truncation: 10.28"</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; weighted average number of contacts after truncation: 10.28</span></span></code></pre>
 </div>
 </div>
 </div>
