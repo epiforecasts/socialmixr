@@ -20,13 +20,11 @@ flexible_countrycode <- function(countries) {
     yes = "iso2c",
     no = "country.name"
   )
-  corrected_countries <- suppressWarnings(
+  suppressWarnings(
     countrycode(
       sourcevar = countries,
       origin = coding_scheme,
       destination = "country.name"
     )
   )
-
-  return(corrected_countries)
 }

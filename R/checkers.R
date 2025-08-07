@@ -55,7 +55,9 @@ check_any_missing_countries <- function(
     cli::cli_abort(
       message = c(
         "Could not find population data for {missing_countries}.",
+        # nolint start
         "i" = "Use {.fn wpp_countries} to get a list of country names."
+        # nolint end
       ),
       call = call
     )
