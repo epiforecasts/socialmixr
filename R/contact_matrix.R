@@ -794,7 +794,9 @@ contact_matrix <- function(
         c(
           "{.code symmetric = TRUE} does not work with missing data; will \\
           not make matrix symmetric.",
-          "i" = "{warning.suggestion}" # nolint
+          # nolint start
+          "i" = "{warning.suggestion}"
+          # nolint end
         )
       )
     } else {

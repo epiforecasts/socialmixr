@@ -98,7 +98,5 @@ wpp_countries <- function() {
       "un",
       "country.name"
     ))
-  found_countries <- found_countries[!is.na(found_countries)]
-
-  found_countries
+  found_countries[!is.na(found_countries)]
 }

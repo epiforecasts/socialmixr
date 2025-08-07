@@ -23,7 +23,5 @@ get_citation <- function(x) {
     x$reference
   )
 
-  bref <- do.call(bibentry, ref)
-
-  bref
+  do.call(bibentry, ref)
 }
