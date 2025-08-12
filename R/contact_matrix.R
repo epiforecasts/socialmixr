@@ -144,26 +144,11 @@ contact_matrix <- function(
     is.na(cnt_age) | cnt_age >= min(age.limits),
   ]
 
-  if (
-    missing.contact.age == "remove" &&
-      nrow(survey$contacts[is.na(cnt_age)]) > 0
-  ) {
-    if (!missing.contact.age.set) {
-      cli::cli_inform(
-        c(
-          "Removing participants that have contacts without age information.",
-          # nolint start
-          "i" = "To change this behaviour, set the 'missing.contact.age' option."
-          # nolint end
-        )
-      )
-    }
-    missing.age.id <- survey$contacts[
-      is.na(cnt_age),
-      part_id
-    ]
-    survey$participants <- survey$participants[!(part_id %in% missing.age.id)]
-  }
+  survey$participants <- drop_by_invalid_contact_age(
+    survey$contacts,
+    survey$participants,
+    missing.contact.age
+  )
 
   if (
     missing.contact.age == "ignore" &&

@@ -102,6 +102,26 @@ drop_invalid_ages <- function(
   participants
 }
 
+drop_by_invalid_contact_age <- function(
+  contacts,
+  participants,
+  missing.contact.age
+) {
+  if (missing.contact.age == "remove" && nrow(contacts[is.na(cnt_age)]) > 0) {
+    cli::cli_inform(
+      c(
+        "Removing participants that have contacts without age information.",
+        # nolint start
+        "i" = "To change this behaviour, set the 'missing.contact.age' option."
+        # nolint end
+      )
+    )
+    missing.age.id <- contacts[is.na(cnt_age), part_id]
+    participants <- participants[!(part_id %in% missing.age.id)]
+  }
+  participants
+}
+
 ## convert factors to integers, preserving numeric values
 convert_factor_to_integer <- function(
   contacts,
