@@ -109,18 +109,7 @@ contact_matrix <- function(
     estimated.participant.age
   )
 
-  if ("part_age_est_max" %in% colnames(survey$participants)) {
-    max.age <- max(
-      c(
-        survey$participants[, part_age_exact],
-        survey$participants[, part_age_est_max]
-      ),
-      na.rm = TRUE
-    ) +
-      1
-  } else {
-    max.age <- max(survey$participants[, part_age], na.rm = TRUE) + 1
-  }
+  max.age <- calculate_max_age(survey$participants)
 
   if (missing(age.limits)) {
     all.ages <- unique(as.integer(survey$participants[, part_age]))
