@@ -67,8 +67,7 @@ contact_matrix <- function(
   dot.args <- list(...)
   check_arg_dots_in(dot.args, check.contact_survey, pop_age)
 
-  ## record if 'missing.participant.age' and 'missing.contact.age' are set, for later
-  missing.participant.age.set <- !missing(missing.participant.age)
+  ## record if and 'missing.contact.age' are set, for later
   missing.contact.age.set <- !missing(missing.contact.age)
 
   ## read arguments
@@ -113,28 +112,11 @@ contact_matrix <- function(
 
   age.limits <- age.limits %||% set_age_limits(survey$participants)
 
-  if (
-    missing.participant.age == "remove" &&
-      nrow(survey$participants[
-        is.na(part_age) | part_age < min(age.limits)
-      ]) >
-        0
-  ) {
-    if (!missing.participant.age.set) {
-      cli::cli_inform(
-        c(
-          "Removing participants without age information.",
-          # nolint start
-          "i" = "To change this behaviour, set the \\
-          {.code missing.participant.age} option."
-          # nolint end
-        )
-      )
-    }
-    survey$participants <- survey$participants[
-      !is.na(part_age) & part_age >= min(age.limits)
-    ]
-  }
+  survey$participants <- drop_invalid_ages(
+    survey$participants,
+    missing.participant.age,
+    age.limits
+  )
 
   ## set contact age if it's not in the data
   if ("cnt_age_exact" %in% colnames(survey$contacts)) {

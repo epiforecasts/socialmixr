@@ -51,3 +51,19 @@ set_age_limits <- function(participants) {
   age.limits <- union(0, all.ages)
   age.limits
 }
+
+drop_invalid_ages <- function(
+  participants,
+  missing.participant.age,
+  age.limits
+) {
+  if (
+    missing.participant.age == "remove" &&
+      nrow(participants[is.na(part_age) | part_age < min(age.limits)]) > 0
+  ) {
+    participants <- participants[
+      !is.na(part_age) & part_age >= min(age.limits)
+    ]
+  }
+  participants
+}
