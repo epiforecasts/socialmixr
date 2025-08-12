@@ -104,30 +104,10 @@ contact_matrix <- function(
   }
 
   ## sample estimated participant ages
-  if (
-    "part_age_est_min" %in%
-      colnames(survey$participants) &&
-      "part_age_est_max" %in% colnames(survey$participants)
-  ) {
-    if (estimated.participant.age == "mean") {
-      survey$participants[
-        is.na(part_age_exact) &
-          !is.na(part_age_est_min) &
-          !is.na(part_age_est_max),
-        part_age := as.integer(rowMeans(.SD)),
-        .SDcols = c("part_age_est_min", "part_age_est_max")
-      ]
-    } else if (estimated.participant.age == "sample") {
-      survey$participants[
-        is.na(part_age) &
-          !is.na(part_age_est_min) &
-          !is.na(part_age_est_max) &
-          part_age_est_min <= part_age_est_max,
-        part_age := as.integer(runif(.N, part_age_est_min, part_age_est_max))
-      ]
-    }
-    # note: do nothing when "missing" is specified
-  }
+  survey$participants <- sample_participant_ages(
+    data = survey$participants,
+    estimated.participant.age
+  )
 
   if ("part_age_est_max" %in% colnames(survey$participants)) {
     max.age <- max(
