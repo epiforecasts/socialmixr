@@ -51,6 +51,21 @@ sample_contact_ages <- function(contacts, estimated.contact.age) {
   contacts
 }
 
+drop_contact_ages <- function(contacts, missing.contact.age) {
+  if (missing.contact.age == "ignore" && nrow(contacts[is.na(cnt_age)]) > 0) {
+    cli::cli_inform(
+      c(
+        "Ignore contacts without age information.",
+        # nolint start
+        "i" = "To change this behaviour, set the 'missing.contact.age' option."
+        # nolint end
+      )
+    )
+    contacts <- contacts[!is.na(cnt_age), ]
+  }
+  contacts
+}
+
 
 calculate_max_age <- function(data) {
   if ("part_age_est_max" %in% colnames(data)) {

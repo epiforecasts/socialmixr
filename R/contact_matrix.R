@@ -150,22 +150,7 @@ contact_matrix <- function(
     missing.contact.age
   )
 
-  if (
-    missing.contact.age == "ignore" &&
-      nrow(survey$contacts[is.na(cnt_age)]) > 0
-  ) {
-    if (!missing.contact.age.set) {
-      cli::cli_inform(
-        c(
-          "Ignore contacts without age information.",
-          # nolint start
-          "i" = "To change this behaviour, set the 'missing.contact.age' option."
-          # nolint end
-        )
-      )
-    }
-    survey$contacts <- survey$contacts[!is.na(cnt_age), ]
-  }
+  survey$contacts <- drop_contact_ages(survey$contacts, missing.contact.age)
 
   ## check if any filters have been requested
   if (!missing(filter)) {
