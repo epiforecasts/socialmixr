@@ -61,6 +61,16 @@ drop_invalid_ages <- function(
     missing.participant.age == "remove" &&
       nrow(participants[is.na(part_age) | part_age < min(age.limits)]) > 0
   ) {
+    cli::cli_inform(
+      message = c(
+        "Removing participants without age information.",
+        # nolint start
+        "i" = "To change this behaviour, set the \\
+          {.code missing.participant.age} option."
+        # nolint end
+      )
+    )
+
     participants <- participants[
       !is.na(part_age) & part_age >= min(age.limits)
     ]
