@@ -87,8 +87,6 @@ contact_matrix <- function(
   country_col_in_participants <- "country" %in% colnames(survey$participants)
   if (multiple_countries && country_col_in_participants) {
     corrected_countries <- flexible_countrycode(countries)
-    present_countries <- unique(as.character(survey$participants$country))
-    missing_countries <- countries[which(is.na(corrected_countries))]
     check_missing_countries(countries, corrected_countries)
     countries <- corrected_countries
     survey$participants <- survey$participants[country %in% countries]
