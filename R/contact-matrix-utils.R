@@ -43,3 +43,11 @@ calculate_max_age <- function(data) {
   }
   max.age
 }
+
+set_age_limits <- function(participants) {
+  all.ages <- unique(as.integer(participants[, part_age]))
+  all.ages <- all.ages[!is.na(all.ages)]
+  all.ages <- sort(all.ages)
+  age.limits <- union(0, all.ages)
+  age.limits
+}
