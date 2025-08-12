@@ -28,6 +28,30 @@ sample_participant_ages <- function(
   ret %||% data
 }
 
+sample_contact_ages <- function(contacts, estimated.contact.age) {
+  age_cols_in_data <- hasName(contacts, c("cnt_age_est_min", "cnt_age_est_max"))
+  if (all(age_cols_in_data)) {
+    if (estimated.contact.age == "mean") {
+      contacts <- contacts[
+        is.na(cnt_age) & !is.na(cnt_age_est_min) & !is.na(cnt_age_est_max),
+        cnt_age := as.integer(rowMeans(.SD)),
+        .SDcols = c("cnt_age_est_min", "cnt_age_est_max")
+      ]
+    } else if (estimated.contact.age == "sample") {
+      contacts <- contacts[
+        is.na(cnt_age) &
+          !is.na(cnt_age_est_min) &
+          !is.na(cnt_age_est_max) &
+          cnt_age_est_min <= cnt_age_est_max,
+        cnt_age := as.integer(runif(.N, cnt_age_est_min, cnt_age_est_max))
+      ]
+    }
+    # note: do nothing when "missing" is specified
+  }
+  contacts
+}
+
+
 calculate_max_age <- function(data) {
   if ("part_age_est_max" %in% colnames(data)) {
     max.age <- max(

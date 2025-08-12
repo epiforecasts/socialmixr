@@ -137,28 +137,7 @@ contact_matrix <- function(
   )
 
   ## sample estimated contact ages
-  if (
-    "cnt_age_est_min" %in%
-      colnames(survey$contacts) &&
-      "cnt_age_est_max" %in% colnames(survey$contacts)
-  ) {
-    if (estimated.contact.age == "mean") {
-      survey$contacts[
-        is.na(cnt_age) & !is.na(cnt_age_est_min) & !is.na(cnt_age_est_max),
-        cnt_age := as.integer(rowMeans(.SD)),
-        .SDcols = c("cnt_age_est_min", "cnt_age_est_max")
-      ]
-    } else if (estimated.contact.age == "sample") {
-      survey$contacts[
-        is.na(cnt_age) &
-          !is.na(cnt_age_est_min) &
-          !is.na(cnt_age_est_max) &
-          cnt_age_est_min <= cnt_age_est_max,
-        cnt_age := as.integer(runif(.N, cnt_age_est_min, cnt_age_est_max))
-      ]
-    }
-    # note: do nothing when "missing" is specified
-  }
+  survey$contacts <- sample_contact_ages(survey$contacts, estimated.contact.age)
 
   # remove contact ages below the age limit, before dealing with missing contact ages
   survey$contacts <- survey$contacts[
