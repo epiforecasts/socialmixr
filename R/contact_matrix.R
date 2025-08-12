@@ -141,8 +141,7 @@ contact_matrix <- function(
 
   # remove contact ages below the age limit, before dealing with missing contact ages
   survey$contacts <- survey$contacts[
-    is.na(cnt_age) |
-      cnt_age >= min(age.limits),
+    is.na(cnt_age) | cnt_age >= min(age.limits),
   ]
 
   if (
