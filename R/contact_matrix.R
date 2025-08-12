@@ -765,13 +765,10 @@ contact_matrix <- function(
   }
 
   ## get number of participants in each age group
-  if (anyNA(survey$participants$age.group)) {
-    useNA <- "always"
-  } else {
-    useNA <- "no"
-  }
-
-  part.pop <- data.table(table(survey$participants[, age.group], useNA = useNA))
+  part.pop <- data.table(table(
+    survey$participants[, age.group],
+    useNA = "ifany"
+  ))
   setnames(part.pop, c("age.group", "participants"))
   part.pop[, proportion := participants / sum(participants)]
 
