@@ -67,3 +67,17 @@ drop_invalid_ages <- function(
   }
   participants
 }
+
+## convert factors to integers, preserving numeric values
+convert_factor_to_integer <- function(
+  contacts,
+  cols
+) {
+  which_factors <- sapply(contacts, is.factor)
+  factor_cols <- intersect(cols, names(contacts)[which_factors])
+
+  contacts[,
+    (factor_cols) := lapply(.SD, function(x) as.integer(levels(x))[x]),
+    .SDcols = factor_cols
+  ]
+}
