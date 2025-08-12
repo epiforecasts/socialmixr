@@ -67,9 +67,6 @@ contact_matrix <- function(
   dot.args <- list(...)
   check_arg_dots_in(dot.args, check.contact_survey, pop_age)
 
-  ## record if and 'missing.contact.age' are set, for later
-  missing.contact.age.set <- !missing(missing.contact.age)
-
   ## read arguments
   estimated.participant.age <- match.arg(estimated.participant.age)
   estimated.contact.age <- match.arg(estimated.contact.age)
