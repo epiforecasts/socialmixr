@@ -91,13 +91,7 @@ contact_matrix <- function(
     }
   }
 
-  if ("part_age_exact" %in% colnames(survey$participants)) {
-    survey$participants[,
-      part_age := as.integer(part_age_exact)
-    ]
-  } else if (!("part_age" %in% colnames(survey$participants))) {
-    survey$participants[, part_age := NA_integer_]
-  }
+  survey$participants <- set_part_age(survey$participants)
 
   ## sample estimated participant ages
   survey$participants <- sample_participant_ages(
@@ -116,11 +110,7 @@ contact_matrix <- function(
   )
 
   ## set contact age if it's not in the data
-  if ("cnt_age_exact" %in% colnames(survey$contacts)) {
-    survey$contacts[, cnt_age := as.integer(cnt_age_exact)]
-  } else {
-    survey$contacts[, cnt_age := NA_integer_]
-  }
+  survey$contacts <- set_contact_age(survey$contacts)
 
   ## convert factors to integers, preserving numeric values
   survey$contacts <- convert_factor_to_integer(
