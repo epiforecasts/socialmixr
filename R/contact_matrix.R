@@ -158,9 +158,9 @@ contact_matrix <- function(
       right = FALSE
     )
   ]
-  age.groups <- survey$participants[, levels(age.group)]
-  age.groups[length(age.groups)] <-
-    sub("\\[([0-9]+),.*$", "\\1+", age.groups[length(age.groups)])
+
+  age.groups <- age_group_labels(survey$participants)
+
   survey$participants[,
     age.group := factor(
       age.group,

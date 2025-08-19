@@ -203,3 +203,16 @@ apply_data_filter <- function(
   }
   survey
 }
+
+# converts from [0,1) [1,5) [5,15) [15,80) to [0,1) [1,5) [5,15) 15+
+final_age_group_label <- function(age.groups) {
+  age.groups[length(age.groups)] <-
+    sub("\\[([0-9]+),.*$", "\\1+", age.groups[length(age.groups)])
+  age.groups
+}
+
+age_group_labels <- function(participants) {
+  age.groups <- participants[, levels(age.group)]
+  age.groups <- final_age_group_label(age.groups)
+  age.groups
+}
