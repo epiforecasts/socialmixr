@@ -183,11 +183,13 @@ contact_matrix <- function(
     )
 
   ## if split, symmetric or age weights are requested, get demographic data (survey population)
-  need.survey.pop <- split ||
-    symmetric ||
-    weigh.age ||
-    (!is.na(return.demography) && return.demography) ||
+  need.survey.pop <- any(
+    split,
+    symmetric,
+    weigh.age,
+    isTRUE(return.demography),
     per.capita
+  )
   if (need.survey.pop) {
     ## check if survey population is either not given or given as a vector of countries
     if (missing(survey.pop) || is.character(survey.pop)) {
