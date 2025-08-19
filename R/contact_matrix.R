@@ -194,80 +194,14 @@ contact_matrix <- function(
   if (need.survey.pop) {
     ## check if survey population is either not given or given as a vector of countries
     if (missing(survey.pop) || is.character(survey.pop)) {
-      survey.representative <- FALSE
-      if (!missing(survey.pop)) {
-        ## survey population is given as vector of countries
-        survey.countries <- survey.pop
-      } else if (!missing(countries)) {
-        ## survey population not given but countries requested from
-        ## survey - get population data from those countries
-        survey.countries <- countries
-      } else if ("country" %in% colnames(survey$participants)) {
-        ## neither survey population nor country names given - try to
-        ## guess country or countries surveyed from participant data
-        survey.countries <- unique(survey$participants[, country])
-      } else {
-        cli::cli_warn(
-          c(
-            "No {.arg survey.pop} or {.arg countries} given, and no
-              {.arg country} column found in the data.",
-            # nolint start
-            "i" = "I don't know which population this is from (assuming the \\
-              survey is representative)."
-            # nolint end
-          )
-        )
-        survey.representative <- TRUE
-      }
-
-      if (!survey.representative) {
-        ## get population data for countries from 'wpp' package
-        country.pop <- data.table(wpp_age(survey.countries))
-
-        # !! warning: spelling can differ between wpp_age and wpp_countries (e.g. Viet Nam vs Vietnam)
-        # fix: rename countries using the same approach as in clean(survey,...)
-        country.pop$country <- suppressWarnings(countrycode(
-          country.pop$country,
-          "country.name",
-          "country.name"
-        ))
-
-        ## check if survey data are from a specific year - in that case
-        ## use demographic data from that year, otherwise latest
-        if ("year" %in% colnames(survey$participants)) {
-          survey.year <- survey$participants[, median(year, na.rm = TRUE)]
-        } else {
-          survey.year <- country.pop[, max(year, na.rm = TRUE)]
-          cli::cli_warn(
-            "No information on year found in the data. Will use
-            {survey.year} population data."
-          )
-        }
-
-        ## check if any survey countries are not in wpp
-        check_any_missing_countries(survey.countries, country.pop)
-
-        ## get demographic data closest to survey year
-        country.pop.year <- unique(country.pop[, year])
-        survey.year <-
-          min(country.pop.year[which.min(abs(survey.year - country.pop.year))])
-        survey.pop <-
-          country.pop[year == survey.year][,
-            list(population = sum(population)),
-            by = "lower.age.limit"
-          ]
-      }
-      if (survey.representative) {
-        survey.pop <-
-          survey$participants[,
-            lower.age.limit := reduce_agegroups(part_age, age.limits)
-          ]
-        survey.pop <- survey.pop[, list(population = .N), by = lower.age.limit]
-        survey.pop <- survey.pop[!is.na(lower.age.limit)]
-        if ("year" %in% colnames(survey$participants)) {
-          survey.year <- survey$participants[, median(year, na.rm = TRUE)]
-        }
-      }
+      survey_pop_info <- survey_pop_is_derived(
+        survey.pop,
+        countries,
+        survey$participants,
+        age.limits
+      )
+      survey.pop <- survey_pop_info$survey.pop
+      survey.year <- survey_pop_info$survey.year
     } else {
       # if survey.pop is a data frame with columns 'lower.age.limit' and 'population'
       survey.pop <- survey_pop_from_data(survey.pop, part.age.group.present)
