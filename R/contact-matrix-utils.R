@@ -314,3 +314,25 @@ survey_pop_is_derived <- function(
     survey.pop = survey.pop
   )
 }
+
+add_upper_age_limit <- function(survey.pop, part.age.group.present) {
+  # add upper.age.limit after sorting the survey.pop ages (and add maximum age > given ages)
+  survey.pop <- survey.pop[order(lower.age.limit), ]
+  # if any lower age limits are missing remove them
+  survey.pop <- survey.pop[!is.na(population)]
+  survey.pop$upper.age.limit <- unlist(c(
+    survey.pop[-1, "lower.age.limit"],
+    1 + max(survey.pop$lower.age.limit, part.age.group.present)
+  ))
+  survey.pop
+}
+
+adjust_survey_age_groups <- function(survey.pop, part.age.group.present, ...) {
+  survey.pop.max <- max(survey.pop$upper.age.limit)
+  survey.pop <- data.table(pop_age(survey.pop, part.age.group.present, ...))
+
+  ## set upper age limits
+  survey.pop[,
+    upper.age.limit := c(part.age.group.present[-1], survey.pop.max)
+  ]
+}

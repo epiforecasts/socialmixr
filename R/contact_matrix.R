@@ -210,38 +210,30 @@ contact_matrix <- function(
       survey.year <- NA_integer_
     }
 
-    # add upper.age.limit after sorting the survey.pop ages (and add maximum age > given ages)
-    survey.pop <- survey.pop[order(lower.age.limit), ]
-    # if any lower age limits are missing remove them
-    survey.pop <- survey.pop[!is.na(population)]
-    survey.pop$upper.age.limit <- unlist(c(
-      survey.pop[-1, "lower.age.limit"],
-      1 + max(survey.pop$lower.age.limit, part.age.group.present)
-    ))
+    survey.pop <- add_upper_age_limit(survey.pop, part.age.group.present)
 
     if (weigh.age) {
       ## keep reference of survey.pop
-      survey.pop.full <-
-        data.table(pop_age(
+      survey.pop.full <- data.table(
+        pop_age(
           survey.pop,
           seq(
             min(survey.pop$lower.age.limit),
             max(survey.pop$upper.age.limit)
           ),
           ...
-        ))
+        )
+      )
     }
 
     ## adjust age groups by interpolating, in case they don't match between
     ## demographic and survey data
-    survey.pop.max <- max(survey.pop$upper.age.limit)
-    survey.pop <- data.table(pop_age(survey.pop, part.age.group.present, ...))
-
-    ## set upper age limits
-    survey.pop[,
-      upper.age.limit := c(part.age.group.present[-1], survey.pop.max)
-    ]
-  } ## END of large if statement
+    survey.pop <- adjust_survey_age_groups(
+      survey.pop,
+      part.age.group.present,
+      ...
+    )
+  }
 
   ## weights
   survey$participants[, weight := 1]
