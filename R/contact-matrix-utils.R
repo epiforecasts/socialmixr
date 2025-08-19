@@ -168,3 +168,38 @@ convert_factor_to_integer <- function(
     .SDcols = factor_cols
   ]
 }
+
+## check if any filters have been requested
+apply_data_filter <- function(
+  survey,
+  survey_type,
+  filter,
+  call = rlang::caller_env()
+) {
+  if (!missing(filter)) {
+    missing_columns <- list()
+    for (table in survey_type) {
+      if (nrow(survey[[table]]) > 0) {
+        missing_columns <-
+          c(
+            missing_columns,
+            list(setdiff(names(filter), colnames(survey[[table]])))
+          )
+        ## filter contact data
+        for (column in names(filter)) {
+          if (column %in% colnames(survey[[table]])) {
+            survey[[table]] <- survey[[table]][get(column) == filter[[column]]]
+          }
+        }
+      }
+    }
+    missing_all <- do.call(intersect, missing_columns)
+    if (length(missing_all) > 0) {
+      cli::cli_warn(
+        message = "Filter columns {missing_all} not found.",
+        call = call
+      )
+    }
+  }
+  survey
+}

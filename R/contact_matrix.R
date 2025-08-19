@@ -62,7 +62,7 @@ contact_matrix <- function(
   per.capita = FALSE,
   ...
 ) {
-  surveys <- c("participants", "contacts")
+  survey_type <- c("participants", "contacts")
 
   dot.args <- list(...)
   check_arg_dots_in(dot.args, check.contact_survey, pop_age)
@@ -140,28 +140,7 @@ contact_matrix <- function(
   survey$contacts <- drop_contact_ages(survey$contacts, missing.contact.age)
 
   ## check if any filters have been requested
-  if (!missing(filter)) {
-    missing_columns <- list()
-    for (table in surveys) {
-      if (nrow(survey[[table]]) > 0) {
-        missing_columns <-
-          c(
-            missing_columns,
-            list(setdiff(names(filter), colnames(survey[[table]])))
-          )
-        ## filter contact data
-        for (column in names(filter)) {
-          if (column %in% colnames(survey[[table]])) {
-            survey[[table]] <- survey[[table]][get(column) == filter[[column]]]
-          }
-        }
-      }
-    }
-    missing_all <- do.call(intersect, missing_columns)
-    if (length(missing_all) > 0) {
-      cli::cli_warn("Filter columns {missing_all} not found.")
-    }
-  }
+  survey <- apply_data_filter(survey, survey_type, filter)
 
   # adjust age.group.brakes to the lower and upper ages in the survey
   survey$participants[,
