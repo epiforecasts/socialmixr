@@ -216,3 +216,15 @@ age_group_labels <- function(participants) {
   age.groups <- final_age_group_label(age.groups)
   age.groups
 }
+
+survey_pop_from_data <- function(survey.pop, part.age.group.present) {
+  survey.pop <- data.table(survey.pop)
+  # make sure the maximum survey.pop age exceeds the participant age group breaks
+  if (max(survey.pop$lower.age.limit) < max(part.age.group.present)) {
+    survey.pop <- rbind(
+      survey.pop,
+      list(max(part.age.group.present + 1), 0)
+    )
+  }
+  survey.pop
+}

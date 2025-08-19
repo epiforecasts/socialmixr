@@ -190,6 +190,7 @@ contact_matrix <- function(
     isTRUE(return.demography),
     per.capita
   )
+
   if (need.survey.pop) {
     ## check if survey population is either not given or given as a vector of countries
     if (missing(survey.pop) || is.character(survey.pop)) {
@@ -269,14 +270,7 @@ contact_matrix <- function(
       }
     } else {
       # if survey.pop is a data frame with columns 'lower.age.limit' and 'population'
-      survey.pop <- data.table(survey.pop)
-      # make sure the maximum survey.pop age exceeds the participant age group breaks
-      if (max(survey.pop$lower.age.limit) < max(part.age.group.present)) {
-        survey.pop <- rbind(
-          survey.pop,
-          list(max(part.age.group.present + 1), 0)
-        )
-      }
+      survey.pop <- survey_pop_from_data(survey.pop, part.age.group.present)
 
       # add dummy survey.year
       survey.year <- NA_integer_
@@ -313,7 +307,7 @@ contact_matrix <- function(
     survey.pop[,
       upper.age.limit := c(part.age.group.present[-1], survey.pop.max)
     ]
-  }
+  } ## END of large if statement
 
   ## weights
   survey$participants[, weight := 1]
