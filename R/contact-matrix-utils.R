@@ -374,3 +374,40 @@ weight_by_day_of_week <- function(
   }
   participants
 }
+
+weight_by_age <- function(participants, survey.pop.full) {
+  # get number and proportion of participants by age
+  participants[, age.count := .N, by = part_age]
+  participants[, age.proportion := age.count / .N]
+
+  # get reference population by age (absolute and proportional)
+  part.age.all <- range(unique(participants[, part_age]))
+  survey.pop.detail <- data.table(pop_age(
+    survey.pop.full,
+    seq(part.age.all[1], part.age.all[2] + 1)
+  ))
+  names(survey.pop.detail) <- c("part_age", "population.count")
+  survey.pop.detail[,
+    population.proportion := population.count / sum(population.count)
+  ]
+
+  # merge reference and survey population data
+  participants <- merge(
+    participants,
+    survey.pop.detail,
+    by = "part_age"
+  )
+
+  # calculate age-specific weights
+  participants[, weight.age := population.proportion / age.proportion]
+
+  # merge 'weight.age' into 'weight'
+  participants[, weight := weight * weight.age]
+
+  ## Remove the additional columns
+  participants[, age.count := NULL]
+  participants[, age.proportion := NULL]
+  participants[, population.count := NULL]
+  participants[, population.proportion := NULL]
+  participants[, weight.age := NULL]
+}

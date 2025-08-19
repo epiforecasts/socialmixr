@@ -245,40 +245,7 @@ contact_matrix <- function(
 
   ## assign weights to participants, to account for age variation
   if (weigh.age) {
-    # get number and proportion of participants by age
-    survey$participants[, age.count := .N, by = part_age]
-    survey$participants[, age.proportion := age.count / .N]
-
-    # get reference population by age (absolute and proportional)
-    part.age.all <- range(unique(survey$participants[, part_age]))
-    survey.pop.detail <- data.table(pop_age(
-      survey.pop.full,
-      seq(part.age.all[1], part.age.all[2] + 1)
-    ))
-    names(survey.pop.detail) <- c("part_age", "population.count")
-    survey.pop.detail[,
-      population.proportion := population.count / sum(population.count)
-    ]
-
-    # merge reference and survey population data
-    survey$participants <- merge(
-      survey$participants,
-      survey.pop.detail,
-      by = "part_age"
-    )
-
-    # calculate age-specific weights
-    survey$participants[, weight.age := population.proportion / age.proportion]
-
-    # merge 'weight.age' into 'weight'
-    survey$participants[, weight := weight * weight.age]
-
-    ## Remove the additional columns
-    survey$participants[, age.count := NULL]
-    survey$participants[, age.proportion := NULL]
-    survey$participants[, population.count := NULL]
-    survey$participants[, population.proportion := NULL]
-    survey$participants[, weight.age := NULL]
+    survey$participants <- weight_by_age(survey$participants, survey.pop.full)
   }
 
   ## option to weigh the contact data with user-defined participant weights
