@@ -240,36 +240,7 @@ contact_matrix <- function(
 
   ## assign weights to participants to account for weekend/weekday variation
   if (weigh.dayofweek) {
-    found.dayofweek <- FALSE
-    if ("dayofweek" %in% colnames(survey$participants)) {
-      ## Add column sum_weight: Number of entries on weekdays / weekends
-      survey$participants[,
-        sum_weight := nrow(.SD),
-        by = (dayofweek %in% 1:5),
-      ]
-
-      ## The sum of the weights on weekdays is 5
-      survey$participants[dayofweek %in% 1:5, weight := 5 / sum_weight]
-      ## The sum of the weights on weekend is 2
-      survey$participants[!(dayofweek %in% 1:5), weight := 2 / sum_weight]
-
-      survey$participants[, sum_weight := NULL]
-      found.dayofweek <- TRUE
-
-      # add boolean for "weekday"
-      survey$participants[, is.weekday := dayofweek %in% 1:5]
-    }
-    if (!found.dayofweek) {
-      cli::cli_warn(
-        c(
-          "{.code weigh.dayofweek} is {.val TRUE}, but no {.col dayofweek} \\
-          column in the data.",
-          # nolint start
-          "i" = "Will ignore."
-          # nolint end
-        )
-      )
-    }
+    survey$participants <- weight_by_day_of_week(survey$participants)
   }
 
   ## assign weights to participants, to account for age variation
@@ -391,7 +362,8 @@ contact_matrix <- function(
         ]
       }
     }
-    survey$contacts <- survey$contacts[!is.na(cnt_age), ] # make sure the final set does not contain NA's anymore
+    # make sure the final set does not contain NA's anymore
+    survey$contacts <- survey$contacts[!is.na(cnt_age), ]
   }
 
   ## set contact age groups

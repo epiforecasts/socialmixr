@@ -336,3 +336,41 @@ adjust_survey_age_groups <- function(survey.pop, part.age.group.present, ...) {
     upper.age.limit := c(part.age.group.present[-1], survey.pop.max)
   ]
 }
+
+weight_by_day_of_week <- function(
+  participants,
+  call = rlang::caller_env()
+) {
+  found.dayofweek <- FALSE
+  if ("dayofweek" %in% colnames(participants)) {
+    ## Add column sum_weight: Number of entries on weekdays / weekends
+    participants[,
+      sum_weight := nrow(.SD),
+      by = (dayofweek %in% 1:5),
+    ]
+
+    ## The sum of the weights on weekdays is 5
+    participants[dayofweek %in% 1:5, weight := 5 / sum_weight]
+    ## The sum of the weights on weekend is 2
+    participants[!(dayofweek %in% 1:5), weight := 2 / sum_weight]
+
+    participants[, sum_weight := NULL]
+    found.dayofweek <- TRUE
+
+    # add boolean for "weekday"
+    participants[, is.weekday := dayofweek %in% 1:5]
+  }
+  if (!found.dayofweek) {
+    cli::cli_warn(
+      message = c(
+        "{.code weigh.dayofweek} is {.val TRUE}, but no {.col dayofweek} \\
+          column in the data.",
+        # nolint start
+        "i" = "Will ignore."
+        # nolint end
+      ),
+      call = call
+    )
+  }
+  participants
+}
