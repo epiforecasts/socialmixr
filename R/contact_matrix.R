@@ -272,15 +272,14 @@ contact_matrix <- function(
   setkey(survey$participants, part_id)
   participant_ids <- unique(survey$participants$part_id)
 
-  survey$contacts <-
-    merge(
-      survey$contacts,
-      survey$participants,
-      by = "part_id",
-      all = FALSE,
-      allow.cartesian = TRUE,
-      suffixes = c(".cont", ".part")
-    )
+  survey$contacts <- merge(
+    survey$contacts,
+    survey$participants,
+    by = "part_id",
+    all = FALSE,
+    allow.cartesian = TRUE,
+    suffixes = c(".cont", ".part")
+  )
 
   setkey(survey$contacts, part_id)
 
@@ -388,12 +387,11 @@ contact_matrix <- function(
   }
 
   ## calculate weighted contact matrix
-  weighted.matrix <-
-    xtabs(
-      data = sampled.contacts,
-      formula = sampled.weight ~ age.group + contact.age.group,
-      addNA = TRUE
-    )
+  weighted.matrix <- xtabs(
+    data = sampled.contacts,
+    formula = sampled.weight ~ age.group + contact.age.group,
+    addNA = TRUE
+  )
 
   dims <- dim(weighted.matrix)
   dim.names <- dimnames(weighted.matrix)
