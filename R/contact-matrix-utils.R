@@ -636,10 +636,11 @@ normalise_weighted_matrix <- function(
   symmetric,
   counts,
   symmetric.norm.threshold,
-  warning.suggestion,
   call = rlang::caller_env()
 ) {
   na.present <- na_in_weighted_matrix(weighted.matrix)
+  ## construct a warning in case there are NAs
+  warning.suggestion <- build_na_warning(weighted.matrix)
 
   matrix_not_scalar <- prod(dim(as.matrix(weighted.matrix))) > 1
   if (symmetric && matrix_not_scalar) {
@@ -704,10 +705,12 @@ split_mean_norm_contacts <- function(
   split,
   counts,
   weighted.matrix,
-  warning.suggestion,
   survey.pop,
   call = rlang::caller_env()
 ) {
+  ## construct a warning in case there are NAs
+  warning.suggestion <- build_na_warning(weighted.matrix)
+
   if (split) {
     if (counts) {
       cli::cli_warn(
@@ -778,5 +781,45 @@ matrix_per_capita <- function(ret, weighted.matrix, survey.pop, counts, split) {
       )
     ret[["matrix.per.capita"]] <- weighted.matrix.per.capita
   }
+  ret
+}
+
+participant_weights <- function(
+  ret,
+  survey_participants,
+  weigh.age,
+  weigh.dayofweek
+) {
+  # default
+  part.weights <- survey_participants[, .N, by = list(age.group, weight)]
+  part.weights <- part.weights[order(age.group, weight), ]
+
+  # add age and/or dayofweek info
+  if (weigh.age && weigh.dayofweek) {
+    part.weights <- survey_participants[,
+      .N,
+      by = list(age.group, participant.age = part_age, is.weekday, weight)
+    ]
+  } else if (weigh.age) {
+    part.weights <- survey_participants[,
+      .N,
+      by = list(age.group, participant.age = part_age, weight)
+    ]
+  } else if (weigh.dayofweek) {
+    part.weights <- survey_participants[,
+      .N,
+      by = list(age.group, is.weekday, weight)
+    ]
+  }
+
+  # order (from left to right)
+  part.weights <- part.weights[order(part.weights), ] # nolint
+
+  # set name of last column
+  names(part.weights)[ncol(part.weights)] <- "participants"
+
+  # add proportion and add to ret
+  part.weights[, proportion := participants / sum(participants)]
+  ret[["participants.weights"]] <- part.weights[]
   ret
 }
