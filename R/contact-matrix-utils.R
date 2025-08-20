@@ -466,3 +466,27 @@ impute_age_by_sample <- function(contacts) {
 
   contacts
 }
+
+## set contact age groups
+set_contact_age_groups <- function(
+  contacts,
+  part.age.group.breaks,
+  age.groups
+) {
+  max.contact.age <- contacts[, max(cnt_age, na.rm = TRUE) + 1]
+
+  contact.age.group.breaks <- part.age.group.breaks
+  if (max.contact.age > max(contact.age.group.breaks)) {
+    contact.age.group.breaks[length(
+      contact.age.group.breaks
+    )] <- max.contact.age
+  }
+  contacts[,
+    contact.age.group := cut(
+      cnt_age,
+      breaks = contact.age.group.breaks,
+      labels = age.groups,
+      right = FALSE
+    )
+  ]
+}

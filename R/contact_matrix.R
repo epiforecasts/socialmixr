@@ -285,22 +285,11 @@ contact_matrix <- function(
   }
 
   ## set contact age groups
-  max.contact.age <- survey$contacts[, max(cnt_age, na.rm = TRUE) + 1]
-
-  contact.age.group.breaks <- part.age.group.breaks
-  if (max.contact.age > max(contact.age.group.breaks)) {
-    contact.age.group.breaks[length(
-      contact.age.group.breaks
-    )] <- max.contact.age
-  }
-  survey$contacts[,
-    contact.age.group := cut(
-      cnt_age,
-      breaks = contact.age.group.breaks,
-      labels = age.groups,
-      right = FALSE
-    )
-  ]
+  survey$contacts <- set_contact_age_groups(
+    survey$contacts,
+    part.age.group.breaks,
+    age.groups
+  )
 
   ret <- list()
   if (sample.participants) {
