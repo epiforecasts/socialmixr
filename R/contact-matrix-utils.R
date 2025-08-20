@@ -563,3 +563,21 @@ get_sampled_contacts_participants <- function(
   }
   sampled_contacts_participants
 }
+
+normalise_weights_to_counts <- function(sampled.participants, weighted.matrix) {
+  ## normalise to give mean number of contacts
+  ## calculate normalisation vector
+  norm.vector <- c(xtabs(
+    data = sampled.participants,
+    formula = sampled.weight ~ age.group,
+    addNA = TRUE
+  ))
+
+  ## normalise contact matrix
+  weighted.matrix <- weighted.matrix / norm.vector
+
+  ## set non-existent data to NA
+  weighted.matrix[is.nan(weighted.matrix)] <- NA_real_
+
+  weighted.matrix
+}
