@@ -401,14 +401,12 @@ contact_matrix <- function(
         will not return the contact matrix per capita."
       )
     } else {
-      survey.pop$population
       weighted.matrix.per.capita <- weighted.matrix /
         matrix(
           rep(survey.pop$population, nrow(survey.pop)),
           ncol = nrow(survey.pop),
           byrow = TRUE
         )
-      weighted.matrix.per.capita
       ret[["matrix.per.capita"]] <- weighted.matrix.per.capita
     }
   }
