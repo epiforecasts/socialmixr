@@ -421,3 +421,48 @@ weigh_by_user_defined <- function(participants, weights) {
   }
   participants
 }
+
+## some contacts in the age group have an age, sample from these
+sample_present_age <- function(contacts, this.age.group) {
+  contacts[
+    is.na(cnt_age) & age.group == this.age.group,
+    cnt_age := sample(
+      contacts[
+        !is.na(cnt_age) & age.group == this.age.group,
+        cnt_age
+      ],
+      size = .N,
+      replace = TRUE
+    )
+  ]
+}
+
+sample_uniform_age <- function(contacts, this.age.group) {
+  min.contact.age <- contacts[, min(cnt_age, na.rm = TRUE)]
+  max.contact.age <- contacts[, max(cnt_age, na.rm = TRUE)]
+  contacts[
+    is.na(cnt_age) & age.group == this.age.group,
+    cnt_age := as.integer(floor(runif(
+      .N,
+      min = min.contact.age,
+      max = max.contact.age + 1
+    )))
+  ]
+}
+
+impute_age_by_sample <- function(contacts) {
+  for (this.age.group in unique(contacts[is.na(cnt_age), age.group])) {
+    ## first, deal with missing age
+    if (nrow(contacts[!is.na(cnt_age) & age.group == this.age.group]) > 0) {
+      ## some contacts in the age group have an age, sample from these
+      contacts <- sample_present_age(contacts, this.age.group)
+    } else if (nrow(contacts[!is.na(cnt_age), ]) > 0) {
+      ## no contacts in the age group have an age, sample uniformly between limits
+      contacts <- sample_uniform_age(contacts, this.age.group)
+    }
+  }
+  # make sure the final set does not contain NA's anymore
+  contacts <- contacts[!is.na(cnt_age), ]
+
+  contacts
+}

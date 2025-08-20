@@ -279,52 +279,9 @@ contact_matrix <- function(
   setkey(survey$contacts, part_id)
 
   ## sample contacts
-  if (
-    missing.contact.age == "sample" &&
-      nrow(survey$contacts[is.na(cnt_age)]) > 0
-  ) {
-    for (this.age.group in unique(survey$contacts[is.na(cnt_age), age.group])) {
-      ## first, deal with missing age
-      if (
-        nrow(survey$contacts[
-          !is.na(cnt_age) &
-            age.group == this.age.group
-        ]) >
-          0
-      ) {
-        ## some contacts in the age group have an age, sample from these
-        survey$contacts[
-          is.na(cnt_age) &
-            age.group == this.age.group,
-          cnt_age := sample(
-            survey$contacts[
-              !is.na(cnt_age) &
-                age.group == this.age.group,
-              cnt_age
-            ],
-            size = .N,
-            replace = TRUE
-          )
-        ]
-      } else if (nrow(survey$contacts[!is.na(cnt_age), ]) > 0) {
-        ## no contacts in the age group have an age, sample uniformly between limits
-        min.contact.age <-
-          survey$contacts[, min(cnt_age, na.rm = TRUE)]
-        max.contact.age <-
-          survey$contacts[, max(cnt_age, na.rm = TRUE)]
-        survey$contacts[
-          is.na(cnt_age) &
-            age.group == this.age.group,
-          cnt_age := as.integer(floor(runif(
-            .N,
-            min = min.contact.age,
-            max = max.contact.age + 1
-          )))
-        ]
-      }
-    }
-    # make sure the final set does not contain NA's anymore
-    survey$contacts <- survey$contacts[!is.na(cnt_age), ]
+  missing_contact_age <- nrow(survey$contacts[is.na(cnt_age)]) > 0
+  if (missing.contact.age == "sample" && missing_contact_age) {
+    survey$contacts <- impute_age_by_sample(survey$contacts)
   }
 
   ## set contact age groups
