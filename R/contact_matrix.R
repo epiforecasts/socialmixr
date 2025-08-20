@@ -332,33 +332,7 @@ contact_matrix <- function(
   na.content <- anyNA(weighted.matrix)
   na.present <- na.headers || na.content
 
-  if (na.present) {
-    warning.suggestion <- "  Consider "
-    if (na.headers) {
-      warning.suggestion <- paste0(warning.suggestion, "setting ")
-      suggested.options <- NULL
-      if (anyNA(rownames(weighted.matrix))) {
-        suggested.options <- c(suggested.options, "'missing.participant.age'")
-      }
-      if (anyNA(colnames(weighted.matrix))) {
-        suggested.options <- c(suggested.options, "'missing.contact.age'")
-      }
-
-      warning.suggestion <-
-        paste0(warning.suggestion, paste(suggested.options, collapse = " and "))
-      if (na.content) {
-        warning.suggestion <- paste0(warning.suggestion, ", and ")
-      } else {
-        warning.suggestion <- paste0(warning.suggestion, ".")
-      }
-    }
-    if (na.content) {
-      warning.suggestion <- paste0(
-        warning.suggestion,
-        "adjusting the age limits."
-      )
-    }
-  }
+  warning.suggestion <- build_na_warning(weighted.matrix)
 
   if (symmetric && prod(dim(as.matrix(weighted.matrix))) > 1) {
     if (counts) {

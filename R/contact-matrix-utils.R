@@ -581,3 +581,40 @@ normalise_weights_to_counts <- function(sampled.participants, weighted.matrix) {
 
   weighted.matrix
 }
+
+## construct a warning in case there are NAs
+build_na_warning <- function(weighted.matrix) {
+  na.headers <- anyNA(dimnames(weighted.matrix), recursive = TRUE)
+  na.content <- anyNA(weighted.matrix)
+  na.present <- na.headers || na.content
+
+  warning.suggestion <- NULL
+  if (na.present) {
+    warning.suggestion <- "  Consider "
+    if (na.headers) {
+      warning.suggestion <- paste0(warning.suggestion, "setting ")
+      suggested.options <- NULL
+      if (anyNA(rownames(weighted.matrix))) {
+        suggested.options <- c(suggested.options, "'missing.participant.age'")
+      }
+      if (anyNA(colnames(weighted.matrix))) {
+        suggested.options <- c(suggested.options, "'missing.contact.age'")
+      }
+
+      warning.suggestion <-
+        paste0(warning.suggestion, paste(suggested.options, collapse = " and "))
+      if (na.content) {
+        warning.suggestion <- paste0(warning.suggestion, ", and ")
+      } else {
+        warning.suggestion <- paste0(warning.suggestion, ".")
+      }
+    }
+    if (na.content) {
+      warning.suggestion <- paste0(
+        warning.suggestion,
+        "adjusting the age limits."
+      )
+    }
+  }
+  warning.suggestion
+}
