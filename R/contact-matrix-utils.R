@@ -233,7 +233,8 @@ survey_pop_is_derived <- function(
   survey.pop,
   countries,
   participants,
-  age.limits
+  age.limits,
+  call = rlang::caller_env()
 ) {
   survey.representative <- FALSE
   if (!missing(survey.pop)) {
@@ -249,14 +250,15 @@ survey_pop_is_derived <- function(
     survey.countries <- unique(participants[, country])
   } else {
     cli::cli_warn(
-      c(
+      message = c(
         "No {.arg survey.pop} or {.arg countries} given, and no
               {.arg country} column found in the data.",
         # nolint start
         "i" = "I don't know which population this is from (assuming the \\
               survey is representative)."
         # nolint end
-      )
+      ),
+      call = call
     )
     survey.representative <- TRUE
   }
@@ -634,7 +636,8 @@ normalise_weighted_matrix <- function(
   symmetric,
   counts,
   symmetric.norm.threshold,
-  warning.suggestion
+  warning.suggestion,
+  call = rlang::caller_env()
 ) {
   na.present <- na_in_weighted_matrix(weighted.matrix)
 
@@ -642,18 +645,20 @@ normalise_weighted_matrix <- function(
   if (symmetric && matrix_not_scalar) {
     if (counts) {
       cli::cli_warn(
-        "{.code symmetric = TRUE} does not make sense with
-        {.code counts = TRUE}; will not make matrix symmetric."
+        message = "{.code symmetric = TRUE} does not make sense with
+        {.code counts = TRUE}; will not make matrix symmetric.",
+        call = call
       )
     } else if (na.present) {
       cli::cli_warn(
-        c(
+        message = c(
           "{.code symmetric = TRUE} does not work with missing data; will \\
           not make matrix symmetric.",
           # nolint start
           "i" = "{warning.suggestion}"
           # nolint end
-        )
+        ),
+        call = call
       )
     } else {
       ## set c_{ij} N_i and c_{ji} N_j (which should both be equal) to
@@ -672,7 +677,7 @@ normalise_weighted_matrix <- function(
       ]
       if (any(normalisation_fctr > symmetric.norm.threshold)) {
         cli::cli_warn(
-          c(
+          message = c(
             "Large differences in the size of the sub-populations with the \\
             current age breaks are likely to result in artefacts after making \\
             the matrix symmetric.",
@@ -682,7 +687,8 @@ normalise_weighted_matrix <- function(
             "i" = "Normalization factors: [{round(range(normalisation_fctr, \\
             na.rm = TRUE), digits = 1)}]"
             # nolint end
-          )
+          ),
+          call = call
         )
       }
       # update weighted.matrix
