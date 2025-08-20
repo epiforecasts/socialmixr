@@ -698,3 +698,62 @@ normalise_weighted_matrix <- function(
 
   weighted.matrix
 }
+
+split_mean_norm_contacts <- function(
+  ret,
+  split,
+  counts,
+  weighted.matrix,
+  warning.suggestion,
+  survey.pop,
+  call = rlang::caller_env()
+) {
+  if (split) {
+    if (counts) {
+      cli::cli_warn(
+        message = "{.code split = TRUE} does not make sense with {.code counts = TRUE}; \\
+        will not split the contact matrix.",
+        call = call
+      )
+    } else if (na_in_weighted_matrix(weighted.matrix)) {
+      cli::cli_warn(
+        message = c(
+          "{.code split = TRUE} does not work with missing data; will not
+          split contact.matrix.",
+          "i" = "{warning.suggestion}" # nolint
+        ),
+        call = call
+      )
+      ret[["mean.contacts"]] <- NA
+      ret[["normalisation"]] <- NA
+      ret[["contacts"]] <- rep(NA, nrow(weighted.matrix))
+    } else {
+      ## get rid of name but preserve row and column names
+      weighted.matrix <- unname(weighted.matrix)
+
+      nb.contacts <- rowSums(weighted.matrix)
+      mean.contacts <- sum(survey.pop$population * nb.contacts) /
+        sum(survey.pop$population)
+      spectrum.matrix <- weighted.matrix
+      spectrum.matrix[is.na(spectrum.matrix)] <- 0
+      spectrum_val <- as.numeric(eigen(
+        spectrum.matrix,
+        only.values = TRUE
+      )$values[
+        1
+      ])
+      ret[["mean.contacts"]] <- mean.contacts
+      ret[["normalisation"]] <- spectrum_val / mean.contacts
+
+      age.proportions <- survey.pop$population / sum(survey.pop$population)
+      weighted.matrix <-
+        diag(1 / nb.contacts) %*% weighted.matrix %*% diag(1 / age.proportions)
+      nb.contacts <- nb.contacts / spectrum_val
+      ret[["contacts"]] <- nb.contacts
+    }
+  }
+  list(
+    weighted.matrix = weighted.matrix,
+    ret = ret
+  )
+}
