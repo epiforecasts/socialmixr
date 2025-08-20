@@ -326,9 +326,6 @@ contact_matrix <- function(
     )
   }
 
-  ## construct a warning in case there are NAs
-  warning.suggestion <- build_na_warning(weighted.matrix)
-
   # only happens if symmetric && matrix_not_scalar
   # (matrix_not_scalar <- prod(dim(as.matrix(weighted.matrix))) > 1)
   weighted.matrix <- normalise_weighted_matrix(
@@ -336,8 +333,7 @@ contact_matrix <- function(
     weighted.matrix,
     symmetric,
     counts,
-    symmetric.norm.threshold,
-    warning.suggestion
+    symmetric.norm.threshold
   )
 
   ret <- list()
@@ -347,7 +343,6 @@ contact_matrix <- function(
     split,
     counts,
     weighted.matrix,
-    warning.suggestion,
     survey.pop,
   )
   weighted.matrix <- splitted$weighted.matrix
