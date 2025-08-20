@@ -618,3 +618,77 @@ build_na_warning <- function(weighted.matrix) {
   }
   warning.suggestion
 }
+
+na_in_weighted_matrix <- function(weighted.matrix) {
+  na.headers <- anyNA(dimnames(weighted.matrix), recursive = TRUE)
+  na.content <- anyNA(weighted.matrix)
+  na.present <- na.headers || na.content
+
+  na.present
+}
+
+
+normalise_weighted_matrix <- function(
+  survey.pop,
+  weighted.matrix,
+  symmetric,
+  counts,
+  symmetric.norm.threshold,
+  warning.suggestion
+) {
+  na.present <- na_in_weighted_matrix(weighted.matrix)
+
+  matrix_not_scalar <- prod(dim(as.matrix(weighted.matrix))) > 1
+  if (symmetric && matrix_not_scalar) {
+    if (counts) {
+      cli::cli_warn(
+        "{.code symmetric = TRUE} does not make sense with
+        {.code counts = TRUE}; will not make matrix symmetric."
+      )
+    } else if (na.present) {
+      cli::cli_warn(
+        c(
+          "{.code symmetric = TRUE} does not work with missing data; will \\
+          not make matrix symmetric.",
+          # nolint start
+          "i" = "{warning.suggestion}"
+          # nolint end
+        )
+      )
+    } else {
+      ## set c_{ij} N_i and c_{ji} N_j (which should both be equal) to
+      ## 0.5 * their sum; then c_{ij} is that sum / N_i
+      normalised.weighted.matrix <- survey.pop$population * weighted.matrix
+      normalised.weighted.matrix <- 0.5 /
+        survey.pop$population *
+        (normalised.weighted.matrix + t(normalised.weighted.matrix))
+      # show warning if normalisation factors exceed the symmetric.norm.threshold
+      normalisation_fctr <- c(
+        normalised.weighted.matrix / weighted.matrix,
+        weighted.matrix / normalised.weighted.matrix
+      )
+      normalisation_fctr <- normalisation_fctr[
+        !is.infinite(normalisation_fctr) & !is.na(normalisation_fctr)
+      ]
+      if (any(normalisation_fctr > symmetric.norm.threshold)) {
+        cli::cli_warn(
+          c(
+            "Large differences in the size of the sub-populations with the \\
+            current age breaks are likely to result in artefacts after making \\
+            the matrix symmetric.",
+            "!" = "Please reconsider the age breaks to obtain more equally \\
+            sized sub-populations.",
+            # nolint start
+            "i" = "Normalization factors: [{round(range(normalisation_fctr, \\
+            na.rm = TRUE), digits = 1)}]"
+            # nolint end
+          )
+        )
+      }
+      # update weighted.matrix
+      weighted.matrix <- normalised.weighted.matrix
+    }
+  }
+
+  weighted.matrix
+}

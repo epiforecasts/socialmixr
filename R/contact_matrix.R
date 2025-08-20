@@ -291,7 +291,6 @@ contact_matrix <- function(
     age.groups
   )
 
-  ret <- list()
   sampled_contacts_participants <- sample_contacts_participants(
     sample.participants,
     survey$participants,
@@ -328,70 +327,27 @@ contact_matrix <- function(
   }
 
   ## construct a warning in case there are NAs
-  na.headers <- anyNA(dimnames(weighted.matrix), recursive = TRUE)
-  na.content <- anyNA(weighted.matrix)
-  na.present <- na.headers || na.content
-
   warning.suggestion <- build_na_warning(weighted.matrix)
 
-  if (symmetric && prod(dim(as.matrix(weighted.matrix))) > 1) {
-    if (counts) {
-      cli::cli_warn(
-        "{.code symmetric = TRUE} does not make sense with
-        {.code counts = TRUE}; will not make matrix symmetric."
-      )
-    } else if (na.present) {
-      cli::cli_warn(
-        c(
-          "{.code symmetric = TRUE} does not work with missing data; will \\
-          not make matrix symmetric.",
-          # nolint start
-          "i" = "{warning.suggestion}"
-          # nolint end
-        )
-      )
-    } else {
-      ## set c_{ij} N_i and c_{ji} N_j (which should both be equal) to
-      ## 0.5 * their sum; then c_{ij} is that sum / N_i
-      normalised.weighted.matrix <- survey.pop$population * weighted.matrix
-      normalised.weighted.matrix <- 0.5 /
-        survey.pop$population *
-        (normalised.weighted.matrix + t(normalised.weighted.matrix))
-      # show warning if normalisation factors exceed the symmetric.norm.threshold
-      normalisation_fctr <- c(
-        normalised.weighted.matrix / weighted.matrix,
-        weighted.matrix / normalised.weighted.matrix
-      )
-      normalisation_fctr <- normalisation_fctr[
-        !is.infinite(normalisation_fctr) & !is.na(normalisation_fctr)
-      ]
-      if (any(normalisation_fctr > symmetric.norm.threshold)) {
-        cli::cli_warn(
-          c(
-            "Large differences in the size of the sub-populations with the \\
-            current age breaks are likely to result in artefacts after making \\
-            the matrix symmetric.",
-            "!" = "Please reconsider the age breaks to obtain more equally \\
-            sized sub-populations.",
-            # nolint start
-            "i" = "Normalization factors: [{round(range(normalisation_fctr, \\
-            na.rm = TRUE), digits = 1)}]"
-            # nolint end
-          )
-        )
-      }
-      # update weighted.matrix
-      weighted.matrix <- normalised.weighted.matrix
-    }
-  }
+  # only happens if symmetric && matrix_not_scalar
+  # (matrix_not_scalar <- prod(dim(as.matrix(weighted.matrix))) > 1)
+  weighted.matrix <- normalise_weighted_matrix(
+    survey.pop,
+    weighted.matrix,
+    symmetric,
+    counts,
+    symmetric.norm.threshold,
+    warning.suggestion
+  )
 
+  ret <- list()
   if (split) {
     if (counts) {
       cli::cli_warn(
         "{.code split = TRUE} does not make sense with {.code counts = TRUE}; \\
         will not split the contact matrix."
       )
-    } else if (na.present) {
+    } else if (na_in_weighted_matrix(weighted.matrix)) {
       cli::cli_warn(
         c(
           "{.code split = TRUE} does not work with missing data; will not
