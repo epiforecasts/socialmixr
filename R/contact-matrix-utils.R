@@ -757,3 +757,26 @@ split_mean_norm_contacts <- function(
     ret = ret
   )
 }
+
+matrix_per_capita <- function(ret, weighted.matrix, survey.pop, counts, split) {
+  if (counts) {
+    cli::cli_warn(
+      "{.arg per.capita = TRUE} does not make sense with {.arg counts = TRUE}; \\
+        will not return the contact matrix per capita."
+    )
+  } else if (split) {
+    cli::cli_warn(
+      "{.code per.capita = TRUE} does not make sense with {.code split = TRUE}; \\
+        will not return the contact matrix per capita."
+    )
+  } else {
+    weighted.matrix.per.capita <- weighted.matrix /
+      matrix(
+        rep(survey.pop$population, nrow(survey.pop)),
+        ncol = nrow(survey.pop),
+        byrow = TRUE
+      )
+    ret[["matrix.per.capita"]] <- weighted.matrix.per.capita
+  }
+  ret
+}
