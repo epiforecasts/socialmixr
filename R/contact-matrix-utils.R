@@ -534,7 +534,7 @@ sample_from_participants <- function(
   )
 }
 
-get_sampled_contacts_participants <- function(
+sample_contacts_participants <- function(
   sample.participants,
   participants,
   contacts,

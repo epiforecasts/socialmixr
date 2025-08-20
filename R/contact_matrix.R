@@ -292,7 +292,7 @@ contact_matrix <- function(
   )
 
   ret <- list()
-  sampled_contacts_participants <- get_sampled_contacts_participants(
+  sampled_contacts_participants <- sample_contacts_participants(
     sample.participants,
     survey$participants,
     survey$contacts,
