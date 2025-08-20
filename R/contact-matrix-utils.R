@@ -490,3 +490,76 @@ set_contact_age_groups <- function(
     )
   ]
 }
+
+create_bootstrap_weights <- function(part.sample) {
+  sample.table <- data.table(id = part.sample, weight = 1)
+  sample.table <- sample.table[,
+    list(bootstrap.weight = sum(weight)),
+    by = id
+  ]
+  setnames(sample.table, "id", "part_id")
+  setkey(sample.table, part_id)
+  sample.table
+}
+
+sample_from_participants <- function(
+  participants,
+  contacts,
+  participant_ids,
+  age.limits,
+  sample.all.age.groups
+) {
+  good.sample <- FALSE
+  while (!good.sample) {
+    ## take a sample from the participants
+    part.sample <- sample(participant_ids, replace = TRUE)
+    part.age.limits <- unique(
+      participants[part_id %in% part.sample, lower.age.limit]
+    )
+    age_limits_match_part <- setequal(age.limits, part.age.limits)
+    good.sample <- !sample.all.age.groups || age_limits_match_part
+
+    sample.table <- create_bootstrap_weights(part.sample)
+
+    sampled.contacts <- merge(contacts, sample.table)
+    sampled.contacts[, sampled.weight := weight * bootstrap.weight]
+
+    sampled.participants <- merge(participants, sample.table)
+    sampled.participants[, sampled.weight := weight * bootstrap.weight]
+  }
+
+  list(
+    sampled.contacts = sampled.contacts,
+    sampled.participants = sampled.participants
+  )
+}
+
+get_sampled_contacts_participants <- function(
+  sample.participants,
+  participants,
+  contacts,
+  participant_ids,
+  age.limits,
+  sample.all.age.groups
+) {
+  if (sample.participants) {
+    sampled_contacts_participants <- sample_from_participants(
+      participants,
+      contacts,
+      participant_ids,
+      age.limits,
+      sample.all.age.groups
+    )
+  } else {
+    ## just use all participants
+    sampled.contacts <- contacts
+    sampled.contacts[, sampled.weight := weight]
+    sampled.participants <- participants
+    sampled.participants[, sampled.weight := weight]
+    sampled_contacts_participants <- list(
+      sampled.contacts = sampled.contacts,
+      sampled.participants = sampled.participants
+    )
+  }
+  sampled_contacts_participants
+}

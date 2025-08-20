@@ -292,40 +292,16 @@ contact_matrix <- function(
   )
 
   ret <- list()
-  if (sample.participants) {
-    good.sample <- FALSE
-    while (!good.sample) {
-      ## take a sample from the participants
-      part.sample <- sample(participant_ids, replace = TRUE)
-      part.age.limits <-
-        unique(survey$participants[
-          part_id %in% part.sample,
-          lower.age.limit
-        ])
-      good.sample <- !sample.all.age.groups ||
-        (length(setdiff(age.limits, part.age.limits)) == 0)
-
-      sample.table <-
-        data.table(id = part.sample, weight = 1)
-      sample.table <-
-        sample.table[, list(bootstrap.weight = sum(weight)), by = id]
-      setnames(sample.table, "id", "part_id")
-      setkey(sample.table, part_id)
-
-      sampled.contacts <- merge(survey$contacts, sample.table)
-      sampled.contacts[, sampled.weight := weight * bootstrap.weight]
-
-      sampled.participants <-
-        merge(survey$participants, sample.table)
-      sampled.participants[, sampled.weight := weight * bootstrap.weight]
-    }
-  } else {
-    ## just use all participants
-    sampled.contacts <- survey$contacts
-    sampled.contacts[, sampled.weight := weight]
-    sampled.participants <- survey$participants
-    sampled.participants[, sampled.weight := weight]
-  }
+  sampled_contacts_participants <- get_sampled_contacts_participants(
+    sample.participants,
+    survey$participants,
+    survey$contacts,
+    participant_ids,
+    age.limits,
+    sample.all.age.groups
+  )
+  sampled.contacts <- sampled_contacts_participants$sampled.contacts
+  sampled.participants <- sampled_contacts_participants$sampled.participants
 
   ## calculate weighted contact matrix
   weighted.matrix <- xtabs(
