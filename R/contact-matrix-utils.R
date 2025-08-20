@@ -411,3 +411,13 @@ weight_by_age <- function(participants, survey.pop.full) {
   participants[, population.proportion := NULL]
   participants[, weight.age := NULL]
 }
+
+weigh_by_user_defined <- function(participants, weights) {
+  for (i in seq_along(weights)) {
+    if (weights[i] %in% colnames(participants)) {
+      ## Compute the overall weight
+      participants[, weight := weight * get(weights[i])]
+    }
+  }
+  participants
+}

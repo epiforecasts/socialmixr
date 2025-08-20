@@ -250,12 +250,7 @@ contact_matrix <- function(
 
   ## option to weigh the contact data with user-defined participant weights
   if (length(weights) > 0) {
-    for (i in seq_along(weights)) {
-      if (weights[i] %in% colnames(survey$participants)) {
-        ## Compute the overall weight
-        survey$participants[, weight := weight * get(weights[i])]
-      }
-    }
+    survey$participants <- weigh_by_user_defined(survey$participants, weights)
   }
 
   # post-stratification weight standardisation: by age.group
