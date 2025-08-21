@@ -381,6 +381,19 @@ add_upper_age_limit <- function(survey.pop, part.age.group.present) {
   survey.pop
 }
 
+survey_pop_reference <- function(survey.pop, ...) {
+  data.table(
+    pop_age(
+      survey.pop,
+      seq(
+        min(survey.pop$lower.age.limit),
+        max(survey.pop$upper.age.limit)
+      ),
+      ...
+    )
+  )
+}
+
 adjust_survey_age_groups <- function(survey.pop, part.age.group.present, ...) {
   survey.pop.max <- max(survey.pop$upper.age.limit)
   survey.pop <- data.table(pop_age(survey.pop, part.age.group.present, ...))
