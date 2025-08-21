@@ -277,8 +277,7 @@ contact_matrix <- function(
     )
   }
 
-  # only happens if symmetric && matrix_not_scalar
-  # (matrix_not_scalar <- prod(dim(as.matrix(weighted.matrix))) > 1)
+  # only happens if symmetric and weighted matrix is not scalar
   weighted.matrix <- normalise_weighted_matrix(
     survey.pop,
     weighted.matrix,
@@ -294,7 +293,7 @@ contact_matrix <- function(
     split,
     counts,
     weighted.matrix,
-    survey.pop,
+    survey.pop
   )
   weighted.matrix <- splitted$weighted.matrix
   ret <- splitted$ret_w_mean_norm_contacts
