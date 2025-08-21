@@ -140,22 +140,16 @@ contact_matrix <- function(
 
   max.age <- calculate_max_age(survey$participants)
 
-  # adjust age.group.brakes to the lower and upper ages in the survey
-  survey$participants[,
-    lower.age.limit := reduce_agegroups(
-      part_age,
-      age.limits[age.limits < max.age]
-    )
-  ]
+  # adjust age.group.breaks to the lower and upper ages in the survey
   part.age.group.breaks <- c(age.limits[age.limits < max.age], max.age)
   part.age.group.present <- age.limits[age.limits < max.age]
-  survey$participants[,
-    age.group := cut(
-      survey$participants[, part_age],
-      breaks = part.age.group.breaks,
-      right = FALSE
-    )
-  ]
+
+  survey$participants <- adjust_ppt_age_group_breaks(
+    survey$participants,
+    max.age,
+    age.limits,
+    part.age.group.breaks
+  )
 
   age.groups <- age_group_labels(survey$participants)
 
@@ -303,7 +297,7 @@ contact_matrix <- function(
     survey.pop,
   )
   weighted.matrix <- splitted$weighted.matrix
-  ret <- splitted$ret
+  ret <- splitted$ret_w_mean_norm_contacts
   # make sure the dim.names are retained after symmetric or split procedure
   dimnames(weighted.matrix) <- dim.names
 

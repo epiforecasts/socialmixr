@@ -210,6 +210,30 @@ final_age_group_label <- function(age.groups) {
   age.groups
 }
 
+adjust_ppt_age_group_breaks <- function(
+  participants,
+  max.age,
+  age.limits,
+  part.age.group.breaks
+) {
+  participants[,
+    lower.age.limit := reduce_agegroups(
+      part_age,
+      age.limits[age.limits < max.age]
+    )
+  ]
+
+  participants[,
+    age.group := cut(
+      participants[, part_age],
+      breaks = part.age.group.breaks,
+      right = FALSE
+    )
+  ]
+
+  participants
+}
+
 age_group_labels <- function(participants) {
   age.groups <- participants[, levels(age.group)]
   age.groups <- final_age_group_label(age.groups)
@@ -854,7 +878,7 @@ split_mean_norm_contacts <- function(
   }
   list(
     weighted.matrix = weighted.matrix,
-    ret = ret
+    ret_w_mean_norm_contacts = ret
   )
 }
 
