@@ -66,7 +66,6 @@ drop_contact_ages <- function(contacts, missing.contact.age) {
   contacts
 }
 
-
 calculate_max_age <- function(data) {
   if ("part_age_est_max" %in% colnames(data)) {
     max.age <- max(
@@ -217,7 +216,6 @@ age_group_labels <- function(participants) {
   age.groups
 }
 
-###
 add_upper_age_limits <- function(
   participants,
   part.age.group.present,
@@ -236,8 +234,6 @@ add_upper_age_limits <- function(
   )
   participants
 }
-
-###
 
 survey_pop_from_data <- function(survey.pop, part.age.group.present) {
   survey.pop <- data.table(survey.pop)
@@ -369,7 +365,7 @@ define_survey_pop <- function(
   )
 }
 
-add_upper_age_limit <- function(survey.pop, part.age.group.present) {
+add_survey_upper_age_limit <- function(survey.pop, part.age.group.present) {
   # add upper.age.limit after sorting the survey.pop ages (and add maximum age > given ages)
   survey.pop <- survey.pop[order(lower.age.limit), ]
   # if any lower age limits are missing remove them
@@ -489,6 +485,44 @@ weigh_by_user_defined <- function(participants, weights) {
   participants
 }
 
+assign_participant_weights <- function(
+  participants,
+  survey.pop.full,
+  weights,
+  weigh.dayofweek,
+  weigh.age,
+  weight.threshold
+) {
+  participants[, weight := 1]
+
+  ## assign weights to participants to account for weekend/weekday variation
+  if (weigh.dayofweek) {
+    participants <- weight_by_day_of_week(participants)
+  }
+
+  ## assign weights to participants, to account for age variation
+  if (weigh.age) {
+    participants <- weight_by_age(participants, survey.pop.full)
+  }
+
+  ## option to weigh the contact data with user-defined participant weights
+  if (length(weights) > 0) {
+    participants <- weigh_by_user_defined(participants, weights)
+  }
+
+  # post-stratification weight standardisation: by age.group
+  participants[, weight := weight / sum(weight) * .N, by = age.group]
+
+  # option to truncate overall participant weights (if not NULL or NA)
+  if (!is.null(weight.threshold) && !is.na(weight.threshold)) {
+    participants[weight > weight.threshold, weight := weight.threshold]
+    # re-normalise
+    participants[, weight := weight / sum(weight) * .N, by = age.group]
+  }
+
+  participants
+}
+
 ## some contacts in the age group have an age, sample from these
 sample_present_age <- function(contacts, this.age.group) {
   contacts[
@@ -534,7 +568,6 @@ impute_age_by_sample <- function(contacts) {
   contacts
 }
 
-## set contact age groups
 set_contact_age_groups <- function(
   contacts,
   part.age.group.breaks,
@@ -694,7 +727,6 @@ na_in_weighted_matrix <- function(weighted.matrix) {
   na.present
 }
 
-
 normalise_weighted_matrix <- function(
   survey.pop,
   weighted.matrix,
@@ -849,7 +881,7 @@ matrix_per_capita <- function(ret, weighted.matrix, survey.pop, counts, split) {
   ret
 }
 
-participant_weights <- function(
+return_participant_weights <- function(
   ret,
   survey_participants,
   weigh.age,
