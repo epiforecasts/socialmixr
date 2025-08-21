@@ -217,6 +217,28 @@ age_group_labels <- function(participants) {
   age.groups
 }
 
+###
+add_upper_age_limits <- function(
+  participants,
+  part.age.group.present,
+  part.age.group.breaks
+) {
+  lower.upper.age.limits <- data.table(
+    lower.age.limit = part.age.group.present,
+    upper.age.limit = part.age.group.breaks[-1]
+  )
+
+  participants <- merge(
+    participants,
+    lower.upper.age.limits,
+    by = "lower.age.limit",
+    all.x = TRUE
+  )
+  participants
+}
+
+###
+
 survey_pop_from_data <- function(survey.pop, part.age.group.present) {
   survey.pop <- data.table(survey.pop)
   # make sure the maximum survey.pop age exceeds the participant age group breaks

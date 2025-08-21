@@ -167,18 +167,11 @@ contact_matrix <- function(
     )
   ]
 
-  ## add upper age limits
-  lower.upper.age.limits <- data.table(
-    lower.age.limit = part.age.group.present,
-    upper.age.limit = part.age.group.breaks[-1]
+  survey$participants <- add_upper_age_limits(
+    survey$participants,
+    part.age.group.present,
+    part.age.group.breaks
   )
-  survey$participants <-
-    merge(
-      survey$participants,
-      lower.upper.age.limits,
-      by = "lower.age.limit",
-      all.x = TRUE
-    )
 
   ## if split, symmetric or age weights are requested, get demographic data (survey population)
   need.survey.pop <- any(
