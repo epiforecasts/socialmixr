@@ -82,9 +82,7 @@ contact_matrix <- function(
   multiple_countries <- length(countries) > 0
   country_col_in_participants <- "country" %in% colnames(survey$participants)
   if (multiple_countries && country_col_in_participants) {
-    corrected_countries <- flexible_countrycode(countries)
-    check_missing_countries(countries, corrected_countries)
-    countries <- corrected_countries
+    countries <- flexible_countrycode(countries)
     survey$participants <- survey$participants[country %in% countries]
     if (nrow(survey$participants) == 0) {
       cli::cli_abort("No participants left after selecting countries.")
