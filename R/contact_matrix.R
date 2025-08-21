@@ -97,8 +97,6 @@ contact_matrix <- function(
     estimated.participant.age
   )
 
-  max.age <- calculate_max_age(survey$participants)
-
   age.limits <- age.limits %||% set_age_limits(survey$participants)
 
   survey$participants <- drop_invalid_ages(
@@ -139,6 +137,8 @@ contact_matrix <- function(
 
   ## check if any filters have been requested
   survey <- apply_data_filter(survey, survey_type, filter)
+
+  max.age <- calculate_max_age(survey$participants)
 
   # adjust age.group.brakes to the lower and upper ages in the survey
   survey$participants[,
