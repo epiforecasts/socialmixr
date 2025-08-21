@@ -184,22 +184,15 @@ contact_matrix <- function(
 
   if (need.survey.pop) {
     ## check if survey population is either not given or given as a vector of countries
-    if (missing(survey.pop) || is.character(survey.pop)) {
-      survey_pop_info <- survey_pop_is_derived(
-        survey.pop,
-        countries,
-        survey$participants,
-        age.limits
-      )
-      survey.pop <- survey_pop_info$survey.pop
-      survey.year <- survey_pop_info$survey.year
-    } else {
-      # if survey.pop is a data frame with columns 'lower.age.limit' and 'population'
-      survey.pop <- survey_pop_from_data(survey.pop, part.age.group.present)
-
-      # add dummy survey.year
-      survey.year <- NA_integer_
-    }
+    survey_pop_info <- define_survey_pop(
+      survey.pop,
+      countries,
+      survey$participants,
+      age.limits,
+      part.age.group.present
+    )
+    survey.pop <- survey_pop_info$survey.pop
+    survey.year <- survey_pop_info$survey.year
 
     survey.pop <- add_upper_age_limit(survey.pop, part.age.group.present)
 

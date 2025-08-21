@@ -339,6 +339,36 @@ survey_pop_is_derived <- function(
   )
 }
 
+define_survey_pop <- function(
+  survey.pop,
+  countries,
+  participants,
+  age.limits,
+  part.age.group.present
+) {
+  if (missing(survey.pop) || is.character(survey.pop)) {
+    survey_pop_info <- survey_pop_is_derived(
+      survey.pop,
+      countries,
+      participants,
+      age.limits
+    )
+    survey.pop <- survey_pop_info$survey.pop
+    survey.year <- survey_pop_info$survey.year
+  } else {
+    # if survey.pop is a data frame with columns 'lower.age.limit' and 'population'
+    survey.pop <- survey_pop_from_data(survey.pop, part.age.group.present)
+
+    # add dummy survey.year
+    survey.year <- NA_integer_
+  }
+
+  list(
+    survey.pop = survey.pop,
+    survey.year = survey.year
+  )
+}
+
 add_upper_age_limit <- function(survey.pop, part.age.group.present) {
   # add upper.age.limit after sorting the survey.pop ages (and add maximum age > given ages)
   survey.pop <- survey.pop[order(lower.age.limit), ]
