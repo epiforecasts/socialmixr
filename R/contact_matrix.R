@@ -78,16 +78,9 @@ contact_matrix <- function(
   check_if_contact_survey(survey)
   check_age_limits_increasing(age.limits)
 
-  ## check if specific countries are requested (if a survey contains data from multiple countries)
-  multiple_countries <- length(countries) > 0
-  country_col_in_participants <- "country" %in% colnames(survey$participants)
-  if (multiple_countries && country_col_in_participants) {
-    countries <- flexible_countrycode(countries)
-    survey$participants <- survey$participants[country %in% countries]
-    if (nrow(survey$participants) == 0) {
-      cli::cli_abort("No participants left after selecting countries.")
-    }
-  }
+  ## Filter to specific countries, if specific countries are specified, and
+  # if a survey contains data from multiple countries.
+  survey$participants <- filter_countries(survey$participants, countries)
 
   survey$participants <- set_part_age(survey$participants)
 
@@ -218,6 +211,8 @@ contact_matrix <- function(
   setkey(survey$participants, part_id)
   participant_ids <- unique(survey$participants$part_id)
 
+  # Merge participants with contacts, allowing Cartesian products as one
+  # participant can have multiple contacts
   survey$contacts <- merge(
     survey$contacts,
     survey$participants,

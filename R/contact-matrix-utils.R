@@ -90,6 +90,19 @@ set_age_limits <- function(participants) {
   age.limits
 }
 
+filter_countries <- function(participants, countries) {
+  multiple_countries <- length(countries) > 0
+  country_col_in_participants <- "country" %in% colnames(participants)
+  if (multiple_countries && country_col_in_participants) {
+    countries <- flexible_countrycode(countries)
+    participants <- participants[country %in% countries]
+    if (nrow(participants) == 0) {
+      cli::cli_abort("No participants left after selecting countries.")
+    }
+  }
+  participants
+}
+
 set_part_age <- function(participants) {
   if ("part_age_exact" %in% colnames(participants)) {
     participants <- participants[, part_age := as.integer(part_age_exact)]
@@ -309,12 +322,13 @@ survey_pop_is_derived <- function(
     ## get population data for countries from 'wpp' package
     country.pop <- data.table(wpp_age(survey.countries))
 
-    # !! warning: spelling can differ between wpp_age and wpp_countries (e.g. Viet Nam vs Vietnam)
+    # !! warning: spelling can differ between wpp_age and wpp_countries
+    # (e.g. Viet Nam vs Vietnam)
     # fix: rename countries using the same approach as in clean(survey,...)
     country.pop$country <- suppressWarnings(countrycode(
-      country.pop$country,
-      "country.name",
-      "country.name"
+      sourcevar = country.pop$country,
+      origin = "country.name",
+      destination = "country.name"
     ))
 
     ## check if survey data are from a specific year - in that case
