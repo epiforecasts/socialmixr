@@ -835,65 +835,51 @@ normalise_weighted_matrix <- function(
   weighted.matrix
 }
 
+mean_contacts_per_person <- function(population, num_contacts) {
+  mean_contacts <- sum(population * num_contacts) / sum(population)
+  mean_contacts
+}
+
+get_spectral_radius <- function(weighted_matrix) {
+  spectrum_matrix <- weighted_matrix
+  spectrum_matrix[is.na(spectrum_matrix)] <- 0
+  eigen_values <- eigen(spectrum_matrix, only.values = TRUE)
+  # get the largest eigenvalue
+  spectral_radius <- as.numeric(eigen_values$values[1])
+  spectral_radius
+}
+
 split_mean_norm_contacts <- function(
-  ret,
-  split,
-  counts,
   weighted.matrix,
   survey.pop,
   call = rlang::caller_env()
 ) {
-  ## construct a warning in case there are NAs
-  warning.suggestion <- build_na_warning(weighted.matrix)
+  ## get rid of name but preserve row and column names
+  weighted.matrix <- unname(weighted.matrix)
 
-  if (split) {
-    if (counts) {
-      cli::cli_warn(
-        message = "{.code split = TRUE} does not make sense with {.code counts = TRUE}; \\
-        will not split the contact matrix.",
-        call = call
-      )
-    } else if (na_in_weighted_matrix(weighted.matrix)) {
-      cli::cli_warn(
-        message = c(
-          "{.code split = TRUE} does not work with missing data; will not
-          split contact.matrix.",
-          "i" = "{warning.suggestion}" # nolint
-        ),
-        call = call
-      )
-      ret[["mean.contacts"]] <- NA
-      ret[["normalisation"]] <- NA
-      ret[["contacts"]] <- rep(NA, nrow(weighted.matrix))
-    } else {
-      ## get rid of name but preserve row and column names
-      weighted.matrix <- unname(weighted.matrix)
+  num.contacts <- rowSums(weighted.matrix)
 
-      nb.contacts <- rowSums(weighted.matrix)
-      mean.contacts <- sum(survey.pop$population * nb.contacts) /
-        sum(survey.pop$population)
-      spectrum.matrix <- weighted.matrix
-      spectrum.matrix[is.na(spectrum.matrix)] <- 0
-      spectrum_val <- as.numeric(eigen(
-        spectrum.matrix,
-        only.values = TRUE
-      )$values[
-        1
-      ])
-      ret[["mean.contacts"]] <- mean.contacts
-      ret[["normalisation"]] <- spectrum_val / mean.contacts
-
-      age.proportions <- survey.pop$population / sum(survey.pop$population)
-      weighted.matrix <-
-        diag(1 / nb.contacts) %*% weighted.matrix %*% diag(1 / age.proportions)
-      nb.contacts <- nb.contacts / spectrum_val
-      ret[["contacts"]] <- nb.contacts
-    }
-  }
-  list(
-    weighted.matrix = weighted.matrix,
-    ret_w_mean_norm_contacts = ret
+  mean.contacts <- mean_contacts_per_person(
+    survey.pop$population,
+    num.contacts
   )
+  # Maximum growth rate of the infection process
+  # the dominant eigenvalue or the spectral radius
+  spectral.radius <- get_spectral_radius(weighted.matrix)
+  # normalise: how much more transmission potential from pop. structure
+  normalisation <- spectral.radius / mean.contacts
+
+  age.proportions <- survey.pop$population / sum(survey.pop$population)
+  weighted.matrix <-
+    diag(1 / num.contacts) %*% weighted.matrix %*% diag(1 / age.proportions)
+  num.contacts <- num.contacts / spectral.radius
+  ret <- list(
+    weighted.matrix = weighted.matrix,
+    mean.contacts = mean.contacts,
+    normalisation = normalisation,
+    contacts = num.contacts
+  )
+  ret
 }
 
 matrix_per_capita <- function(ret, weighted.matrix, survey.pop, counts, split) {

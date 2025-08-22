@@ -237,6 +237,7 @@ contact_matrix <- function(
     age.groups
   )
 
+  ## calculate weighted contact matrix
   sampled_contacts_participants <- sample_contacts_participants(
     sample.participants,
     survey$participants,
@@ -283,15 +284,23 @@ contact_matrix <- function(
 
   ret <- list()
 
-  splitted <- split_mean_norm_contacts(
-    ret,
-    split,
-    counts,
-    weighted.matrix,
-    survey.pop
-  )
-  weighted.matrix <- splitted$weighted.matrix
-  ret <- splitted$ret_w_mean_norm_contacts
+  # do not return matrix with mean/norm/contacts if counts and split elected
+  warn_if_counts_and_split(counts, split)
+  check_na_in_weighted_matrix(weighted.matrix, split)
+
+  ## TODO rename this function
+  # if NOT counts and NO NAs in weighted.matrix
+  if (split && !counts && !na_in_weighted_matrix(weighted.matrix)) {
+    splitted <- split_mean_norm_contacts(
+      weighted.matrix,
+      survey.pop
+    )
+
+    weighted.matrix <- splitted$weighted.matrix
+    ret[["mean.contacts"]] <- splitted$mean.contacts
+    ret[["normalisation"]] <- splitted$normalisation
+    ret[["contacts"]] <- splitted$contacts
+  }
   # make sure the dim.names are retained after symmetric or split procedure
   dimnames(weighted.matrix) <- dim.names
 

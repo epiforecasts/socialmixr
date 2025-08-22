@@ -78,3 +78,38 @@ check_missing_countries <- function(
     )
   }
 }
+
+warn_if_counts_and_split <- function(
+  counts,
+  split,
+  call = rlang::caller_env()
+) {
+  if (counts && split) {
+    cli::cli_warn(
+      message = c(
+        "{.code split = TRUE} does not make sense with {.code counts = TRUE}; \\
+        will not split the contact matrix."
+      ),
+      call = call
+    )
+  }
+}
+
+check_na_in_weighted_matrix <- function(
+  weighted.matrix,
+  split,
+  call = rlang::caller_env()
+) {
+  if (na_in_weighted_matrix(weighted.matrix) && split) {
+    ## construct a warning in case there are NAs
+    warning.suggestion <- build_na_warning(weighted.matrix)
+    cli::cli_warn(
+      message = c(
+        "{.code split = TRUE} does not work with missing data; will not
+          split contact.matrix.",
+        "i" = "{warning.suggestion}" # nolint
+      ),
+      call = call
+    )
+  }
+}
