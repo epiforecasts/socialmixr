@@ -86,10 +86,8 @@ warn_if_counts_and_split <- function(
 ) {
   if (counts && split) {
     cli::cli_warn(
-      message = c(
-        "{.code split = TRUE} does not make sense with {.code counts = TRUE}; \\
-        will not split the contact matrix."
-      ),
+      "{.code split = TRUE} does not make sense with {.code counts = TRUE}; \\
+        will not split the contact matrix.",
       call = call
     )
   }
