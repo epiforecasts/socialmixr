@@ -599,6 +599,27 @@ assign_participant_weights <- function(
   participants
 }
 
+## merge participants and contacts into a single data table
+merge_participants_contacts <- function(participants, contacts) {
+  setkey(participants, part_id)
+  participant_ids <- unique(participants$part_id)
+
+  # Merge participants with contacts, allowing Cartesian products as one
+  # participant can have multiple contacts
+  contacts <- merge(
+    x = contacts,
+    y = participants,
+    by = "part_id",
+    all = FALSE,
+    allow.cartesian = TRUE,
+    suffixes = c(".cont", ".part")
+  )
+
+  setkey(contacts, part_id)
+
+  contacts
+}
+
 ## some contacts in the age group have an age, sample from these
 sample_present_age <- function(contacts, this.age.group) {
   contacts[
@@ -681,12 +702,12 @@ create_bootstrap_weights <- function(part.sample) {
 sample_from_participants <- function(
   participants,
   contacts,
-  participant_ids,
   age.limits,
   sample.all.age.groups
 ) {
   good.sample <- FALSE
   while (!good.sample) {
+    participant_ids <- unique(participants$part_id)
     ## take a sample from the participants
     part.sample <- sample(participant_ids, replace = TRUE)
     part.age.limits <- unique(
@@ -714,7 +735,6 @@ sample_contacts_participants <- function(
   sample.participants,
   participants,
   contacts,
-  participant_ids,
   age.limits,
   sample.all.age.groups
 ) {
@@ -722,7 +742,6 @@ sample_contacts_participants <- function(
     sampled_contacts_participants <- sample_from_participants(
       participants,
       contacts,
-      participant_ids,
       age.limits,
       sample.all.age.groups
     )

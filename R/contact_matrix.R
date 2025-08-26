@@ -211,21 +211,10 @@ contact_matrix <- function(
   )
 
   ## merge participants and contacts into a single data table
-  setkey(survey$participants, part_id)
-  participant_ids <- unique(survey$participants$part_id)
-
-  # Merge participants with contacts, allowing Cartesian products as one
-  # participant can have multiple contacts
-  survey$contacts <- merge(
-    x = survey$contacts,
-    y = survey$participants,
-    by = "part_id",
-    all = FALSE,
-    allow.cartesian = TRUE,
-    suffixes = c(".cont", ".part")
+  survey$contacts <- merge_participants_contacts(
+    participants = survey$participants,
+    contacts = survey$contacts
   )
-
-  setkey(survey$contacts, part_id)
 
   ## sample contacts
   missing_contact_age <- nrow(survey$contacts[is.na(cnt_age)]) > 0
@@ -247,7 +236,6 @@ contact_matrix <- function(
     sample.participants = sample.participants,
     participants = survey$participants,
     contacts = survey$contacts,
-    participant_ids = participant_ids,
     age.limits = age.limits,
     sample.all.age.groups = sample.all.age.groups
   )
