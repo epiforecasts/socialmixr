@@ -7,10 +7,9 @@ sample_participant_ages <- function(
   data,
   estimated.participant.age
 ) {
-  ret <- NULL
   if (has_names(data, c("part_age_est_min", "part_age_est_max"))) {
     if (estimated.participant.age == "mean") {
-      ret <- data[
+      data <- data[
         is.na(part_age_exact) &
           !is.na(part_age_est_min) &
           !is.na(part_age_est_max),
@@ -18,7 +17,7 @@ sample_participant_ages <- function(
         .SDcols = c("part_age_est_min", "part_age_est_max")
       ]
     } else if (estimated.participant.age == "sample") {
-      ret <- data[
+      data <- data[
         is.na(part_age) &
           !is.na(part_age_est_min) &
           !is.na(part_age_est_max) &
@@ -28,8 +27,7 @@ sample_participant_ages <- function(
     }
     # note: do nothing when "missing" is specified
   }
-  # return ret, or if that is NULL, the data
-  ret %||% data
+  data
 }
 
 sample_contact_ages <- function(contacts, estimated.contact.age) {
@@ -147,9 +145,7 @@ drop_invalid_ages <- function(
       )
     )
 
-    participants <- participants[
-      !is.na(part_age) & part_age >= min(age.limits)
-    ]
+    participants <- participants[!is.na(part_age) & part_age >= min(age.limits)]
   }
   participants
 }
