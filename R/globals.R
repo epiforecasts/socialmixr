@@ -5,33 +5,11 @@ utils::globalVariables(c(
   "..age.unit", # <clean.contact_survey>
   "..high", # <clean.contact_survey>
   "..low", # <clean.contact_survey>
-  "country", # <contact_matrix>
-  "part_age", # <contact_matrix>
-  "part_age_exact", # <contact_matrix>
-  "part_age_est_min", # <contact_matrix>
-  "part_age_est_max", # <contact_matrix>
   "cnt_age", # <contact_matrix>
-  "cnt_age_exact", # <contact_matrix>
-  "cnt_age_est_min", # <contact_matrix>
-  "cnt_age_est_max", # <contact_matrix>
+  "age.group", # <contact_matrix>
   "part_id", # <contact_matrix>
   "lower.age.limit", # <contact_matrix>
-  "age.group", # <contact_matrix>
   "population", # <contact_matrix>
-  "upper.age.limit", # <contact_matrix>
-  "weight", # <contact_matrix>
-  "sum_weight", # <contact_matrix>
-  "dayofweek", # <contact_matrix>
-  "is.weekday", # <contact_matrix>
-  "age.count", # <contact_matrix>
-  "age.proportion", # <contact_matrix>
-  "population.proportion", # <contact_matrix>
-  "population.count", # <contact_matrix>
-  "weight.age", # <contact_matrix>
-  "contact.age.group", # <contact_matrix>
-  "id", # <contact_matrix>
-  "sampled.weight", # <contact_matrix>
-  "bootstrap.weight", # <contact_matrix>
   "proportion", # <contact_matrix>
   "participants", # <contact_matrix>
   "file_name", # <download_survey>
