@@ -759,6 +759,47 @@ sample_contacts_participants <- function(
   sampled_contacts_participants
 }
 
+calculate_weighted_matrix <- function(
+  sampled.contacts = sampled.contacts,
+  sampled.participants = sampled.participants,
+  survey.pop = survey.pop,
+  symmetric,
+  counts,
+  symmetric.norm.threshold
+) {
+  weighted.matrix <- xtabs(
+    data = sampled.contacts,
+    formula = sampled.weight ~ age.group + contact.age.group,
+    addNA = TRUE
+  )
+
+  dims <- dim(weighted.matrix)
+  dim.names <- dimnames(weighted.matrix)
+
+  weighted.matrix <- array(
+    weighted.matrix,
+    dim = dims,
+    dimnames = dim.names
+  )
+
+  if (!counts) {
+    ## normalise to give mean number of contacts
+    weighted.matrix <- normalise_weights_to_counts(
+      sampled.participants = sampled.participants,
+      weighted.matrix = weighted.matrix
+    )
+  }
+
+  # only happens if symmetric and weighted matrix is not scalar
+  weighted.matrix <- normalise_weighted_matrix(
+    survey.pop = survey.pop,
+    weighted.matrix = weighted.matrix,
+    symmetric = symmetric,
+    counts = counts,
+    symmetric.norm.threshold = symmetric.norm.threshold
+  )
+}
+
 normalise_weights_to_counts <- function(sampled.participants, weighted.matrix) {
   ## normalise to give mean number of contacts
   ## calculate normalisation vector

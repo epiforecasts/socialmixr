@@ -222,13 +222,11 @@ contact_matrix <- function(
     survey$contacts <- impute_age_by_sample(survey$contacts)
   }
 
-  age.groups <- age_group_labels(survey$participants)
-
   ## set contact age groups
   survey$contacts <- set_contact_age_groups(
     contacts = survey$contacts,
     part.age.group.breaks = create_age_breaks(age.limits, max.age),
-    age.groups = age.groups
+    age.groups = age_group_labels(survey$participants)
   )
 
   ## calculate weighted contact matrix
@@ -239,40 +237,15 @@ contact_matrix <- function(
     age.limits = age.limits,
     sample.all.age.groups = sample.all.age.groups
   )
-  sampled.contacts <- sampled_contacts_participants$sampled.contacts
-  sampled.participants <- sampled_contacts_participants$sampled.participants
 
   ## calculate weighted contact matrix
-  weighted.matrix <- xtabs(
-    data = sampled.contacts,
-    formula = sampled.weight ~ age.group + contact.age.group,
-    addNA = TRUE
-  )
-
-  dims <- dim(weighted.matrix)
-  dim.names <- dimnames(weighted.matrix)
-
-  weighted.matrix <- array(
-    weighted.matrix,
-    dim = dims,
-    dimnames = dim.names
-  )
-
-  if (!counts) {
-    ## normalise to give mean number of contacts
-    weighted.matrix <- normalise_weights_to_counts(
-      sampled.participants = sampled.participants,
-      weighted.matrix = weighted.matrix
-    )
-  }
-
-  # only happens if symmetric and weighted matrix is not scalar
-  weighted.matrix <- normalise_weighted_matrix(
+  weighted.matrix <- calculate_weighted_matrix(
+    sampled.contacts = sampled_contacts_participants$sampled.contacts,
+    sampled.participants = sampled_contacts_participants$sampled.participants,
     survey.pop = survey.pop,
-    weighted.matrix = weighted.matrix,
-    symmetric = symmetric,
-    counts = counts,
-    symmetric.norm.threshold = symmetric.norm.threshold
+    symmetric,
+    counts,
+    symmetric.norm.threshold
   )
 
   ret <- list()
@@ -280,6 +253,9 @@ contact_matrix <- function(
   # do not return matrix with mean/norm/contacts if counts and split elected
   warn_if_counts_and_split(counts, split)
   check_na_in_weighted_matrix(weighted.matrix, split)
+
+  # make sure the dim.names are retained after symmetric or split procedure
+  retained_dimnames <- dimnames(weighted.matrix)
 
   ## TODO rename this function
   # if split and NOT counts and NO NAs in weighted.matrix
@@ -295,7 +271,7 @@ contact_matrix <- function(
     ret[["contacts"]] <- splitted$contacts
   }
   # make sure the dim.names are retained after symmetric or split procedure
-  dimnames(weighted.matrix) <- dim.names
+  dimnames(weighted.matrix) <- retained_dimnames
 
   ret[["matrix"]] <- weighted.matrix
 
