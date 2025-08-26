@@ -94,8 +94,6 @@ contact_matrix <- function(
     estimated.participant.age = estimated.participant.age
   )
 
-  age.limits <- age.limits %||% set_age_limits(survey$participants)
-
   survey$participants <- drop_invalid_ages(
     participants = survey$participants,
     missing.participant.age = missing.participant.age,
@@ -122,10 +120,14 @@ contact_matrix <- function(
     estimated.contact.age = estimated.contact.age
   )
 
+  age.limits <- age.limits %||% set_age_limits(survey$participants)
   # remove contact ages below the age limit, before dealing with missing contact ages
-  survey$contacts <- survey$contacts[
-    is.na(cnt_age) | cnt_age >= min(age.limits),
-  ]
+  # TODO are we sure that we want to use `age.limits` as defined above, because
+  # that means it is defined by the participants age limit?
+  survey$contacts <- drop_ages_below_limit(
+    contacts = survey$contacts,
+    age.limits = age.limits
+  )
 
   survey$participants <- drop_by_invalid_contact_age(
     contacts = survey$contacts,
@@ -147,31 +149,13 @@ contact_matrix <- function(
 
   max.age <- calculate_max_age(survey$participants)
 
-  # adjust age.group.breaks to the lower and upper ages in the survey
-  part.age.group.breaks <- c(age.limits[age.limits < max.age], max.age)
-  part.age.group.present <- age.limits[age.limits < max.age]
+  part.age.group.breaks <- create_age_breaks(age.limits, max.age)
+  part.age.group.present <- filter_valid_ages(age.limits, max.age)
 
+  ## adjust age.group.breaks to the lower and upper ages in the survey
   survey$participants <- adjust_ppt_age_group_breaks(
     participants = survey$participants,
-    max.age = max.age,
-    age.limits = age.limits,
-    part.age.group.breaks = part.age.group.breaks
-  )
-
-  age.groups <- age_group_labels(survey$participants)
-
-  survey$participants[,
-    age.group := factor(
-      age.group,
-      levels = levels(age.group),
-      labels = age.groups
-    )
-  ]
-
-  survey$participants <- add_upper_age_limits(
-    participants = survey$participants,
-    part.age.group.present = part.age.group.present,
-    part.age.group.breaks = part.age.group.breaks
+    age.limits = age.limits
   )
 
   ## if split, symmetric or age weights are requested, get demographic data
@@ -247,6 +231,8 @@ contact_matrix <- function(
   if (missing.contact.age == "sample" && missing_contact_age) {
     survey$contacts <- impute_age_by_sample(survey$contacts)
   }
+
+  age.groups <- age_group_labels(survey$participants)
 
   ## set contact age groups
   survey$contacts <- set_contact_age_groups(

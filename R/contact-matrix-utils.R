@@ -30,6 +30,10 @@ sample_participant_ages <- function(
   data
 }
 
+drop_ages_below_limit <- function(contacts, age.limits) {
+  contacts[is.na(cnt_age) | cnt_age >= min(age.limits), ]
+}
+
 sample_contact_ages <- function(contacts, estimated.contact.age) {
   age_cols_in_data <- has_names(
     contacts,
@@ -87,6 +91,14 @@ calculate_max_age <- function(data) {
   max.age
 }
 
+create_age_breaks <- function(age.limits, max.age) {
+  c(age.limits[age.limits < max.age], max.age)
+}
+
+filter_valid_ages <- function(age.limits, max.age) {
+  age.limits[age.limits < max.age]
+}
+
 set_age_limits <- function(participants) {
   all.ages <- unique(as.integer(participants[, part_age]))
   all.ages <- all.ages[!is.na(all.ages)]
@@ -131,6 +143,7 @@ drop_invalid_ages <- function(
   missing.participant.age,
   age.limits
 ) {
+  age.limits <- age.limits %||% set_age_limits(participants)
   if (
     missing.participant.age == "remove" &&
       nrow(participants[is.na(part_age) | part_age < min(age.limits)]) > 0
@@ -226,12 +239,16 @@ final_age_group_label <- function(age.groups) {
   age.groups
 }
 
+# adjust age.group.breaks to the lower and upper ages in the survey
 adjust_ppt_age_group_breaks <- function(
   participants,
-  max.age,
-  age.limits,
-  part.age.group.breaks
+  age.limits
 ) {
+  max.age <- calculate_max_age(participants)
+
+  part.age.group.breaks <- c(age.limits[age.limits < max.age], max.age)
+  part.age.group.present <- age.limits[age.limits < max.age]
+
   participants[,
     lower.age.limit := reduce_agegroups(
       part_age,
@@ -246,6 +263,22 @@ adjust_ppt_age_group_breaks <- function(
       right = FALSE
     )
   ]
+
+  age.groups <- age_group_labels(participants)
+
+  participants[,
+    age.group := factor(
+      age.group,
+      levels = levels(age.group),
+      labels = age.groups
+    )
+  ]
+
+  participants <- add_upper_age_limits(
+    participants = participants,
+    part.age.group.present = part.age.group.present,
+    part.age.group.breaks = part.age.group.breaks
+  )
 
   participants
 }
