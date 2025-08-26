@@ -1,10 +1,14 @@
+has_names <- function(x, name) {
+  all(hasName(x, name))
+}
+
 ## sample estimated participant ages
 sample_participant_ages <- function(
   data,
   estimated.participant.age
 ) {
   ret <- NULL
-  if (all(hasName(data, c("part_age_est_min", "part_age_est_max")))) {
+  if (has_names(data, c("part_age_est_min", "part_age_est_max"))) {
     if (estimated.participant.age == "mean") {
       ret <- data[
         is.na(part_age_exact) &
@@ -29,8 +33,11 @@ sample_participant_ages <- function(
 }
 
 sample_contact_ages <- function(contacts, estimated.contact.age) {
-  age_cols_in_data <- hasName(contacts, c("cnt_age_est_min", "cnt_age_est_max"))
-  if (all(age_cols_in_data)) {
+  age_cols_in_data <- has_names(
+    contacts,
+    c("cnt_age_est_min", "cnt_age_est_max")
+  )
+  if (age_cols_in_data) {
     if (estimated.contact.age == "mean") {
       contacts <- contacts[
         is.na(cnt_age) & !is.na(cnt_age_est_min) & !is.na(cnt_age_est_max),
