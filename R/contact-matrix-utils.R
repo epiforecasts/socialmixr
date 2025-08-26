@@ -1003,6 +1003,16 @@ matrix_per_capita <- function(ret, weighted.matrix, survey.pop, counts, split) {
   ret
 }
 
+n_participants_per_age_group <- function(participants) {
+  part.pop <- data.table(table(
+    participants[, age.group],
+    useNA = "ifany"
+  ))
+  setnames(part.pop, c("age.group", "participants"))
+  part.pop[, proportion := participants / sum(participants)]
+  part.pop
+}
+
 return_participant_weights <- function(
   ret,
   survey_participants,
