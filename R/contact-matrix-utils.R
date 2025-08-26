@@ -413,8 +413,7 @@ define_survey_pop <- function(
   survey.pop,
   countries,
   participants,
-  age.limits,
-  part.age.group.present
+  age.limits
 ) {
   if (missing(survey.pop) || is.character(survey.pop)) {
     survey_pop_info <- survey_pop_is_derived(
@@ -426,6 +425,9 @@ define_survey_pop <- function(
     survey.pop <- survey_pop_info$survey.pop
     survey.year <- survey_pop_info$survey.year
   } else {
+    max.age <- calculate_max_age(participants)
+
+    part.age.group.present <- filter_valid_ages(age.limits, max.age)
     # if survey.pop is a data frame with columns 'lower.age.limit' and 'population'
     survey.pop <- survey_pop_from_data(survey.pop, part.age.group.present)
 

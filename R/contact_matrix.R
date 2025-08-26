@@ -149,7 +149,6 @@ contact_matrix <- function(
 
   max.age <- calculate_max_age(survey$participants)
 
-  part.age.group.breaks <- create_age_breaks(age.limits, max.age)
   part.age.group.present <- filter_valid_ages(age.limits, max.age)
 
   ## adjust age.group.breaks to the lower and upper ages in the survey
@@ -174,11 +173,13 @@ contact_matrix <- function(
       survey.pop = survey.pop,
       countries = countries,
       participants = survey$participants,
-      age.limits = age.limits,
-      part.age.group.present = part.age.group.present
+      age.limits = age.limits
     )
     survey.pop <- survey_pop_info$survey.pop
     survey.year <- survey_pop_info$survey.year
+
+    max.age <- calculate_max_age(survey$participants)
+    part.age.group.present <- filter_valid_ages(age.limits, max.age)
 
     survey.pop <- add_survey_upper_age_limit(
       survey.pop = survey.pop,
@@ -237,7 +238,7 @@ contact_matrix <- function(
   ## set contact age groups
   survey$contacts <- set_contact_age_groups(
     contacts = survey$contacts,
-    part.age.group.breaks = part.age.group.breaks,
+    part.age.group.breaks = create_age_breaks(age.limits, max.age),
     age.groups = age.groups
   )
 
