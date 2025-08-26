@@ -277,8 +277,9 @@ contact_matrix <- function(
 
   # option to add matrix per capita, i.e. the contact rate of age i with one
   # individual of age j in the population.
-  if (per.capita) {
-    ret <- matrix_per_capita(ret, weighted.matrix, survey.pop, counts, split)
+  warn_counts_split_per_capita(counts, split, per.capita)
+  if (per.capita && !counts && !split) {
+    ret[["matrix.per.capita"]] <- matrix_per_capita(weighted.matrix, survey.pop)
   }
 
   if (exists("survey.year")) {

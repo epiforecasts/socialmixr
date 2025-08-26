@@ -93,6 +93,28 @@ warn_if_counts_and_split <- function(
   }
 }
 
+warn_counts_split_per_capita <- function(
+  counts,
+  split,
+  per.capita,
+  call = rlang::caller_env()
+) {
+  if (per.capita && counts) {
+    cli::cli_warn(
+      message = "{.arg per.capita = TRUE} does not make sense with \\
+      {.arg counts = TRUE}; will not return the contact matrix per capita.",
+      call = call
+    )
+  }
+  if (per.capita && split) {
+    cli::cli_warn(
+      message = "{.code per.capita = TRUE} does not make sense with \\
+      {.code split = TRUE}; will not return the contact matrix per capita.",
+      call = call
+    )
+  }
+}
+
 check_na_in_weighted_matrix <- function(
   weighted.matrix,
   split,
