@@ -83,14 +83,8 @@ drop_contact_ages <- function(contacts, missing_action) {
 
 calculate_max_age <- function(data) {
   if ("part_age_est_max" %in% colnames(data)) {
-    max.age <- max(
-      c(
-        data[, part_age_exact],
-        data[, part_age_est_max]
-      ),
-      na.rm = TRUE
-    ) +
-      1
+    part_age_data <- c(data[, part_age_exact], data[, part_age_est_max])
+    max.age <- max(part_age_data, na.rm = TRUE) + 1
   } else {
     max.age <- max(data[, part_age], na.rm = TRUE) + 1
   }
