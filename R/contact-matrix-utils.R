@@ -34,28 +34,34 @@ drop_ages_below_age_limit <- function(contacts, age_limits) {
   contacts[is.na(cnt_age) | cnt_age >= min(age_limits), ]
 }
 
+est_contact_age_mean <- function(contacts) {
+  contacts[
+    is.na(cnt_age) & !is.na(cnt_age_est_min) & !is.na(cnt_age_est_max),
+    cnt_age := as.integer(rowMeans(.SD)),
+    .SDcols = c("cnt_age_est_min", "cnt_age_est_max")
+  ]
+}
+est_contact_age_sample <- function(contacts) {
+  contacts[
+    is.na(cnt_age) &
+      !is.na(cnt_age_est_min) &
+      !is.na(cnt_age_est_max) &
+      cnt_age_est_min <= cnt_age_est_max,
+    cnt_age := as.integer(runif(.N, cnt_age_est_min, cnt_age_est_max))
+  ]
+}
+
 sample_contact_ages <- function(contacts, estimate) {
-  age_cols_in_data <- has_names(
-    contacts,
-    c("cnt_age_est_min", "cnt_age_est_max")
-  )
+  contact_age_names <- c("cnt_age_est_min", "cnt_age_est_max")
+  age_cols_in_data <- has_names(contacts, contact_age_names)
   if (age_cols_in_data) {
-    if (estimate == "mean") {
-      contacts <- contacts[
-        is.na(cnt_age) & !is.na(cnt_age_est_min) & !is.na(cnt_age_est_max),
-        cnt_age := as.integer(rowMeans(.SD)),
-        .SDcols = c("cnt_age_est_min", "cnt_age_est_max")
-      ]
-    } else if (estimate == "sample") {
-      contacts <- contacts[
-        is.na(cnt_age) &
-          !is.na(cnt_age_est_min) &
-          !is.na(cnt_age_est_max) &
-          cnt_age_est_min <= cnt_age_est_max,
-        cnt_age := as.integer(runif(.N, cnt_age_est_min, cnt_age_est_max))
-      ]
-    }
-    # note: do nothing when "missing" is specified
+    contacts <- switch(
+      estimate,
+      mean = est_contact_age_mean(contacts),
+      sample = est_contact_age_sample(contacts),
+      # note: do nothing when "missing" is specified
+      missing = contacts
+    )
   }
   contacts
 }
