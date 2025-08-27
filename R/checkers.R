@@ -133,3 +133,56 @@ check_na_in_weighted_matrix <- function(
     )
   }
 }
+
+warn_symmetric_counts_na <- function(symmetric, counts, weighted.matrix) {
+  if (symmetric && counts) {
+    cli::cli_warn(
+      message = "{.code symmetric = TRUE} does not make sense with
+        {.code counts = TRUE}; will not make matrix symmetric.",
+      call = call
+    )
+  }
+
+  if (symmetric && na_in_weighted_matrix(weighted.matrix)) {
+    cli::cli_warn(
+      message = c(
+        "{.code symmetric = TRUE} does not work with missing data; will \\
+          not make matrix symmetric.",
+        # nolint start
+        "i" = "{build_na_warning(weighted.matrix)}"
+        # nolint end
+      ),
+      call = call
+    )
+  }
+}
+
+warn_norm_fct_exceed_thresh <- function(
+  normalised_weighted_matrix,
+  weighted_matrix,
+  symmetric_norm_threshold,
+  call = rlang::caller_env()
+) {
+  # show warning if normalisation factors exceed the symmetric_norm_threshold
+  normalisation_fctr <- normalisation_factors(
+    normalised_weighted_matrix,
+    weighted_matrix
+  )
+
+  if (any(normalisation_fctr > symmetric_norm_threshold)) {
+    cli::cli_warn(
+      message = c(
+        "Large differences in the size of the sub-populations with the \\
+            current age breaks are likely to result in artefacts after making \\
+            the matrix symmetric.",
+        "!" = "Please reconsider the age breaks to obtain more equally \\
+            sized sub-populations.",
+        # nolint start
+        "i" = "Normalization factors: [{round(range(normalisation_fctr, \\
+            na.rm = TRUE), digits = 1)}]"
+        # nolint end
+      ),
+      call = call
+    )
+  }
+}

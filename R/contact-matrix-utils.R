@@ -782,14 +782,17 @@ calculate_weighted_matrix <- function(
     )
   }
 
-  # only happens if symmetric and weighted matrix is not scalar
-  weighted.matrix <- normalise_weighted_matrix(
-    survey.pop = survey.pop,
-    weighted.matrix = weighted.matrix,
-    symmetric = symmetric,
-    counts = counts,
-    symmetric.norm.threshold = symmetric.norm.threshold
-  )
+  warn_symmetric_counts_na(symmetric, counts, weighted.matrix)
+  matrix_not_scalar <- prod(dim(as.matrix(weighted.matrix))) > 1
+  na_in_weighted_mtx <- na_in_weighted_matrix(weighted.matrix)
+  if (symmetric && matrix_not_scalar && !na_in_weighted_mtx) {
+    weighted.matrix <- normalise_weighted_matrix(
+      survey.pop = survey.pop,
+      weighted.matrix = weighted.matrix,
+      symmetric.norm.threshold = symmetric.norm.threshold
+    )
+  }
+  weighted.matrix
 }
 
 normalise_weights_to_counts <- function(sampled.participants, weighted.matrix) {
@@ -855,74 +858,37 @@ na_in_weighted_matrix <- function(weighted.matrix) {
   na.present
 }
 
+normalisation_factors <- function(normalised_matrix, weighted_matrix) {
+  normalisation_fctr <- c(
+    normalised_matrix / weighted_matrix,
+    weighted_matrix / normalised_matrix
+  )
+  normalisation_fctr <- normalisation_fctr[
+    !is.infinite(normalisation_fctr) & !is.na(normalisation_fctr)
+  ]
+  normalisation_fctr
+}
+
 normalise_weighted_matrix <- function(
   survey.pop,
   weighted.matrix,
-  symmetric,
-  counts,
   symmetric.norm.threshold,
   call = rlang::caller_env()
 ) {
-  na.present <- na_in_weighted_matrix(weighted.matrix)
-  ## construct a warning in case there are NAs
-  warning.suggestion <- build_na_warning(weighted.matrix)
+  ## set c_{ij} N_i and c_{ji} N_j (which should both be equal) to
+  ## 0.5 * their sum; then c_{ij} is that sum / N_i
+  normalised.weighted.matrix <- survey.pop$population * weighted.matrix
+  normalised.weighted.matrix <- 0.5 /
+    survey.pop$population *
+    (normalised.weighted.matrix + t(normalised.weighted.matrix))
 
-  matrix_not_scalar <- prod(dim(as.matrix(weighted.matrix))) > 1
-  if (symmetric && matrix_not_scalar) {
-    if (counts) {
-      cli::cli_warn(
-        message = "{.code symmetric = TRUE} does not make sense with
-        {.code counts = TRUE}; will not make matrix symmetric.",
-        call = call
-      )
-    } else if (na.present) {
-      cli::cli_warn(
-        message = c(
-          "{.code symmetric = TRUE} does not work with missing data; will \\
-          not make matrix symmetric.",
-          # nolint start
-          "i" = "{warning.suggestion}"
-          # nolint end
-        ),
-        call = call
-      )
-    } else {
-      ## set c_{ij} N_i and c_{ji} N_j (which should both be equal) to
-      ## 0.5 * their sum; then c_{ij} is that sum / N_i
-      normalised.weighted.matrix <- survey.pop$population * weighted.matrix
-      normalised.weighted.matrix <- 0.5 /
-        survey.pop$population *
-        (normalised.weighted.matrix + t(normalised.weighted.matrix))
-      # show warning if normalisation factors exceed the symmetric.norm.threshold
-      normalisation_fctr <- c(
-        normalised.weighted.matrix / weighted.matrix,
-        weighted.matrix / normalised.weighted.matrix
-      )
-      normalisation_fctr <- normalisation_fctr[
-        !is.infinite(normalisation_fctr) & !is.na(normalisation_fctr)
-      ]
-      if (any(normalisation_fctr > symmetric.norm.threshold)) {
-        cli::cli_warn(
-          message = c(
-            "Large differences in the size of the sub-populations with the \\
-            current age breaks are likely to result in artefacts after making \\
-            the matrix symmetric.",
-            "!" = "Please reconsider the age breaks to obtain more equally \\
-            sized sub-populations.",
-            # nolint start
-            "i" = "Normalization factors: [{round(range(normalisation_fctr, \\
-            na.rm = TRUE), digits = 1)}]"
-            # nolint end
-          ),
-          call = call
-        )
-      }
-      # update weighted.matrix
-      weighted.matrix <- normalised.weighted.matrix
-    }
-  }
+  warn_norm_fct_exceed_thresh(
+    normalised_weighted_matrix = normalised.weighted.matrix,
+    weighted_matrix = weighted.matrix,
+    symmetric_norm_threshold = symmetric.norm.threshold
+  )
 
-  weighted.matrix
+  normalised.weighted.matrix
 }
 
 mean_contacts_per_person <- function(population, num_contacts) {
