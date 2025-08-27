@@ -439,17 +439,17 @@ define_survey_pop <- function(
   )
 }
 
-add_survey_upper_age_limit <- function(survey.pop, part.age.group.present) {
-  # add upper.age.limit after sorting the survey.pop ages (and add
+add_survey_upper_age_limit <- function(survey, age_breaks) {
+  # add upper.age.limit after sorting the survey ages (and add
   # maximum age > given ages)
-  survey.pop <- survey.pop[order(lower.age.limit), ]
+  survey <- survey[order(lower.age.limit), ]
   # if any lower age limits are missing remove them
-  survey.pop <- survey.pop[!is.na(population)]
-  survey.pop$upper.age.limit <- unlist(c(
-    survey.pop[-1, "lower.age.limit"],
-    1 + max(survey.pop$lower.age.limit, part.age.group.present)
+  survey <- survey[!is.na(population)]
+  survey$upper.age.limit <- unlist(c(
+    survey[-1, "lower.age.limit"],
+    1 + max(survey$lower.age.limit, age_breaks)
   ))
-  survey.pop
+  survey
 }
 
 survey_pop_reference <- function(survey.pop, ...) {
@@ -666,22 +666,19 @@ impute_age_by_sample <- function(contacts) {
 
 set_contact_age_groups <- function(
   contacts,
-  part.age.group.breaks,
-  age.groups
+  age_breaks,
+  age_groups
 ) {
   max.contact.age <- contacts[, max(cnt_age, na.rm = TRUE) + 1]
 
-  contact.age.group.breaks <- part.age.group.breaks
-  if (max.contact.age > max(contact.age.group.breaks)) {
-    contact.age.group.breaks[length(
-      contact.age.group.breaks
-    )] <- max.contact.age
+  if (max.contact.age > max(age_breaks)) {
+    age_breaks[length(age_breaks)] <- max.contact.age
   }
   contacts[,
     contact.age.group := cut(
       cnt_age,
-      breaks = contact.age.group.breaks,
-      labels = age.groups,
+      breaks = age_breaks,
+      labels = age_groups,
       right = FALSE
     )
   ]
@@ -746,13 +743,9 @@ sample_contacts_participants <- function(
     )
   } else {
     ## just use all participants
-    sampled.contacts <- contacts
-    sampled.contacts[, sampled.weight := weight]
-    sampled.participants <- participants
-    sampled.participants[, sampled.weight := weight]
     sampled_contacts_participants <- list(
-      sampled.contacts = sampled.contacts,
-      sampled.participants = sampled.participants
+      sampled.contacts = contacts[, sampled.weight := weight],
+      sampled.participants = participants[, sampled.weight := weight]
     )
   }
   sampled_contacts_participants
