@@ -184,8 +184,8 @@ contact_matrix <- function(
     part.age.group.present <- filter_valid_ages(age.limits, max.age)
 
     survey.pop <- add_survey_upper_age_limit(
-      survey.pop = survey.pop,
-      part.age.group.present = part.age.group.present
+      survey = survey.pop,
+      age_breaks = part.age.group.present
     )
 
     if (weigh.age) {
@@ -227,8 +227,8 @@ contact_matrix <- function(
   ## set contact age groups
   survey$contacts <- set_contact_age_groups(
     contacts = survey$contacts,
-    part.age.group.breaks = create_age_breaks(age.limits, max.age),
-    age.groups = age_group_labels(survey$participants)
+    age_breaks = create_age_breaks(age.limits, max.age),
+    age_groups = age_group_labels(survey$participants)
   )
 
   ## calculate weighted contact matrix
