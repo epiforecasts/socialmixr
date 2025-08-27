@@ -207,11 +207,10 @@ apply_data_filter <- function(
     missing_columns <- list()
     for (table in survey_type) {
       if (nrow(survey[[table]]) > 0) {
-        missing_columns <-
-          c(
-            missing_columns,
-            list(setdiff(names(filter), colnames(survey[[table]])))
-          )
+        missing_columns <- c(
+          missing_columns,
+          list(setdiff(names(filter), colnames(survey[[table]])))
+        )
         ## filter contact data
         for (column in names(filter)) {
           if (column %in% colnames(survey[[table]])) {
