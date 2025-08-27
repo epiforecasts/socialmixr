@@ -968,16 +968,17 @@ split_mean_norm_contacts <- function(
   normalisation <- spectral.radius / mean.contacts
 
   age.proportions <- survey.pop$population / sum(survey.pop$population)
-  weighted.matrix <-
-    diag(1 / num.contacts) %*% weighted.matrix %*% diag(1 / age.proportions)
+  weighted.matrix <- diag(1 / num.contacts) %*%
+    weighted.matrix %*%
+    diag(1 / age.proportions)
   num.contacts <- num.contacts / spectral.radius
-  ret <- list(
+
+  list(
     weighted.matrix = weighted.matrix,
     mean.contacts = mean.contacts,
     normalisation = normalisation,
     contacts = num.contacts
   )
-  ret
 }
 
 matrix_per_capita <- function(weighted.matrix, survey.pop) {
@@ -1001,7 +1002,6 @@ n_participants_per_age_group <- function(participants) {
 }
 
 return_participant_weights <- function(
-  ret,
   survey_participants,
   weigh.age,
   weigh.dayofweek
@@ -1034,8 +1034,6 @@ return_participant_weights <- function(
   # set name of last column
   names(part.weights)[ncol(part.weights)] <- "participants"
 
-  # add proportion and add to ret
   part.weights[, proportion := participants / sum(participants)]
-  ret[["participants.weights"]] <- part.weights[]
-  ret
+  part.weights[]
 }

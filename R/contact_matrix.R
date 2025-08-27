@@ -310,8 +310,7 @@ contact_matrix <- function(
 
   # option to return participant weights
   if (return.part.weights) {
-    ret <- return_participant_weights(
-      ret = ret,
+    ret[["participants.weights"]] <- return_participant_weights(
       survey_participants = survey$participants,
       weigh.age = weigh.age,
       weigh.dayofweek = weigh.dayofweek
