@@ -5,10 +5,10 @@ has_names <- function(x, name) {
 ## sample estimated participant ages
 sample_participant_ages <- function(
   data,
-  estimated.participant.age
+  estimate
 ) {
   if (has_names(data, c("part_age_est_min", "part_age_est_max"))) {
-    if (estimated.participant.age == "mean") {
+    if (estimate == "mean") {
       data <- data[
         is.na(part_age_exact) &
           !is.na(part_age_est_min) &
@@ -16,7 +16,7 @@ sample_participant_ages <- function(
         part_age := as.integer(rowMeans(.SD)),
         .SDcols = c("part_age_est_min", "part_age_est_max")
       ]
-    } else if (estimated.participant.age == "sample") {
+    } else if (estimate == "sample") {
       data <- data[
         is.na(part_age) &
           !is.na(part_age_est_min) &
@@ -30,23 +30,23 @@ sample_participant_ages <- function(
   data
 }
 
-drop_ages_below_limit <- function(contacts, age.limits) {
-  contacts[is.na(cnt_age) | cnt_age >= min(age.limits), ]
+drop_ages_below_age_limit <- function(contacts, age_limits) {
+  contacts[is.na(cnt_age) | cnt_age >= min(age_limits), ]
 }
 
-sample_contact_ages <- function(contacts, estimated.contact.age) {
+sample_contact_ages <- function(contacts, estimate) {
   age_cols_in_data <- has_names(
     contacts,
     c("cnt_age_est_min", "cnt_age_est_max")
   )
   if (age_cols_in_data) {
-    if (estimated.contact.age == "mean") {
+    if (estimate == "mean") {
       contacts <- contacts[
         is.na(cnt_age) & !is.na(cnt_age_est_min) & !is.na(cnt_age_est_max),
         cnt_age := as.integer(rowMeans(.SD)),
         .SDcols = c("cnt_age_est_min", "cnt_age_est_max")
       ]
-    } else if (estimated.contact.age == "sample") {
+    } else if (estimate == "sample") {
       contacts <- contacts[
         is.na(cnt_age) &
           !is.na(cnt_age_est_min) &
@@ -60,8 +60,8 @@ sample_contact_ages <- function(contacts, estimated.contact.age) {
   contacts
 }
 
-drop_contact_ages <- function(contacts, missing.contact.age) {
-  if (missing.contact.age == "ignore" && nrow(contacts[is.na(cnt_age)]) > 0) {
+drop_contact_ages <- function(contacts, missing_action) {
+  if (missing_action == "ignore" && nrow(contacts[is.na(cnt_age)]) > 0) {
     cli::cli_inform(
       c(
         "Ignore contacts without age information.",
@@ -140,13 +140,13 @@ set_contact_age <- function(contacts) {
 
 drop_invalid_ages <- function(
   participants,
-  missing.participant.age,
-  age.limits
+  missing_action,
+  age_limits
 ) {
-  age.limits <- age.limits %||% set_age_limits(participants)
+  age_limits <- age_limits %||% set_age_limits(participants)
   if (
-    missing.participant.age == "remove" &&
-      nrow(participants[is.na(part_age) | part_age < min(age.limits)]) > 0
+    missing_action == "remove" &&
+      nrow(participants[is.na(part_age) | part_age < min(age_limits)]) > 0
   ) {
     cli::cli_inform(
       message = c(
@@ -158,7 +158,7 @@ drop_invalid_ages <- function(
       )
     )
 
-    participants <- participants[!is.na(part_age) & part_age >= min(age.limits)]
+    participants <- participants[!is.na(part_age) & part_age >= min(age_limits)]
   }
   participants
 }
@@ -166,9 +166,9 @@ drop_invalid_ages <- function(
 drop_by_invalid_contact_age <- function(
   contacts,
   participants,
-  missing.contact.age
+  missing_action
 ) {
-  if (missing.contact.age == "remove" && nrow(contacts[is.na(cnt_age)]) > 0) {
+  if (missing_action == "remove" && nrow(contacts[is.na(cnt_age)]) > 0) {
     cli::cli_inform(
       c(
         "Removing participants that have contacts without age information.",
@@ -417,10 +417,10 @@ define_survey_pop <- function(
 ) {
   if (missing(survey.pop) || is.character(survey.pop)) {
     survey_pop_info <- survey_pop_is_derived(
-      survey.pop,
-      countries,
-      participants,
-      age.limits
+      survey.pop = survey.pop,
+      countries = countries,
+      participants = participants,
+      age.limits = age.limits
     )
     survey.pop <- survey_pop_info$survey.pop
     survey.year <- survey_pop_info$survey.year
@@ -442,7 +442,8 @@ define_survey_pop <- function(
 }
 
 add_survey_upper_age_limit <- function(survey.pop, part.age.group.present) {
-  # add upper.age.limit after sorting the survey.pop ages (and add maximum age > given ages)
+  # add upper.age.limit after sorting the survey.pop ages (and add
+  # maximum age > given ages)
   survey.pop <- survey.pop[order(lower.age.limit), ]
   # if any lower age limits are missing remove them
   survey.pop <- survey.pop[!is.na(population)]

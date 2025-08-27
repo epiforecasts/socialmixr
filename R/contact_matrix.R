@@ -91,13 +91,15 @@ contact_matrix <- function(
   ## sample estimated participant ages
   survey$participants <- sample_participant_ages(
     data = survey$participants,
-    estimated.participant.age = estimated.participant.age
+    estimate = estimated.participant.age
   )
 
+  ## TODO docs say that when `missing.partipant.age` is `keep` missings are
+  ## treated differently, but I don't see that logic in here
   survey$participants <- drop_invalid_ages(
     participants = survey$participants,
-    missing.participant.age = missing.participant.age,
-    age.limits = age.limits
+    missing_action = missing.participant.age,
+    age_limits = age.limits
   )
 
   ## set contact age if it's not in the data
@@ -117,27 +119,27 @@ contact_matrix <- function(
   ## sample estimated contact ages
   survey$contacts <- sample_contact_ages(
     contacts = survey$contacts,
-    estimated.contact.age = estimated.contact.age
+    estimate = estimated.contact.age
   )
 
   age.limits <- age.limits %||% set_age_limits(survey$participants)
   # remove contact ages below the age limit, before dealing with missing contact ages
   # TODO are we sure that we want to use `age.limits` as defined above, because
   # that means it is defined by the participants age limit?
-  survey$contacts <- drop_ages_below_limit(
+  survey$contacts <- drop_ages_below_age_limit(
     contacts = survey$contacts,
-    age.limits = age.limits
+    age_limits = age.limits
   )
 
   survey$participants <- drop_by_invalid_contact_age(
     contacts = survey$contacts,
     participants = survey$participants,
-    missing.contact.age = missing.contact.age
+    missing_action = missing.contact.age
   )
 
   survey$contacts <- drop_contact_ages(
     contacts = survey$contacts,
-    missing.contact.age = missing.contact.age
+    missing_action = missing.contact.age
   )
 
   ## check if any filters have been requested
