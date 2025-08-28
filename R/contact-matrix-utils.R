@@ -74,7 +74,7 @@ sample_contact_ages <- function(contacts, estimate) {
   contacts
 }
 
-drop_contact_ages <- function(contacts, missing_action) {
+drop_missing_contact_ages <- function(contacts, missing_action) {
   if (missing_action == "ignore" && nrow(contacts[is.na(cnt_age)]) > 0) {
     cli::cli_inform(
       c(
