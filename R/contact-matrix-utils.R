@@ -161,7 +161,7 @@ drop_invalid_ages <- function(
   participants
 }
 
-drop_by_invalid_contact_age <- function(
+drop_invalid_contact_ages <- function(
   contacts,
   participants,
   missing_action

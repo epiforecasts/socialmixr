@@ -131,7 +131,7 @@ contact_matrix <- function(
     age_limits = age.limits
   )
 
-  survey$participants <- drop_by_invalid_contact_age(
+  survey$participants <- drop_invalid_contact_ages(
     contacts = survey$contacts,
     participants = survey$participants,
     missing_action = missing.contact.age
