@@ -2,30 +2,38 @@ has_names <- function(x, name) {
   all(hasName(x, name))
 }
 
+est_part_age_mean <- function(data) {
+  data[
+    is.na(part_age_exact) & !is.na(part_age_est_min) & !is.na(part_age_est_max),
+    part_age := as.integer(rowMeans(.SD)),
+    .SDcols = c("part_age_est_min", "part_age_est_max")
+  ]
+}
+
+est_part_age_sample <- function(data) {
+  data[
+    is.na(part_age) &
+      !is.na(part_age_est_min) &
+      !is.na(part_age_est_max) &
+      part_age_est_min <= part_age_est_max,
+    part_age := as.integer(runif(.N, part_age_est_min, part_age_est_max))
+  ]
+}
+
 ## sample estimated participant ages
 sample_participant_ages <- function(
   data,
   estimate
 ) {
-  if (has_names(data, c("part_age_est_min", "part_age_est_max"))) {
-    if (estimate == "mean") {
-      data <- data[
-        is.na(part_age_exact) &
-          !is.na(part_age_est_min) &
-          !is.na(part_age_est_max),
-        part_age := as.integer(rowMeans(.SD)),
-        .SDcols = c("part_age_est_min", "part_age_est_max")
-      ]
-    } else if (estimate == "sample") {
-      data <- data[
-        is.na(part_age) &
-          !is.na(part_age_est_min) &
-          !is.na(part_age_est_max) &
-          part_age_est_min <= part_age_est_max,
-        part_age := as.integer(runif(.N, part_age_est_min, part_age_est_max))
-      ]
-    }
-    # note: do nothing when "missing" is specified
+  part_age_names <- c("part_age_est_min", "part_age_est_max")
+  age_cols_in_data <- has_names(data, part_age_names)
+  if (age_cols_in_data) {
+    data <- switch(
+      estimate,
+      mean = est_part_age_mean(data),
+      sample = est_part_age_sample(data),
+      missing = data
+    )
   }
   data
 }
