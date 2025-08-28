@@ -99,12 +99,11 @@ filter_valid_ages <- function(age.limits, max.age) {
   age.limits[age.limits < max.age]
 }
 
-set_age_limits <- function(participants) {
-  all.ages <- unique(as.integer(participants[, part_age]))
-  all.ages <- all.ages[!is.na(all.ages)]
-  all.ages <- sort(all.ages)
-  age.limits <- union(0, all.ages)
-  age.limits
+get_age_limits <- function(participants) {
+  unique_ages <- unique(as.integer(participants[, part_age]))
+  unique_non_missing_ages <- unique_ages[!is.na(unique_ages)]
+  all_ages <- sort(unique_non_missing_ages)
+  union(0, all_ages)
 }
 
 filter_countries <- function(participants, countries) {
@@ -143,7 +142,7 @@ drop_invalid_ages <- function(
   missing_action,
   age_limits
 ) {
-  age_limits <- age_limits %||% set_age_limits(participants)
+  age_limits <- age_limits %||% get_age_limits(participants)
   ppt_no_age_info <- participants[is.na(part_age) | part_age < min(age_limits)]
   no_age_info <- nrow(ppt_no_age_info) > 0
   if (missing_action == "remove" && no_age_info) {

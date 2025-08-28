@@ -122,7 +122,7 @@ contact_matrix <- function(
     estimate = estimated.contact.age
   )
 
-  age.limits <- age.limits %||% set_age_limits(survey$participants)
+  age.limits <- age.limits %||% get_age_limits(survey$participants)
   # remove contact ages below the age limit, before dealing with missing contact ages
   # TODO are we sure that we want to use `age.limits` as defined above, because
   # that means it is defined by the participants age limit?
