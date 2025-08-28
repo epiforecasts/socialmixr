@@ -751,6 +751,20 @@ sample_contacts_participants <- function(
   sampled_contacts_participants
 }
 
+weighted_matrix_array <- function(contacts) {
+  weighted_matrix <- xtabs(
+    data = contacts,
+    formula = sampled.weight ~ age.group + contact.age.group,
+    addNA = TRUE
+  )
+
+  array(
+    weighted_matrix,
+    dim = dim(weighted_matrix),
+    dimnames = dimnames(weighted_matrix)
+  )
+}
+
 calculate_weighted_matrix <- function(
   sampled.contacts = sampled.contacts,
   sampled.participants = sampled.participants,
@@ -759,19 +773,8 @@ calculate_weighted_matrix <- function(
   counts,
   symmetric.norm.threshold
 ) {
-  weighted.matrix <- xtabs(
-    data = sampled.contacts,
-    formula = sampled.weight ~ age.group + contact.age.group,
-    addNA = TRUE
-  )
-
-  dims <- dim(weighted.matrix)
-  dim.names <- dimnames(weighted.matrix)
-
-  weighted.matrix <- array(
-    weighted.matrix,
-    dim = dims,
-    dimnames = dim.names
+  weighted.matrix <- weighted_matrix_array(
+    contacts = sampled.contacts
   )
 
   if (!counts) {
