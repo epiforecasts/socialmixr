@@ -325,14 +325,7 @@ survey_pop_from_data <- function(survey.pop, part.age.group.present) {
   survey.pop
 }
 
-survey_pop_is_derived <- function(
-  survey.pop,
-  countries,
-  participants,
-  age.limits,
-  call = rlang::caller_env()
-) {
-  survey.representative <- FALSE
+get_survey_countries <- function(survey.pop, countries, participants) {
   if (!missing(survey.pop)) {
     ## survey population is given as vector of countries
     survey.countries <- survey.pop
@@ -344,7 +337,21 @@ survey_pop_is_derived <- function(
     ## neither survey population nor country names given - try to
     ## guess country or countries surveyed from participant data
     survey.countries <- unique(participants[, country])
-  } else {
+  }
+  survey.countries
+}
+
+survey_is_representative <- function(countries, participants, survey.pop) {
+  no_countries <- is.null(countries) && !("country" %in% colnames(participants))
+  survey_representative <- missing(survey.pop) && no_countries
+  survey_representative
+}
+
+warn_if_no_survey_countries <- function(
+  survey_representative,
+  call = rlang::caller_env()
+) {
+  if (survey_representative) {
     cli::cli_warn(
       message = c(
         "No {.arg survey.pop} or {.arg countries} given, and no
@@ -356,10 +363,30 @@ survey_pop_is_derived <- function(
       ),
       call = call
     )
-    survey.representative <- TRUE
   }
+}
 
-  if (!survey.representative) {
+survey_pop_is_derived <- function(
+  survey.pop,
+  countries,
+  participants,
+  age.limits,
+  call = rlang::caller_env()
+) {
+  survey_representative <- survey_is_representative(
+    countries,
+    participants,
+    survey.pop
+  )
+
+  warn_if_no_survey_countries(survey_representative, call = call)
+
+  if (!survey_representative) {
+    survey.countries <- get_survey_countries(
+      survey.pop,
+      countries,
+      participants
+    )
     ## get population data for countries from 'wpp' package
     country.pop <- data.table(wpp_age(survey.countries))
 
@@ -397,7 +424,8 @@ survey_pop_is_derived <- function(
         by = "lower.age.limit"
       ]
   }
-  if (survey.representative) {
+
+  if (survey_representative) {
     survey.pop <- participants[,
       lower.age.limit := reduce_agegroups(part_age, age.limits)
     ]
