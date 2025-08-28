@@ -149,7 +149,7 @@ contact_matrix <- function(
     filter = filter
   )
 
-  max.age <- calculate_max_age(survey$participants)
+  max.age <- max_participant_age(survey$participants)
 
   part.age.group.present <- filter_valid_ages(age.limits, max.age)
 
@@ -180,7 +180,7 @@ contact_matrix <- function(
     survey.pop <- survey_pop_info$survey.pop
     survey.year <- survey_pop_info$survey.year
 
-    max.age <- calculate_max_age(survey$participants)
+    max.age <- max_participant_age(survey$participants)
     part.age.group.present <- filter_valid_ages(age.limits, max.age)
 
     survey.pop <- add_survey_upper_age_limit(

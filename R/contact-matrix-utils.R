@@ -89,7 +89,7 @@ drop_contact_ages <- function(contacts, missing_action) {
   contacts
 }
 
-calculate_max_age <- function(data) {
+max_participant_age <- function(data) {
   if ("part_age_est_max" %in% colnames(data)) {
     part_age_data <- c(data[, part_age_exact], data[, part_age_est_max])
     max.age <- max(part_age_data, na.rm = TRUE) + 1
@@ -191,13 +191,13 @@ drop_invalid_contact_ages <- function(
 
 ## convert factors to integers, preserving numeric values
 convert_factor_to_integer <- function(
-  contacts,
+  data,
   cols
 ) {
-  which_factors <- sapply(contacts, is.factor)
-  factor_cols <- intersect(cols, names(contacts)[which_factors])
+  which_factors <- sapply(data, is.factor)
+  factor_cols <- intersect(cols, names(data)[which_factors])
 
-  contacts[,
+  data[,
     (factor_cols) := lapply(.SD, function(x) as.integer(levels(x))[x]),
     .SDcols = factor_cols
   ]
@@ -249,7 +249,7 @@ adjust_ppt_age_group_breaks <- function(
   participants,
   age.limits
 ) {
-  max.age <- calculate_max_age(participants)
+  max.age <- max_participant_age(participants)
 
   part.age.group.breaks <- c(age.limits[age.limits < max.age], max.age)
   part.age.group.present <- age.limits[age.limits < max.age]
@@ -430,7 +430,7 @@ define_survey_pop <- function(
     survey.pop <- survey_pop_info$survey.pop
     survey.year <- survey_pop_info$survey.year
   } else {
-    max.age <- calculate_max_age(participants)
+    max.age <- max_participant_age(participants)
 
     part.age.group.present <- filter_valid_ages(age.limits, max.age)
     # if survey.pop is a data frame with columns 'lower.age.limit' and 'population'
