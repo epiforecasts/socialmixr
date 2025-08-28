@@ -251,8 +251,8 @@ adjust_ppt_age_group_breaks <- function(
 ) {
   max.age <- max_participant_age(participants)
 
-  part.age.group.breaks <- c(age.limits[age.limits < max.age], max.age)
-  part.age.group.present <- age.limits[age.limits < max.age]
+  part.age.group.breaks <- create_age_breaks(age.limits, max.age)
+  part.age.group.present <- filter_valid_ages(age.limits, max.age)
 
   participants[,
     lower.age.limit := reduce_agegroups(
