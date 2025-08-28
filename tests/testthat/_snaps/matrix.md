@@ -168,7 +168,40 @@
 
 ---
 
-    `symmetric = TRUE` does not make sense with `counts = TRUE`; will not make matrix symmetric.
+    Code
+      contact_matrix(survey = polymod, counts = TRUE, symmetric = TRUE, age.limits = c(
+        0, 5))
+    Message
+      Removing participants without age information.
+      i To change this behaviour, set the `missing.participant.age` option.
+      Removing participants that have contacts without age information.
+      i To change this behaviour, set the 'missing.contact.age' option.
+    Condition
+      Warning:
+      `symmetric = TRUE` does not make sense with `counts = TRUE`; will not make matrix symmetric.
+      Warning in `normalise_weighted_matrix()`:
+      Large differences in the size of the sub-populations with the current age breaks are likely to result in artefacts after making the matrix symmetric.
+      ! Please reconsider the age breaks to obtain more equally sized sub-populations.
+      i Normalization factors: [0.2 and 5.1]
+    Output
+      $matrix
+               contact.age.group
+      age.group    [0,5)       5+
+          [0,5) 1463.000 26710.24
+          5+    1396.075 87824.00
+      
+      $demography
+         age.group population proportion  year
+            <char>      <num>      <num> <int>
+      1:     [0,5)   13498647 0.04967121  2005
+      2:        5+  258261321 0.95032879  2005
+      
+      $participants
+         age.group participants proportion
+            <char>        <int>      <num>
+      1:     [0,5)          654 0.09085857
+      2:        5+         6544 0.90914143
+      
 
 # warning is thrown if it is assumed that the survey is representative
 
