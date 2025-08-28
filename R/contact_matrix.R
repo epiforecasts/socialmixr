@@ -86,7 +86,7 @@ contact_matrix <- function(
   # if a survey contains data from multiple countries.
   survey$participants <- filter_countries(survey$participants, countries)
 
-  survey$participants <- set_part_age(survey$participants)
+  survey$participants <- add_part_age(survey$participants)
 
   ## sample estimated participant ages
   survey$participants <- sample_participant_ages(
@@ -103,7 +103,7 @@ contact_matrix <- function(
   )
 
   ## set contact age if it's not in the data
-  survey$contacts <- set_contact_age(survey$contacts)
+  survey$contacts <- add_contact_age(survey$contacts)
 
   ## convert factors to integers, preserving numeric values
   survey$contacts <- convert_factor_to_integer(

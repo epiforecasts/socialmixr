@@ -120,7 +120,7 @@ filter_countries <- function(participants, countries) {
   participants
 }
 
-set_part_age <- function(participants) {
+add_part_age <- function(participants) {
   if ("part_age_exact" %in% colnames(participants)) {
     participants <- participants[, part_age := as.integer(part_age_exact)]
   } else if (!("part_age" %in% colnames(participants))) {
@@ -129,7 +129,7 @@ set_part_age <- function(participants) {
   participants
 }
 
-set_contact_age <- function(contacts) {
+add_contact_age <- function(contacts) {
   if ("cnt_age_exact" %in% colnames(contacts)) {
     contacts <- contacts[, cnt_age := as.integer(cnt_age_exact)]
   } else {
