@@ -38,8 +38,8 @@ sample_participant_ages <- function(
   data
 }
 
-drop_ages_below_age_limit <- function(contacts, age_limits) {
-  contacts[is.na(cnt_age) | cnt_age >= min(age_limits), ]
+drop_ages_below_age_limit <- function(data, age_limits) {
+  data[is.na(cnt_age) | cnt_age >= min(age_limits), ]
 }
 
 est_contact_age_mean <- function(contacts) {

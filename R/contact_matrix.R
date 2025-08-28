@@ -107,7 +107,7 @@ contact_matrix <- function(
 
   ## convert factors to integers, preserving numeric values
   survey$contacts <- convert_factor_to_integer(
-    contacts = survey$contacts,
+    data = survey$contacts,
     cols = c(
       "cnt_age",
       "cnt_age_est_min",
@@ -127,7 +127,7 @@ contact_matrix <- function(
   # TODO are we sure that we want to use `age.limits` as defined above, because
   # that means it is defined by the participants age limit?
   survey$contacts <- drop_ages_below_age_limit(
-    contacts = survey$contacts,
+    data = survey$contacts,
     age_limits = age.limits
   )
 
@@ -137,7 +137,7 @@ contact_matrix <- function(
     missing_action = missing.contact.age
   )
 
-  survey$contacts <- drop_contact_ages(
+  survey$contacts <- drop_missing_contact_ages(
     contacts = survey$contacts,
     missing_action = missing.contact.age
   )
