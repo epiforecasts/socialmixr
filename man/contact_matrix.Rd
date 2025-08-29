@@ -7,7 +7,7 @@
 contact_matrix(
   survey,
   countries = NULL,
-  survey.pop,
+  survey.pop = NULL,
   age.limits = NULL,
   filter,
   counts = FALSE,
