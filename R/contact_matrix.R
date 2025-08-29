@@ -203,7 +203,7 @@ contact_matrix <- function(
   }
 
   ## weights
-  survey$participants <- assign_participant_weights(
+  survey$participants <- participant_weights(
     participants = survey$participants,
     survey.pop.full = survey.pop.full,
     weights = weights,

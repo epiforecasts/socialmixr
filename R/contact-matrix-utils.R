@@ -597,7 +597,7 @@ weigh_by_user_defined <- function(participants, weights) {
   participants
 }
 
-assign_participant_weights <- function(
+participant_weights <- function(
   participants,
   survey.pop.full,
   weights,
