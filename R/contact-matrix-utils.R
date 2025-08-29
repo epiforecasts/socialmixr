@@ -1014,12 +1014,16 @@ return_participant_weights <- function(
       .N,
       by = list(age.group, participant.age = part_age, is.weekday, weight)
     ]
-  } else if (weigh.age) {
+  }
+
+  if (weigh.age && !weigh.dayofweek) {
     part.weights <- survey_participants[,
       .N,
       by = list(age.group, participant.age = part_age, weight)
     ]
-  } else if (weigh.dayofweek) {
+  }
+
+  if (weigh.dayofweek && !weigh.age) {
     part.weights <- survey_participants[,
       .N,
       by = list(age.group, is.weekday, weight)
