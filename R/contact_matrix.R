@@ -225,7 +225,7 @@ contact_matrix <- function(
   }
 
   ## set contact age groups
-  survey$contacts <- set_contact_age_groups(
+  survey$contacts <- add_contact_age_groups(
     contacts = survey$contacts,
     age_breaks = create_age_breaks(age.limits, max.age),
     age_groups = age_group_labels(survey$participants)

@@ -701,7 +701,7 @@ impute_age_by_sample <- function(contacts) {
   contacts
 }
 
-set_contact_age_groups <- function(
+add_contact_age_groups <- function(
   contacts,
   age_breaks,
   age_groups
