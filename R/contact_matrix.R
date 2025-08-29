@@ -224,7 +224,7 @@ contact_matrix <- function(
     survey$contacts <- impute_age_by_sample(survey$contacts)
   }
 
-  ## set contact age groups
+  ## add contact age groups
   survey$contacts <- add_contact_age_groups(
     contacts = survey$contacts,
     age_breaks = create_age_breaks(age.limits, max.age),
@@ -253,8 +253,8 @@ contact_matrix <- function(
   ret <- list()
 
   # do not return matrix with mean/norm/contacts if counts and split elected
-  warn_if_counts_and_split(counts, split)
-  check_na_in_weighted_matrix(weighted.matrix, split)
+  warn_if_counts_and_split(counts = counts, split = split)
+  check_na_in_weighted_matrix(weighted.matrix = weighted.matrix, split = split)
 
   # make sure the dim.names are retained after symmetric or split procedure
   retained_dimnames <- dimnames(weighted.matrix)
@@ -263,8 +263,8 @@ contact_matrix <- function(
   # if split and NOT counts and NO NAs in weighted.matrix
   if (split && !counts && !na_in_weighted_matrix(weighted.matrix)) {
     splitted <- split_mean_norm_contacts(
-      weighted.matrix,
-      survey.pop
+      weighted.matrix = weighted.matrix,
+      population = survey.pop$population
     )
 
     weighted.matrix <- splitted$weighted.matrix
@@ -279,9 +279,16 @@ contact_matrix <- function(
 
   # option to add matrix per capita, i.e. the contact rate of age i with one
   # individual of age j in the population.
-  warn_counts_split_per_capita(counts, split, per.capita)
+  warn_counts_split_per_capita(
+    counts = counts,
+    split = split,
+    per.capita = per.capita
+  )
   if (per.capita && !counts && !split) {
-    ret[["matrix.per.capita"]] <- matrix_per_capita(weighted.matrix, survey.pop)
+    ret[["matrix.per.capita"]] <- matrix_per_capita(
+      weighted.matrix = weighted.matrix,
+      survey.pop = survey.pop
+    )
   }
 
   if (exists("survey.year")) {

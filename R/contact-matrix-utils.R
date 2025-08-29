@@ -947,8 +947,7 @@ get_spectral_radius <- function(weighted_matrix) {
 
 split_mean_norm_contacts <- function(
   weighted.matrix,
-  survey.pop,
-  call = rlang::caller_env()
+  population
 ) {
   ## get rid of name but preserve row and column names
   weighted.matrix <- unname(weighted.matrix)
@@ -956,16 +955,15 @@ split_mean_norm_contacts <- function(
   num.contacts <- rowSums(weighted.matrix)
 
   mean.contacts <- mean_contacts_per_person(
-    survey.pop$population,
-    num.contacts
+    population = population,
+    num_contacts = num.contacts
   )
   # Maximum growth rate of the infection process
   # the dominant eigenvalue or the spectral radius
   spectral.radius <- get_spectral_radius(weighted.matrix)
   # normalise: how much more transmission potential from pop. structure
   normalisation <- spectral.radius / mean.contacts
-
-  age.proportions <- survey.pop$population / sum(survey.pop$population)
+  age.proportions <- population / sum(population)
   weighted.matrix <- diag(1 / num.contacts) %*%
     weighted.matrix %*%
     diag(1 / age.proportions)
