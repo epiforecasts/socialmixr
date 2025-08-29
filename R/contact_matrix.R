@@ -156,7 +156,7 @@ contact_matrix <- function(
   ## adjust age.group.breaks to the lower and upper ages in the survey
   survey$participants <- adjust_ppt_age_group_breaks(
     participants = survey$participants,
-    age.limits = age.limits
+    age_limits = age.limits
   )
 
   ## if split, symmetric or age weights are requested, get demographic data
@@ -172,13 +172,13 @@ contact_matrix <- function(
   if (need.survey.pop) {
     ## check if survey population is either not given or is a vector of countries
     survey_pop_info <- survey_pop_year(
-      survey.pop = survey.pop,
+      survey_pop = survey.pop,
       countries = countries,
       participants = survey$participants,
-      age.limits = age.limits
+      age_limits = age.limits
     )
-    survey.pop <- survey_pop_info$survey.pop
-    survey.year <- survey_pop_info$survey.year
+    survey.pop <- survey_pop_info$survey_pop
+    survey.year <- survey_pop_info$survey_year
 
     max.age <- max_participant_age(survey$participants)
     part.age.group.present <- filter_valid_ages(age.limits, max.age)
@@ -196,8 +196,8 @@ contact_matrix <- function(
     ## adjust age groups by interpolating, in case they don't match between
     ## demographic and survey data
     survey.pop <- adjust_survey_age_groups(
-      survey.pop = survey.pop,
-      part.age.group.present = part.age.group.present,
+      survey_pop = survey.pop,
+      part_age_group_present = part.age.group.present,
       ...
     )
   }
@@ -205,7 +205,7 @@ contact_matrix <- function(
   ## weights
   survey$participants <- participant_weights(
     participants = survey$participants,
-    survey.pop.full = survey.pop.full,
+    survey_pop_full = survey.pop.full,
     weights = weights,
     weigh.dayofweek = weigh.dayofweek,
     weigh.age = weigh.age,
@@ -236,15 +236,15 @@ contact_matrix <- function(
     sample.participants = sample.participants,
     participants = survey$participants,
     contacts = survey$contacts,
-    age.limits = age.limits,
+    age_limits = age.limits,
     sample.all.age.groups = sample.all.age.groups
   )
 
   ## calculate weighted contact matrix
   weighted.matrix <- calculate_weighted_matrix(
-    sampled.contacts = sampled_contacts_participants$sampled.contacts,
-    sampled.participants = sampled_contacts_participants$sampled.participants,
-    survey.pop = survey.pop,
+    sampled_contacts = sampled_contacts_participants$sampled_contacts,
+    sampled_participants = sampled_contacts_participants$sampled_participants,
+    survey_pop = survey.pop,
     symmetric,
     counts,
     symmetric.norm.threshold
@@ -254,7 +254,7 @@ contact_matrix <- function(
 
   # do not return matrix with mean/norm/contacts if counts and split elected
   warn_if_counts_and_split(counts = counts, split = split)
-  check_na_in_weighted_matrix(weighted.matrix = weighted.matrix, split = split)
+  check_na_in_weighted_matrix(weighted_matrix = weighted.matrix, split = split)
 
   # make sure the dim.names are retained after symmetric or split procedure
   retained_dimnames <- dimnames(weighted.matrix)
@@ -263,12 +263,12 @@ contact_matrix <- function(
   # if split and NOT counts and NO NAs in weighted.matrix
   if (split && !counts && !na_in_weighted_matrix(weighted.matrix)) {
     splitted <- split_mean_norm_contacts(
-      weighted.matrix = weighted.matrix,
+      weighted_matrix = weighted.matrix,
       population = survey.pop$population
     )
 
-    weighted.matrix <- splitted$weighted.matrix
-    ret[["mean.contacts"]] <- splitted$mean.contacts
+    weighted.matrix <- splitted$weighted_matrix
+    ret[["mean.contacts"]] <- splitted$mean_contacts
     ret[["normalisation"]] <- splitted$normalisation
     ret[["contacts"]] <- splitted$contacts
   }
@@ -282,12 +282,12 @@ contact_matrix <- function(
   warn_counts_split_per_capita(
     counts = counts,
     split = split,
-    per.capita = per.capita
+    per_capita = per.capita
   )
   if (per.capita && !counts && !split) {
     ret[["matrix.per.capita"]] <- matrix_per_capita(
-      weighted.matrix = weighted.matrix,
-      survey.pop = survey.pop
+      weighted_matrix = weighted.matrix,
+      survey_pop = survey.pop
     )
   }
 

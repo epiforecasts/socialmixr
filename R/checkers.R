@@ -1,13 +1,13 @@
 # check if the arguments match from dots to fun_one or fun_two
 #' @importFrom methods formalArgs
 check_arg_dots_in <- function(dots, fun_one, fun_two) {
-  unknown.args <- setdiff(
+  unknown_args <- setdiff(
     names(dots),
     union(formalArgs(fun_one), formalArgs(fun_two))
   )
-  any_unknown_args <- length(unknown.args) > 0
+  any_unknown_args <- length(unknown_args) > 0
   if (any_unknown_args) {
-    cli::cli_abort("Unknown argument{?s}: {unknown.args}.")
+    cli::cli_abort("Unknown argument{?s}: {unknown_args}.")
   }
 }
 
@@ -96,19 +96,19 @@ warn_if_counts_and_split <- function(
 warn_counts_split_per_capita <- function(
   counts,
   split,
-  per.capita,
+  per_capita,
   call = rlang::caller_env()
 ) {
-  if (per.capita && counts) {
+  if (per_capita && counts) {
     cli::cli_warn(
-      message = "{.arg per.capita = TRUE} does not make sense with \\
+      message = "{.arg per_capita = TRUE} does not make sense with \\
       {.arg counts = TRUE}; will not return the contact matrix per capita.",
       call = call
     )
   }
-  if (per.capita && split) {
+  if (per_capita && split) {
     cli::cli_warn(
-      message = "{.code per.capita = TRUE} does not make sense with \\
+      message = "{.code per_capita = TRUE} does not make sense with \\
       {.code split = TRUE}; will not return the contact matrix per capita.",
       call = call
     )
@@ -116,25 +116,25 @@ warn_counts_split_per_capita <- function(
 }
 
 check_na_in_weighted_matrix <- function(
-  weighted.matrix,
+  weighted_matrix,
   split,
   call = rlang::caller_env()
 ) {
-  if (na_in_weighted_matrix(weighted.matrix) && split) {
+  if (na_in_weighted_matrix(weighted_matrix) && split) {
     ## construct a warning in case there are NAs
-    warning.suggestion <- build_na_warning(weighted.matrix)
+    warning_suggestion <- build_na_warning(weighted_matrix)
     cli::cli_warn(
       message = c(
         "{.code split = TRUE} does not work with missing data; will not
           split contact.matrix.",
-        "i" = "{warning.suggestion}" # nolint
+        "i" = "{warning_suggestion}" # nolint
       ),
       call = call
     )
   }
 }
 
-warn_symmetric_counts_na <- function(symmetric, counts, weighted.matrix) {
+warn_symmetric_counts_na <- function(symmetric, counts, weighted_matrix) {
   if (symmetric && counts) {
     cli::cli_warn(
       message = "{.code symmetric = TRUE} does not make sense with
@@ -143,13 +143,13 @@ warn_symmetric_counts_na <- function(symmetric, counts, weighted.matrix) {
     )
   }
 
-  if (symmetric && na_in_weighted_matrix(weighted.matrix)) {
+  if (symmetric && na_in_weighted_matrix(weighted_matrix)) {
     cli::cli_warn(
       message = c(
         "{.code symmetric = TRUE} does not work with missing data; will \\
           not make matrix symmetric.",
         # nolint start
-        "i" = "{build_na_warning(weighted.matrix)}"
+        "i" = "{build_na_warning(weighted_matrix)}"
         # nolint end
       ),
       call = call
@@ -180,6 +180,26 @@ warn_norm_fct_exceed_thresh <- function(
         # nolint start
         "i" = "Normalization factors: [{round(range(normalisation_fctr, \\
             na.rm = TRUE), digits = 1)}]"
+        # nolint end
+      ),
+      call = call
+    )
+  }
+}
+
+
+warn_if_no_survey_countries <- function(
+  survey_representative,
+  call = rlang::caller_env()
+) {
+  if (survey_representative) {
+    cli::cli_warn(
+      message = c(
+        "No {.arg survey.pop} or {.arg countries} given, and no
+              {.arg country} column found in the data.",
+        # nolint start
+        "i" = "I don't know which population this is from (assuming the \\
+              survey is representative)."
         # nolint end
       ),
       call = call

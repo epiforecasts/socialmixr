@@ -92,19 +92,19 @@ drop_missing_contact_ages <- function(contacts, missing_action) {
 max_participant_age <- function(data) {
   if ("part_age_est_max" %in% colnames(data)) {
     part_age_data <- c(data[, part_age_exact], data[, part_age_est_max])
-    max.age <- max(part_age_data, na.rm = TRUE) + 1
+    max_year <- max(part_age_data, na.rm = TRUE) + 1
   } else {
-    max.age <- max(data[, part_age], na.rm = TRUE) + 1
+    max_year <- max(data[, part_age], na.rm = TRUE) + 1
   }
-  max.age
+  max_year
 }
 
-create_age_breaks <- function(age.limits, max.age) {
-  c(age.limits[age.limits < max.age], max.age)
+create_age_breaks <- function(age_limits, max_age) {
+  c(age_limits[age_limits < max_age], max_age)
 }
 
-filter_valid_ages <- function(age.limits, max.age) {
-  age.limits[age.limits < max.age]
+filter_valid_ages <- function(age_limits, max_age) {
+  age_limits[age_limits < max_age]
 }
 
 get_age_limits <- function(participants) {
@@ -238,33 +238,33 @@ apply_data_filter <- function(
 }
 
 # converts from [0,1) [1,5) [5,15) [15,80) to [0,1) [1,5) [5,15) 15+
-final_age_group_label <- function(age.groups) {
-  age.groups[length(age.groups)] <-
-    sub("\\[([0-9]+),.*$", "\\1+", age.groups[length(age.groups)])
-  age.groups
+final_age_group_label <- function(age_groups) {
+  age_groups[length(age_groups)] <-
+    sub("\\[([0-9]+),.*$", "\\1+", age_groups[length(age_groups)])
+  age_groups
 }
 
 # adjust age.group.breaks to the lower and upper ages in the survey
 adjust_ppt_age_group_breaks <- function(
   participants,
-  age.limits
+  age_limits
 ) {
-  max.age <- max_participant_age(participants)
+  max_age <- max_participant_age(participants)
 
-  part.age.group.breaks <- create_age_breaks(age.limits, max.age)
-  part.age.group.present <- filter_valid_ages(age.limits, max.age)
+  part_age_group_breaks <- create_age_breaks(age_limits, max_age)
+  part_age_group_present <- filter_valid_ages(age_limits, max_age)
 
   participants[,
     lower.age.limit := reduce_agegroups(
       part_age,
-      age.limits[age.limits < max.age]
+      age_limits[age_limits < max_age]
     )
   ]
 
   participants[,
     age.group := cut(
       participants[, part_age],
-      breaks = part.age.group.breaks,
+      breaks = part_age_group_breaks,
       right = FALSE
     )
   ]
@@ -281,122 +281,103 @@ adjust_ppt_age_group_breaks <- function(
 
   participants <- add_upper_age_limits(
     participants = participants,
-    part.age.group.present = part.age.group.present,
-    part.age.group.breaks = part.age.group.breaks
+    part_age_group_present = part_age_group_present,
+    part_age_group_breaks = part_age_group_breaks
   )
 
   participants
 }
 
 age_group_labels <- function(participants) {
-  age.groups <- participants[, levels(age.group)]
-  age.groups <- final_age_group_label(age.groups)
-  age.groups
+  age_groups <- participants[, levels(age.group)]
+  age_groups <- final_age_group_label(age_groups)
+  age_groups
 }
 
 add_upper_age_limits <- function(
   participants,
-  part.age.group.present,
-  part.age.group.breaks
+  part_age_group_present,
+  part_age_group_breaks
 ) {
-  lower.upper.age.limits <- data.table(
-    lower.age.limit = part.age.group.present,
-    upper.age.limit = part.age.group.breaks[-1]
+  lower_upper_age_limits <- data.table(
+    lower.age.limit = part_age_group_present,
+    upper.age.limit = part_age_group_breaks[-1]
   )
 
   participants <- merge(
     participants,
-    lower.upper.age.limits,
+    lower_upper_age_limits,
     by = "lower.age.limit",
     all.x = TRUE
   )
   participants
 }
 
-survey_pop_from_data <- function(survey.pop, part.age.group.present) {
-  survey.pop <- data.table(survey.pop)
-  # make sure the maximum survey.pop age exceeds the participant age group breaks
-  if (max(survey.pop$lower.age.limit) < max(part.age.group.present)) {
-    survey.pop <- rbind(
-      survey.pop,
-      list(max(part.age.group.present + 1), 0)
+survey_pop_from_data <- function(survey_pop, part_age_group_present) {
+  survey_pop <- data.table(survey_pop)
+  # make sure the maximum survey_pop age exceeds the participant age group breaks
+  if (max(survey_pop$lower.age.limit) < max(part_age_group_present)) {
+    survey_pop <- rbind(
+      survey_pop,
+      list(max(part_age_group_present + 1), 0)
     )
   }
-  survey.pop
+  survey_pop
 }
 
-get_survey_countries <- function(survey.pop, countries, participants) {
-  if (!is.null(survey.pop)) {
+get_survey_countries <- function(survey_pop, countries, participants) {
+  if (!is.null(survey_pop)) {
     ## survey population is given as vector of countries
-    survey.countries <- survey.pop
+    survey_countries <- survey_pop
   } else if (!is.null(countries)) {
     ## survey population not given but countries requested from
     ## survey - get population data from those countries
-    survey.countries <- countries
+    survey_countries <- countries
   } else if ("country" %in% colnames(participants)) {
     ## neither survey population nor country names given - try to
     ## guess country or countries surveyed from participant data
-    survey.countries <- unique(participants[, country])
+    survey_countries <- unique(participants[, country])
   }
-  survey.countries
+  survey_countries
 }
 
-survey_is_representative <- function(countries, participants, survey.pop) {
+survey_is_representative <- function(countries, participants, survey_pop) {
   no_countries <- is.null(countries) && !("country" %in% colnames(participants))
-  survey_representative <- is.null(survey.pop) && no_countries
+  survey_representative <- is.null(survey_pop) && no_countries
   survey_representative
 }
 
-warn_if_no_survey_countries <- function(
-  survey_representative,
-  call = rlang::caller_env()
-) {
-  if (survey_representative) {
-    cli::cli_warn(
-      message = c(
-        "No {.arg survey.pop} or {.arg countries} given, and no
-              {.arg country} column found in the data.",
-        # nolint start
-        "i" = "I don't know which population this is from (assuming the \\
-              survey is representative)."
-        # nolint end
-      ),
-      call = call
-    )
-  }
-}
-
 survey_pop_from_countries <- function(
-  survey.pop,
+  survey_pop,
   countries,
   participants,
-  age.limits,
+  age_limits,
   call = rlang::caller_env()
 ) {
-  # no countries, and no survey.pop
+  # no countries, and no survey_pop
   survey_representative <- survey_is_representative(
-    countries,
-    participants,
-    survey.pop
+    countries = countries,
+    participants = participants,
+    survey_pop = survey_pop
   )
 
   warn_if_no_survey_countries(survey_representative, call = call)
 
   # there aren't countries or survey pop, get the countries
   if (!survey_representative) {
-    survey.countries <- get_survey_countries(
-      survey.pop,
-      countries,
-      participants
+    survey_countries <- get_survey_countries(
+      survey_pop = survey_pop,
+      countries = countries,
+      participants = participants
     )
     ## get population data for countries from 'wpp' package
-    country.pop <- data.table(wpp_age(survey.countries))
+    country_pop <- data.table(wpp_age(survey_countries))
 
     # !! warning: spelling can differ between wpp_age and wpp_countries
     # (e.g. Viet Nam vs Vietnam)
     # fix: rename countries using the same approach as in clean(survey,...)
-    country.pop$country <- suppressWarnings(countrycode(
-      sourcevar = country.pop$country,
+    country_pop$country <- suppressWarnings(countrycode(
+      sourcevar = country_pop$country,
       origin = "country.name",
       destination = "country.name"
     ))
@@ -404,75 +385,75 @@ survey_pop_from_countries <- function(
     ## check if survey data are from a specific year - in that case
     ## use demographic data from that year, otherwise latest
     if ("year" %in% colnames(participants)) {
-      survey.year <- participants[, median(year, na.rm = TRUE)]
+      survey_year <- participants[, median(year, na.rm = TRUE)]
     } else {
-      survey.year <- country.pop[, max(year, na.rm = TRUE)]
+      survey_year <- country_pop[, max(year, na.rm = TRUE)]
       cli::cli_warn(
         "No information on year found in the data. Will use
-            {survey.year} population data."
+            {survey_year} population data."
       )
     }
 
     ## check if any survey countries are not in wpp
-    check_any_missing_countries(survey.countries, country.pop)
+    check_any_missing_countries(survey_countries, country_pop)
 
     ## get demographic data closest to survey year
-    country.pop.year <- unique(country.pop[, year])
-    survey.year <-
-      min(country.pop.year[which.min(abs(survey.year - country.pop.year))])
-    survey.pop <-
-      country.pop[year == survey.year][,
-        list(population = sum(population)),
-        by = "lower.age.limit"
-      ]
+    country_pop_year <- unique(country_pop[, year])
+    survey_year <- min(
+      country_pop_year[which.min(abs(survey_year - country_pop_year))]
+    )
+    survey_pop <- country_pop[year == survey_year][,
+      list(population = sum(population)),
+      by = "lower.age.limit"
+    ]
   }
 
   if (survey_representative) {
-    survey.pop <- participants[,
-      lower.age.limit := reduce_agegroups(part_age, age.limits)
+    survey_pop <- participants[,
+      lower.age.limit := reduce_agegroups(part_age, age_limits)
     ]
-    survey.pop <- survey.pop[, list(population = .N), by = lower.age.limit]
-    survey.pop <- survey.pop[!is.na(lower.age.limit)]
+    survey_pop <- survey_pop[, list(population = .N), by = lower.age.limit]
+    survey_pop <- survey_pop[!is.na(lower.age.limit)]
     if ("year" %in% colnames(participants)) {
-      survey.year <- participants[, median(year, na.rm = TRUE)]
+      survey_year <- participants[, median(year, na.rm = TRUE)]
     }
   }
 
   list(
-    survey.year = survey.year,
-    survey.pop = survey.pop
+    survey_year = survey_year,
+    survey_pop = survey_pop
   )
 }
 
 survey_pop_year <- function(
-  survey.pop,
+  survey_pop,
   countries,
   participants,
-  age.limits
+  age_limits
 ) {
-  if (is.null(survey.pop) || is.character(survey.pop)) {
+  if (is.null(survey_pop) || is.character(survey_pop)) {
     survey_pop_info <- survey_pop_from_countries(
-      survey.pop = survey.pop,
+      survey_pop = survey_pop,
       countries = countries,
       participants = participants,
-      age.limits = age.limits
+      age_limits = age_limits
     )
-    survey.pop <- survey_pop_info$survey.pop
-    survey.year <- survey_pop_info$survey.year
+    survey_pop <- survey_pop_info$survey_pop
+    survey_year <- survey_pop_info$survey_year
   } else {
-    max.age <- max_participant_age(participants)
+    max_year <- max_participant_age(participants)
 
-    part.age.group.present <- filter_valid_ages(age.limits, max.age)
-    # if survey.pop is a data frame with columns 'lower.age.limit' and 'population'
-    survey.pop <- survey_pop_from_data(survey.pop, part.age.group.present)
+    part_age_group_present <- filter_valid_ages(age_limits, max_year)
+    # if survey_pop is a data frame with columns 'lower.age.limit' and 'population'
+    survey_pop <- survey_pop_from_data(survey_pop, part_age_group_present)
 
-    # add dummy survey.year
-    survey.year <- NA_integer_
+    # add dummy survey_year
+    survey_year <- NA_integer_
   }
 
   list(
-    survey.pop = survey.pop,
-    survey.year = survey.year
+    survey_pop = survey_pop,
+    survey_year = survey_year
   )
 }
 
@@ -489,26 +470,26 @@ add_survey_upper_age_limit <- function(survey, age_breaks) {
   survey
 }
 
-survey_pop_reference <- function(survey.pop, ...) {
+survey_pop_reference <- function(survey_pop, ...) {
   data.table(
     pop_age(
-      survey.pop,
+      survey_pop,
       seq(
-        min(survey.pop$lower.age.limit),
-        max(survey.pop$upper.age.limit)
+        min(survey_pop$lower.age.limit),
+        max(survey_pop$upper.age.limit)
       ),
       ...
     )
   )
 }
 
-adjust_survey_age_groups <- function(survey.pop, part.age.group.present, ...) {
-  survey.pop.max <- max(survey.pop$upper.age.limit)
-  survey.pop <- data.table(pop_age(survey.pop, part.age.group.present, ...))
+adjust_survey_age_groups <- function(survey_pop, part_age_group_present, ...) {
+  survey_pop_max <- max(survey_pop$upper.age.limit)
+  survey_pop <- data.table(pop_age(survey_pop, part_age_group_present, ...))
 
   ## set upper age limits
-  survey.pop[,
-    upper.age.limit := c(part.age.group.present[-1], survey.pop.max)
+  survey_pop[,
+    upper.age.limit := c(part_age_group_present[-1], survey_pop_max)
   ]
 }
 
@@ -516,7 +497,7 @@ weight_by_day_of_week <- function(
   participants,
   call = rlang::caller_env()
 ) {
-  found.dayofweek <- FALSE
+  found_dayofweek <- FALSE
   if ("dayofweek" %in% colnames(participants)) {
     ## Add column sum_weight: Number of entries on weekdays / weekends
     participants[,
@@ -530,12 +511,12 @@ weight_by_day_of_week <- function(
     participants[!(dayofweek %in% 1:5), weight := 2 / sum_weight]
 
     participants[, sum_weight := NULL]
-    found.dayofweek <- TRUE
+    found_dayofweek <- TRUE
 
     # add boolean for "weekday"
     participants[, is.weekday := dayofweek %in% 1:5]
   }
-  if (!found.dayofweek) {
+  if (!found_dayofweek) {
     cli::cli_warn(
       message = c(
         "{.code weigh.dayofweek} is {.val TRUE}, but no {.col dayofweek} \\
@@ -550,26 +531,26 @@ weight_by_day_of_week <- function(
   participants
 }
 
-weight_by_age <- function(participants, survey.pop.full) {
+weight_by_age <- function(participants, survey_pop_full) {
   # get number and proportion of participants by age
   participants[, age.count := .N, by = part_age]
   participants[, age.proportion := age.count / .N]
 
   # get reference population by age (absolute and proportional)
-  part.age.all <- range(unique(participants[, part_age]))
-  survey.pop.detail <- data.table(pop_age(
-    survey.pop.full,
-    seq(part.age.all[1], part.age.all[2] + 1)
+  part_age_all <- range(unique(participants[, part_age]))
+  survey_pop_detail <- data.table(pop_age(
+    survey_pop_full,
+    seq(part_age_all[1], part_age_all[2] + 1)
   ))
-  names(survey.pop.detail) <- c("part_age", "population.count")
-  survey.pop.detail[,
+  names(survey_pop_detail) <- c("part_age", "population.count")
+  survey_pop_detail[,
     population.proportion := population.count / sum(population.count)
   ]
 
   # merge reference and survey population data
   participants <- merge(
     participants,
-    survey.pop.detail,
+    survey_pop_detail,
     by = "part_age"
   )
 
@@ -599,7 +580,7 @@ weigh_by_user_defined <- function(participants, weights) {
 
 participant_weights <- function(
   participants,
-  survey.pop.full,
+  survey_pop_full,
   weights,
   weigh.dayofweek,
   weigh.age,
@@ -614,7 +595,7 @@ participant_weights <- function(
 
   ## assign weights to participants, to account for age variation
   if (weigh.age) {
-    participants <- weight_by_age(participants, survey.pop.full)
+    participants <- weight_by_age(participants, survey_pop_full)
   }
 
   ## option to weigh the contact data with user-defined participant weights
@@ -657,12 +638,12 @@ merge_participants_contacts <- function(participants, contacts) {
 }
 
 ## some contacts in the age group have an age, sample from these
-sample_present_age <- function(contacts, this.age.group) {
+sample_present_age <- function(contacts, this_age_group) {
   contacts[
-    is.na(cnt_age) & age.group == this.age.group,
+    is.na(cnt_age) & age.group == this_age_group,
     cnt_age := sample(
       contacts[
-        !is.na(cnt_age) & age.group == this.age.group,
+        !is.na(cnt_age) & age.group == this_age_group,
         cnt_age
       ],
       size = .N,
@@ -671,28 +652,28 @@ sample_present_age <- function(contacts, this.age.group) {
   ]
 }
 
-sample_uniform_age <- function(contacts, this.age.group) {
-  min.contact.age <- contacts[, min(cnt_age, na.rm = TRUE)]
-  max.contact.age <- contacts[, max(cnt_age, na.rm = TRUE)]
+sample_uniform_age <- function(contacts, this_age_group) {
+  min_contact_age <- contacts[, min(cnt_age, na.rm = TRUE)]
+  max_contact_age <- contacts[, max(cnt_age, na.rm = TRUE)]
   contacts[
-    is.na(cnt_age) & age.group == this.age.group,
+    is.na(cnt_age) & age.group == this_age_group,
     cnt_age := as.integer(floor(runif(
       .N,
-      min = min.contact.age,
-      max = max.contact.age + 1
+      min = min_contact_age,
+      max = max_contact_age + 1
     )))
   ]
 }
 
 impute_age_by_sample <- function(contacts) {
-  for (this.age.group in unique(contacts[is.na(cnt_age), age.group])) {
+  for (this_age_group in unique(contacts[is.na(cnt_age), age.group])) {
     ## first, deal with missing age
-    if (nrow(contacts[!is.na(cnt_age) & age.group == this.age.group]) > 0) {
+    if (nrow(contacts[!is.na(cnt_age) & age.group == this_age_group]) > 0) {
       ## some contacts in the age group have an age, sample from these
-      contacts <- sample_present_age(contacts, this.age.group)
+      contacts <- sample_present_age(contacts, this_age_group)
     } else if (nrow(contacts[!is.na(cnt_age), ]) > 0) {
       ## no contacts in the age group have an age, sample uniformly between limits
-      contacts <- sample_uniform_age(contacts, this.age.group)
+      contacts <- sample_uniform_age(contacts, this_age_group)
     }
   }
   # make sure the final set does not contain NA's anymore
@@ -706,10 +687,10 @@ add_contact_age_groups <- function(
   age_breaks,
   age_groups
 ) {
-  max.contact.age <- contacts[, max(cnt_age, na.rm = TRUE) + 1]
+  max_contact_age <- contacts[, max(cnt_age, na.rm = TRUE) + 1]
 
-  if (max.contact.age > max(age_breaks)) {
-    age_breaks[length(age_breaks)] <- max.contact.age
+  if (max_contact_age > max(age_breaks)) {
+    age_breaks[length(age_breaks)] <- max_contact_age
   }
   contacts[,
     contact.age.group := cut(
@@ -721,46 +702,46 @@ add_contact_age_groups <- function(
   ]
 }
 
-create_bootstrap_weights <- function(part.sample) {
-  sample.table <- data.table(id = part.sample, weight = 1)
-  sample.table <- sample.table[,
+create_bootstrap_weights <- function(part_sample) {
+  sample_table <- data.table(id = part_sample, weight = 1)
+  sample_table <- sample_table[,
     list(bootstrap.weight = sum(weight)),
     by = id
   ]
-  setnames(sample.table, "id", "part_id")
-  setkey(sample.table, part_id)
-  sample.table
+  setnames(sample_table, "id", "part_id")
+  setkey(sample_table, part_id)
+  sample_table
 }
 
 sample_from_participants <- function(
   participants,
   contacts,
-  age.limits,
+  age_limits,
   sample.all.age.groups
 ) {
-  good.sample <- FALSE
-  while (!good.sample) {
+  good_sample <- FALSE
+  while (!good_sample) {
     participant_ids <- unique(participants$part_id)
     ## take a sample from the participants
-    part.sample <- sample(participant_ids, replace = TRUE)
-    part.age.limits <- unique(
-      participants[part_id %in% part.sample, lower.age.limit]
+    part_sample <- sample(participant_ids, replace = TRUE)
+    part_age_limits <- unique(
+      participants[part_id %in% part_sample, lower.age.limit]
     )
-    age_limits_match_part <- setequal(age.limits, part.age.limits)
-    good.sample <- !sample.all.age.groups || age_limits_match_part
+    age_limits_match_part <- setequal(age_limits, part_age_limits)
+    good_sample <- !sample.all.age.groups || age_limits_match_part
 
-    sample.table <- create_bootstrap_weights(part.sample)
+    sample_table <- create_bootstrap_weights(part_sample)
 
-    sampled.contacts <- merge(contacts, sample.table)
-    sampled.contacts[, sampled.weight := weight * bootstrap.weight]
+    sampled_contacts <- merge(contacts, sample_table)
+    sampled_contacts[, sampled.weight := weight * bootstrap.weight]
 
-    sampled.participants <- merge(participants, sample.table)
-    sampled.participants[, sampled.weight := weight * bootstrap.weight]
+    sampled_participants <- merge(participants, sample_table)
+    sampled_participants[, sampled.weight := weight * bootstrap.weight]
   }
 
   list(
-    sampled.contacts = sampled.contacts,
-    sampled.participants = sampled.participants
+    sampled_contacts = sampled_contacts,
+    sampled_participants = sampled_participants
   )
 }
 
@@ -768,21 +749,21 @@ sample_contacts_participants <- function(
   sample.participants,
   participants,
   contacts,
-  age.limits,
+  age_limits,
   sample.all.age.groups
 ) {
   if (sample.participants) {
     sampled_contacts_participants <- sample_from_participants(
       participants,
       contacts,
-      age.limits,
+      age_limits,
       sample.all.age.groups
     )
   } else {
     ## just use all participants
     sampled_contacts_participants <- list(
-      sampled.contacts = contacts[, sampled.weight := weight],
-      sampled.participants = participants[, sampled.weight := weight]
+      sampled_contacts = contacts[, sampled.weight := weight],
+      sampled_participants = participants[, sampled.weight := weight]
     )
   }
   sampled_contacts_participants
@@ -803,99 +784,99 @@ weighted_matrix_array <- function(contacts) {
 }
 
 calculate_weighted_matrix <- function(
-  sampled.contacts = sampled.contacts,
-  sampled.participants = sampled.participants,
-  survey.pop = survey.pop,
+  sampled_contacts = sampled_contacts,
+  sampled_participants = sampled_participants,
+  survey_pop = survey_pop,
   symmetric,
   counts,
   symmetric.norm.threshold
 ) {
-  weighted.matrix <- weighted_matrix_array(
-    contacts = sampled.contacts
+  weighted_matrix <- weighted_matrix_array(
+    contacts = sampled_contacts
   )
 
   if (!counts) {
     ## normalise to give mean number of contacts
-    weighted.matrix <- normalise_weights_to_counts(
-      sampled.participants = sampled.participants,
-      weighted.matrix = weighted.matrix
+    weighted_matrix <- normalise_weights_to_counts(
+      sampled_participants = sampled_participants,
+      weighted_matrix = weighted_matrix
     )
   }
 
-  warn_symmetric_counts_na(symmetric, counts, weighted.matrix)
-  matrix_not_scalar <- prod(dim(as.matrix(weighted.matrix))) > 1
-  na_in_weighted_mtx <- na_in_weighted_matrix(weighted.matrix)
+  warn_symmetric_counts_na(symmetric, counts, weighted_matrix)
+  matrix_not_scalar <- prod(dim(as.matrix(weighted_matrix))) > 1
+  na_in_weighted_mtx <- na_in_weighted_matrix(weighted_matrix)
   if (symmetric && matrix_not_scalar && !na_in_weighted_mtx) {
-    weighted.matrix <- normalise_weighted_matrix(
-      survey.pop = survey.pop,
-      weighted.matrix = weighted.matrix,
+    weighted_matrix <- normalise_weighted_matrix(
+      survey_pop = survey_pop,
+      weighted_matrix = weighted_matrix,
       symmetric.norm.threshold = symmetric.norm.threshold
     )
   }
-  weighted.matrix
+  weighted_matrix
 }
 
-normalise_weights_to_counts <- function(sampled.participants, weighted.matrix) {
+normalise_weights_to_counts <- function(sampled_participants, weighted_matrix) {
   ## normalise to give mean number of contacts
   ## calculate normalisation vector
-  norm.vector <- c(xtabs(
-    data = sampled.participants,
+  norm_vector <- c(xtabs(
+    data = sampled_participants,
     formula = sampled.weight ~ age.group,
     addNA = TRUE
   ))
 
   ## normalise contact matrix
-  weighted.matrix <- weighted.matrix / norm.vector
+  weighted_matrix <- weighted_matrix / norm_vector
 
   ## set non-existent data to NA
-  weighted.matrix[is.nan(weighted.matrix)] <- NA_real_
+  weighted_matrix[is.nan(weighted_matrix)] <- NA_real_
 
-  weighted.matrix
+  weighted_matrix
 }
 
 ## construct a warning in case there are NAs
-build_na_warning <- function(weighted.matrix) {
-  na.headers <- anyNA(dimnames(weighted.matrix), recursive = TRUE)
-  na.content <- anyNA(weighted.matrix)
-  na.present <- na.headers || na.content
+build_na_warning <- function(weighted_matrix) {
+  na_headers <- anyNA(dimnames(weighted_matrix), recursive = TRUE)
+  na_content <- anyNA(weighted_matrix)
+  na_present <- na_headers || na_content
 
-  warning.suggestion <- NULL
-  if (na.present) {
-    warning.suggestion <- "  Consider "
-    if (na.headers) {
-      warning.suggestion <- paste0(warning.suggestion, "setting ")
-      suggested.options <- NULL
-      if (anyNA(rownames(weighted.matrix))) {
-        suggested.options <- c(suggested.options, "'missing.participant.age'")
+  warning_suggestion <- NULL
+  if (na_present) {
+    warning_suggestion <- "  Consider "
+    if (na_headers) {
+      warning_suggestion <- paste0(warning_suggestion, "setting ")
+      suggested_options <- NULL
+      if (anyNA(rownames(weighted_matrix))) {
+        suggested_options <- c(suggested_options, "'missing.participant.age'")
       }
-      if (anyNA(colnames(weighted.matrix))) {
-        suggested.options <- c(suggested.options, "'missing.contact.age'")
+      if (anyNA(colnames(weighted_matrix))) {
+        suggested_options <- c(suggested_options, "'missing.contact.age'")
       }
 
-      warning.suggestion <-
-        paste0(warning.suggestion, paste(suggested.options, collapse = " and "))
-      if (na.content) {
-        warning.suggestion <- paste0(warning.suggestion, ", and ")
+      warning_suggestion <-
+        paste0(warning_suggestion, paste(suggested_options, collapse = " and "))
+      if (na_content) {
+        warning_suggestion <- paste0(warning_suggestion, ", and ")
       } else {
-        warning.suggestion <- paste0(warning.suggestion, ".")
+        warning_suggestion <- paste0(warning_suggestion, ".")
       }
     }
-    if (na.content) {
-      warning.suggestion <- paste0(
-        warning.suggestion,
+    if (na_content) {
+      warning_suggestion <- paste0(
+        warning_suggestion,
         "adjusting the age limits."
       )
     }
   }
-  warning.suggestion
+  warning_suggestion
 }
 
-na_in_weighted_matrix <- function(weighted.matrix) {
-  na.headers <- anyNA(dimnames(weighted.matrix), recursive = TRUE)
-  na.content <- anyNA(weighted.matrix)
-  na.present <- na.headers || na.content
+na_in_weighted_matrix <- function(weighted_matrix) {
+  na_headers <- anyNA(dimnames(weighted_matrix), recursive = TRUE)
+  na_content <- anyNA(weighted_matrix)
+  na_present <- na_headers || na_content
 
-  na.present
+  na_present
 }
 
 normalisation_factors <- function(normalised_matrix, weighted_matrix) {
@@ -910,25 +891,25 @@ normalisation_factors <- function(normalised_matrix, weighted_matrix) {
 }
 
 normalise_weighted_matrix <- function(
-  survey.pop,
-  weighted.matrix,
+  survey_pop,
+  weighted_matrix,
   symmetric.norm.threshold,
   call = rlang::caller_env()
 ) {
   ## set c_{ij} N_i and c_{ji} N_j (which should both be equal) to
   ## 0.5 * their sum; then c_{ij} is that sum / N_i
-  normalised.weighted.matrix <- survey.pop$population * weighted.matrix
-  normalised.weighted.matrix <- 0.5 /
-    survey.pop$population *
-    (normalised.weighted.matrix + t(normalised.weighted.matrix))
+  normalised_weighted_matrix <- survey_pop$population * weighted_matrix
+  normalised_weighted_matrix <- 0.5 /
+    survey_pop$population *
+    (normalised_weighted_matrix + t(normalised_weighted_matrix))
 
   warn_norm_fct_exceed_thresh(
-    normalised_weighted_matrix = normalised.weighted.matrix,
-    weighted_matrix = weighted.matrix,
+    normalised_weighted_matrix = normalised_weighted_matrix,
+    weighted_matrix = weighted_matrix,
     symmetric_norm_threshold = symmetric.norm.threshold
   )
 
-  normalised.weighted.matrix
+  normalised_weighted_matrix
 }
 
 mean_contacts_per_person <- function(population, num_contacts) {
@@ -946,55 +927,55 @@ get_spectral_radius <- function(weighted_matrix) {
 }
 
 split_mean_norm_contacts <- function(
-  weighted.matrix,
+  weighted_matrix,
   population
 ) {
   ## get rid of name but preserve row and column names
-  weighted.matrix <- unname(weighted.matrix)
+  weighted_matrix <- unname(weighted_matrix)
 
-  num.contacts <- rowSums(weighted.matrix)
+  num_contacts <- rowSums(weighted_matrix)
 
-  mean.contacts <- mean_contacts_per_person(
+  mean_contacts <- mean_contacts_per_person(
     population = population,
-    num_contacts = num.contacts
+    num_contacts = num_contacts
   )
   # Maximum growth rate of the infection process
   # the dominant eigenvalue or the spectral radius
-  spectral.radius <- get_spectral_radius(weighted.matrix)
+  spectral_radius <- get_spectral_radius(weighted_matrix)
   # normalise: how much more transmission potential from pop. structure
-  normalisation <- spectral.radius / mean.contacts
-  age.proportions <- population / sum(population)
-  weighted.matrix <- diag(1 / num.contacts) %*%
-    weighted.matrix %*%
-    diag(1 / age.proportions)
-  num.contacts <- num.contacts / spectral.radius
+  normalisation <- spectral_radius / mean_contacts
+  age_proportions <- population / sum(population)
+  weighted_matrix <- diag(1 / num_contacts) %*%
+    weighted_matrix %*%
+    diag(1 / age_proportions)
+  num_contacts <- num_contacts / spectral_radius
 
   list(
-    weighted.matrix = weighted.matrix,
-    mean.contacts = mean.contacts,
+    weighted_matrix = weighted_matrix,
+    mean_contacts = mean_contacts,
     normalisation = normalisation,
-    contacts = num.contacts
+    contacts = num_contacts
   )
 }
 
-matrix_per_capita <- function(weighted.matrix, survey.pop) {
-  weighted.matrix.per.capita <- weighted.matrix /
+matrix_per_capita <- function(weighted_matrix, survey_pop) {
+  weighted_matrix_per_capita <- weighted_matrix /
     matrix(
-      rep(survey.pop$population, nrow(survey.pop)),
-      ncol = nrow(survey.pop),
+      rep(survey_pop$population, nrow(survey_pop)),
+      ncol = nrow(survey_pop),
       byrow = TRUE
     )
-  weighted.matrix.per.capita
+  weighted_matrix_per_capita
 }
 
 n_participants_per_age_group <- function(participants) {
-  part.pop <- data.table(table(
+  participant_population <- data.table(table(
     participants[, age.group],
     useNA = "ifany"
   ))
-  setnames(part.pop, c("age.group", "participants"))
-  part.pop[, proportion := participants / sum(participants)]
-  part.pop
+  setnames(participant_population, c("age.group", "participants"))
+  participant_population[, proportion := participants / sum(participants)]
+  participant_population
 }
 
 return_participant_weights <- function(
@@ -1003,37 +984,37 @@ return_participant_weights <- function(
   weigh.dayofweek
 ) {
   # default
-  part.weights <- survey_participants[, .N, by = list(age.group, weight)]
-  part.weights <- part.weights[order(age.group, weight), ]
+  part_weights <- survey_participants[, .N, by = list(age.group, weight)]
+  part_weights <- part_weights[order(age.group, weight), ]
 
   # add age and/or dayofweek info
   if (weigh.age && weigh.dayofweek) {
-    part.weights <- survey_participants[,
+    part_weights <- survey_participants[,
       .N,
       by = list(age.group, participant.age = part_age, is.weekday, weight)
     ]
   }
 
   if (weigh.age && !weigh.dayofweek) {
-    part.weights <- survey_participants[,
+    part_weights <- survey_participants[,
       .N,
       by = list(age.group, participant.age = part_age, weight)
     ]
   }
 
   if (weigh.dayofweek && !weigh.age) {
-    part.weights <- survey_participants[,
+    part_weights <- survey_participants[,
       .N,
       by = list(age.group, is.weekday, weight)
     ]
   }
 
   # order (from left to right)
-  part.weights <- part.weights[order(part.weights), ] # nolint
+  part_weights <- part_weights[order(part_weights), ] # nolint
 
   # set name of last column
-  names(part.weights)[ncol(part.weights)] <- "participants"
+  names(part_weights)[ncol(part_weights)] <- "participants"
 
-  part.weights[, proportion := participants / sum(participants)]
-  part.weights[]
+  part_weights[, proportion := participants / sum(participants)]
+  part_weights[]
 }
