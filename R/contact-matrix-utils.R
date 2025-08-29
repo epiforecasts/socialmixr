@@ -326,7 +326,7 @@ survey_pop_from_data <- function(survey.pop, part.age.group.present) {
 }
 
 get_survey_countries <- function(survey.pop, countries, participants) {
-  if (!missing(survey.pop)) {
+  if (!is.null(survey.pop)) {
     ## survey population is given as vector of countries
     survey.countries <- survey.pop
   } else if (!is.null(countries)) {
@@ -343,7 +343,7 @@ get_survey_countries <- function(survey.pop, countries, participants) {
 
 survey_is_representative <- function(countries, participants, survey.pop) {
   no_countries <- is.null(countries) && !("country" %in% colnames(participants))
-  survey_representative <- missing(survey.pop) && no_countries
+  survey_representative <- is.null(survey.pop) && no_countries
   survey_representative
 }
 
@@ -448,8 +448,8 @@ define_survey_pop <- function(
   participants,
   age.limits
 ) {
-  if (missing(survey.pop) || is.character(survey.pop)) {
     survey_pop_info <- survey_pop_is_derived(
+  if (is.null(survey.pop) || is.character(survey.pop)) {
       survey.pop = survey.pop,
       countries = countries,
       participants = participants,
