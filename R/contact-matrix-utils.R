@@ -366,13 +366,14 @@ warn_if_no_survey_countries <- function(
   }
 }
 
-survey_pop_is_derived <- function(
+survey_pop_from_countries <- function(
   survey.pop,
   countries,
   participants,
   age.limits,
   call = rlang::caller_env()
 ) {
+  # no countries, and no survey.pop
   survey_representative <- survey_is_representative(
     countries,
     participants,
@@ -381,6 +382,7 @@ survey_pop_is_derived <- function(
 
   warn_if_no_survey_countries(survey_representative, call = call)
 
+  # there aren't countries or survey pop, get the countries
   if (!survey_representative) {
     survey.countries <- get_survey_countries(
       survey.pop,
@@ -448,8 +450,8 @@ survey_pop_year <- function(
   participants,
   age.limits
 ) {
-    survey_pop_info <- survey_pop_is_derived(
   if (is.null(survey.pop) || is.character(survey.pop)) {
+    survey_pop_info <- survey_pop_from_countries(
       survey.pop = survey.pop,
       countries = countries,
       participants = participants,
