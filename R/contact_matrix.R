@@ -170,8 +170,8 @@ contact_matrix <- function(
   )
 
   if (need.survey.pop) {
-    ## check if survey population is either not given or given as a vector of countries
-    survey_pop_info <- define_survey_pop(
+    ## check if survey population is either not given or is a vector of countries
+    survey_pop_info <- survey_pop_year(
       survey.pop = survey.pop,
       countries = countries,
       participants = survey$participants,

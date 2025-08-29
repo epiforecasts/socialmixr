@@ -442,7 +442,7 @@ survey_pop_is_derived <- function(
   )
 }
 
-define_survey_pop <- function(
+survey_pop_year <- function(
   survey.pop,
   countries,
   participants,
