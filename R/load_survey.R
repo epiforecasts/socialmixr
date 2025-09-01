@@ -34,25 +34,9 @@ load_survey <- function(files, ...) {
   }
 
   ## join files that can be joined
-  for (file1 in survey_files) {
-    if (!is.null(contact_data[[file1]])) {
-      for (file2 in setdiff(survey_files, file1)) {
-        if (
-          setequal(
-            colnames(contact_data[[file1]]),
-            colnames(contact_data[[file2]])
-          )
-        ) {
-          contact_data[[file1]] <- rbindlist(
-            list(contact_data[[file1]], contact_data[[file2]]),
-            fill = TRUE
-          )
-          contact_data[[file2]] <- NULL
-          survey_files <- setdiff(survey_files, file2)
-        }
-      }
-    }
-  }
+  survey_contact_data <- join_compatible_files(survey_files, contact_data)
+  contact_data <- survey_contact_data$contact_data
+  survey_files <- survey_contact_data$survey_files
 
   ## lastly, merge in any additional files that can be merged
   for (type in main_types) {
