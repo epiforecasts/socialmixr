@@ -60,11 +60,10 @@ load_survey <- function(files, ...) {
             colnames(contact_data[[file2]])
           )
         ) {
-          contact_data[[file1]] <-
-            rbindlist(
-              list(contact_data[[file1]], contact_data[[file2]]),
-              fill = TRUE
-            )
+          contact_data[[file1]] <- rbindlist(
+            list(contact_data[[file1]], contact_data[[file2]]),
+            fill = TRUE
+          )
           contact_data[[file2]] <- NULL
           survey_files <- setdiff(survey_files, file2)
         }
@@ -74,14 +73,11 @@ load_survey <- function(files, ...) {
 
   ## lastly, merge in any additional files that can be merged
   for (type in main_types) {
+    main_cols <- colnames(main_surveys[[type]])
     can_merge <- vapply(
       survey_files,
       function(x) {
-        length(intersect(
-          colnames(contact_data[[x]]),
-          colnames(main_surveys[[type]])
-        )) >
-          0
+        any(colnames(contact_data[[x]]) %in% main_cols)
       },
       TRUE
     )
@@ -141,14 +137,11 @@ load_survey <- function(files, ...) {
         }
       }
       survey_files <- setdiff(survey_files, merged_files)
+      main_cols <- colnames(main_surveys[[type]])
       can_merge <- vapply(
         survey_files,
         function(x) {
-          length(intersect(
-            colnames(contact_data[[x]]),
-            colnames(main_surveys[[type]])
-          )) >
-            0
+          any(colnames(contact_data[[x]]) %in% main_cols)
         },
         TRUE
       )
