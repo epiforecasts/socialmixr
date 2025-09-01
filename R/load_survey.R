@@ -14,11 +14,8 @@
 #' @return a survey in the correct format
 #' @export
 load_survey <- function(files, ...) {
-  exist <- file.exists(files)
-  files_missing <- files[!exist]
-  if (length(files_missing) > 0) {
-    cli::cli_abort("File{?s} {.file {files_missing}} not found.")
-  }
+  check_files_exist(files)
+
   survey_files <- grep("csv$", files, value = TRUE) # select csv files
   reference_file <- grep("json$", files, value = TRUE) # select json file
   if (length(reference_file) > 0) {
