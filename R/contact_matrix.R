@@ -149,10 +149,6 @@ contact_matrix <- function(
     filter = filter
   )
 
-  max.age <- max_participant_age(survey$participants)
-
-  part.age.group.present <- filter_valid_ages(age.limits, max.age)
-
   ## adjust age.group.breaks to the lower and upper ages in the survey
   survey$participants <- adjust_ppt_age_group_breaks(
     participants = survey$participants,
@@ -241,6 +237,8 @@ contact_matrix <- function(
   if (missing.contact.age == "sample" && missing_contact_age) {
     survey$contacts <- impute_age_by_sample(survey$contacts)
   }
+
+  max.age <- max_participant_age(survey$participants)
 
   ## add contact age groups
   survey$contacts <- add_contact_age_groups(
