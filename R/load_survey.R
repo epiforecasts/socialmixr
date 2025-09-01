@@ -27,16 +27,7 @@ load_survey <- function(files, ...) {
 
   ## first, get the common files
   for (type in main_types) {
-    main_file <- grep(
-      paste0("_", type, "s?_common.*\\.csv$"),
-      survey_files,
-      value = TRUE
-    )
-    if (length(main_file) == 0) {
-      cli::cli_abort(
-        "Need a csv file containing _{type}_common.csv, but no such file found."
-      )
-    }
+    main_file <- extract_type_common_csv(type, survey_files)
     main_surveys[[type]] <- rbindlist(contact_data[main_file], fill = TRUE)
     main_surveys[[type]] <- main_surveys[[type]][, ..main_id := seq_len(.N)]
     survey_files <- setdiff(survey_files, main_file)
