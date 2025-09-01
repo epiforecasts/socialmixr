@@ -373,11 +373,40 @@ contact_matrix <- function(
 
   # option to return participant weights
   if (return.part.weights) {
-    ret[["participants.weights"]] <- return_participant_weights(
-      survey_participants = survey$participants,
-      weigh.age = weigh.age,
-      weigh.dayofweek = weigh.dayofweek
-    )
+    # default
+    part_weights <- survey_participants[, .N, by = list(age.group, weight)]
+    part_weights <- part_weights[order(age.group, weight), ]
+
+    # add age and/or dayofweek info
+    if (weigh.age && weigh.dayofweek) {
+      part_weights <- survey_participants[,
+        .N,
+        by = list(age.group, participant.age = part_age, is.weekday, weight)
+      ]
+    }
+
+    if (weigh.age && !weigh.dayofweek) {
+      part_weights <- survey_participants[,
+        .N,
+        by = list(age.group, participant.age = part_age, weight)
+      ]
+    }
+
+    if (weigh.dayofweek && !weigh.age) {
+      part_weights <- survey_participants[,
+        .N,
+        by = list(age.group, is.weekday, weight)
+      ]
+    }
+
+    # order (from left to right)
+    part_weights <- part_weights[order(part_weights), ] # nolint
+
+    # set name of last column
+    names(part_weights)[ncol(part_weights)] <- "participants"
+
+    part_weights[, proportion := participants / sum(participants)]
+    ret[["participants.weights"]] <- part_weights[]
   }
 
   return(ret)
