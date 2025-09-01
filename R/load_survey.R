@@ -55,16 +55,10 @@ load_survey <- function(files, ...) {
     if (!is.null(contact_data[[file1]])) {
       for (file2 in setdiff(survey_files, file1)) {
         if (
-          length(setdiff(
+          setequal(
             colnames(contact_data[[file1]]),
             colnames(contact_data[[file2]])
-          )) ==
-            0 ||
-            length(setdiff(
-              colnames(contact_data[[file2]]),
-              colnames(contact_data[[file1]])
-            )) ==
-              0
+          )
         ) {
           contact_data[[file1]] <-
             rbindlist(
