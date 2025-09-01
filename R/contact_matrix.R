@@ -66,12 +66,10 @@ contact_matrix <- function(
   per.capita = FALSE,
   ...
 ) {
+  ## read arguments and check --------------------------------------------------
   survey_type <- c("participants", "contacts")
-
   dot.args <- list(...)
   check_arg_dots_in(dot.args, check.contact_survey, pop_age)
-
-  ## read arguments
   estimated.participant.age <- match.arg(estimated.participant.age)
   estimated.contact.age <- match.arg(estimated.contact.age)
   missing.participant.age <- match.arg(missing.participant.age)
@@ -82,10 +80,11 @@ contact_matrix <- function(
   check_if_contact_survey(survey)
   check_age_limits_increasing(age.limits)
 
-  ## Filter to specific countries, if specific countries are specified, and
-  # if a survey contains data from multiple countries.
+  ## Filter to specific countries ----------------------------------------------
+  # If a survey contains data from multiple countries or if countries specified
   survey$participants <- filter_countries(survey$participants, countries)
 
+  ## Process participant ages: deal with ranges and missing data ---------------
   survey$participants <- add_part_age(survey$participants)
 
   ## sample estimated participant ages
@@ -102,6 +101,7 @@ contact_matrix <- function(
     age_limits = age.limits
   )
 
+  ## Process contact ages: deal with ranges and missing data -------------------
   ## set contact age if it's not in the data
   survey$contacts <- add_contact_age(survey$contacts)
 
@@ -142,20 +142,21 @@ contact_matrix <- function(
     missing_action = missing.contact.age
   )
 
-  ## check if any filters have been requested
+  ## check if any filters have been requested ----------------------------------
   survey <- apply_data_filter(
     survey = survey,
     survey_type = survey_type,
     filter = filter
   )
 
-  ## adjust age.group.breaks to the lower and upper ages in the survey
+  ## adjust age.group.breaks to the lower and upper ages in the survey ---------
   survey$participants <- adjust_ppt_age_group_breaks(
     participants = survey$participants,
     age_limits = age.limits
   )
 
-  ## if split, symmetric or age weights are requested, get demographic data
+  ## ---------------------------------------------------------------------------
+  ## if split, symmetric, or age weights are requested, get demographic data
   ## (survey population)
   need.survey.pop <- any(
     split,
@@ -198,7 +199,7 @@ contact_matrix <- function(
     )
   }
 
-  ## weights ----
+  ## Process weights -----------------------------------------------------------
   survey$participants[, weight := 1]
 
   ## assign weights to participants to account for weekend/weekday variation
@@ -226,13 +227,13 @@ contact_matrix <- function(
     survey$participants[, weight := weight / sum(weight) * .N, by = age.group]
   }
 
-  ## merge participants and contacts into a single data table
+  ## merge participants and contacts into a single data table ------------------
   survey$contacts <- merge_participants_contacts(
     participants = survey$participants,
     contacts = survey$contacts
   )
 
-  ## sample contacts
+  ## sample contacts randomly (if requested) -----------------------------------
   missing_contact_age <- nrow(survey$contacts[is.na(cnt_age)]) > 0
   if (missing.contact.age == "sample" && missing_contact_age) {
     survey$contacts <- impute_age_by_sample(survey$contacts)
@@ -247,7 +248,7 @@ contact_matrix <- function(
     age_groups = age_group_labels(survey$participants)
   )
 
-  ## calculate weighted contact matrix ----
+  ## calculate weighted contact matrix -----------------------------------------
   if (sample.participants) {
     ### sample from participants
     good_sample <- FALSE
@@ -282,7 +283,6 @@ contact_matrix <- function(
     )
   }
 
-  ## calculate weighted contact matrix ----
   weighted.matrix <- weighted_matrix_array(
     contacts = sampled_contacts_participants$sampled_contacts
   )
@@ -305,6 +305,8 @@ contact_matrix <- function(
       symmetric.norm.threshold = symmetric.norm.threshold
     )
   }
+
+  ## Split contact matrix ------------------------------------------------------
   # do not return matrix with mean/norm/contacts if counts and split elected
   warn_if_counts_and_split(counts = counts, split = split)
   check_na_in_weighted_matrix(weighted_matrix = weighted.matrix, split = split)
@@ -329,8 +331,8 @@ contact_matrix <- function(
 
   ret[["matrix"]] <- weighted.matrix
 
-  # option to add matrix per capita, i.e. the contact rate of age i with one
-  # individual of age j in the population.
+  ## Option to add matrix per capita -------------------------------------------
+  # i.e., contact rate of age i with one individual of age j in the population.
   warn_counts_split_per_capita(
     counts = counts,
     split = split,
@@ -369,7 +371,7 @@ contact_matrix <- function(
     ret[["participants"]] <- part.pop[]
   }
 
-  # option to return participant weights
+  # option to return participant weights ---------------------------------------
   if (return.part.weights) {
     # default
     part_weights <- survey$participants[, .N, by = list(age.group, weight)]
