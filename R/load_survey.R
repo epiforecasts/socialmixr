@@ -17,12 +17,7 @@ load_survey <- function(files, ...) {
   check_files_exist(files)
 
   survey_files <- grep("csv$", files, value = TRUE) # select csv files
-  reference_file <- grep("json$", files, value = TRUE) # select json file
-  if (length(reference_file) > 0) {
-    reference <- fromJSON(reference_file)
-  } else {
-    reference <- NULL
-  }
+  reference <- extract_reference(files)
 
   contact_data <- lapply(survey_files, fread)
   names(contact_data) <- survey_files
