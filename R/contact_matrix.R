@@ -202,15 +202,33 @@ contact_matrix <- function(
     )
   }
 
-  ## weights
-  survey$participants <- participant_weights(
-    participants = survey$participants,
-    survey_pop_full = survey.pop.full,
-    weights = weights,
-    weigh.dayofweek = weigh.dayofweek,
-    weigh.age = weigh.age,
-    weight.threshold = weight.threshold
-  )
+  ## weights ----
+  survey$participants[, weight := 1]
+
+  ## assign weights to participants to account for weekend/weekday variation
+  if (weigh.dayofweek) {
+    survey$participants <- weight_by_day_of_week(survey$participants)
+  }
+
+  ## assign weights to participants, to account for age variation
+  if (weigh.age) {
+    survey$participants <- weight_by_age(survey$participants, survey.pop.full)
+  }
+
+  ## option to weigh the contact data with user-defined participant weights
+  if (length(weights) > 0) {
+    survey$participants <- weigh_by_user_defined(survey$participants, weights)
+  }
+
+  # post-stratification weight standardisation: by age.group
+  survey$participants[, weight := weight / sum(weight) * .N, by = age.group]
+
+  # option to truncate overall participant weights (if not NULL or NA)
+  if (!is.null(weight.threshold) && !is.na(weight.threshold)) {
+    survey$participants[weight > weight.threshold, weight := weight.threshold]
+    # re-normalise
+    survey$participants[, weight := weight / sum(weight) * .N, by = age.group]
+  }
 
   ## merge participants and contacts into a single data table
   survey$contacts <- merge_participants_contacts(
