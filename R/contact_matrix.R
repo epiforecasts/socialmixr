@@ -307,8 +307,6 @@ contact_matrix <- function(
       symmetric.norm.threshold = symmetric.norm.threshold
     )
   }
-  ret <- list()
-
   # do not return matrix with mean/norm/contacts if counts and split elected
   warn_if_counts_and_split(counts = counts, split = split)
   check_na_in_weighted_matrix(weighted_matrix = weighted.matrix, split = split)
@@ -316,8 +314,7 @@ contact_matrix <- function(
   # make sure the dim.names are retained after symmetric or split procedure
   retained_dimnames <- dimnames(weighted.matrix)
 
-  ## TODO rename this function
-  # if split and NOT counts and NO NAs in weighted.matrix
+  ret <- list()
   if (split && !counts && !na_in_weighted_matrix(weighted.matrix)) {
     splitted <- split_mean_norm_contacts(
       weighted_matrix = weighted.matrix,
