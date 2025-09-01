@@ -374,26 +374,26 @@ contact_matrix <- function(
   # option to return participant weights
   if (return.part.weights) {
     # default
-    part_weights <- survey_participants[, .N, by = list(age.group, weight)]
+    part_weights <- survey$participants[, .N, by = list(age.group, weight)]
     part_weights <- part_weights[order(age.group, weight), ]
 
     # add age and/or dayofweek info
     if (weigh.age && weigh.dayofweek) {
-      part_weights <- survey_participants[,
+      part_weights <- survey$participants[,
         .N,
         by = list(age.group, participant.age = part_age, is.weekday, weight)
       ]
     }
 
     if (weigh.age && !weigh.dayofweek) {
-      part_weights <- survey_participants[,
+      part_weights <- survey$participants[,
         .N,
         by = list(age.group, participant.age = part_age, weight)
       ]
     }
 
     if (weigh.dayofweek && !weigh.age) {
-      part_weights <- survey_participants[,
+      part_weights <- survey$participants[,
         .N,
         by = list(age.group, is.weekday, weight)
       ]
