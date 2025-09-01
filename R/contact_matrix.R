@@ -276,7 +276,6 @@ contact_matrix <- function(
       sampled_contacts = sampled_contacts,
       sampled_participants = sampled_participants
     )
-    ###
   } else {
     ## just use all participants
     sampled_contacts_participants <- list(
@@ -284,7 +283,6 @@ contact_matrix <- function(
       sampled_participants = survey$participants[, sampled.weight := weight]
     )
   }
-  ###
 
   ## calculate weighted contact matrix
   weighted.matrix <- calculate_weighted_matrix(
