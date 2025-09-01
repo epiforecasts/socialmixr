@@ -284,16 +284,29 @@ contact_matrix <- function(
     )
   }
 
-  ## calculate weighted contact matrix
-  weighted.matrix <- calculate_weighted_matrix(
-    sampled_contacts = sampled_contacts_participants$sampled_contacts,
-    sampled_participants = sampled_contacts_participants$sampled_participants,
-    survey_pop = survey.pop,
-    symmetric,
-    counts,
-    symmetric.norm.threshold
+  ## calculate weighted contact matrix ----
+  weighted.matrix <- weighted_matrix_array(
+    contacts = sampled_contacts_participants$sampled_contacts
   )
 
+  if (!counts) {
+    ## normalise to give mean number of contacts
+    weighted.matrix <- normalise_weights_to_counts(
+      sampled_participants = sampled_contacts_participants$sampled_participants,
+      weighted_matrix = weighted.matrix
+    )
+  }
+
+  warn_symmetric_counts_na(symmetric, counts, weighted.matrix)
+  matrix_not_scalar <- prod(dim(as.matrix(weighted.matrix))) > 1
+  na_in_weighted_mtx <- na_in_weighted_matrix(weighted.matrix)
+  if (symmetric && matrix_not_scalar && !na_in_weighted_mtx) {
+    weighted.matrix <- normalise_weighted_matrix(
+      survey_pop = survey.pop,
+      weighted_matrix = weighted.matrix,
+      symmetric.norm.threshold = symmetric.norm.threshold
+    )
+  }
   ret <- list()
 
   # do not return matrix with mean/norm/contacts if counts and split elected
