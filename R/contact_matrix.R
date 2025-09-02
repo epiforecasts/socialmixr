@@ -251,8 +251,17 @@ contact_matrix <- function(
   ## calculate weighted contact matrix -----------------------------------------
   if (sample.participants) {
     ### sample from participants
+    present_age_limits <- unique(survey$participants$lower.age.limit)
+    if (sample.all.age.groups && !setequal(age.limits, present_age_limits)) {
+      cli::cli_abort(
+        "Cannot sample all age groups: no participants in \\
+        {setdiff(age.limits, present_age_limits)}."
+      )
+    }
     good_sample <- FALSE
-    while (!good_sample) {
+    tries <- 0
+    max_tries <- 1000
+    while (!good_sample && tries < max_tries) {
       participant_ids <- unique(survey$participants$part_id)
       ## take a sample from the participants
       part_sample <- sample(participant_ids, replace = TRUE)
@@ -261,14 +270,18 @@ contact_matrix <- function(
       )
       age_limits_match_part <- setequal(age.limits, part_age_limits)
       good_sample <- !sample.all.age.groups || age_limits_match_part
-
+      tries <- tries + 1
       sample_table <- create_bootstrap_weights(part_sample)
-
       sampled_contacts <- merge(survey$contacts, sample_table)
       sampled_contacts[, sampled.weight := weight * bootstrap.weight]
-
       sampled_participants <- merge(survey$participants, sample_table)
       sampled_participants[, sampled.weight := weight * bootstrap.weight]
+    }
+    if (!good_sample) {
+      cli::cli_abort(
+        "Failed to draw a bootstrap sample covering all age groups after \\
+        {max_tries} attempts."
+      )
     }
 
     sampled_contacts_participants <- list(
