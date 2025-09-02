@@ -588,6 +588,15 @@ weigh_by_user_defined <- function(participants, weights) {
   participants
 }
 
+truncate_renormalise_weights <- function(participants, weight.threshold) {
+  if (!is.null(weight.threshold) && !is.na(weight.threshold)) {
+    participants[weight > weight.threshold, weight := weight.threshold]
+    # re-normalise
+    participants[, weight := weight / sum(weight) * .N, by = age.group]
+  }
+  participants
+}
+
 participant_weights <- function(
   participants,
   survey_pop_full,
@@ -617,11 +626,7 @@ participant_weights <- function(
   participants[, weight := weight / sum(weight) * .N, by = age.group]
 
   # option to truncate overall participant weights (if not NULL or NA)
-  if (!is.null(weight.threshold) && !is.na(weight.threshold)) {
-    participants[weight > weight.threshold, weight := weight.threshold]
-    # re-normalise
-    participants[, weight := weight / sum(weight) * .N, by = age.group]
-  }
+  participants <- truncate_renormalise_weights(participants, weight.threshold)
 
   participants
 }
