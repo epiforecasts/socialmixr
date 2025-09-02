@@ -106,7 +106,7 @@ drop_missing_contact_ages <- function(contacts, missing_action) {
 
 #' @autoglobal
 max_participant_age <- function(data) {
-  if ("part_age_est_max" %in% colnames(data)) {
+  if (has_names(data, c("part_age_est_max", "part_age_exact"))) {
     part_age_data <- c(data[, part_age_exact], data[, part_age_est_max])
     max_year <- max(part_age_data, na.rm = TRUE) + 1
   } else {
