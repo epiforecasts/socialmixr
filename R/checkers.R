@@ -126,7 +126,7 @@ check_na_in_weighted_matrix <- function(
     cli::cli_warn(
       message = c(
         "{.code split = TRUE} does not work with missing data; will not
-          split contact.matrix.",
+          split the contact matrix.",
         "i" = "{warning_suggestion}" # nolint
       ),
       call = call
