@@ -362,14 +362,12 @@ contact_matrix <- function(
   ## get number of participants in each age group
   part.pop <- n_participants_per_age_group(survey$participants)
 
-  if (!is.null(ret)) {
-    if (need.survey.pop && (is.na(return.demography) || return.demography)) {
-      # change survey.pop$age.group factors into characters (cfr. part.pop)
-      survey.pop[, age.group := as.character(age.group)]
-      ret[["demography"]] <- survey.pop[]
-    }
-    ret[["participants"]] <- part.pop[]
+  if (need.survey.pop && (is.na(return.demography) || return.demography)) {
+    # change survey.pop$age.group factors into characters (cfr. part.pop)
+    survey.pop[, age.group := as.character(age.group)]
+    ret[["demography"]] <- survey.pop[]
   }
+  ret[["participants"]] <- part.pop[]
 
   # option to return participant weights ---------------------------------------
   if (return.part.weights) {
