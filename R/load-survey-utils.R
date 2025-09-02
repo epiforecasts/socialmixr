@@ -56,7 +56,7 @@ join_compatible_files <- function(survey_files, contact_data) {
 }
 
 ## lastly, merge in any additional files that can be merged
-merge_additional_possible_files <- function(
+try_merge_additional_files <- function(
   main_types,
   main_surveys,
   survey_files,
@@ -172,7 +172,7 @@ join_possible_files <- function(
   survey_files <- survey_contact_data$survey_files
 
   ## lastly, merge in any additional files that can be merged
-  main_surveys <- merge_additional_possible_files(
+  main_surveys <- try_merge_additional_files(
     main_types,
     main_surveys,
     survey_files,
