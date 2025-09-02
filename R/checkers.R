@@ -101,8 +101,8 @@ warn_counts_split_per_capita <- function(
 ) {
   if (per_capita && counts) {
     cli::cli_warn(
-      message = "{.arg per_capita = TRUE} does not make sense with \\
-      {.arg counts = TRUE}; will not return the contact matrix per capita.",
+      message = "{.code per_capita = TRUE} does not make sense with \\
+      {.code counts = TRUE}; will not return the contact matrix per capita.",
       call = call
     )
   }
