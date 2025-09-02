@@ -220,7 +220,7 @@ apply_data_filter <- function(
   filter,
   call = rlang::caller_env()
 ) {
-  if (!missing(filter)) {
+  if (!is.null(filter)) {
     missing_columns <- list()
     for (table in survey_type) {
       if (nrow(survey[[table]]) > 0) {
