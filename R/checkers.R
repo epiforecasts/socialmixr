@@ -174,7 +174,7 @@ warn_norm_fct_exceed_thresh <- function(
     weighted_matrix
   )
 
-  if (any(normalisation_fctr > symmetric_norm_threshold)) {
+  if (any(normalisation_fctr > symmetric_norm_threshold, na.rm = TRUE)) {
     cli::cli_warn(
       message = c(
         "Large differences in the size of the sub-populations with the \\
