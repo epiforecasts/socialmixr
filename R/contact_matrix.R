@@ -272,9 +272,13 @@ contact_matrix <- function(
       good_sample <- !sample.all.age.groups || age_limits_match_part
       tries <- tries + 1
       sample_table <- create_bootstrap_weights(part_sample)
-      sampled_contacts <- merge(survey$contacts, sample_table)
+      sampled_contacts <- merge(survey$contacts, sample_table, by = "part_id")
       sampled_contacts[, sampled.weight := weight * bootstrap.weight]
-      sampled_participants <- merge(survey$participants, sample_table)
+      sampled_participants <- merge(
+        survey$participants,
+        sample_table,
+        by = "part_id"
+      )
       sampled_participants[, sampled.weight := weight * bootstrap.weight]
     }
     if (!good_sample) {
