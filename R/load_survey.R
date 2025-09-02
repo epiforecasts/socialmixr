@@ -16,7 +16,8 @@
 load_survey <- function(files, ...) {
   check_files_exist(files)
 
-  survey_files <- grep("csv$", files, value = TRUE) # select csv files
+  # select csv files
+  survey_files <- grep("\\.csv$", files, value = TRUE, ignore.case = TRUE)
   reference <- extract_reference(files)
 
   contact_data <- lapply(survey_files, fread)
@@ -29,7 +30,7 @@ load_survey <- function(files, ...) {
   for (type in main_types) {
     main_file <- extract_type_common_csv(type, survey_files)
     main_surveys[[type]] <- rbindlist(contact_data[main_file], fill = TRUE)
-    main_surveys[[type]] <- main_surveys[[type]][, ..main_id := seq_len(.N)]
+    main_surveys[[type]][, ("..main_id") := seq_len(.N)]
     survey_files <- setdiff(survey_files, main_file)
   }
 
