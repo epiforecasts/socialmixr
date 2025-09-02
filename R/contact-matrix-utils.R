@@ -1,5 +1,5 @@
-has_names <- function(x, name) {
-  all(hasName(x, name))
+has_names <- function(x, names) {
+  all(names %in% names(x))
 }
 
 est_part_age_mean <- function(data) {
