@@ -177,7 +177,7 @@
       Removing participants that have contacts without age information.
       i To change this behaviour, set the 'missing.contact.age' option.
     Condition
-      Warning:
+      Warning in `contact_matrix()`:
       `symmetric = TRUE` does not make sense with `counts = TRUE`; will not make matrix symmetric.
       Warning in `normalise_weighted_matrix()`:
       Large differences in the size of the sub-populations with the current age breaks are likely to result in artefacts after making the matrix symmetric.
