@@ -1,3 +1,4 @@
+#' @autoglobal
 extract_reference <- function(files) {
   reference_files <- grep("\\.json$", files, value = TRUE, ignore.case = TRUE)
   if (length(reference_files) == 0) {
@@ -12,6 +13,7 @@ extract_reference <- function(files) {
   fromJSON(selected)
 }
 
+#' @autoglobal
 extract_type_common_csv <- function(
   type,
   survey_files,
@@ -31,6 +33,7 @@ extract_type_common_csv <- function(
   main_file
 }
 
+#' @autoglobal
 #' @importFrom data.table rbindlist
 join_compatible_files <- function(survey_files, contact_data) {
   ## join files that can be joined
@@ -60,6 +63,7 @@ join_compatible_files <- function(survey_files, contact_data) {
 }
 
 ## lastly, merge in any additional files that can be merged
+#' @autoglobal
 try_merge_additional_files <- function(
   main_types,
   main_surveys,
@@ -76,7 +80,7 @@ try_merge_additional_files <- function(
       },
       TRUE
     )
-    merge_files <- names(can_merge[can_merge])
+    merge_files <- survey_files[can_merge]
     while (length(merge_files) > 0) {
       merged_files <- NULL
       for (file in merge_files) {
@@ -170,6 +174,7 @@ try_merge_additional_files <- function(
 }
 
 ## join files that can be joined
+#' @autoglobal
 join_possible_files <- function(
   survey_files,
   contact_data,

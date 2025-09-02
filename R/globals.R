@@ -41,6 +41,8 @@ utils::globalVariables(c(
   "title", # <.list_surveys>
   "creator", # <.list_surveys>
   "identifier.2", # <.list_surveys>
+  "..merge_id", # <try_merge_additional_files>
+  "..main_id", # <try_merge_additional_files>
   "..original.lower.age.limit", # <pop_age>
   "..segment", # <pop_age>
   "..upper.age.limit", # <pop_age>
