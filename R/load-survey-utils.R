@@ -31,7 +31,7 @@ extract_type_common_csv <- function(
   main_file
 }
 
-
+#' @importFrom data.table rbindlist
 join_compatible_files <- function(survey_files, contact_data) {
   ## join files that can be joined
   for (file1 in survey_files) {
@@ -100,7 +100,8 @@ try_merge_additional_files <- function(
             if (!grepl("cartesian", cond$message, fixed = TRUE)) {
               cli::cli_abort(
                 "Merge failed for {.file {basename(file)}} on \\
-                {.val {common_id}}: {cond$message}"
+                {.val {common_id}}: {cond$message}",
+                call = call
               )
             }
             NULL
