@@ -27,8 +27,9 @@ est_part_age_sample <- function(data) {
 #' @autoglobal
 sample_participant_ages <- function(
   data,
-  estimate
+  estimate = c("mean", "sample", "missing")
 ) {
+  estimate <- rlang::arg_match(estimate)
   part_age_names <- c("part_age_est_min", "part_age_est_max")
   age_cols_in_data <- has_names(data, part_age_names)
   if (age_cols_in_data) {
@@ -68,9 +69,13 @@ est_contact_age_sample <- function(contacts) {
 }
 
 #' @autoglobal
-sample_contact_ages <- function(contacts, estimate) {
+sample_contact_ages <- function(
+  contacts,
+  estimate = c("mean", "sample", "missing")
+) {
   contact_age_names <- c("cnt_age_est_min", "cnt_age_est_max")
   age_cols_in_data <- has_names(contacts, contact_age_names)
+  estimate <- rlang::arg_match(estimate)
   if (age_cols_in_data) {
     contacts <- switch(
       estimate,
@@ -673,7 +678,6 @@ participant_weights <- function(
 #' @autoglobal
 merge_participants_contacts <- function(participants, contacts) {
   setkey(participants, part_id)
-  participant_ids <- unique(participants$part_id)
 
   # Merge participants with contacts, allowing Cartesian products as one
   # participant can have multiple contacts
