@@ -1,11 +1,15 @@
 extract_reference <- function(files) {
-  reference_file <- grep("json$", files, value = TRUE) # select json file
-  if (length(reference_file) > 0) {
-    reference <- fromJSON(reference_file)
-  } else {
-    reference <- NULL
+  reference_files <- grep("\\.json$", files, value = TRUE, ignore.case = TRUE)
+  if (length(reference_files) == 0) {
+    return(NULL)
   }
-  reference
+  selected <- reference_files[[1]]
+  if (length(reference_files) > 1) {
+    cli::cli_warn(
+      "Multiple JSON files found; using {.file {basename(selected)}}."
+    )
+  }
+  fromJSON(selected)
 }
 
 extract_type_common_csv <- function(
