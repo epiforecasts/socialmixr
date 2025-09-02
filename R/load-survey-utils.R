@@ -20,7 +20,7 @@ extract_type_common_csv <- function(
   )
   if (length(main_file) == 0) {
     cli::cli_abort(
-      message = "Need a csv file containing _{type}_common.csv, but no such file found.",
+      message = "Need a CSV matching _{type}s?_common*.csv, but none found.",
       call = call
     )
   }
@@ -94,7 +94,10 @@ try_merge_additional_files <- function(
           },
           error = function(cond) {
             if (!grepl("cartesian", cond$message, fixed = TRUE)) {
-              cli::cli_abort(cond$message)
+              cli::cli_abort(
+                "Merge failed for {.file {basename(file)}} on \\
+                {.val {common_id}}: {cond$message}"
+              )
             }
             NULL
           }
@@ -124,7 +127,8 @@ try_merge_additional_files <- function(
               call = call
             )
           }
-          main_surveys[[type]] <- merged[, !"..merge_id"]
+          merged[, ("..merge_id") := NULL]
+          main_surveys[[type]] <- merged
           merged_files <- c(merged_files, file)
         } else {
           anyDuplicated(merged[, "..main_id", with = FALSE])
