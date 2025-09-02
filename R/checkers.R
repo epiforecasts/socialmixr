@@ -134,7 +134,12 @@ check_na_in_weighted_matrix <- function(
   }
 }
 
-warn_symmetric_counts_na <- function(symmetric, counts, weighted_matrix) {
+warn_symmetric_counts_na <- function(
+  symmetric,
+  counts,
+  weighted_matrix,
+  call = rlang::caller_env()
+) {
   if (symmetric && counts) {
     cli::cli_warn(
       message = "{.code symmetric = TRUE} does not make sense with
