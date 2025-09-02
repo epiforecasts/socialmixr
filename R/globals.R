@@ -5,11 +5,97 @@ utils::globalVariables(c(
   "..age.unit", # <clean.contact_survey>
   "..high", # <clean.contact_survey>
   "..low", # <clean.contact_survey>
-  "cnt_age", # <contact_matrix>
+  "part_age_exact", # <est_part_age_mean>
+  "part_age_est_min", # <est_part_age_mean>
+  "part_age_est_max", # <est_part_age_mean>
+  "part_age", # <est_part_age_mean>
+  "part_age", # <est_part_age_sample>
+  "part_age_est_min", # <est_part_age_sample>
+  "part_age_est_max", # <est_part_age_sample>
+  "cnt_age", # <drop_ages_below_age_limit>
+  "cnt_age", # <est_contact_age_mean>
+  "cnt_age_est_min", # <est_contact_age_mean>
+  "cnt_age_est_max", # <est_contact_age_mean>
+  "cnt_age", # <est_contact_age_sample>
+  "cnt_age_est_min", # <est_contact_age_sample>
+  "cnt_age_est_max", # <est_contact_age_sample>
+  "cnt_age", # <drop_missing_contact_ages>
+  "part_age_exact", # <max_participant_age>
+  "part_age_est_max", # <max_participant_age>
+  "part_age", # <max_participant_age>
+  "part_age", # <get_age_limits>
+  "country", # <filter_countries>
+  "part_age", # <add_part_age>
+  "part_age_exact", # <add_part_age>
+  "cnt_age", # <add_contact_age>
+  "cnt_age_exact", # <add_contact_age>
+  "part_age", # <drop_invalid_ages>
+  "cnt_age", # <drop_invalid_contact_ages>
+  "part_id", # <drop_invalid_contact_ages>
+  "lower.age.limit", # <adjust_ppt_age_group_breaks>
+  "part_age", # <adjust_ppt_age_group_breaks>
+  "age.group", # <adjust_ppt_age_group_breaks>
+  "age.group", # <age_group_labels>
+  "country", # <get_survey_countries>
+  "population", # <survey_pop_from_countries>
+  "lower.age.limit", # <survey_pop_from_countries>
+  "part_age", # <survey_pop_from_countries>
+  "lower.age.limit", # <add_survey_upper_age_limit>
+  "population", # <add_survey_upper_age_limit>
+  "upper.age.limit", # <adjust_survey_age_groups>
+  "sum_weight", # <weight_by_day_of_week>
+  "dayofweek", # <weight_by_day_of_week>
+  "weight", # <weight_by_day_of_week>
+  "is.weekday", # <weight_by_day_of_week>
+  "age.count", # <weight_by_age>
+  "part_age", # <weight_by_age>
+  "age.proportion", # <weight_by_age>
+  "population.proportion", # <weight_by_age>
+  "population.count", # <weight_by_age>
+  "weight.age", # <weight_by_age>
+  "weight", # <weight_by_age>
+  "weight", # <weigh_by_user_defined>
+  "weight", # <truncate_renormalise_weights>
+  "age.group", # <truncate_renormalise_weights>
+  "weight", # <participant_weights>
+  "age.group", # <participant_weights>
+  "part_id", # <merge_participants_contacts>
+  "cnt_age", # <sample_present_age>
+  "age.group", # <sample_present_age>
+  "cnt_age", # <sample_uniform_age>
+  "age.group", # <sample_uniform_age>
+  "cnt_age", # <impute_age_by_sample>
+  "age.group", # <impute_age_by_sample>
+  "cnt_age", # <add_contact_age_groups>
+  "contact.age.group", # <add_contact_age_groups>
+  "weight", # <create_bootstrap_weights>
+  "id", # <create_bootstrap_weights>
+  "part_id", # <create_bootstrap_weights>
+  "part_id", # <sample_from_participants>
+  "lower.age.limit", # <sample_from_participants>
+  "sampled.weight", # <sample_from_participants>
+  "weight", # <sample_from_participants>
+  "bootstrap.weight", # <sample_from_participants>
+  "sampled.weight", # <sample_contacts_participants>
+  "weight", # <sample_contacts_participants>
+  "age.group", # <n_participants_per_age_group>
+  "proportion", # <n_participants_per_age_group>
+  "age.group", # <return_participant_weights>
+  "weight", # <return_participant_weights>
+  "part_age", # <return_participant_weights>
+  "is.weekday", # <return_participant_weights>
+  "proportion", # <return_participant_weights>
+  "participants", # <return_participant_weights>
+  "weight", # <contact_matrix>
   "age.group", # <contact_matrix>
+  "cnt_age", # <contact_matrix>
   "part_id", # <contact_matrix>
   "lower.age.limit", # <contact_matrix>
+  "sampled.weight", # <contact_matrix>
+  "bootstrap.weight", # <contact_matrix>
   "population", # <contact_matrix>
+  "part_age", # <contact_matrix>
+  "is.weekday", # <contact_matrix>
   "proportion", # <contact_matrix>
   "participants", # <contact_matrix>
   "file_name", # <download_survey>
