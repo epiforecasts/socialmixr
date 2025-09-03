@@ -27,7 +27,7 @@ a vector of filenames that can be used with \link{load_survey}
 \code{download_survey()} downloads survey data from Zenodo.
 }
 \examples{
-#' # we recommend using the contactsurveys package for download_survey()
+# we recommend using the contactsurveys package for download_survey()
 \dontrun{
 # if needed, discovery surveys with:
 contactsurveys::list_surveys()

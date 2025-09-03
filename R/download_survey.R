@@ -20,7 +20,7 @@
 #' @importFrom xml2 xml_text xml_find_first xml_find_all xml_attr
 #' @autoglobal
 #' @examples
-#' #' # we recommend using the contactsurveys package for download_survey()
+#' # we recommend using the contactsurveys package for download_survey()
 #' \dontrun{
 #' # if needed, discovery surveys with:
 #' contactsurveys::list_surveys()
