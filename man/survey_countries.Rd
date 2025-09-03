@@ -17,9 +17,24 @@ survey_countries(survey, country.column = "country", ...)
 list of countries
 }
 \description{
-List all countries contained in a survey
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+}
+\details{
+\code{survey_countries()} has been deprecated in favour of using
+\code{\link[contactsurveys:download_survey]{contactsurveys::download_survey()}}, and \code{\link[=load_survey]{load_survey()}}, and then
+exploring the country column yourself.
 }
 \examples{
 data(polymod)
 survey_countries(polymod)
+## --> we now recommend
+\dontrun{
+doi_peru <- "10.5281/zenodo.1095664" # nolint
+# download the data with the contactsurveys package
+peru_survey <- contactsurveys::download_survey(doi_peru)
+# load the survey with socialmixr
+peru_data <- socialmixr::load_survey(peru_survey)
+# find the unique country - assuming your data has a "country" column:
+unique(peru_data$participants$country)
+}
 }

@@ -85,6 +85,12 @@ list_surveys <- function(clear_cache = FALSE) {
 
 #' List all countries contained in a survey
 #'
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `survey_countries()` has been deprecated in favour of using
+#'   [contactsurveys::download_survey()], and [load_survey()], and then
+#'   exploring the country column yourself.
+#'
 #' @param country.column column in the survey indicating the country
 #' @param ... further arguments for [get_survey()]
 #' @return list of countries
@@ -92,8 +98,26 @@ list_surveys <- function(clear_cache = FALSE) {
 #' @examples
 #' data(polymod)
 #' survey_countries(polymod)
+#' ## --> we now recommend
+#' \dontrun{
+#' doi_peru <- "10.5281/zenodo.1095664" # nolint
+#' # download the data with the contactsurveys package
+#' peru_survey <- contactsurveys::download_survey(doi_peru)
+#' # load the survey with socialmixr
+#' peru_data <- socialmixr::load_survey(peru_survey)
+#' # find the unique country - assuming your data has a "country" column:
+#' unique(peru_data$participants$country)
+#' }
 #' @export
 survey_countries <- function(survey, country.column = "country", ...) {
+  lifecycle::deprecate_soft(
+    when = "0.5.0",
+    what = "survey_countries()",
+    with = "contactsurveys::download_survey()",
+    details = "We recommend using contactsurveys::download_survey() to \\
+    download your surveys, and then you can load them with \\
+    socialmixr::load_survey() and explore which countries are in the data."
+  )
   survey <- get_survey(survey, ...)
   return(as.character(unique(survey[["participants"]][[country.column]])))
 }
