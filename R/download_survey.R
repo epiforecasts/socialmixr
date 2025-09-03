@@ -39,8 +39,8 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
     what = "download_survey()",
     with = "contactsurveys::download_survey()"
   )
-  if (!is.character(survey) || length(survey) > 1) {
-    cli::cli_abort("{.arg survey} must be a character of length 1.")
+  if (!is.character(survey) || length(survey) != 1 || is.na(survey)) {
+    cli::cli_abort("{.arg survey} must be a single, non-NA character string.")
   }
 
   survey <- sub("^(https?:\\/\\/(dx\\.)?doi\\.org\\/|doi:)", "", survey)
