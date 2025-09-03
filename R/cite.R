@@ -26,15 +26,19 @@ get_citation <- function(x) {
     what = "get_citation()",
     with = "contactsurveys::get_citation()"
   )
-
   survey <- get_survey(x)
-  if (is.null(x$reference)) {
-    cli::cli_abort("No citation defined for {x$name %||% 'survey'}.")
+  if (is.null(survey$reference)) {
+    cli::cli_abort("No citation defined for {survey$name %||% 'survey'}.")
   }
 
   ref <- c(
-    list(header = gettextf("To cite %s in publications use:", x$ref$title)),
-    x$reference
+    list(
+      header = gettextf(
+        "To cite %s in publications use:",
+        survey$reference$title
+      )
+    ),
+    survey$reference
   )
 
   do.call(bibentry, ref)
