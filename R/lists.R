@@ -1,5 +1,11 @@
 #' List all surveys available for download
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `list_surveys()` has been deprecated in favour of
+#'   [contactsurveys::list_surveys()].
+#'
 #' @return character vector of surveys
 #' @inheritParams get_survey
 #' @examples
@@ -8,6 +14,12 @@
 #' }
 #' @export
 list_surveys <- function(clear_cache = FALSE) {
+  lifecycle::deprecate_soft(
+    when = "0.5.0",
+    what = "list_surveys()",
+    with = "contactsurveys::list_surveys()"
+  )
+
   if (
     !("list_surveys" %in% names(.socialmixr.env$cached_functions)) ||
       clear_cache

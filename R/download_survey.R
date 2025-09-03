@@ -1,6 +1,13 @@
 #' Download a survey from its Zenodo repository
 #'
-#' @description Downloads survey data
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `download_survey()` has been deprecated in favour of
+#'   [contactsurveys::download_survey()].
+#'
+#' `download_survey()` downloads survey data from zenodo.
+#'
 #' @param survey a URL (see [list_surveys()])
 #' @param dir a directory to save the files to; if not given, will save to a
 #'   temporary directory
@@ -16,11 +23,20 @@
 #' \dontrun{
 #' list_surveys()
 #' peru_survey <- download_survey("https://doi.org/10.5281/zenodo.1095664")
+#' # -->
+#' peru_survey <- contactsurveys::download_survey(
+#'   "https://doi.org/10.5281/zenodo.1095664"
+#' )
 #' }
 #' @return a vector of filenames that can be used with [load_survey]
 #  @seealso load_survey
 #' @export
 download_survey <- function(survey, dir = NULL, sleep = 1) {
+  lifecycle::deprecate_soft(
+    when = "0.5.0",
+    what = "download_survey()",
+    with = "contactsurveys::download_survey()"
+  )
   if (!is.character(survey) || length(survey) > 1) {
     cli::cli_abort("{.arg survey} must be a character of length 1.")
   }

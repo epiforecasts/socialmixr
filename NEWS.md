@@ -8,6 +8,10 @@
 
 * A bug was fixed leading to excess contacts with `NA` age if the lowest age group did not start at 0.
 
+## Deprecations
+
+We have soft-deprecated `download_survey()`, `get_citation()` and `list_surveys()` and moved these to [contactsurveys](https://github.com/epiforecasts/contactsurveys). This is part of decoupling these features from socialmixr to reduce dependencies (#207 and #179). These will continue to be supported until we move to a major release (version 1.0.0) of socialmixr. In the meantime, we recommend that users use the [contactsurveys](https://github.com/epiforecasts/contactsurveys) package, as these functions have improved caching and support there.
+
 # socialmixr 0.4.0
 
 * The speed of loading surveys has been increased.

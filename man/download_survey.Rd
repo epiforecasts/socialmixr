@@ -19,11 +19,20 @@ temporary directory}
 a vector of filenames that can be used with \link{load_survey}
 }
 \description{
-Downloads survey data
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{download_survey()} has been deprecated in favour of
+\code{\link[contactsurveys:download_survey]{contactsurveys::download_survey()}}.
+
+\code{download_survey()} downloads survey data from zenodo.
 }
 \examples{
 \dontrun{
 list_surveys()
 peru_survey <- download_survey("https://doi.org/10.5281/zenodo.1095664")
+# -->
+peru_survey <- contactsurveys::download_survey(
+  "https://doi.org/10.5281/zenodo.1095664"
+)
 }
 }

@@ -13,7 +13,10 @@ list_surveys(clear_cache = FALSE)
 character vector of surveys
 }
 \description{
-List all surveys available for download
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{list_surveys()} has been deprecated in favour of
+\code{\link[contactsurveys:list_surveys]{contactsurveys::list_surveys()}}.
 }
 \examples{
 \dontrun{
