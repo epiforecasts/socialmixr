@@ -34,12 +34,22 @@ list_surveys <- function(clear_cache = FALSE) {
 #' @importFrom oai list_records
 #' @keywords internal
 .list_surveys <- function() {
-  record_list <-
+  record_list <- tryCatch(
     data.table(list_records(
       "https://zenodo.org/oai2d",
       metadataPrefix = "oai_datacite",
       set = "user-social_contact_data"
-    ))
+    )),
+    error = function(e) {
+      cli::cli_abort(
+        message = c(
+          "Failed to retrieve survey list from Zenodo OAI-PMH.",
+          "Please retry later",
+          "Original error: {conditionMessage(e)}"
+        )
+      )
+    }
+  )
   ## find common DOI for different versions, i.e. the "relation" that is a DOI
   relations <- grep("^relation(\\.|$)", colnames(record_list), value = TRUE)
   DOIs <- apply(
