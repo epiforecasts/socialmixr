@@ -1,4 +1,4 @@
-test_that("download_survey() gives deprecated warning", {
+test_that("download_survey() gives deprecation warning", {
   skip_if_offline("zenodo.org")
   skip_on_cran()
   skip_on_ci()

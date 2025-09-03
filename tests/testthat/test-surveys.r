@@ -6,7 +6,7 @@ test_that("list of surveys is not empty", {
   expect_gt(nrow(list_surveys()), 0)
 })
 
-test_that("list_survey() gives deprecated warning", {
+test_that("list_survey() gives deprecation warning", {
   skip_if_offline("zenodo.org")
   skip_on_cran()
   skip_on_ci()
@@ -28,7 +28,7 @@ test_that("surveys can be downloaded", {
   )
 })
 
-test_that("get_citation() gives deprecated warning", {
+test_that("get_citation() gives deprecation warning", {
   skip_if_offline("zenodo.org")
   skip_on_cran()
   skip_on_ci()
