@@ -9,8 +9,9 @@
 #' @return character vector of surveys
 #' @inheritParams get_survey
 #' @examples
+#' # we recommend using the contactsurveys package now for listing surveys.
 #' \dontrun{
-#' list_surveys()
+#' contactsurveys::list_surveys()
 #' }
 #' @export
 list_surveys <- function(clear_cache = FALSE) {

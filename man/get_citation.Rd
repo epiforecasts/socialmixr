@@ -21,8 +21,11 @@ citation as bibentry
 Gets a full citation for a \code{\link[=survey]{survey()}}.
 }
 \examples{
+# we recommend using the contactsurveys package for get_citation()
+\dontrun{
 data(polymod)
-citation <- get_citation(polymod)
+citation <- contactsurveys::get_citation(polymod)
 print(citation)
 print(citation, style = "bibtex")
+}
 }

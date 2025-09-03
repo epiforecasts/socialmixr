@@ -7,7 +7,10 @@
 list_surveys(clear_cache = FALSE)
 }
 \arguments{
-\item{clear_cache}{logical, whether to clear the cache before downloading the survey; by default, the cache is not cleared and so multiple calls of this function to access the same survey will not result in repeated downloads}
+\item{clear_cache}{logical, whether to clear the cache before downloading
+the survey; by default, the cache is not cleared and so multiple calls of
+this function to access the same survey will not result in repeated
+downloads.}
 }
 \value{
 character vector of surveys
@@ -19,7 +22,8 @@ character vector of surveys
 \code{\link[contactsurveys:list_surveys]{contactsurveys::list_surveys()}}.
 }
 \examples{
+# we recommend using the contactsurveys package now for listing surveys.
 \dontrun{
-list_surveys()
+contactsurveys::list_surveys()
 }
 }

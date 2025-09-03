@@ -6,9 +6,9 @@
 #' `download_survey()` has been deprecated in favour of
 #'   [contactsurveys::download_survey()].
 #'
-#' `download_survey()` downloads survey data from zenodo.
+#' `download_survey()` downloads survey data from Zenodo.
 #'
-#' @param survey a URL (see [list_surveys()])
+#' @param survey a URL (see [contactsurveys::list_surveys()])
 #' @param dir a directory to save the files to; if not given, will save to a
 #'   temporary directory
 #' @param sleep time to sleep between requests to avoid overloading the server
@@ -20,8 +20,10 @@
 #' @importFrom xml2 xml_text xml_find_first xml_find_all xml_attr
 #' @autoglobal
 #' @examples
+#' #' # we recommend using the contactsurveys package for download_survey()
 #' \dontrun{
-#' list_surveys()
+#' # if needed, discovery surveys with:
+#' contactsurveys::list_surveys()
 #' peru_survey <- download_survey("https://doi.org/10.5281/zenodo.1095664")
 #' # -->
 #' peru_survey <- contactsurveys::download_survey(

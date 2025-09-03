@@ -11,12 +11,14 @@
 #' @param x a character vector of surveys to cite
 #' @return citation as bibentry
 #' @importFrom utils bibentry
-#' @importFrom httr GET content
 #' @examples
+#' # we recommend using the contactsurveys package for get_citation()
+#' \dontrun{
 #' data(polymod)
-#' citation <- get_citation(polymod)
+#' citation <- contactsurveys::get_citation(polymod)
 #' print(citation)
 #' print(citation, style = "bibtex")
+#' }
 #' @export
 get_citation <- function(x) {
   lifecycle::deprecate_soft(
