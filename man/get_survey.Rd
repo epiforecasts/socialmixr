@@ -9,7 +9,10 @@ get_survey(survey, clear_cache = FALSE, ...)
 \arguments{
 \item{survey}{a DOI or url to get the survey from, or a \code{\link[=survey]{survey()}} object (in which case only cleaning is done).}
 
-\item{clear_cache}{logical, whether to clear the cache before downloading the survey; by default, the cache is not cleared and so multiple calls of this function to access the same survey will not result in repeated downloads}
+\item{clear_cache}{logical, whether to clear the cache before downloading
+the survey; by default, the cache is not cleared and so multiple calls of
+this function to access the same survey will not result in repeated
+downloads.}
 
 \item{...}{options for \code{\link[=clean]{clean()}}, which is called at the end of this}
 }
@@ -17,14 +20,28 @@ get_survey(survey, clear_cache = FALSE, ...)
 a survey in the correct format
 }
 \description{
-Downloads survey data, or extracts them from files, and returns a clean data set. If a survey URL is accessed multiple times, the data will be cached (unless \code{clear_cache} is set to \code{TRUE}) to avoid repeated downloads.
-}
-\details{
-If survey objects are used repeatedly the downloaded files can be saved and reloaded between sessions then survey objects can be saved/loaded using \code{\link[base:readRDS]{base::saveRDS()}} and \code{\link[base:readRDS]{base::readRDS()}}, or via the individual survey files that can be downloaded using \code{\link[=download_survey]{download_survey()}} and subsequently loaded using \code{\link[=load_survey]{load_survey()}}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{get_survey()} has been deprecated in favour of using
+\code{\link[contactsurveys:download_survey]{contactsurveys::download_survey()}} and then \code{\link[=load_survey]{load_survey()}}.
+
+Downloads survey data, or extracts them from files, and returns a clean data
+set. If a survey URL is accessed multiple times, the data will be cached
+(unless \code{clear_cache} is set to \code{TRUE}) to avoid repeated downloads.
+
+If survey objects are used repeatedly the downloaded files can be saved and
+reloaded between sessions then survey objects can be saved/loaded using
+\code{\link[base:readRDS]{base::saveRDS()}} and \code{\link[base:readRDS]{base::readRDS()}}, or via the individual survey files
+that can be downloaded using \code{\link[=download_survey]{download_survey()}} and subsequently loaded
+using \code{\link[=load_survey]{load_survey()}}.
 }
 \examples{
 \dontrun{
 list_surveys()
-peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
+peru_doi <- "https://doi.org/10.5281/zenodo.1095664"
+peru_survey <- get_survey(peru_doi)
+## --> We now recommend:
+peru_survey <- contactsurveys::download_survey(peru_doi)
+peru_data <- load_survey(peru_survey)
 }
 }
