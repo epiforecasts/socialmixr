@@ -6,7 +6,9 @@ has_names <- function(x, names) {
 #' @autoglobal
 est_part_age_mean <- function(data) {
   data[
-    is.na(part_age_exact) & !is.na(part_age_est_min) & !is.na(part_age_est_max),
+    is.na(part_age_exact) &
+      !is.na(part_age_est_min) &
+      !is.na(part_age_est_max),
     part_age := as.integer(rowMeans(.SD)),
     .SDcols = c("part_age_est_min", "part_age_est_max")
   ]
@@ -51,7 +53,9 @@ drop_ages_below_age_limit <- function(data, age_limits) {
 #' @autoglobal
 est_contact_age_mean <- function(contacts) {
   contacts[
-    is.na(cnt_age) & !is.na(cnt_age_est_min) & !is.na(cnt_age_est_max),
+    is.na(cnt_age) &
+      !is.na(cnt_age_est_min) &
+      !is.na(cnt_age_est_max),
     cnt_age := as.integer(rowMeans(.SD)),
     .SDcols = c("cnt_age_est_min", "cnt_age_est_max")
   ]
@@ -265,7 +269,7 @@ apply_data_filter <- function(
     missing_all <- do.call(intersect, missing_columns)
     if (length(missing_all) > 0) {
       cli::cli_warn(
-        message = "Filter columns {missing_all} not found.",
+        message = "Filter columns {.val {missing_all}} not found.",
         call = call
       )
     }
@@ -289,15 +293,14 @@ adjust_ppt_age_group_breaks <- function(
 ) {
   max_age <- max_participant_age(participants)
 
-  part_age_group_breaks <- create_age_breaks(age_limits, max_age)
-  part_age_group_present <- filter_valid_ages(age_limits, max_age)
-
   participants[,
     lower.age.limit := reduce_agegroups(
-      part_age,
-      age_limits[age_limits < max_age]
+      x = part_age,
+      limits = age_limits[age_limits < max_age]
     )
   ]
+
+  part_age_group_breaks <- create_age_breaks(age_limits, max_age)
 
   participants[,
     age.group := cut(
@@ -316,6 +319,8 @@ adjust_ppt_age_group_breaks <- function(
       labels = age.groups
     )
   ]
+
+  part_age_group_present <- filter_valid_ages(age_limits, max_age)
 
   participants <- add_upper_age_limits(
     participants = participants,

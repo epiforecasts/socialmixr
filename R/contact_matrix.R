@@ -10,7 +10,7 @@
 #' @param counts whether to return counts (instead of means)
 #' @param symmetric whether to make matrix symmetric, such that \eqn{c_{ij}N_i = c_{ji}N_j}.
 #' @param split whether to split the contact matrix into the mean number of contacts, in each age group (split further into the product of the mean number of contacts across the whole population (`mean.contacts`), a normalisation constant (`normalisation`) and age-specific variation in contacts (`contacts`)), multiplied with an assortativity matrix (`assortativity`) and a population multiplier (`demography`). For more detail on this, see the "Getting Started" vignette.
-#' @param sample.participants whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this..
+#' @param sample.participants whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this.
 #' @param estimated.participant.age if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
 #' @param estimated.contact.age if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing
 #' @param missing.participant.age if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group
@@ -93,8 +93,8 @@ contact_matrix <- function(
     estimate = estimated.participant.age
   )
 
-  ## TODO docs say that when `missing.partipant.age` is `keep` missings are
-  ## treated differently, but I don't see that logic in here
+  ## TODO docs say when `missing.partipant.age = "keep"` missings are treated
+  ## differently, but I don't see that logic in here
   survey$participants <- drop_invalid_ages(
     participants = survey$participants,
     missing_action = missing.participant.age,
@@ -254,8 +254,12 @@ contact_matrix <- function(
     present_age_limits <- unique(survey$participants$lower.age.limit)
     if (sample.all.age.groups && !setequal(age.limits, present_age_limits)) {
       cli::cli_abort(
-        "Cannot sample all age groups: no participants in \\
-        {setdiff(age.limits, present_age_limits)}."
+        c(
+          "Cannot sample all age groups: no participants in \\
+        {setdiff(age.limits, present_age_limits)}:",
+          "{.var age.limits: {age.limits}}",
+          "{.var present_age_limits: {present_age_limits}}"
+        )
       )
     }
     good_sample <- FALSE
