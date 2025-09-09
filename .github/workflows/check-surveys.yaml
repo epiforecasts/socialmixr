@@ -1,0 +1,254 @@
+name: socialmixr-survey-check
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+    # Run when the workflow, R code, or inst files change
+      - '.github/workflows/socialmixr-survey-check.yaml'
+      - 'R/**'
+      - 'inst/**'
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - '.github/workflows/socialmixr-survey-check.yaml'
+      - 'R/**'
+      - 'inst/**'
+  schedule:
+    - cron: '0 6 * * 1'  # Run every Monday at 6 AM UTC to check for new surveys
+  workflow_dispatch:
+
+jobs:
+  check-surveys:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write  # Allow creating/updating issues if errors are found
+    timeout-minutes: 180  # 3 hours
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Setup R dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::socialmixr
+            any::here
+            any::purrr
+            any::devtools
+            local::.
+          cache-version: 1
+          upgrade: 'TRUE'
+
+      - name: Create surveys directory
+        run: mkdir -p surveys
+
+      - name: Download survey files
+        shell: Rscript {0}
+        run: |
+          library(socialmixr)
+          library(here)
+          library(purrr)
+
+          cat("Starting survey download...\n")
+
+          ## list all surveys
+          ls <- list_surveys()
+          cat("Found", nrow(ls), "surveys to download\n")
+          print(ls)
+
+          dir.create(here("surveys"), showWarnings = FALSE)
+
+          ## download all surveys using the `url` column in the survey list and
+          ## save them in the `surveys` folder (which is created if it does not exist)
+          survey_files <- purrr::map(ls$url, function(x) {
+            cat("Downloading survey from:", x, "\n")
+            tryCatch({
+              result <- download_survey(x, "surveys")
+              cat("Successfully downloaded:", x, "\n")
+              Sys.sleep(10)  # Be nice to the server
+              return(result)
+            }, error = function(e) {
+              cat("Error downloading", x, ":", e$message, "\n")
+              return(NULL)
+            })
+          })
+
+          ## name list elements according to url
+          names(survey_files) <- paste0(ls$title, " (", ls$url, ")")
+
+          ## save list of survey files
+          saveRDS(survey_files, here("surveys", "survey_files.rds"))
+
+          cat("Download phase completed\n")
+
+      - name: Check survey files
+        shell: Rscript {0}
+        run: |
+          library(socialmixr)
+          library(purrr)
+          library(here)
+
+          cat("Starting survey file checks...\n")
+
+          ## load list of survey files
+          survey_files <- readRDS(here("surveys", "survey_files.rds"))
+
+          cat("Loaded", length(survey_files), "survey files\n")
+
+          ## define safe checking function
+          safe_check <- safely(\(files) {
+            if (is.null(files)) {
+              stop("Survey file is NULL (download failed)")
+            }
+            check(load_survey(files))
+          })
+
+          ## check all surveys
+          cat("Checking all surveys...\n")
+          checks <- map(survey_files, safe_check)
+
+          errors <- map(checks, "error")
+          no_error <- map_vec(errors, is.null)
+          error_messages <- map(errors[!no_error], "message")
+
+          cat("=== SURVEY CHECK RESULTS ===\n")
+          cat("Total surveys:", length(survey_files), "\n")
+          cat("Successful checks:", sum(no_error), "\n")
+          cat("Failed checks:", sum(!no_error), "\n")
+
+          if (sum(!no_error) > 0) {
+            cat("\n=== ERRORS ===\n")
+            iwalk(error_messages, ~ {
+              cat("Survey", .y, ":\n")
+              cat("  Error:", .x, "\n\n")
+            })
+          }
+
+          # Capture warnings
+          if (length(warnings()) > 0) {
+            cat("\n=== WARNINGS ===\n")
+            print(warnings())
+          }
+
+          # Create summary for artifact
+          summary_data <- list(
+            timestamp = Sys.time(),
+            total_surveys = length(survey_files),
+            successful_checks = sum(no_error),
+            failed_checks = sum(!no_error),
+            errors = error_messages,
+            warnings = if(length(warnings()) > 0) warnings() else NULL,
+            survey_names = names(survey_files)
+          )
+
+          saveRDS(summary_data, here("surveys", "check_summary.rds"))
+
+          # Exit with error code if there are failures
+          if (sum(!no_error) > 0) {
+            cat("\nSome surveys failed checks. Exiting with error code.\n")
+            quit(status = 1)
+          } else {
+            cat("\nAll surveys passed checks successfully!\n")
+          }
+
+      - name: Upload survey files as artifacts
+        uses: actions/upload-artifact@v4
+        if: always()  # Upload even if checks failed
+        with:
+          name: survey-files
+          path: surveys/
+          retention-days: 30
+
+      - name: Upload check results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: check-results
+          path: surveys/check_summary.rds
+          retention-days: 90
+
+      - name: Create issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Try to read the summary file if it exists
+            let summaryContent = "Check summary not available";
+            try {
+              // This is a simplified approach - in practice you might want to
+              // parse the RDS file or create a text summary in the R step
+              summaryContent = "Survey checks failed. Please check the workflow logs and artifacts for details.";
+            } catch (error) {
+              console.log("Could not read summary file");
+            }
+
+            const issueTitle = `Survey Check Failure - ${new Date().toISOString().split('T')[0]}`;
+            const issueBody = `
+            ## Survey Check Failed
+
+            The automated survey check workflow failed on ${new Date().toISOString()}.
+
+            **Details:**
+            ${summaryContent}
+
+            **Workflow Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            **Artifacts:**
+            - Survey files and check results are available in the workflow artifacts
+
+            Please investigate the failure and resolve any issues with the survey data or checking process.
+
+            ---
+            *This issue was automatically created by the survey-check workflow.*
+            `;
+
+            // Check if there's already an open issue for survey failures
+            const existingIssues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: ['survey-check-failure']
+            });
+
+            if (existingIssues.data.length === 0) {
+              // Create new issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: issueTitle,
+                body: issueBody,
+                labels: ['survey-check-failure', 'automated']
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssues.data[0].number,
+                body: `## New Failure Detected\n\n${issueBody}`
+              });
+            }
+
+      - name: Session info
+        shell: Rscript {0}
+        if: always()
+        run: |
+          options(width = 100)
+          pkgs <- installed.packages()[, "Package"]
+          sessioninfo::session_info(pkgs, include_base = TRUE)
