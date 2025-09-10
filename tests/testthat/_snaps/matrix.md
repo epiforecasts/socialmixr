@@ -157,10 +157,47 @@
       
       
 
+# warning is thrown if filter column is not found
+
+    Filter columns: `test` not found.
+
+# warning is thrown if missing data exist
+
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider setting 'missing.contact.age'.
+
+# warning is thrown if population needed but no 'year' column present
+
+    No information on "year" found in the data.
+    i Will use 2015 population data.
+
 # warning is thrown if day of week is asked to be weighed but not present
 
     `weigh.dayofweek` is "TRUE", but no `dayofweek` column in the data.
     i Will ignore.
+
+# warning is thrown if contact survey has no age information
+
+    Contact age column `cnt_age` or columns to estimate contact age (`cnt_age_exact` or `cnt_age_est_min` and `cnt_age_est_max`) do not exist in the contact data frame.
+
+# warning is thrown if participant data has no country
+
+    Country column `country` does not exist in the participant data frame.
+
+# good suggestions are made
+
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider adjusting the age limits.
+
+---
+
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider setting 'missing.participant.age'.
+
+---
+
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider setting 'missing.participant.age' and 'missing.contact.age'.
 
 # nonsensical operations are warned about
 
@@ -170,8 +207,19 @@
 
     `symmetric = TRUE` does not make sense with `counts = TRUE`; will not make matrix symmetric.
 
+---
+
+    `split = TRUE` does not work with missing data; will not split contact.matrix.
+    i  Consider setting 'missing.participant.age'.
+
 # warning is thrown if it is assumed that the survey is representative
 
     No `survey.pop` or `countries` given, and no `country` column found in the data.
     i I don't know which population this is from (assuming the survey is representative).
+
+# Symmetric contact matrices with large normalisation weights throw a warning
+
+    Large differences in the size of the sub-populations with the current age breaks are likely to result in artefacts after making the matrix symmetric.
+    ! Please reconsider the age breaks to obtain more equally sized sub-populations.
+    i Normalization factors: [0.5 and 2.1]
 

@@ -285,7 +285,7 @@ contact_matrix <- function(
     }
     missing_all <- do.call(intersect, missing_columns)
     if (length(missing_all) > 0) {
-      cli::cli_warn("Filter columns {missing_all} not found.")
+      cli::cli_warn("Filter columns: {.var {missing_all}} not found.")
     }
   }
 
@@ -383,8 +383,10 @@ contact_matrix <- function(
         } else {
           survey.year <- country.pop[, max(year, na.rm = TRUE)]
           cli::cli_warn(
-            "No information on year found in the data. Will use
-            {survey.year} population data."
+            message = c(
+              "No information on {.val year} found in the data.",
+              "i" = "Will use {.val {survey.year}} population data." # nolint
+            )
           )
         }
 

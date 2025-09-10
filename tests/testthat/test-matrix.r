@@ -144,6 +144,9 @@ test_that("error is thrown if country is not found", {
 })
 
 test_that("warning is thrown if filter column is not found", {
+  expect_snapshot_warning(
+    contact_matrix(survey = polymod, filter = c(test = 0))
+  )
   expect_warning(
     contact_matrix(survey = polymod, filter = c(test = 0)),
     "column.* not found"
@@ -151,6 +154,14 @@ test_that("warning is thrown if filter column is not found", {
 })
 
 test_that("warning is thrown if missing data exist", {
+  expect_snapshot_warning(
+    contact_matrix(
+      survey = polymod,
+      missing.contact.age = "keep",
+      symmetric = TRUE,
+      age.limits = c(0, 5, 15)
+    )
+  )
   expect_warning(
     contact_matrix(
       survey = polymod,
@@ -187,13 +198,20 @@ test_that("error is thrown if there are no participants after selection the coun
 })
 
 test_that("warning is thrown if population needed but no 'year' column present", {
+  expect_snapshot_warning(
+    contact_matrix(
+      survey = polymod3,
+      symmetric = TRUE,
+      age.limits = c(0, 5, 15)
+    )
+  )
   expect_warning(
     contact_matrix(
       survey = polymod3,
       symmetric = TRUE,
       age.limits = c(0, 5, 15)
     ),
-    "No information on year"
+    "No information on \"year\" found"
   )
 })
 
@@ -212,11 +230,19 @@ test_that("warning is thrown if country has no survey population", {
 
 test_that("warning is thrown if contact survey has no age information", {
   withr::local_options(lifecycle_verbosity = "quiet")
+  expect_snapshot_warning(
+    cran = FALSE,
+    check(x = polymod6)
+  )
   expect_warning(check(x = polymod6), "do not exist")
 })
 
 test_that("warning is thrown if participant data has no country", {
   withr::local_options(lifecycle_verbosity = "quiet")
+  expect_snapshot_warning(
+    cran = FALSE,
+    check(x = polymod4)
+  )
   expect_warning(check(x = polymod4), "does not exist")
 })
 
@@ -230,6 +256,13 @@ test_that("check result is reported back", {
 })
 
 test_that("good suggestions are made", {
+  expect_snapshot_warning(
+    contact_matrix(
+      survey = polymod8,
+      symmetric = TRUE,
+      age.limits = c(0, 5, 15)
+    )
+  )
   expect_warning(
     contact_matrix(
       survey = polymod8,
@@ -237,6 +270,14 @@ test_that("good suggestions are made", {
       age.limits = c(0, 5, 15)
     ),
     "adjusting the age limits"
+  )
+  expect_snapshot_warning(
+    contact_matrix(
+      survey = polymod,
+      symmetric = TRUE,
+      age.limits = c(0, 5, 15),
+      missing.participant.age = "keep"
+    )
   )
   expect_warning(
     contact_matrix(
@@ -246,6 +287,15 @@ test_that("good suggestions are made", {
       missing.participant.age = "keep"
     ),
     "setting 'missing.participant.age"
+  )
+  expect_snapshot_warning(
+    contact_matrix(
+      survey = polymod,
+      symmetric = TRUE,
+      age.limits = c(0, 5, 15),
+      missing.participant.age = "keep",
+      missing.contact.age = "keep"
+    )
   )
   expect_warning(
     contact_matrix(
@@ -274,6 +324,14 @@ test_that("nonsensical operations are warned about", {
       counts = TRUE,
       symmetric = TRUE,
       age.limits = c(0, 5)
+    )
+  )
+  expect_snapshot_warning(
+    contact_matrix(
+      survey = polymod,
+      split = TRUE,
+      age.limits = c(0, 5, 15),
+      missing.participant.age = "keep"
     )
   )
   expect_warning(
@@ -1018,6 +1076,10 @@ test_that("Contact matrices per capita are also generated when bootstrapping", {
 
 
 test_that("Symmetric contact matrices with large normalisation weights throw a warning", {
+  expect_snapshot_warning(
+    cran = FALSE,
+    contact_matrix(survey = polymod, age.limits = c(0, 90), symmetric = TRUE)
+  )
   expect_warning(
     contact_matrix(survey = polymod, age.limits = c(0, 90), symmetric = TRUE),
     "artefacts after making the matrix symmetric"
