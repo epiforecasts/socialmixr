@@ -7,7 +7,7 @@ on:
       - master
     paths:
     # Run when the workflow, R code, or inst files change
-      - '.github/workflows/check_surveys.yaml'
+      - '.github/workflows/check-surveys.yaml'
       - 'R/**'
       - 'inst/**'
   pull_request:
@@ -15,18 +15,22 @@ on:
       - main
       - master
     paths:
-      - '.github/workflows/check_surveys.yaml'
+      - '.github/workflows/check-surveys.yaml'
       - 'R/**'
       - 'inst/**'
   schedule:
     - cron: '0 6 * * 1'  # Run every Monday at 6 AM UTC to check for new surveys
   workflow_dispatch:
 
+concurrency:
+  group: check-surveys-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check-surveys:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
       issues: write  # Allow creating/updating issues if errors are found
     timeout-minutes: 180  # 3 hours
     env:
@@ -65,15 +69,15 @@ jobs:
           cat("Starting survey download...\n")
 
           ## list all surveys
-          ls <- list_surveys()
-          cat("Found", nrow(ls), "surveys to download\n")
-          print(ls)
+          survey_list <- list_surveys()
+          cat("Found", nrow(survey_list), "surveys to download\n")
+          print(survey_list)
 
           dir.create(here("surveys"), showWarnings = FALSE)
 
           ## download all surveys using the `url` column in the survey list and
           ## save them in the `surveys` folder (which is created if it does not exist)
-          survey_files <- purrr::map(ls$url, function(x) {
+          survey_files <- purrr::map(survey_list$url, function(x) {
             cat("Downloading survey from:", x, "\n")
             tryCatch({
               result <- download_survey(x, "surveys")
@@ -87,7 +91,7 @@ jobs:
           })
 
           ## name list elements according to url
-          names(survey_files) <- paste0(ls$title, " (", ls$url, ")")
+          names(survey_files) <- paste0(survey_list$title, " (", survey_list$url, ")")
 
           ## save list of survey files
           saveRDS(survey_files, here("surveys", "survey_files.rds"))
@@ -113,7 +117,7 @@ jobs:
             if (is.null(files)) {
               stop("Survey file is NULL (download failed)")
             }
-            check(load_survey(files))
+            socialmixr::check(load_survey(files))
           })
 
           ## check all surveys
@@ -187,9 +191,6 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const fs = require('fs');
-            const path = require('path');
-
             // Try to read the summary file if it exists
             let summaryContent = "Check summary not available";
             try {
