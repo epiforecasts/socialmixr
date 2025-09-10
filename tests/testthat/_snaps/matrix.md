@@ -186,7 +186,7 @@
 
 # warning is thrown if filter column is not found
 
-    Filter columns: `test` not found.
+    Filter column: `test` not found.
 
 # warning is thrown if missing data exist
 
@@ -199,7 +199,7 @@
       contact_matrix(dummy = "test")
     Condition
       Error in `check_arg_dots_in()`:
-      ! Unknown argument: dummy.
+      ! Unknown argument: "dummy".
 
 # error is thrown if invalid age limits are passed
 
@@ -295,9 +295,15 @@
     Code
       contact_matrix(polymod_nocountry, age.limits = c(0, 18, 60), symmetric = TRUE,
       survey.pop = "dummy")
+    Message
+      Removing participants without age information.
+      i To change this behaviour, set the `missing.participant.age` option.
+      Removing participants that have contacts without age information.
+      i To change this behaviour, set the 'missing.contact.age' option.
     Condition
-      Error:
-      ! object 'polymod_nocountry' not found
+      Error in `contact_matrix()`:
+      ! Could not find population data for: "dummy".
+      i Use `wpp_countries()` to get a list of country names.
 
 # Symmetric contact matrices with large normalisation weights throw a warning
 

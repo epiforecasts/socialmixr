@@ -35,9 +35,14 @@ wpp_age <- function(countries, years) {
     popF <- merge(popF, popFprojMed)
 
     cli::cli_warn(
-      "Don't have historial population data available after {years_included}. \\
-      Will make use of the median projection of population counts from the \\
-      {.pkg WPP2017} package."
+      message = c(
+        "Don't have historical population data available after: \\
+        {.val {years_included}}.",
+        # nolint start
+        "i" = "Will make use of the median projection of population counts \\
+        from the {.pkg WPP2017} package."
+        # nolint end
+      )
     )
   }
 

@@ -287,7 +287,7 @@ contact_matrix <- function(
     }
     missing_all <- do.call(intersect, missing_columns)
     if (length(missing_all) > 0) {
-      cli::cli_warn("Filter columns: {.var {missing_all}} not found.")
+      cli::cli_warn("Filter column{?s}: {.var {missing_all}} not found.")
     }
   }
 

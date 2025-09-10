@@ -163,6 +163,7 @@ test_that("error is thrown if country is not found", {
 
 test_that("warning is thrown if filter column is not found", {
   expect_snapshot_warning(
+    cran = FALSE,
     contact_matrix(survey = polymod, filter = c(test = 0))
   )
   expect_warning(
@@ -366,6 +367,7 @@ test_that("nonsensical operations are warned about", {
     )
   )
   expect_snapshot_warning(
+    cran = FALSE,
     contact_matrix(
       survey = polymod,
       split = TRUE,
@@ -1007,6 +1009,9 @@ test_that("User-defined reference populations with open ended age groups are han
       )[1],
       "age.group"
     )
+
+    polymod_nocountry <- polymod
+    polymod_nocountry$participants$country <- NULL
 
     expect_snapshot(
       cran = FALSE,
