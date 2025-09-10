@@ -93,7 +93,9 @@ contact_matrix <- function(
     countries <- corrected_countries
     survey$participants <- survey$participants[country %in% countries]
     if (nrow(survey$participants) == 0) {
-      cli::cli_abort("No participants left after selecting countries.")
+      cli::cli_abort(
+        "No participants left after selecting countries: {.val {countries}}"
+      )
     }
   }
 

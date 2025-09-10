@@ -5,6 +5,14 @@
 
 # pop_age throws warnings or errors
 
+    Code
+      pop_age(3)
+    Condition
+      Error in `pop_age()`:
+      ! Expecting `pop` to be a data.frame with columns `lower.age.limit` and `population`.
+
+---
+
     Don't have population data available for year: 2011
     i Will return nearest year: 2010
 

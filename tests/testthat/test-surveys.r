@@ -23,10 +23,23 @@ test_that("surveys can be cited", {
 })
 
 test_that("missing surveys can't be cited", {
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    get_citation("bogus")
+  )
   expect_error(get_citation("bogus"), "URL")
 })
 
 test_that("multiple DOI's cannot be loaded", {
+  expect_snapshot(
+    cran = FALSE,
+    error = TRUE,
+    suppressMessages(suppressWarnings(get_survey(c(
+      "10.5281/zenodo.1095664", # nolint
+      "10.5281/zenodo.1127693" # nolint
+    ))))
+  )
   expect_error(suppressMessages(suppressWarnings(get_survey(c(
     "10.5281/zenodo.1095664", # nolint
     "10.5281/zenodo.1127693" # nolint

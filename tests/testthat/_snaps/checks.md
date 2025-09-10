@@ -1,3 +1,19 @@
+# error is thrown if survey contains false data types
+
+    Code
+      check(erroneous_type1)
+    Condition
+      Error in `check()`:
+      ! The participants and contacts elements of `x` must be data.frames.
+
+---
+
+    Code
+      check(erroneous_type2)
+    Condition
+      Error in `check()`:
+      ! The participants and contacts elements of `x` must be data.frames.
+
 # incorrect structure of data frames is correctly identified
 
     `id.columns` "part_id" does not exist in both the participants and contacts data frames.

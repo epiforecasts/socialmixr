@@ -123,10 +123,23 @@ test_that("contact matrices look as expected", {
 })
 
 test_that("survey argument is validated", {
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    contact_matrix(survey = "bogus")
+  )
   expect_error(contact_matrix(survey = "bogus"), "survey")
 })
 
 test_that("error is thrown if age limits are non-numeric", {
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    contact_matrix(
+      survey = polymod,
+      age.limits = c(0, 5, "fifteen")
+    )
+  )
   expect_error(
     suppressWarnings(contact_matrix(
       survey = polymod,
@@ -137,6 +150,11 @@ test_that("error is thrown if age limits are non-numeric", {
 })
 
 test_that("error is thrown if country is not found", {
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    contact_matrix(survey = polymod, countries = c("Italy", "Zamonia"))
+  )
   expect_error(
     contact_matrix(survey = polymod, countries = c("Italy", "Zamonia")),
     "data not found"
@@ -180,10 +198,20 @@ test_that("warning is thrown if missing data exist", {
 })
 
 test_that("error is thrown if an unknown argument is passed", {
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    contact_matrix(dummy = "test")
+  )
   expect_error(contact_matrix(dummy = "test"), "Unknown argument")
 })
 
 test_that("error is thrown if invalid age limits are passed", {
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    contact_matrix(survey = polymod, age.limits = c(13, 11))
+  )
   expect_error(
     contact_matrix(survey = polymod, age.limits = c(13, 11)),
     "increasing"
@@ -191,6 +219,11 @@ test_that("error is thrown if invalid age limits are passed", {
 })
 
 test_that("error is thrown if there are no participants after selection the country", {
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    contact_matrix(survey = polymod, countries = "Romania")
+  )
   expect_error(
     contact_matrix(survey = polymod, countries = "Romania"),
     "No participants left"
@@ -222,6 +255,11 @@ test_that("warning is thrown if day of week is asked to be weighed but not prese
 })
 
 test_that("warning is thrown if country has no survey population", {
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    contact_matrix(survey = polymod5, symmetric = TRUE)
+  )
   expect_error(
     contact_matrix(survey = polymod5, symmetric = TRUE),
     "not find population data"
@@ -967,6 +1005,17 @@ test_that("User-defined reference populations with open ended age groups are han
         )$demography
       )[1],
       "age.group"
+    )
+
+    expect_snapshot(
+      cran = FALSE,
+      error = TRUE,
+      contact_matrix(
+        polymod_nocountry,
+        age.limits = c(0, 18, 60),
+        symmetric = TRUE, # to make sure that demography is returned
+        survey.pop = "dummy"
+      )
     )
 
     expect_error(contact_matrix(

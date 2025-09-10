@@ -34,7 +34,11 @@ check_age_limits_increasing <- function(
     x <- as.integer(x)
     if (anyNA(x) || any(diff(x) <= 0)) {
       cli::cli_abort(
-        message = "{.arg {arg}} must be an increasing integer vector of lower age limits.",
+        message = c(
+          "{.arg {arg}} must be an increasing integer vector of lower age \\
+          limits.",
+          "i" = "We see: {.val {x}}" # nolint
+        ),
         call = call
       )
     }
@@ -54,7 +58,7 @@ check_any_missing_countries <- function(
   if (any_missing_country) {
     cli::cli_abort(
       message = c(
-        "Could not find population data for {missing_countries}.",
+        "Could not find population data for: {.val {missing_countries}}.",
         # nolint start
         "i" = "Use {.fn wpp_countries} to get a list of country names."
         # nolint end
@@ -73,7 +77,7 @@ check_missing_countries <- function(
   any_missing_countries <- length(missing_countries) > 0
   if (any_missing_countries) {
     cli::cli_abort(
-      message = "Survey data not found for {missing_countries}.",
+      message = "Survey data not found for: {.val {missing_countries}}.",
       call = call
     )
   }

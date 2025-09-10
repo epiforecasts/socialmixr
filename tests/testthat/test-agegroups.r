@@ -52,6 +52,11 @@ test_that("pop_age doesn't change total population size", {
 })
 
 test_that("pop_age throws warnings or errors", {
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    pop_age(3)
+  )
   expect_error(pop_age(3), "to be a data.frame")
   expect_warning(wpp_age("Germany", 2011), "Don't have population data")
   expect_snapshot_warning(

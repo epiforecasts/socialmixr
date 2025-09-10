@@ -9,7 +9,17 @@ erroneous_type2$participants <- 17
 
 test_that("error is thrown if survey contains false data types", {
   withr::local_options(lifecycle_verbosity = "quiet")
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    check(erroneous_type1)
+  )
   expect_error(check(erroneous_type1), "must be data.frames")
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    check(erroneous_type2)
+  )
   expect_error(check(erroneous_type2), "must be data.frames")
 })
 
