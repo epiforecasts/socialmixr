@@ -7,7 +7,7 @@ on:
       - master
     paths:
     # Run when the workflow, R code, or inst files change
-      - '.github/workflows/socialmixr-survey-check.yaml'
+      - '.github/workflows/check_surveys.yaml'
       - 'R/**'
       - 'inst/**'
   pull_request:
@@ -15,7 +15,7 @@ on:
       - main
       - master
     paths:
-      - '.github/workflows/socialmixr-survey-check.yaml'
+      - '.github/workflows/check_surveys.yaml'
       - 'R/**'
       - 'inst/**'
   schedule:
@@ -40,6 +40,7 @@ jobs:
         uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
+          r-version: 'release'
 
       - name: Setup R dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
@@ -49,12 +50,10 @@ jobs:
             any::here
             any::purrr
             any::devtools
+            any::sessioninfo
             local::.
           cache-version: 1
-          upgrade: 'TRUE'
-
-      - name: Create surveys directory
-        run: mkdir -p surveys
+          upgrade: true
 
       - name: Download survey files
         shell: Rscript {0}
@@ -79,7 +78,7 @@ jobs:
             tryCatch({
               result <- download_survey(x, "surveys")
               cat("Successfully downloaded:", x, "\n")
-              Sys.sleep(10)  # Be nice to the server
+              Sys.sleep(2)  # Be nice to the server
               return(result)
             }, error = function(e) {
               cat("Error downloading", x, ":", e$message, "\n")
@@ -122,7 +121,7 @@ jobs:
           checks <- map(survey_files, safe_check)
 
           errors <- map(checks, "error")
-          no_error <- map_vec(errors, is.null)
+          no_error <- map_lgl(errors, is.null)
           error_messages <- map(errors[!no_error], "message")
 
           cat("=== SURVEY CHECK RESULTS ===\n")
@@ -172,6 +171,7 @@ jobs:
           name: survey-files
           path: surveys/
           retention-days: 30
+          if-no-files-found: warn
 
       - name: Upload check results
         uses: actions/upload-artifact@v4
@@ -180,6 +180,7 @@ jobs:
           name: check-results
           path: surveys/check_summary.rds
           retention-days: 90
+          if-no-files-found: warn
 
       - name: Create issue on failure
         if: failure()
@@ -224,7 +225,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              labels: ['survey-check-failure']
+              labels: 'survey-check-failure'
             });
 
             if (existingIssues.data.length === 0) {
