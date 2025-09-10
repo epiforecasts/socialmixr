@@ -55,9 +55,10 @@ jobs:
             any::purrr
             any::devtools
             any::sessioninfo
+            any::glue
+            any::cli
             local::.
           cache-version: 1
-          upgrade: true
 
       - name: Download survey files
         shell: Rscript {0}
@@ -65,38 +66,36 @@ jobs:
           library(socialmixr)
           library(here)
           library(purrr)
+          library(cli)
 
-          cat("Starting survey download...\n")
+          cli_h1("Starting survey download...\n")
 
           ## list all surveys
           survey_list <- list_surveys()
-          cat("Found", nrow(survey_list), "surveys to download\n")
-          print(survey_list)
+          cli_h1("Found {nrow(survey_list)} surveys to download")
+          survey_list
 
           dir.create(here("surveys"), showWarnings = FALSE)
 
           ## download all surveys using the `url` column in the survey list and
           ## save them in the `surveys` folder (which is created if it does not exist)
           survey_files <- purrr::map(survey_list$url, function(x) {
-            cat("Downloading survey from:", x, "\n")
-            tryCatch({
-              result <- download_survey(x, "surveys")
-              cat("Successfully downloaded:", x, "\n")
-              Sys.sleep(2)  # Be nice to the server
-              return(result)
-            }, error = function(e) {
-              cat("Error downloading", x, ":", e$message, "\n")
-              return(NULL)
-            })
+              tryCatch({
+                  result <- download_survey(x, "surveys")
+                  Sys.sleep(2)  # Be nice to the server
+                  return(result)
+              }, error = function(e) {
+                  return(NULL)
+              })
           })
 
           ## name list elements according to url
-          names(survey_files) <- paste0(survey_list$title, " (", survey_list$url, ")")
+          names(survey_files) <- glue::glue("{survey_list$title} ({survey_list$url})")
 
           ## save list of survey files
-          saveRDS(survey_files, here("surveys", "survey_files.rds"))
+          saveRDS(survey_files, here("surveys", "survey_files-example.rds"))
 
-          cat("Download phase completed\n")
+          cli_h1("Download phase completed")
 
       - name: Check survey files
         shell: Rscript {0}
@@ -104,68 +103,63 @@ jobs:
           library(socialmixr)
           library(purrr)
           library(here)
+          library(cli)
 
-          cat("Starting survey file checks...\n")
+          cli_h1("Starting survey file checks...")
 
           ## load list of survey files
-          survey_files <- readRDS(here("surveys", "survey_files.rds"))
+          survey_files <- readRDS(here("surveys", "survey_files-example.rds"))
 
-          cat("Loaded", length(survey_files), "survey files\n")
+          cli_h1("Loaded {length(survey_files)} survey files")
 
           ## define safe checking function
-          safe_check <- safely(\(files) {
-            if (is.null(files)) {
-              stop("Survey file is NULL (download failed)")
-            }
-            socialmixr::check(load_survey(files))
-          })
+          safe_check <- safely(\(files) socialmixr::check(load_survey(files)))
 
           ## check all surveys
-          cat("Checking all surveys...\n")
+          cli_h1("Checking all surveys...")
           checks <- map(survey_files, safe_check)
 
           errors <- map(checks, "error")
           no_error <- map_lgl(errors, is.null)
           error_messages <- map(errors[!no_error], "message")
 
-          cat("=== SURVEY CHECK RESULTS ===\n")
-          cat("Total surveys:", length(survey_files), "\n")
-          cat("Successful checks:", sum(no_error), "\n")
-          cat("Failed checks:", sum(!no_error), "\n")
+          cli_h1("Survey check results")
+          cli_li("Total surveys: {length(survey_files)}")
+          cli_li("Successful checks: {sum(no_error)}")
+          cli_li("Failed checks: {sum(!no_error)}")
 
           if (sum(!no_error) > 0) {
-            cat("\n=== ERRORS ===\n")
-            iwalk(error_messages, ~ {
-              cat("Survey", .y, ":\n")
-              cat("  Error:", .x, "\n\n")
-            })
+          iwalk(error_messages, ~ {
+              cli_li("Survey: {.y}")
+              cli_li("Error: {.x}")
+          })
           }
 
           # Capture warnings
           if (length(warnings()) > 0) {
-            cat("\n=== WARNINGS ===\n")
-            print(warnings())
+              cli_h1("Warnings")
+              print(warnings())
           }
 
           # Create summary for artifact
           summary_data <- list(
-            timestamp = Sys.time(),
-            total_surveys = length(survey_files),
-            successful_checks = sum(no_error),
-            failed_checks = sum(!no_error),
-            errors = error_messages,
-            warnings = if(length(warnings()) > 0) warnings() else NULL,
-            survey_names = names(survey_files)
+              timestamp = Sys.time(),
+              total_surveys = length(survey_files),
+              successful_checks = sum(no_error),
+              failed_checks = sum(!no_error),
+              errors = error_messages,
+              warnings = if(length(warnings()) > 0) warnings() else NULL,
+              survey_names = names(survey_files)
           )
 
           saveRDS(summary_data, here("surveys", "check_summary.rds"))
 
           # Exit with error code if there are failures
           if (sum(!no_error) > 0) {
-            cat("\nSome surveys failed checks. Exiting with error code.\n")
-            quit(status = 1)
+              cli_h1("Some surveys failed checks. Exiting with error code.")
+              quit(status = 1)
           } else {
-            cat("\nAll surveys passed checks successfully!\n")
+              cli_h1("All surveys passed checks successfully!")
           }
 
       - name: Upload survey files as artifacts
