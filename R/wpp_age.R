@@ -78,8 +78,10 @@ wpp_age <- function(countries, years) {
         available.years <- unique(pop$year)
         nearest.year <- available.years[which.min(abs(available.years - years))]
         cli::cli_warn(
-          "Don't have population data available for {years}. \\
-          Will return nearest year ({nearest.year})."
+          message = c(
+            "Don't have population data available for year: {.val {years}}",
+            "i" = "Will return nearest year: {.val {nearest.year}}" # nolint
+          )
         )
         pop <- pop[year %in% nearest.year]
       }
