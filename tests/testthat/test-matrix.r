@@ -290,6 +290,7 @@ test_that("user is informed about removing missing data", {
 
 test_that("check result is reported back", {
   withr::local_options(lifecycle_verbosity = "quiet")
+  expect_snapshot(check(x = polymod2))
   expect_message(check(x = polymod2), "Check")
 })
 

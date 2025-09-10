@@ -250,6 +250,13 @@
 
     Country column `country` does not exist in the participant data frame.
 
+# check result is reported back
+
+    Code
+      check(x = polymod2)
+    Message
+      > Check OK.
+
 # good suggestions are made
 
     `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
