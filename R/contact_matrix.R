@@ -804,7 +804,7 @@ contact_matrix <- function(
       cli::cli_warn(
         c(
           "{.code split = TRUE} does not work with missing data; will not
-          split contact.matrix.",
+          split the contact matrix.",
           "i" = "{warning.suggestion}" # nolint
         )
       )

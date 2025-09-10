@@ -210,7 +210,7 @@
       ! `<int>` must be an increasing integer vector of lower age limits.
       i We see: 13 and 11
 
-# error is thrown if there are no participants after selection the country
+# error is thrown if there are no participants after selecting the country
 
     Code
       contact_matrix(survey = polymod, countries = "Romania")
@@ -282,7 +282,7 @@
 
 ---
 
-    `split = TRUE` does not work with missing data; will not split contact.matrix.
+    `split = TRUE` does not work with missing data; will not split the contact matrix.
     i  Consider setting 'missing.participant.age'.
 
 # warning is thrown if it is assumed that the survey is representative

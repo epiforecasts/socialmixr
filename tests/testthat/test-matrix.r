@@ -219,7 +219,7 @@ test_that("error is thrown if invalid age limits are passed", {
   )
 })
 
-test_that("error is thrown if there are no participants after selection the country", {
+test_that("error is thrown if there are no participants after selecting the country", {
   expect_snapshot(
     error = TRUE,
     cran = FALSE,
