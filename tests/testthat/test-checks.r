@@ -24,6 +24,18 @@ erroneous_structure3$contacts$cnt_age_est_min <- NULL
 test_that("incorrect structure of data frames is correctly identified", {
   withr::local_options(lifecycle_verbosity = "quiet")
   expect_warning(check(erroneous_structure1), "does not exist")
+  expect_snapshot_warning(
+    cran = FALSE,
+    check(erroneous_structure1)
+  )
   expect_warning(check(erroneous_structure2), "do not exist")
+  expect_snapshot_warning(
+    cran = FALSE,
+    check(erroneous_structure2)
+  )
   expect_warning(check(erroneous_structure3), "do not exist")
+  expect_snapshot_warning(
+    cran = FALSE,
+    check(erroneous_structure3)
+  )
 })
