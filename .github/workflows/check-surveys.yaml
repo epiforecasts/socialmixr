@@ -19,7 +19,7 @@ on:
       - 'R/**'
       - 'inst/**'
   schedule:
-    - cron: '0 6 * * 1'  # Run every Monday at 6 AM UTC to check for new surveys
+    - cron: '0 6 1 * *'  # Run monthly on the 1st at 06:00 UTC
   workflow_dispatch:
 
 concurrency:
@@ -62,11 +62,11 @@ jobs:
 
       - name: Download survey files
         shell: Rscript {0}
-        run: Rscript inst/dev/dl_all_surveys.r
+        run: inst/dev/dl_all_surveys.r
 
       - name: Check survey files
         shell: Rscript {0}
-        run: Rscript inst/dev/check_all_surveys.r
+        run: inst/dev/check_all_surveys.r
 
       - name: Upload survey files as artifacts
         uses: actions/upload-artifact@v4
