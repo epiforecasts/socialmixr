@@ -4,7 +4,7 @@
 #' This function imputes the participant and contact data in a [survey()]
 #'   object. You can impute these values yourself with
 #'   [impute_participant_ages()] and [impute_contact_ages()]. We recommend
-#'   imputing before processing ages with [process_age()].
+#'   imputing before processing ages with [survey_process_ages()].
 #'
 #' @param survey A survey object.
 #' @param missing_participant_age if set to "mean" (default), people whose ages

@@ -32,5 +32,5 @@ The modified survey object with imputed ages for participants and contacts.
 This function imputes the participant and contact data in a \code{\link[=survey]{survey()}}
 object. You can impute these values yourself with
 \code{\link[=impute_participant_ages]{impute_participant_ages()}} and \code{\link[=impute_contact_ages]{impute_contact_ages()}}. We recommend
-imputing before processing ages with \code{\link[=process_age]{process_age()}}.
+imputing before processing ages with \code{\link[=survey_process_ages]{survey_process_ages()}}.
 }
