@@ -88,8 +88,8 @@ contact_matrix <- function(
   survey$participants <- add_part_age(survey$participants)
 
   ## sample estimated participant ages
-  survey$participants <- sample_participant_ages(
-    data = survey$participants,
+  survey$participants <- impute_participant_ages(
+    participants = survey$participants,
     estimate = estimated.participant.age
   )
 
@@ -117,7 +117,7 @@ contact_matrix <- function(
   )
 
   ## sample estimated contact ages
-  survey$contacts <- sample_contact_ages(
+  survey$contacts <- impute_contact_ages(
     contacts = survey$contacts,
     estimate = estimated.contact.age
   )
