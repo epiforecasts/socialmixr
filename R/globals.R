@@ -111,6 +111,7 @@ utils::globalVariables(c(
   "..segment", # <pop_age>
   "..upper.age.limit", # <pop_age>
   "population", # <pop_age>
+  "population", # <survey_country_population>
   "sex", # <wpp_age>
   "country", # <wpp_age>
   "name", # <wpp_age>
