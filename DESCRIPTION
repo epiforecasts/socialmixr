@@ -52,7 +52,7 @@ VignetteBuilder:
 Encoding: UTF-8
 LazyData: true
 NeedsCompilation: no
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 URL: https://github.com/epiforecasts/socialmixr,
     https://epiforecasts.io/socialmixr/
 BugReports: https://github.com/epiforecasts/socialmixr/issues
