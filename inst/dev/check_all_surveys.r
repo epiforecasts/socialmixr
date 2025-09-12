@@ -64,7 +64,9 @@ if (sum(!no_error) > 0) {
   md <- c(md, "", "## Failures", paste0("- ", names(error_messages)))
 }
 sum_path <- Sys.getenv("GITHUB_STEP_SUMMARY")
-if (nzchar(sum_path)) writeLines(md, sum_path, useBytes = TRUE)
+if (nzchar(sum_path)) {
+  writeLines(md, sum_path, useBytes = TRUE)
+}
 
 saveRDS(summary_data, here("surveys", "check_summary.rds"))
 
