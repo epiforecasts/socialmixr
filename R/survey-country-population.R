@@ -21,16 +21,18 @@
 #' survey_country_population(polymod, countries = c("Belgium", "Italy"))
 #' @export
 survey_country_population <- function(survey, countries = NULL) {
+  check_if_contact_survey(survey)
   participants <- survey$participants
   survey_country_name <- countries %||% unique(participants$country)
-  if (is.null(survey_country_name)) {
+  survey_country_name <- as.character(stats::na.omit(survey_country_name))
+  if (is.null(survey_country_name) || length(survey_country_name) == 0) {
     cli::cli_abort(
       message = c(
         "Country name must be provided in {.var survey} or {.var countries}",
         # nolint start
         "i" = "{.var survey}: {.code survey$participants$country} is: \\
       {.val NULL}",
-        "i" = "{.var countries} is: {.val NULL}"
+        "i" = "{.var countries} is: {.val {countries}}"
         # nolint end
       )
     )

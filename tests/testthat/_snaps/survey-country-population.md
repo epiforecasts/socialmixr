@@ -126,5 +126,5 @@
       Error in `survey_country_population()`:
       ! Country name must be provided in `survey` or `countries`
       i `survey`: `survey$participants$country` is: "NULL"
-      i `countries` is: "NULL"
+      i `countries` is:
 

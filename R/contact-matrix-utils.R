@@ -1,6 +1,6 @@
 #' @autoglobal
-has_names <- function(x, names) {
-  all(names %in% names(x))
+has_names <- function(x, nm) {
+  all(nm %in% names(x))
 }
 
 #' @autoglobal

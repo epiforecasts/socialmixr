@@ -27,6 +27,7 @@ survey_impute_ages <- function(
   missing_participant_age = c("mean", "sample", "missing"),
   missing_contact_age = c("mean", "sample", "missing")
 ) {
+  check_if_contact_survey(survey)
   missing_participant_age <- rlang::arg_match(missing_participant_age)
   missing_contact_age <- rlang::arg_match(missing_contact_age)
 

@@ -36,6 +36,8 @@ survey_process_ages <- function(
   missing_participant_age = c("remove", "keep"),
   missing_contact_age = c("remove", "sample", "keep", "ignore")
 ) {
+  check_if_contact_survey(survey)
+  check_age_limits_increasing(age_limits)
   missing_participant_age <- rlang::arg_match(missing_participant_age)
   missing_contact_age <- rlang::arg_match(missing_contact_age)
   ## set contact age and participant age if it's not in the data
