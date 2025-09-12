@@ -74,6 +74,5 @@ saveRDS(summary_data, here("surveys", "check_summary.rds"))
 if (sum(!no_error) > 0) {
   cli_h1("Some surveys failed checks. Exiting with error code.")
   quit(status = 1)
-} else {
-  cli_h1("All surveys passed checks successfully!")
 }
+cli_h1("All surveys passed checks successfully!")
