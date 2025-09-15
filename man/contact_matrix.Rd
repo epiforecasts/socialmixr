@@ -7,9 +7,9 @@
 contact_matrix(
   survey,
   countries = NULL,
-  survey.pop,
-  age.limits,
-  filter,
+  survey.pop = NULL,
+  age.limits = NULL,
+  filter = NULL,
   counts = FALSE,
   symmetric = FALSE,
   split = FALSE,
@@ -39,15 +39,15 @@ contact_matrix(
 
 \item{age.limits}{lower limits of the age groups over which to construct the matrix}
 
-\item{filter}{any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given.}
+\item{filter}{any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given. Default value is NULL; no filtering performed.}
 
 \item{counts}{whether to return counts (instead of means)}
 
 \item{symmetric}{whether to make matrix symmetric, such that \eqn{c_{ij}N_i = c_{ji}N_j}.}
 
-\item{split}{whether to split the contact matrix into the mean number of contacts, in each age group (split further into the product of the mean number of contacts across the whole population (\code{mean.contacts}), a normalisation constant (\code{normalisation}) and age-specific variation in contacts (\code{contacts})), multiplied with an assortativity matrix (\code{assortativity}) and a population multiplier (\code{demograpy}). For more detail on this, see the "Getting Started" vignette.}
+\item{split}{whether to split the contact matrix into the mean number of contacts, in each age group (split further into the product of the mean number of contacts across the whole population (\code{mean.contacts}), a normalisation constant (\code{normalisation}) and age-specific variation in contacts (\code{contacts})), multiplied with an assortativity matrix (\code{assortativity}) and a population multiplier (\code{demography}). For more detail on this, see the "Getting Started" vignette.}
 
-\item{sample.participants}{whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this..}
+\item{sample.participants}{whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this.}
 
 \item{estimated.participant.age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
 
@@ -85,7 +85,11 @@ Samples a contact survey
 }
 \examples{
 data(polymod)
-contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+contact_matrix(
+  survey = polymod,
+  countries = "United Kingdom",
+  age.limits = c(0, 1, 5, 15)
+  )
 }
 \author{
 Sebastian Funk
