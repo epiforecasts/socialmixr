@@ -3,7 +3,6 @@
 on:
   pull_request:
     branches: [main, master]
-  merge_group:
 
 name: lint-changed-files
 
