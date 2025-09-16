@@ -29,7 +29,7 @@ a vector of filenames that can be used with \link{load_survey}
 \examples{
 # we recommend using the contactsurveys package for download_survey()
 \dontrun{
-# if needed, discovery surveys with:
+# if needed, discover surveys with:
 contactsurveys::list_surveys()
 peru_survey <- download_survey("https://doi.org/10.5281/zenodo.1095664")
 # -->
