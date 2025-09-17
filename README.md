@@ -50,6 +50,7 @@ specification. Contributions of any kind are welcome!
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=sbfnk">sbfnk</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=Bisaloo">Bisaloo</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=lwillem">lwillem</a>,
+<a href="https://github.com/epiforecasts/socialmixr/commits?author=njtierney">njtierney</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=alxsrobert">alxsrobert</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=Degoot-AM">Degoot-AM</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=pearsonca">pearsonca</a>,
@@ -57,7 +58,7 @@ specification. Contributions of any kind are welcome!
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=jamesmbaazam">jamesmbaazam</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=mariabnd">mariabnd</a>,
 <a href="https://github.com/epiforecasts/socialmixr/commits?author=samclifford">samclifford</a>,
-<a href="https://github.com/epiforecasts/socialmixr/commits?author=TimTaylor">TimTaylor</a>
+<a href="https://github.com/epiforecasts/socialmixr/commits?author=ukhsa-tt">ukhsa-tt</a>
 
 ### Issue Authors
 
@@ -72,16 +73,17 @@ specification. Contributions of any kind are welcome!
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Akrivit">krivit</a>,
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Alinyang17">linyang17</a>,
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Acliu822">cliu822</a>,
+<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3ATimTaylor">TimTaylor</a>,
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3ANaomiWaterlow">NaomiWaterlow</a>,
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Aaakhmetz">aakhmetz</a>,
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Aadamkucharski">adamkucharski</a>,
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Achitrams">chitrams</a>,
-<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3AIsaacStopard">IsaacStopard</a>
+<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3AIsaacStopard">IsaacStopard</a>,
+<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Aavallecam">avallecam</a>
 
 ### Issue Contributors
 
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Avikkytom">vikkytom</a>,
-<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Anjtierney">njtierney</a>,
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Abahadzie">bahadzie</a>,
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Ajoshwlambert">joshwlambert</a>
 
