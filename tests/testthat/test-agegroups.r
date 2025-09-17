@@ -40,6 +40,11 @@ test_that("pop_age doesn't change total population size", {
     "Linearly estimating"
   )
 
+  expect_snapshot_warning(
+    cran = FALSE,
+    pop_age(ages_it_2015, age.limit = c(0, 18, 40, 65))
+  )
+
   expect_identical(
     sum(ages_it_2015$population),
     sum(ages_it_2015_cat$population)
@@ -47,6 +52,15 @@ test_that("pop_age doesn't change total population size", {
 })
 
 test_that("pop_age throws warnings or errors", {
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    pop_age(3)
+  )
   expect_error(pop_age(3), "to be a data.frame")
   expect_warning(wpp_age("Germany", 2011), "Don't have population data")
+  expect_snapshot_warning(
+    cran = FALSE,
+    wpp_age("Germany", 2011)
+  )
 })

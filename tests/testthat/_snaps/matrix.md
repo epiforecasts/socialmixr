@@ -157,10 +157,120 @@
       
       
 
+# survey argument is validated
+
+    Code
+      contact_matrix(survey = "bogus")
+    Condition
+      Error in `contact_matrix()`:
+      ! `survey` must be a survey object (created using `survey()` or `get_survey()`).
+
+# error is thrown if age limits are non-numeric
+
+    Code
+      contact_matrix(survey = polymod, age.limits = c(0, 5, "fifteen"))
+    Condition
+      Warning in `check_age_limits_increasing()`:
+      NAs introduced by coercion
+      Error in `contact_matrix()`:
+      ! `<int>` must be an increasing integer vector of lower age limits.
+      i We see: 0, 5, and NA
+
+# error is thrown if country is not found
+
+    Code
+      contact_matrix(survey = polymod, countries = c("Italy", "Zamonia"))
+    Condition
+      Error in `contact_matrix()`:
+      ! Survey data not found for: "Zamonia".
+
+# warning is thrown if filter column is not found
+
+    Filter column: `test` not found.
+
+# warning is thrown if missing data exist
+
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider setting 'missing.contact.age'.
+
+# error is thrown if an unknown argument is passed
+
+    Code
+      contact_matrix(dummy = "test")
+    Condition
+      Error in `check_arg_dots_in()`:
+      ! Unknown argument: "dummy".
+
+# error is thrown if invalid age limits are passed
+
+    Code
+      contact_matrix(survey = polymod, age.limits = c(13, 11))
+    Condition
+      Error in `contact_matrix()`:
+      ! `<int>` must be an increasing integer vector of lower age limits.
+      i We see: 13 and 11
+
+# error is thrown if there are no participants after selecting the country
+
+    Code
+      contact_matrix(survey = polymod, countries = "Romania")
+    Condition
+      Error in `contact_matrix()`:
+      ! No participants left after selecting countries: "Romania"
+
+# warning is thrown if population needed but no 'year' column present
+
+    No information on "year" found in the data.
+    i Will use 2015 population data.
+
 # warning is thrown if day of week is asked to be weighed but not present
 
     `weigh.dayofweek` is "TRUE", but no `dayofweek` column in the data.
     i Will ignore.
+
+# warning is thrown if country has no survey population
+
+    Code
+      contact_matrix(survey = polymod5, symmetric = TRUE)
+    Message
+      Removing participants without age information.
+      i To change this behaviour, set the `missing.participant.age` option.
+      Removing participants that have contacts without age information.
+      i To change this behaviour, set the 'missing.contact.age' option.
+    Condition
+      Error in `contact_matrix()`:
+      ! Could not find population data for: "Zamonia".
+      i Use `wpp_countries()` to get a list of country names.
+
+# warning is thrown if contact survey has no age information
+
+    Contact age column `cnt_age` or columns to estimate contact age (`cnt_age_exact` or `cnt_age_est_min` and `cnt_age_est_max`) do not exist in the contact data frame.
+
+# warning is thrown if participant data has no country
+
+    Country column `country` does not exist in the participant data frame.
+
+# check result is reported back
+
+    Code
+      check(x = polymod2)
+    Message
+      > Check OK.
+
+# good suggestions are made
+
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider adjusting the age limits.
+
+---
+
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider setting 'missing.participant.age'.
+
+---
+
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider setting 'missing.participant.age' and 'missing.contact.age'.
 
 # nonsensical operations are warned about
 
@@ -170,8 +280,34 @@
 
     `symmetric = TRUE` does not make sense with `counts = TRUE`; will not make matrix symmetric.
 
+---
+
+    `split = TRUE` does not work with missing data; will not split the contact matrix.
+    i  Consider setting 'missing.participant.age'.
+
 # warning is thrown if it is assumed that the survey is representative
 
     No `survey.pop` or `countries` given, and no `country` column found in the data.
     i I don't know which population this is from (assuming the survey is representative).
+
+# User-defined reference populations with open ended age groups are handled correctly
+
+    Code
+      contact_matrix(polymod_nocountry, age.limits = c(0, 18, 60), symmetric = TRUE,
+      survey.pop = "dummy")
+    Message
+      Removing participants without age information.
+      i To change this behaviour, set the `missing.participant.age` option.
+      Removing participants that have contacts without age information.
+      i To change this behaviour, set the 'missing.contact.age' option.
+    Condition
+      Error in `contact_matrix()`:
+      ! Could not find population data for: "dummy".
+      i Use `wpp_countries()` to get a list of country names.
+
+# Symmetric contact matrices with large normalisation weights throw a warning
+
+    Large differences in the size of the sub-populations with the current age breaks are likely to result in artefacts after making the matrix symmetric.
+    ! Please reconsider the age breaks to obtain more equally sized sub-populations.
+    i Normalization factors: [0.5 and 2.1]
 

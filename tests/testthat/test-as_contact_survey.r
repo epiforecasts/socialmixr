@@ -9,9 +9,19 @@ erroneous_type2 <- copy(erroneous_survey)
 erroneous_type2$participants <- 17
 
 test_that("error is thrown if survey contains false data types", {
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    as_contact_survey(erroneous_type1)
+  )
   expect_error(
     as_contact_survey(erroneous_type1),
     "Must be of type 'data.frame'"
+  )
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    as_contact_survey(erroneous_type2)
   )
   expect_error(
     as_contact_survey(erroneous_type2),
@@ -23,6 +33,11 @@ erroneous_structure1 <- copy(erroneous_survey)
 erroneous_structure1$participants$part_id <- NULL
 
 test_that("incorrect structure of data frames is correctly identified", {
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    as_contact_survey(erroneous_structure1)
+  )
   expect_error(
     as_contact_survey(erroneous_structure1),
     "Names must include the elements \\{'part_id'\\}" ## nolint: nonportable_path_linter
