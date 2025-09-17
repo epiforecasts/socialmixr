@@ -144,6 +144,14 @@ without the need for an internet connection using</p>
 use the <code>survey_countries</code> function</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/survey_countries.html">survey_countries</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: `survey_countries()` was deprecated in socialmixr 0.5.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `contactsurveys::download_survey()` instead.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> We recommend using contactsurveys::download_survey() to download your</span></span>
+<span><span class="co">#&gt;   surveys, and then you can load them with socialmixr::load_survey() and</span></span>
+<span><span class="co">#&gt;   explore which countries are in the data.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="co">#&gt; [1] "Italy"          "Germany"        "Luxembourg"     "Netherlands"   </span></span>
 <span><span class="co">#&gt; [5] "Poland"         "United Kingdom" "Finland"        "Belgium"</span></span></code></pre></div>
 <p>If one wishes to get a contact matrix for one or more specific
@@ -156,6 +164,11 @@ correction).</p>
 given survey can be obtained using <code><a href="../reference/get_citation.html">get_citation()</a></code>, e.g.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_citation.html">get_citation</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: `get_citation()` was deprecated in socialmixr 0.5.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `contactsurveys::get_citation()` instead.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="co">#&gt; Mossong J, Hens N, Jit M, Beutels P, Auranen K, Mikolajczyk R, Massari</span></span>
 <span><span class="co">#&gt; M, Salmaso S, Tomba GS, Wallinga J, Heijne J, Sadkowska-Todys M,</span></span>
 <span><span class="co">#&gt; Rosinska M, Edmunds WJ (2017). "POLYMOD social contact data."</span></span>

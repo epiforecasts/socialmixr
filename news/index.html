@@ -48,6 +48,10 @@
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
 <ul><li>A bug was fixed leading to excess contacts with <code>NA</code> age if the lowest age group did not start at 0.</li>
 </ul></div>
+<div class="section level3">
+<h3 id="deprecations-development-version">Deprecations<a class="anchor" aria-label="anchor" href="#deprecations-development-version"></a></h3>
+<p>We have soft-deprecated <code><a href="../reference/get_survey.html">get_survey()</a></code>, <code><a href="../reference/download_survey.html">download_survey()</a></code>, <code><a href="../reference/get_citation.html">get_citation()</a></code> and <code><a href="../reference/list_surveys.html">list_surveys()</a></code> and moved these to <a href="https://github.com/epiforecasts/contactsurveys" class="external-link">contactsurveys</a>. We have also soft-deprecated <code><a href="../reference/survey_countries.html">survey_countries()</a></code> as this called <code><a href="../reference/get_survey.html">get_survey()</a></code> internally. This is part of decoupling these features from socialmixr to reduce dependencies (<a href="https://github.com/epiforecasts/socialmixr/issues/207" class="external-link">#207</a> and <a href="https://github.com/epiforecasts/socialmixr/issues/179" class="external-link">#179</a>). These will continue to be supported until we move to a major release (version 1.0.0) of socialmixr. In the meantime, we recommend that users use the <a href="https://github.com/epiforecasts/contactsurveys" class="external-link">contactsurveys</a> package, as these functions have improved caching and support there.</p>
+</div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0" id="socialmixr-040">socialmixr 0.4.0<a class="anchor" aria-label="anchor" href="#socialmixr-040"></a></h2><p class="text-muted">CRAN release: 2024-10-18</p>
