@@ -82,3 +82,14 @@ check_missing_countries <- function(
     )
   }
 }
+
+check_files_exist <- function(files, call = rlang::caller_env()) {
+  exist <- file.exists(files)
+  files_missing <- files[!exist]
+  if (length(files_missing) > 0) {
+    cli::cli_abort(
+      message = "File{?s} {.file {files_missing}} not found.",
+      call = call
+    )
+  }
+}

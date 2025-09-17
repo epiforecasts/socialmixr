@@ -7,7 +7,7 @@
 download_survey(survey, dir = NULL, sleep = 1)
 }
 \arguments{
-\item{survey}{a URL (see \code{\link[=list_surveys]{list_surveys()}})}
+\item{survey}{a URL (see \code{\link[contactsurveys:list_surveys]{contactsurveys::list_surveys()}})}
 
 \item{dir}{a directory to save the files to; if not given, will save to a
 temporary directory}
@@ -19,11 +19,22 @@ temporary directory}
 a vector of filenames that can be used with \link{load_survey}
 }
 \description{
-Downloads survey data
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{download_survey()} has been deprecated in favour of
+\code{\link[contactsurveys:download_survey]{contactsurveys::download_survey()}}.
+
+\code{download_survey()} downloads survey data from Zenodo.
 }
 \examples{
+# we recommend using the contactsurveys package for download_survey()
 \dontrun{
-list_surveys()
+# if needed, discover surveys with:
+contactsurveys::list_surveys()
 peru_survey <- download_survey("https://doi.org/10.5281/zenodo.1095664")
+# -->
+peru_survey <- contactsurveys::download_survey(
+  "https://doi.org/10.5281/zenodo.1095664"
+)
 }
 }
