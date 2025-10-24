@@ -89,7 +89,7 @@ contact_matrix(
   survey = polymod,
   countries = "United Kingdom",
   age.limits = c(0, 1, 5, 15)
-  )
+)
 }
 \author{
 Sebastian Funk
