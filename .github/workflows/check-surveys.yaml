@@ -61,12 +61,10 @@ jobs:
           cache-version: 1
 
       - name: Download survey files
-        shell: Rscript {0}
-        run: inst/dev/dl_all_surveys.r
+        run: Rscript inst/dev/dl_all_surveys.r
 
       - name: Check survey files
-        shell: Rscript {0}
-        run: inst/dev/check_all_surveys.r
+        run: Rscript inst/dev/check_all_surveys.r
 
       - name: Upload survey files as artifacts
         uses: actions/upload-artifact@v4
