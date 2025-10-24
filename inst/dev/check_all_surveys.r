@@ -51,7 +51,12 @@ summary_md <- c(
 )
 
 if (sum(!no_error) > 0) {
-  summary_md <- c(summary_md, "", "## Failed surveys", paste0("- ", names(error_messages)))
+  summary_md <- c(
+    summary_md,
+    "",
+    "## Failed surveys",
+    paste0("- ", names(error_messages))
+  )
 }
 
 # Save summary to file (for CLI use and workflow to read)
