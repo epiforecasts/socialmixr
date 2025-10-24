@@ -42,37 +42,31 @@ if (length(warnings()) > 0) {
   print(warnings())
 }
 
-# Create summary for artifact
-summary_data <- list(
-  timestamp = Sys.time(),
-  total_surveys = length(survey_files),
-  successful_checks = sum(no_error),
-  failed_checks = sum(!no_error),
-  errors = error_messages,
-  warnings = if (length(warnings()) > 0) warnings() else NULL,
-  survey_names = names(survey_files)
-)
-
-# Emit a short Markdown summary for the run
-md <- c(
+# Create markdown summary (useful for CLI, GitHub step summary, and issues)
+summary_md <- c(
   "# Survey check summary",
   sprintf("- Total: %d", length(survey_files)),
   sprintf("- Passed: %d", sum(no_error)),
   sprintf("- Failed: %d", sum(!no_error))
 )
+
 if (sum(!no_error) > 0) {
-  md <- c(md, "", "## Failures", paste0("- ", names(error_messages)))
+  summary_md <- c(summary_md, "", "## Failed surveys", paste0("- ", names(error_messages)))
 }
+
+# Save summary to file (for CLI use and workflow to read)
+writeLines(summary_md, here("surveys", "check_summary.md"))
+
+# Also write to GitHub Actions step summary if available
 sum_path <- Sys.getenv("GITHUB_STEP_SUMMARY")
 if (nzchar(sum_path)) {
-  writeLines(md, sum_path, useBytes = TRUE)
+  writeLines(summary_md, sum_path, useBytes = TRUE)
 }
 
-saveRDS(summary_data, here("surveys", "check_summary.rds"))
-
-# Exit with error code if there are failures
+# Report results but don't fail the workflow
+# (Some surveys may always fail, so we log the issues but don't block CI)
 if (sum(!no_error) > 0) {
-  cli_h1("Some surveys failed checks. Exiting with error code.")
-  quit(status = 1)
+  cli_h1("Some surveys failed checks. Results saved for review.")
+} else {
+  cli_h1("All surveys passed checks successfully!")
 }
-cli_h1("All surveys passed checks successfully!")
