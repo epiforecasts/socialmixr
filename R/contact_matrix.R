@@ -93,7 +93,9 @@ contact_matrix <- function(
     countries <- corrected_countries
     survey$participants <- survey$participants[country %in% countries]
     if (nrow(survey$participants) == 0) {
-      cli::cli_abort("No participants left after selecting countries.")
+      cli::cli_abort(
+        "No participants left after selecting countries: {.val {countries}}"
+      )
     }
   }
 
@@ -285,7 +287,7 @@ contact_matrix <- function(
     }
     missing_all <- do.call(intersect, missing_columns)
     if (length(missing_all) > 0) {
-      cli::cli_warn("Filter columns {missing_all} not found.")
+      cli::cli_warn("Filter column{?s}: {.var {missing_all}} not found.")
     }
   }
 
@@ -383,8 +385,10 @@ contact_matrix <- function(
         } else {
           survey.year <- country.pop[, max(year, na.rm = TRUE)]
           cli::cli_warn(
-            "No information on year found in the data. Will use
-            {survey.year} population data."
+            message = c(
+              "No information on {.val year} found in the data.",
+              "i" = "Will use {.val {survey.year}} population data." # nolint
+            )
           )
         }
 
@@ -800,7 +804,7 @@ contact_matrix <- function(
       cli::cli_warn(
         c(
           "{.code split = TRUE} does not work with missing data; will not
-          split contact.matrix.",
+          split the contact matrix.",
           "i" = "{warning.suggestion}" # nolint
         )
       )

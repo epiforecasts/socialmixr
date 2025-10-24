@@ -9,7 +9,17 @@ erroneous_type2$participants <- 17
 
 test_that("error is thrown if survey contains false data types", {
   withr::local_options(lifecycle_verbosity = "quiet")
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    check(erroneous_type1)
+  )
   expect_error(check(erroneous_type1), "must be data.frames")
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    check(erroneous_type2)
+  )
   expect_error(check(erroneous_type2), "must be data.frames")
 })
 
@@ -24,6 +34,18 @@ erroneous_structure3$contacts$cnt_age_est_min <- NULL
 test_that("incorrect structure of data frames is correctly identified", {
   withr::local_options(lifecycle_verbosity = "quiet")
   expect_warning(check(erroneous_structure1), "does not exist")
+  expect_snapshot_warning(
+    cran = FALSE,
+    check(erroneous_structure1)
+  )
   expect_warning(check(erroneous_structure2), "do not exist")
+  expect_snapshot_warning(
+    cran = FALSE,
+    check(erroneous_structure2)
+  )
   expect_warning(check(erroneous_structure3), "do not exist")
+  expect_snapshot_warning(
+    cran = FALSE,
+    check(erroneous_structure3)
+  )
 })
