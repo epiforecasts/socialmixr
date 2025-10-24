@@ -100,7 +100,10 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
   reference[[ifelse(is.doi, "doi", "url")]] <- survey
 
   links <- xml_attr(
-    xml_find_all(parsed_body, "//link[@type=\"text/csv\"]"),
+    xml_find_all(
+      parsed_body,
+      "//link[@type=\"text/csv\" and not(@rel=\"alternate\")]"
+    ),
     "href"
   )
 
