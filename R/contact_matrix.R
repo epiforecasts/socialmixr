@@ -234,8 +234,8 @@ contact_matrix <- function(
   )
 
   ## sample contacts randomly (if requested) -----------------------------------
-  missing_contact_age <- nrow(survey$contacts[is.na(cnt_age)]) > 0
-  if (missing.contact.age == "sample" && missing_contact_age) {
+  no_contact_ages <- nrow(survey$contacts[is.na(cnt_age)]) > 0
+  if (missing.contact.age == "sample" && no_contact_ages) {
     survey$contacts <- impute_age_by_sample(survey$contacts)
   }
 
