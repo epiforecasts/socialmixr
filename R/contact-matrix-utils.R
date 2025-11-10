@@ -1,6 +1,6 @@
 #' @autoglobal
-has_names <- function(x, names) {
-  all(names %in% names(x))
+has_names <- function(x, nm) {
+  all(nm %in% names(x))
 }
 
 #' @autoglobal
@@ -25,24 +25,43 @@ est_part_age_sample <- function(data) {
   ]
 }
 
-## sample estimated participant ages
+#' Impute participant ages
+#'
+#' @description
+#' Imputes participant survey data, where variables are named:
+#'   "part_age_est_min" and "part_age_est_max". Uses mean imputation,  sampling
+#'   (hot  deck), or leaves them as missing. These are controlled by the
+#'   `estimate` argument.
+#'
+#' @param participants A survey data set of participants
+#' @param estimate if set to "mean" (default), people whose ages are given as a
+#'   range (in columns named "..._est_min" and "..._est_max") but not exactly
+#'   (in a column named "..._exact") will have their age set to the mid-point of
+#'   the range; if set to "sample", the age will be sampled from the range; if
+#'   set to "missing", age ranges will be treated as missing
+#'
+#' @returns
+#' The participant data, potentially with participant ages imputed depending on
+#'   the `estimate` method and whether age columns are present in the data.
+#'
 #' @autoglobal
-sample_participant_ages <- function(
-  data,
+#' @export
+impute_participant_ages <- function(
+  participants,
   estimate = c("mean", "sample", "missing")
 ) {
   estimate <- rlang::arg_match(estimate)
   part_age_names <- c("part_age_est_min", "part_age_est_max")
-  age_cols_in_data <- has_names(data, part_age_names)
+  age_cols_in_data <- has_names(participants, part_age_names)
   if (age_cols_in_data) {
-    data <- switch(
+    participants <- switch(
       estimate,
-      mean = est_part_age_mean(data),
-      sample = est_part_age_sample(data),
-      missing = data
+      mean = est_part_age_mean(participants),
+      sample = est_part_age_sample(participants),
+      missing = participants
     )
   }
-  data
+  participants
 }
 
 #' @autoglobal
@@ -72,8 +91,28 @@ est_contact_age_sample <- function(contacts) {
   ]
 }
 
+#' Impute Contact ages
+#'
+#' @description
+#' Imputes contact survey data, where variables are named:
+#'   "cnt_age_est_min" and "cnt_age_est_max". Uses mean imputation,  sampling
+#'   (hot  deck), or leaves them as missing. These are controlled by the
+#'   `estimate` argument.
+#'
+#' @param contacts a survey data set of contacts
+#' @param estimate if set to "mean" (default), contacts whose ages are given as
+#'   a range (in columns named "..._est_min" and "..._est_max") but not exactly
+#'   (in a column named "..._exact") will have their age set to the mid-point of
+#'   the range; if set to "sample", the age will be sampled from the range; if
+#'   set to "missing", age ranges will be treated as missing
+#'
+#' @returns
+#' The contact data, potentially with contact ages imputed depending on the
+#'   `estimate` method and whether age columns are present in the data.
+#'
 #' @autoglobal
-sample_contact_ages <- function(
+#' @export
+impute_contact_ages <- function(
   contacts,
   estimate = c("mean", "sample", "missing")
 ) {
