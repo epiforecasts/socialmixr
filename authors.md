@@ -1,0 +1,40 @@
+# Authors and Citation
+
+## Authors
+
+- **Sebastian Funk**. Author, maintainer.
+
+- **Lander Willem**. Author.
+
+- **Hugo Gruson**. Author.
+
+- **Maria Bekker-Nielsen Dunbar**. Contributor.
+
+- **Carl A. B. Pearson**. Contributor.
+
+- **Sam Clifford**. Contributor.
+
+- **Christopher Jarvis**. Contributor.
+
+- **Alexis Robert**. Contributor.
+
+- **Niel Hens**. Contributor.
+
+- **Pietro Coletti**. Collector, data manager.
+
+## Citation
+
+Source:
+[`DESCRIPTION`](https://github.com/epiforecasts/socialmixr/blob/main/DESCRIPTION)
+
+Funk S, Willem L, Gruson H (2025). *socialmixr: Social Mixing Matrices
+for Infectious Disease Modelling*. R package version 0.4.0.9000,
+<https://github.com/epiforecasts/socialmixr>.
+
+    @Manual{,
+      title = {socialmixr: Social Mixing Matrices for Infectious Disease Modelling},
+      author = {Sebastian Funk and Lander Willem and Hugo Gruson},
+      year = {2025},
+      note = {R package version 0.4.0.9000},
+      url = {https://github.com/epiforecasts/socialmixr},
+    }
