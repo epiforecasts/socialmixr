@@ -504,7 +504,7 @@ survey_pop_from_countries <- function(
     survey_pop <- survey_pop[!is.na(lower.age.limit)]
     if ("year" %in% colnames(participants)) {
       survey_year <- participants[, median(year, na.rm = TRUE)]
-    }
+    } else survey_year <- NULL
   }
 
   list(

@@ -366,7 +366,7 @@ contact_matrix <- function(
     )
   }
 
-  if (exists("survey.year")) {
+  if (need.survey.pop && is.null(survey.pop$survey.year)) {
     survey.pop[, year := survey.year]
     survey.pop <- merge(
       x = survey.pop,
