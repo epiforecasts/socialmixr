@@ -504,7 +504,9 @@ survey_pop_from_countries <- function(
     survey_pop <- survey_pop[!is.na(lower.age.limit)]
     if ("year" %in% colnames(participants)) {
       survey_year <- participants[, median(year, na.rm = TRUE)]
-    } else survey_year <- NULL
+    } else {
+      survey_year <- NULL
+    }
   }
 
   list(
@@ -840,7 +842,7 @@ sample_from_participants <- function(
 
     sample_table <- create_bootstrap_weights(part_sample)
 
-    sampled_contacts <- merge(contacts, sample_table)
+    sampled_contacts <- merge(contacts, sample_table, by = "part_id")
     sampled_contacts[, sampled.weight := weight * bootstrap.weight]
 
     sampled_participants <- merge(participants, sample_table)
