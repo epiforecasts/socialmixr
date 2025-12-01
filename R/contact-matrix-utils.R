@@ -138,7 +138,8 @@ drop_missing_contact_ages <- function(contacts, missing_action) {
       c(
         "Ignore contacts without age information.",
         # nolint start
-        "i" = "To change this behaviour, set the 'missing.contact.age' option."
+        "i" = "To change this behaviour, set the \\
+          {.code missing.contact.age} option."
         # nolint end
       )
     )
@@ -184,7 +185,9 @@ filter_countries <- function(participants, countries) {
     countries <- flexible_countrycode(countries)
     participants <- participants[country %in% countries]
     if (nrow(participants) == 0) {
-      cli::cli_abort("No participants left after selecting countries.")
+      cli::cli_abort(
+        "No participants left after selecting countries: {.val {countries}}"
+      )
     }
   }
   participants
@@ -228,7 +231,6 @@ drop_invalid_ages <- function(
         # nolint end
       )
     )
-
     participants <- participants[!is.na(part_age) & part_age >= min(age_limits)]
   }
   participants
@@ -245,7 +247,8 @@ drop_invalid_contact_ages <- function(
       c(
         "Removing participants that have contacts without age information.",
         # nolint start
-        "i" = "To change this behaviour, set the 'missing.contact.age' option."
+        "i" = "To change this behaviour, set the \\
+          {.code missing.contact.age} option."
         # nolint end
       )
     )
@@ -307,7 +310,7 @@ apply_data_filter <- function(
     missing_all <- do.call(intersect, missing_columns)
     if (length(missing_all) > 0) {
       cli::cli_warn(
-        message = "Filter columns {.val {missing_all}} not found.",
+        message = "Filter column{?s}: {.val {missing_all}} not found.",
         call = call
       )
     }
@@ -476,8 +479,8 @@ survey_pop_from_countries <- function(
     } else {
       survey_year <- country_pop[, max(year, na.rm = TRUE)]
       cli::cli_warn(
-        "No information on year found in the data. Will use
-            {survey_year} population data."
+        "No information on {.val year} found in the data. Will use
+            {.val {survey_year}} population data."
       )
     }
 

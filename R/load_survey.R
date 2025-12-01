@@ -14,18 +14,11 @@
 #' @return a survey in the correct format
 #' @export
 load_survey <- function(files, ...) {
-  exist <- file.exists(files)
-  files_missing <- files[!exist]
-  if (length(files_missing) > 0) {
-    cli::cli_abort("File{?s} {.file {files_missing}} not found.")
-  }
-  survey_files <- grep("csv$", files, value = TRUE) # select csv files
-  reference_file <- grep("json$", files, value = TRUE) # select json file
-  if (length(reference_file) > 0) {
-    reference <- fromJSON(reference_file)
-  } else {
-    reference <- NULL
-  }
+  check_files_exist(files)
+
+  # select csv files
+  survey_files <- grep("\\.csv$", files, value = TRUE, ignore.case = TRUE)
+  reference <- extract_reference(files)
 
   contact_data <- lapply(survey_files, fread)
   names(contact_data) <- survey_files
@@ -35,143 +28,19 @@ load_survey <- function(files, ...) {
 
   ## first, get the common files
   for (type in main_types) {
-    main_file <- grep(
-      paste0("_", type, "s?_common.*\\.csv$"),
-      survey_files,
-      value = TRUE
-    )
-    if (length(main_file) == 0) {
-      cli::cli_abort(
-        "Need a csv file containing _{type}_common.csv, but no such file found."
-      )
-    }
+    main_file <- extract_type_common_csv(type, survey_files)
     main_surveys[[type]] <- rbindlist(contact_data[main_file], fill = TRUE)
-    main_surveys[[type]] <- main_surveys[[type]][, ..main_id := seq_len(.N)]
+    main_surveys[[type]][, ("..main_id") := seq_len(.N)]
     survey_files <- setdiff(survey_files, main_file)
   }
 
   ## join files that can be joined
-  for (file1 in survey_files) {
-    if (!is.null(contact_data[[file1]])) {
-      for (file2 in setdiff(survey_files, file1)) {
-        if (
-          length(setdiff(
-            colnames(contact_data[[file1]]),
-            colnames(contact_data[[file2]])
-          )) ==
-            0 ||
-            length(setdiff(
-              colnames(contact_data[[file2]]),
-              colnames(contact_data[[file1]])
-            )) ==
-              0
-        ) {
-          contact_data[[file1]] <-
-            rbindlist(
-              list(contact_data[[file1]], contact_data[[file2]]),
-              fill = TRUE
-            )
-          contact_data[[file2]] <- NULL
-          survey_files <- setdiff(survey_files, file2)
-        }
-      }
-    }
-  }
-
-  ## lastly, merge in any additional files that can be merged
-  for (type in main_types) {
-    can_merge <- vapply(
-      survey_files,
-      function(x) {
-        length(intersect(
-          colnames(contact_data[[x]]),
-          colnames(main_surveys[[type]])
-        )) >
-          0
-      },
-      TRUE
-    )
-    merge_files <- names(can_merge[can_merge])
-    while (length(merge_files) > 0) {
-      merged_files <- NULL
-      for (file in merge_files) {
-        contact_data[[file]] <-
-          contact_data[[file]][, ..merge_id := seq_len(.N)]
-        common_id <- intersect(
-          colnames(contact_data[[file]]),
-          colnames(main_surveys[[type]])
-        )
-        merged <- tryCatch(
-          {
-            merge(
-              main_surveys[[type]],
-              contact_data[[file]],
-              by = common_id,
-              all.x = TRUE
-            )
-          },
-          error = function(cond) {
-            if (!grepl("cartesian", cond$message, fixed = TRUE)) {
-              cli::cli_abort(cond$message)
-            }
-            NULL
-          }
-        )
-
-        ## first if merge was unique - if not we're ditching the merge
-        if (
-          !is.null(merged) &&
-            anyDuplicated(merged[, "..main_id", with = FALSE]) == 0
-        ) {
-          ## we're keeping the merge; now check for any warnings to issue
-          matched_main <- sum(!is.na(merged[["..merge_id"]]))
-          unmatched_main <- nrow(merged) - matched_main
-          if (unmatched_main > 0) {
-            cli::cli_warn(
-              "Only {matched_main} matching value{?s} in {.val {common_id}} \\
-              column{?s} when pulling {.file {basename(file)}} into \\
-              {.val {type}} survey."
-            )
-          }
-          unmatched_merge <- nrow(contact_data[[file]]) - matched_main
-          if (unmatched_merge > 0) {
-            cli::cli_warn(
-              "{unmatched_merge} row{?s} could not be matched when pulling \\
-              {.file {basename(file)}} into {.val {type}} survey."
-            )
-          }
-          main_surveys[[type]] <- merged[, !"..merge_id"]
-          merged_files <- c(merged_files, file)
-        } else {
-          anyDuplicated(merged[, "..main_id", with = FALSE])
-        }
-      }
-      survey_files <- setdiff(survey_files, merged_files)
-      can_merge <- vapply(
-        survey_files,
-        function(x) {
-          length(intersect(
-            colnames(contact_data[[x]]),
-            colnames(main_surveys[[type]])
-          )) >
-            0
-        },
-        TRUE
-      )
-      if (is.null(merged_files)) {
-        merge_files <- NULL
-      } else {
-        merge_files <- names(can_merge[can_merge])
-      }
-    }
-    main_surveys[[type]] <- main_surveys[[type]][, ..main_id := NULL]
-  }
-
-  if (length(survey_files) > 0) {
-    for (file in survey_files) {
-      cli::cli_warn("Could not merge {.file {file}}.")
-    }
-  }
+  main_surveys <- join_possible_files(
+    survey_files,
+    contact_data,
+    main_types,
+    main_surveys
+  )
 
   new_survey <- as_contact_survey(
     list(

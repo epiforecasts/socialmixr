@@ -1,7 +1,14 @@
 #' Download a survey from its Zenodo repository
 #'
-#' @description Downloads survey data
-#' @param survey a URL (see [list_surveys()])
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `download_survey()` has been deprecated in favour of
+#'   [contactsurveys::download_survey()].
+#'
+#' `download_survey()` downloads survey data from Zenodo.
+#'
+#' @param survey a URL (see [contactsurveys::list_surveys()])
 #' @param dir a directory to save the files to; if not given, will save to a
 #'   temporary directory
 #' @param sleep time to sleep between requests to avoid overloading the server
@@ -13,16 +20,27 @@
 #' @importFrom xml2 xml_text xml_find_first xml_find_all xml_attr
 #' @autoglobal
 #' @examples
+#' # we recommend using the contactsurveys package for download_survey()
 #' \dontrun{
-#' list_surveys()
+#' # if needed, discover surveys with:
+#' contactsurveys::list_surveys()
 #' peru_survey <- download_survey("https://doi.org/10.5281/zenodo.1095664")
+#' # -->
+#' peru_survey <- contactsurveys::download_survey(
+#'   "https://doi.org/10.5281/zenodo.1095664"
+#' )
 #' }
 #' @return a vector of filenames that can be used with [load_survey]
 #  @seealso load_survey
 #' @export
 download_survey <- function(survey, dir = NULL, sleep = 1) {
-  if (!is.character(survey) || length(survey) > 1) {
-    cli::cli_abort("{.arg survey} must be a character of length 1.")
+  lifecycle::deprecate_soft(
+    when = "0.5.0",
+    what = "download_survey()",
+    with = "contactsurveys::download_survey()"
+  )
+  if (!is.character(survey) || length(survey) != 1 || is.na(survey)) {
+    cli::cli_abort("{.arg survey} must be a single, non-NA character string.")
   }
 
   survey <- sub("^(https?:\\/\\/(dx\\.)?doi\\.org\\/|doi:)", "", survey)
@@ -82,7 +100,10 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
   reference[[ifelse(is.doi, "doi", "url")]] <- survey
 
   links <- xml_attr(
-    xml_find_all(parsed_body, "//link[@type=\"text/csv\"]"),
+    xml_find_all(
+      parsed_body,
+      "//link[@type=\"text/csv\" and not(@rel=\"alternate\")]"
+    ),
     "href"
   )
 
@@ -133,7 +154,7 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
 }
 
 find_common_prefix <- function(vec) {
-  # find initial longest common subequence of file names
+  # find initial longest common prefix of file names
   i <- 1
   finish <- FALSE
   lcs <- ""

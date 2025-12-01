@@ -7,7 +7,7 @@ check_arg_dots_in <- function(dots, fun_one, fun_two) {
   )
   any_unknown_args <- length(unknown_args) > 0
   if (any_unknown_args) {
-    cli::cli_abort("Unknown argument{?s}: {unknown_args}.")
+    cli::cli_abort("Unknown argument{?s}: {.val {unknown.args}}.")
   }
 }
 
@@ -34,7 +34,11 @@ check_age_limits_increasing <- function(
     x <- as.integer(x)
     if (anyNA(x) || any(diff(x) <= 0)) {
       cli::cli_abort(
-        message = "{.arg {arg}} must be an increasing integer vector of lower age limits.",
+        message = c(
+          "{.arg {arg}} must be an increasing integer vector of lower age \\
+          limits.",
+          "i" = "We see: {.val {x}}" # nolint
+        ),
         call = call
       )
     }
@@ -54,7 +58,7 @@ check_any_missing_countries <- function(
   if (any_missing_country) {
     cli::cli_abort(
       message = c(
-        "Could not find population data for {missing_countries}.",
+        "Could not find population data for: {.val {missing_countries}}.",
         # nolint start
         "i" = "Use {.fn wpp_countries} to get a list of country names."
         # nolint end
@@ -73,7 +77,18 @@ check_missing_countries <- function(
   any_missing_countries <- length(missing_countries) > 0
   if (any_missing_countries) {
     cli::cli_abort(
-      message = "Survey data not found for {missing_countries}.",
+      message = "Survey data not found for: {.val {missing_countries}}.",
+      call = call
+    )
+  }
+}
+
+check_files_exist <- function(files, call = rlang::caller_env()) {
+  exist <- file.exists(files)
+  files_missing <- files[!exist]
+  if (length(files_missing) > 0) {
+    cli::cli_abort(
+      message = "File{?s} {.file {files_missing}} not found.",
       call = call
     )
   }

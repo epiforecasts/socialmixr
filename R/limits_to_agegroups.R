@@ -16,9 +16,14 @@ limits_to_agegroups <- function(
 ) {
   if (missing(notation)) {
     cli::cli_warn(
-      "In the next version of socialmixr the default notation will \\
-      become \"brackets\" instead of \"dashes\". To prevent this, use \\
-      {.code notation = \"dashes\"} in the call to {.fn limits_to_agegroups}."
+      message = c(
+        "In the next version of {.pkg socialmixr}, {.arg notation} will default
+        to \"brackets\", instead of \"dashes\".",
+        # nolint start
+        "i" = "Prevent this using {.code notation = \"dashes\"} in the call \\
+        to {.fn limits_to_agegroups}."
+        # nolint end
+      )
     )
   }
   notation <- match.arg(notation)
