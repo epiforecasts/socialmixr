@@ -93,8 +93,6 @@ contact_matrix <- function(
     estimate = estimated.participant.age
   )
 
-  ## TODO docs say when `missing.partipant.age = "keep"` missings are treated
-  ## differently, but I don't see that logic in here
   survey$participants <- drop_invalid_ages(
     participants = survey$participants,
     missing_action = missing.participant.age,
