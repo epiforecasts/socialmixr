@@ -216,7 +216,6 @@ drop_invalid_ages <- function(
   missing_action,
   age_limits
 ) {
-  age_limits <- age_limits %||% get_age_limits(participants)
   ppt_no_age_info <- participants[is.na(part_age) | part_age < min(age_limits)]
   no_age_info <- nrow(ppt_no_age_info) > 0
   if (missing_action == "remove" && no_age_info) {
