@@ -112,6 +112,12 @@ utils::globalVariables(c(
   "..upper.age.limit", # <pop_age>
   "population", # <pop_age>
   "population", # <survey_country_population>
+  "part_id", # <sample_participants>
+  "lower.age.limit", # <sample_participants>
+  "weight", # <sample_participants>
+  "id", # <sample_participants>
+  "sampled.weight", # <sample_participants>
+  "bootstrap.weight", # <sample_participants>
   "sex", # <wpp_age>
   "country", # <wpp_age>
   "name", # <wpp_age>

@@ -24,6 +24,7 @@ contact_matrix(
   weight.threshold = NA,
   symmetric.norm.threshold = 2,
   sample.all.age.groups = FALSE,
+  sample.participants.max.tries = 1000,
   return.part.weights = FALSE,
   return.demography = NA,
   per.capita = FALSE,
@@ -68,6 +69,8 @@ contact_matrix(
 \item{symmetric.norm.threshold}{threshold value for the normalization weights when \code{symmetric = TRUE} before showing a warning that that large differences in the size of the sub-populations are likely to result in artefacts when making the matrix symmetric (default 2).}
 
 \item{sample.all.age.groups}{what to do if sampling participants (with \code{sample.participants = TRUE}) fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead.}
+
+\item{sample.participants.max.tries}{maximum number of attempts when \code{sample.all.age.groups = TRUE}; defaults to 1000.}
 
 \item{return.part.weights}{boolean to return the participant weights.}
 

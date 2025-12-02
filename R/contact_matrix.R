@@ -21,6 +21,7 @@
 #' @param weight.threshold threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff).
 #' @param symmetric.norm.threshold threshold value for the normalization weights when `symmetric = TRUE` before showing a warning that that large differences in the size of the sub-populations are likely to result in artefacts when making the matrix symmetric (default 2).
 #' @param sample.all.age.groups what to do if sampling participants (with `sample.participants = TRUE`) fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead.
+#' @param sample.participants.max.tries maximum number of attempts when `sample.all.age.groups = TRUE`; defaults to 1000.
 #' @param return.part.weights boolean to return the participant weights.
 #' @param return.demography boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters).
 #' @param per.capita whether to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE').
@@ -62,6 +63,7 @@ contact_matrix <- function(
   weight.threshold = NA,
   symmetric.norm.threshold = 2,
   sample.all.age.groups = FALSE,
+  sample.participants.max.tries = 1000,
   return.part.weights = FALSE,
   return.demography = NA,
   per.capita = FALSE,
@@ -251,51 +253,16 @@ contact_matrix <- function(
 
   ## calculate weighted contact matrix -----------------------------------------
   if (sample.participants) {
-    ### sample from participants
-    present_age_limits <- unique(survey$participants$lower.age.limit)
-    if (sample.all.age.groups && !setequal(age.limits, present_age_limits)) {
-      cli::cli_abort(
-        c(
-          "Cannot sample all age groups: no participants in \\
-        {setdiff(age.limits, present_age_limits)}:",
-          "{.var age.limits: {age.limits}}",
-          "{.var present_age_limits: {present_age_limits}}"
-        )
-      )
-    }
-    good_sample <- FALSE
-    tries <- 0
-    max_tries <- 1000
-    while (!good_sample && tries < max_tries) {
-      participant_ids <- unique(survey$participants$part_id)
-      ## take a sample from the participants
-      part_sample <- sample(participant_ids, replace = TRUE)
-      part_age_limits <- unique(
-        survey$participants[part_id %in% part_sample, lower.age.limit]
-      )
-      age_limits_match_part <- setequal(age.limits, part_age_limits)
-      good_sample <- !sample.all.age.groups || age_limits_match_part
-      tries <- tries + 1
-      sample_table <- create_bootstrap_weights(part_sample)
-      sampled_contacts <- merge(survey$contacts, sample_table, by = "part_id")
-      sampled_contacts[, sampled.weight := weight * bootstrap.weight]
-      sampled_participants <- merge(
-        survey$participants,
-        sample_table,
-        by = "part_id"
-      )
-      sampled_participants[, sampled.weight := weight * bootstrap.weight]
-    }
-    if (!good_sample) {
-      cli::cli_abort(
-        "Failed to draw a bootstrap sample covering all age groups after \\
-        {max_tries} attempts."
-      )
-    }
-
+    sampled <- sample_participants(
+      participants = survey$participants,
+      contacts = survey$contacts,
+      age.limits = age.limits,
+      sample.all.age.groups = sample.all.age.groups,
+      max.tries = sample.participants.max.tries
+    )
     sampled_contacts_participants <- list(
-      sampled_contacts = sampled_contacts,
-      sampled_participants = sampled_participants
+      sampled_contacts = sampled$contacts,
+      sampled_participants = sampled$participants
     )
   } else {
     ## just use all participants

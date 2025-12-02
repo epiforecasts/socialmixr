@@ -1184,3 +1184,40 @@ test_that("Contacts with an age below the age limits are excluded regardless of 
     2L
   )
 })
+
+test_that("sample.all.age.groups errors when age group has no participants", {
+  # Create a survey with no participants in a specific age range
+  polymod_limited <- get_survey(polymod)
+  # Keep only participants aged 20+
+  polymod_limited$participants <-
+    polymod_limited$participants[part_age_exact >= 20]
+
+  expect_error(
+    contact_matrix(
+      survey = polymod_limited,
+      age.limits = c(0, 10, 20, 30),
+      sample.participants = TRUE,
+      sample.all.age.groups = TRUE
+    ),
+    "Cannot sample all age groups"
+  )
+})
+
+test_that("sample.all.age.groups with bootstrap succeeds with enough tries", {
+  # Test that sample.all.age.groups = TRUE works with sample.participants
+  set.seed(42)
+  result <- suppressMessages(
+    contact_matrix(
+      survey = polymod,
+      countries = "United Kingdom",
+      age.limits = c(0, 18, 65),
+      sample.participants = TRUE,
+      sample.all.age.groups = TRUE
+    )
+  )
+  expect_true(is.matrix(result$matrix))
+  expect_identical(nrow(result$matrix), 3L)
+  expect_identical(ncol(result$matrix), 3L)
+  # All age groups should be represented (no NA rows)
+  expect_false(anyNA(rowSums(result$matrix)))
+})
