@@ -30,6 +30,7 @@
 #' @importFrom utils data globalVariables
 #' @importFrom data.table copy
 #' @importFrom countrycode countrycode
+#' @importFrom rlang %||%
 #' @import data.table
 #' @export
 #' @autoglobal
@@ -428,5 +429,5 @@ contact_matrix <- function(
     ret[["participants.weights"]] <- part_weights[]
   }
 
-  return(ret)
+  ret
 }

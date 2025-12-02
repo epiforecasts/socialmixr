@@ -14,6 +14,7 @@
 #' country information is available from either the survey or countries
 #' argument.
 #'
+#' @importFrom rlang %||%
 #' @autoglobal
 #' @examples
 #' survey_country_population(polymod)

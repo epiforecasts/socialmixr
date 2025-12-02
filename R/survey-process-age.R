@@ -23,6 +23,7 @@
 #' @returns
 #' The survey object with processed age data.
 #'
+#' @importFrom rlang %||%
 #' @export
 #' @autoglobal
 #' @examples

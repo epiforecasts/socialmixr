@@ -1,28 +1,4 @@
-# some things I expect
-# new columns: "part_age", and "cnt_age"
-# rows with missings dropped (or kept, dependning on value)
-# maybe new columns?
-# lower.age.limit
-# age.group
-# lower.age.limit
-# lower_upper_age_limits
-
-polymod_age_processed <- polymod |>
-  survey_process_ages()
-
-# names_not_in <- function(x, y) {
-#   names_in_x_not_y <- !(names(x) %in% names(y))
-#   names(x)[names_in_x_not_y]
-# }
-#
-# # test that these names are added
-# names_not_in(polymod_age_processed$participants, polymod$participants)
-# names_not_in(polymod_age_processed$contacts, polymod$contacts)
-#
-# polymod_age_processed$participants$lower.age.limit
-# polymod_age_processed$participants$part_age
-# polymod_age_processed$participants$age.group
-# polymod_age_processed$participants$upper.age.limit
+polymod_age_processed <- survey_process_ages(polymod)
 
 test_that("survey_process_ages() adds correct columns", {
   expect_true(all(

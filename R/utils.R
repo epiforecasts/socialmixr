@@ -30,5 +30,3 @@ flexible_countrycode <- function(countries) {
   check_missing_countries(countries, corrected_countries)
   corrected_countries
 }
-
-`%||%` <- function(x, y) if (is.null(x)) y else x

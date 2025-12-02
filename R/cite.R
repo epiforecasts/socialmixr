@@ -11,6 +11,7 @@
 #' @param x a character vector of surveys to cite
 #' @return citation as bibentry
 #' @importFrom utils bibentry
+#' @importFrom rlang %||%
 #' @examples
 #' # we recommend using the contactsurveys package for get_citation()
 #' \dontrun{
