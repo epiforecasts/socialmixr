@@ -2,6 +2,15 @@
 
 ## socialmixr (development version)
 
+- Added
+  [`survey_impute_ages()`](https://epiforecasts.io/socialmixr/reference/survey_impute_ages.md),
+  [`impute_participant_ages()`](https://epiforecasts.io/socialmixr/reference/impute_participant_ages.md),
+  [`impute_contact_ages()`](https://epiforecasts.io/socialmixr/reference/impute_contact_ages.md),
+  [`survey_process_ages()`](https://epiforecasts.io/socialmixr/reference/survey_process_ages.md),
+  and
+  [`survey_country_population()`](https://epiforecasts.io/socialmixr/reference/survey_country_population.md)
+  ([\#131](https://github.com/epiforecasts/socialmixr/issues/131))
+
 ### Breaking changes
 
 - `contact_matrix(counts = TRUE)$matrix` is now an array rather than an

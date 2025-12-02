@@ -47,9 +47,9 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">contact_matrix</span><span class="op">(</span></span>
 <span>  <span class="va">survey</span>,</span>
 <span>  countries <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">survey.pop</span>,</span>
-<span>  <span class="va">age.limits</span>,</span>
-<span>  <span class="va">filter</span>,</span>
+<span>  survey.pop <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  age.limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  filter <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  counts <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  symmetric <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  split <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -76,27 +76,27 @@
 
 
 <dl><dt id="arg-survey">survey<a class="anchor" aria-label="anchor" href="#arg-survey"></a></dt>
-<dd><p>a <code><a href="survey.html">survey()</a></code> object</p></dd>
+<dd><p>a <code><a href="survey.html">survey()</a></code> object.</p></dd>
 
 
 <dt id="arg-countries">countries<a class="anchor" aria-label="anchor" href="#arg-countries"></a></dt>
-<dd><p>limit to one or more countries; if not given, will use all countries in the survey; these can be given as country names or 2-letter (ISO Alpha-2) country codes</p></dd>
+<dd><p>limit to one or more countries; if NULL (default), will use all countries in the survey; these can be given as country names or 2-letter (ISO Alpha-2) country codes.</p></dd>
 
 
 <dt id="arg-survey-pop">survey.pop<a class="anchor" aria-label="anchor" href="#arg-survey-pop"></a></dt>
-<dd><p>survey population – either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via <code>wpp_countries</code>; if not given, will use the country populations from the chosen countries, or all countries in the survey if <code>countries</code> is not given</p></dd>
+<dd><p>survey population – either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via <code>wpp_countries</code>; if NULL (default), will use the country populations from the chosen countries, or all countries in the survey if <code>countries</code> is NULL.</p></dd>
 
 
 <dt id="arg-age-limits">age.limits<a class="anchor" aria-label="anchor" href="#arg-age-limits"></a></dt>
-<dd><p>lower limits of the age groups over which to construct the matrix</p></dd>
+<dd><p>lower limits of the age groups over which to construct the matrix. If NULL (default), age limits are taken from participant data.</p></dd>
 
 
 <dt id="arg-filter">filter<a class="anchor" aria-label="anchor" href="#arg-filter"></a></dt>
-<dd><p>any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given.</p></dd>
+<dd><p>any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given. Default value is NULL; no filtering performed.</p></dd>
 
 
 <dt id="arg-counts">counts<a class="anchor" aria-label="anchor" href="#arg-counts"></a></dt>
-<dd><p>whether to return counts (instead of means)</p></dd>
+<dd><p>whether to return counts (instead of means).</p></dd>
 
 
 <dt id="arg-symmetric">symmetric<a class="anchor" aria-label="anchor" href="#arg-symmetric"></a></dt>
@@ -104,11 +104,11 @@
 
 
 <dt id="arg-split">split<a class="anchor" aria-label="anchor" href="#arg-split"></a></dt>
-<dd><p>whether to split the contact matrix into the mean number of contacts, in each age group (split further into the product of the mean number of contacts across the whole population (<code>mean.contacts</code>), a normalisation constant (<code>normalisation</code>) and age-specific variation in contacts (<code>contacts</code>)), multiplied with an assortativity matrix (<code>assortativity</code>) and a population multiplier (<code>demograpy</code>). For more detail on this, see the "Getting Started" vignette.</p></dd>
+<dd><p>whether to split the contact matrix into the mean number of contacts, in each age group (split further into the product of the mean number of contacts across the whole population (<code>mean.contacts</code>), a normalisation constant (<code>normalisation</code>) and age-specific variation in contacts (<code>contacts</code>)), multiplied with an assortativity matrix (<code>assortativity</code>) and a population multiplier (<code>demography</code>). For more detail on this, see the "Getting Started" vignette.</p></dd>
 
 
 <dt id="arg-sample-participants">sample.participants<a class="anchor" aria-label="anchor" href="#arg-sample-participants"></a></dt>
-<dd><p>whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this..</p></dd>
+<dd><p>whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this.</p></dd>
 
 
 <dt id="arg-estimated-participant-age">estimated.participant.age<a class="anchor" aria-label="anchor" href="#arg-estimated-participant-age"></a></dt>
@@ -116,31 +116,31 @@
 
 
 <dt id="arg-estimated-contact-age">estimated.contact.age<a class="anchor" aria-label="anchor" href="#arg-estimated-contact-age"></a></dt>
-<dd><p>if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing</p></dd>
+<dd><p>if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing.</p></dd>
 
 
 <dt id="arg-missing-participant-age">missing.participant.age<a class="anchor" aria-label="anchor" href="#arg-missing-participant-age"></a></dt>
-<dd><p>if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group</p></dd>
+<dd><p>if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and treated as a separate age group.</p></dd>
 
 
 <dt id="arg-missing-contact-age">missing.contact.age<a class="anchor" aria-label="anchor" href="#arg-missing-contact-age"></a></dt>
-<dd><p>if set to "remove" (default), participants that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group; if set to "ignore", contact with missing age are ignored in the contact analysis</p></dd>
+<dd><p>if set to "remove" (default), participants that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and treated as a separate age group; if set to "ignore", contact with missing age are ignored in the contact analysis.</p></dd>
 
 
 <dt id="arg-weights">weights<a class="anchor" aria-label="anchor" href="#arg-weights"></a></dt>
-<dd><p>column names(s) of the participant data of the <code><a href="survey.html">survey()</a></code> object with user-specified weights (default = empty vector)</p></dd>
+<dd><p>column names(s) of the participant data of the <code><a href="survey.html">survey()</a></code> object with user-specified weights (default = empty vector).</p></dd>
 
 
 <dt id="arg-weigh-dayofweek">weigh.dayofweek<a class="anchor" aria-label="anchor" href="#arg-weigh-dayofweek"></a></dt>
-<dd><p>whether to weigh social contacts data by the day of the week (weight (5/7 / N_week / N) for weekdays and (2/7 / N_weekend / N) for weekends)</p></dd>
+<dd><p>whether to weigh social contacts data by the day of the week (weight (5/7 / N_week / N) for weekdays and (2/7 / N_weekend / N) for weekends).</p></dd>
 
 
 <dt id="arg-weigh-age">weigh.age<a class="anchor" aria-label="anchor" href="#arg-weigh-age"></a></dt>
-<dd><p>whether to weigh social contacts data by the age of the participants (vs. the populations' age distribution)</p></dd>
+<dd><p>whether to weigh social contacts data by the age of the participants (vs. the populations' age distribution).</p></dd>
 
 
 <dt id="arg-weight-threshold">weight.threshold<a class="anchor" aria-label="anchor" href="#arg-weight-threshold"></a></dt>
-<dd><p>threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff)</p></dd>
+<dd><p>threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff).</p></dd>
 
 
 <dt id="arg-symmetric-norm-threshold">symmetric.norm.threshold<a class="anchor" aria-label="anchor" href="#arg-symmetric-norm-threshold"></a></dt>
@@ -148,23 +148,23 @@
 
 
 <dt id="arg-sample-all-age-groups">sample.all.age.groups<a class="anchor" aria-label="anchor" href="#arg-sample-all-age-groups"></a></dt>
-<dd><p>what to do if sampling participants (with <code>sample.participants = TRUE</code>) fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead</p></dd>
+<dd><p>what to do if sampling participants (with <code>sample.participants = TRUE</code>) fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead.</p></dd>
 
 
 <dt id="arg-return-part-weights">return.part.weights<a class="anchor" aria-label="anchor" href="#arg-return-part-weights"></a></dt>
-<dd><p>boolean to return the participant weights</p></dd>
+<dd><p>boolean to return the participant weights.</p></dd>
 
 
 <dt id="arg-return-demography">return.demography<a class="anchor" aria-label="anchor" href="#arg-return-demography"></a></dt>
-<dd><p>boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters)</p></dd>
+<dd><p>boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters).</p></dd>
 
 
 <dt id="arg-per-capita">per.capita<a class="anchor" aria-label="anchor" href="#arg-per-capita"></a></dt>
-<dd><p>whether to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE')</p></dd>
+<dd><p>whether to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE').</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>further arguments to pass to <code><a href="get_survey.html">get_survey()</a></code>, <code><a href="check.html">check()</a></code> and <code><a href="pop_age.html">pop_age()</a></code> (especially column names)</p></dd>
+<dd><p>further arguments to pass to <code><a href="get_survey.html">get_survey()</a></code>, <code><a href="check.html">check()</a></code> and <code><a href="pop_age.html">pop_age()</a></code> (especially column names).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -179,9 +179,13 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">contact_matrix</span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span>, age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">contact_matrix</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  survey <span class="op">=</span> <span class="va">polymod</span>,</span></span>
+<span class="r-in"><span>  countries <span class="op">=</span> <span class="st">"United Kingdom"</span>,</span></span>
+<span class="r-in"><span>  age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Removing participants that have contacts without age information.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the 'missing.contact.age' option.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the `missing.contact.age` option.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $matrix</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          contact.age.group</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> age.group      [0,1)     [1,5)   [5,15)      15+</span>

@@ -8,9 +8,9 @@ Samples a contact survey
 contact_matrix(
   survey,
   countries = NULL,
-  survey.pop,
-  age.limits,
-  filter,
+  survey.pop = NULL,
+  age.limits = NULL,
+  filter = NULL,
   counts = FALSE,
   symmetric = FALSE,
   split = FALSE,
@@ -37,37 +37,39 @@ contact_matrix(
 - survey:
 
   a [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md)
-  object
+  object.
 
 - countries:
 
-  limit to one or more countries; if not given, will use all countries
-  in the survey; these can be given as country names or 2-letter (ISO
-  Alpha-2) country codes
+  limit to one or more countries; if NULL (default), will use all
+  countries in the survey; these can be given as country names or
+  2-letter (ISO Alpha-2) country codes.
 
 - survey.pop:
 
   survey population – either a data frame with columns 'lower.age.limit'
   and 'population', or a character vector giving the name(s) of a
   country or countries from the list that can be obtained via
-  `wpp_countries`; if not given, will use the country populations from
-  the chosen countries, or all countries in the survey if `countries` is
-  not given
+  `wpp_countries`; if NULL (default), will use the country populations
+  from the chosen countries, or all countries in the survey if
+  `countries` is NULL.
 
 - age.limits:
 
-  lower limits of the age groups over which to construct the matrix
+  lower limits of the age groups over which to construct the matrix. If
+  NULL (default), age limits are taken from participant data.
 
 - filter:
 
   any filters to apply to the data, given as list of the form
   (column=filter_value) - only contacts that have 'filter_value' in
   'column' will be considered. If multiple filters are given, they are
-  all applied independently and in the sequence given.
+  all applied independently and in the sequence given. Default value is
+  NULL; no filtering performed.
 
 - counts:
 
-  whether to return counts (instead of means)
+  whether to return counts (instead of means).
 
 - symmetric:
 
@@ -81,7 +83,7 @@ contact_matrix(
   of contacts across the whole population (`mean.contacts`), a
   normalisation constant (`normalisation`) and age-specific variation in
   contacts (`contacts`)), multiplied with an assortativity matrix
-  (`assortativity`) and a population multiplier (`demograpy`). For more
+  (`assortativity`) and a population multiplier (`demography`). For more
   detail on this, see the "Getting Started" vignette.
 
 - sample.participants:
@@ -89,7 +91,7 @@ contact_matrix(
   whether to sample participants randomly (with replacement); done
   multiple times this can be used to assess uncertainty in the generated
   contact matrices. See the "Bootstrapping" section in the vignette for
-  how to do this..
+  how to do this.
 
 - estimated.participant.age:
 
@@ -106,13 +108,13 @@ contact_matrix(
   (in a column named "...\_exact") will have their age set to the
   mid-point of the range; if set to "sample", the age will be sampled
   from the range; if set to "missing", age ranges will be treated as
-  missing
+  missing.
 
 - missing.participant.age:
 
   if set to "remove" (default), participants without age information are
   removed; if set to "keep", participants with missing age are kept and
-  treated as a separate age group
+  treated as a separate age group.
 
 - missing.contact.age:
 
@@ -121,29 +123,29 @@ contact_matrix(
   information are sampled from all the contacts of participants of the
   same age group; if set to "keep", contacts with missing age are kept
   and treated as a separate age group; if set to "ignore", contact with
-  missing age are ignored in the contact analysis
+  missing age are ignored in the contact analysis.
 
 - weights:
 
   column names(s) of the participant data of the
   [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md)
-  object with user-specified weights (default = empty vector)
+  object with user-specified weights (default = empty vector).
 
 - weigh.dayofweek:
 
   whether to weigh social contacts data by the day of the week (weight
   (5/7 / N_week / N) for weekdays and (2/7 / N_weekend / N) for
-  weekends)
+  weekends).
 
 - weigh.age:
 
   whether to weigh social contacts data by the age of the participants
-  (vs. the populations' age distribution)
+  (vs. the populations' age distribution).
 
 - weight.threshold:
 
   threshold value for the standardized weights before running an
-  additional standardisation (default 'NA' = no cutoff)
+  additional standardisation (default 'NA' = no cutoff).
 
 - symmetric.norm.threshold:
 
@@ -157,22 +159,22 @@ contact_matrix(
   what to do if sampling participants (with
   `sample.participants = TRUE`) fails to sample participants from one or
   more age groups; if FALSE (default), corresponding rows will be set to
-  NA, if TRUE the sample will be discarded and a new one taken instead
+  NA, if TRUE the sample will be discarded and a new one taken instead.
 
 - return.part.weights:
 
-  boolean to return the participant weights
+  boolean to return the participant weights.
 
 - return.demography:
 
   boolean to explicitly return demography data that corresponds to the
   survey data (default 'NA' = if demography data is requested by other
-  function parameters)
+  function parameters).
 
 - per.capita:
 
   whether to return a matrix with contact rates per capita (default is
-  FALSE and not possible if 'counts=TRUE' or 'split=TRUE')
+  FALSE and not possible if 'counts=TRUE' or 'split=TRUE').
 
 - ...:
 
@@ -180,7 +182,7 @@ contact_matrix(
   [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md),
   [`check()`](https://epiforecasts.io/socialmixr/reference/check.md) and
   [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
-  (especially column names)
+  (especially column names).
 
 ## Value
 
@@ -195,9 +197,13 @@ Sebastian Funk
 
 ``` r
 data(polymod)
-contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+contact_matrix(
+  survey = polymod,
+  countries = "United Kingdom",
+  age.limits = c(0, 1, 5, 15)
+)
 #> Removing participants that have contacts without age information.
-#> ℹ To change this behaviour, set the 'missing.contact.age' option.
+#> ℹ To change this behaviour, set the `missing.contact.age` option.
 #> $matrix
 #>          contact.age.group
 #> age.group      [0,1)     [1,5)   [5,15)      15+

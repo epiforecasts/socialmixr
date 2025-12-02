@@ -17,6 +17,10 @@
 - [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md)
   **\[deprecated\]** : Get a survey, either from its Zenodo repository,
   a set of files, or a survey variable
+- [`impute_contact_ages()`](https://epiforecasts.io/socialmixr/reference/impute_contact_ages.md)
+  : Impute Contact ages
+- [`impute_participant_ages()`](https://epiforecasts.io/socialmixr/reference/impute_participant_ages.md)
+  : Impute participant ages
 - [`is_doi()`](https://epiforecasts.io/socialmixr/reference/is_doi.md) :
   Checks if a character string is a DOI
 - [`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md)
@@ -38,6 +42,12 @@
   Contact survey
 - [`survey_countries()`](https://epiforecasts.io/socialmixr/reference/survey_countries.md)
   **\[deprecated\]** : List all countries contained in a survey
+- [`survey_country_population()`](https://epiforecasts.io/socialmixr/reference/survey_country_population.md)
+  : Get survey country population data
+- [`survey_impute_ages()`](https://epiforecasts.io/socialmixr/reference/survey_impute_ages.md)
+  : Impute missing ages in survey data
+- [`survey_process_ages()`](https://epiforecasts.io/socialmixr/reference/survey_process_ages.md)
+  : Process ages in survey data
 - [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md)
   : Get age-specific population data according to the World Population
   Prospects 2017 edition
