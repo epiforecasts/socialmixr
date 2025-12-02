@@ -7,7 +7,7 @@ check_arg_dots_in <- function(dots, fun_one, fun_two) {
   )
   any_unknown_args <- length(unknown_args) > 0
   if (any_unknown_args) {
-    cli::cli_abort("Unknown argument{?s}: {.val {unknown.args}}.")
+    cli::cli_abort("Unknown argument{?s}: {.val {unknown_args}}.")
   }
 }
 
