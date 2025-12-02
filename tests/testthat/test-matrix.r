@@ -358,7 +358,8 @@ test_that("nonsensical operations are warned about", {
       age.limits = c(0, 5)
     )
   )
-  expect_snapshot_warning(
+  expect_snapshot(
+    cran = FALSE,
     contact_matrix(
       survey = polymod,
       counts = TRUE,

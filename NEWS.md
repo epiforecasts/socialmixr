@@ -1,5 +1,7 @@
 # socialmixr (development version)
 
+* Added `survey_impute_ages()`, `impute_participant_ages()`, `impute_contact_ages()`, `survey_process_ages()`, and `survey_country_population()` (#131)
+
 ## Breaking changes 
 
 * `contact_matrix(counts = TRUE)$matrix` is now an array rather than an xtabs object. This matches the existing output format of `contact_matrix(counts = FALSE)$matrix` (#118).
