@@ -1,4 +1,4 @@
-# process_age() appropriately changes dimensions
+# survey_process_ages() appropriately changes dimensions
 
     Code
       dim(polymod_age_processed$participants)
@@ -12,7 +12,7 @@
     Output
       [1] 97904    16
 
-# process_age() appropriately changes age.group factor
+# survey_process_ages() appropriately changes age.group factor
 
     Code
       levels(polymod_age_processed$participants$age.group)

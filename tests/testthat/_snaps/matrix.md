@@ -181,12 +181,12 @@
     Code
       contact_matrix(survey = polymod, countries = c("Italy", "Zamonia"))
     Condition
-      Error in `contact_matrix()`:
+      Error in `flexible_countrycode()`:
       ! Survey data not found for: "Zamonia".
 
 # warning is thrown if filter column is not found
 
-    Filter column: `test` not found.
+    Filter column: "test" not found.
 
 # warning is thrown if missing data exist
 
@@ -215,13 +215,12 @@
     Code
       contact_matrix(survey = polymod, countries = "Romania")
     Condition
-      Error in `contact_matrix()`:
+      Error in `filter_countries()`:
       ! No participants left after selecting countries: "Romania"
 
 # warning is thrown if population needed but no 'year' column present
 
-    No information on "year" found in the data.
-    i Will use 2015 population data.
+    No information on "year" found in the data. Will use 2015 population data.
 
 # warning is thrown if day of week is asked to be weighed but not present
 
@@ -236,9 +235,9 @@
       Removing participants without age information.
       i To change this behaviour, set the `missing.participant.age` option.
       Removing participants that have contacts without age information.
-      i To change this behaviour, set the 'missing.contact.age' option.
+      i To change this behaviour, set the `missing.contact.age` option.
     Condition
-      Error in `contact_matrix()`:
+      Error in `survey_pop_from_countries()`:
       ! Could not find population data for: "Zamonia".
       i Use `wpp_countries()` to get a list of country names.
 
@@ -285,7 +284,7 @@
       Removing participants without age information.
       i To change this behaviour, set the `missing.participant.age` option.
       Removing participants that have contacts without age information.
-      i To change this behaviour, set the 'missing.contact.age' option.
+      i To change this behaviour, set the `missing.contact.age` option.
     Condition
       Warning in `contact_matrix()`:
       `symmetric = TRUE` does not make sense with `counts = TRUE`; will not make matrix symmetric.
@@ -332,9 +331,9 @@
       Removing participants without age information.
       i To change this behaviour, set the `missing.participant.age` option.
       Removing participants that have contacts without age information.
-      i To change this behaviour, set the 'missing.contact.age' option.
+      i To change this behaviour, set the `missing.contact.age` option.
     Condition
-      Error in `contact_matrix()`:
+      Error in `survey_pop_from_countries()`:
       ! Could not find population data for: "dummy".
       i Use `wpp_countries()` to get a list of country names.
 
