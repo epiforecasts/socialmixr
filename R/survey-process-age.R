@@ -43,6 +43,9 @@ survey_process_ages <- function(
   ## set contact age and participant age if it's not in the data
   survey$participants <- add_part_age(survey$participants)
 
+  # define age limits if not given
+  age_limits <- age_limits %||% get_age_limits(survey$participants)
+
   ## Process participant ages: deal with ranges and missing data ---------------
 
   ## TODO docs say when `missing.partipant.age = "keep"` missings are treated
@@ -68,7 +71,6 @@ survey_process_ages <- function(
     )
   )
 
-  age_limits <- age_limits %||% get_age_limits(survey$participants)
   # remove contact ages below the age limit, before dealing with missing contact ages
   # TODO are we sure that we want to use `age.limits` as defined above, because
   # that means it is defined by the participants age limit?

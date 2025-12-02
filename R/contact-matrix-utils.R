@@ -219,6 +219,9 @@ drop_invalid_ages <- function(
   missing_action,
   age_limits
 ) {
+  if (is.null(age_limits)) {
+    cli::cli_abort("{.arg age_limits} must be provided")
+  }
   ppt_no_age_info <- participants[is.na(part_age) | part_age < min(age_limits)]
   no_age_info <- nrow(ppt_no_age_info) > 0
   if (missing_action == "remove" && no_age_info) {
