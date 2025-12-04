@@ -56,7 +56,6 @@ sample_participants <- function(
 ) {
   participant_ids <- unique(participants$part_id)
 
-
   ## check upfront if sampling all age groups is possible
   if (sample.all.age.groups) {
     present.age.limits <- unique(participants$lower.age.limit)
