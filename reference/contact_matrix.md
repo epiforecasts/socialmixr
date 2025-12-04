@@ -25,6 +25,7 @@ contact_matrix(
   weight.threshold = NA,
   symmetric.norm.threshold = 2,
   sample.all.age.groups = FALSE,
+  sample.participants.max.tries = 1000,
   return.part.weights = FALSE,
   return.demography = NA,
   per.capita = FALSE,
@@ -160,6 +161,11 @@ contact_matrix(
   `sample.participants = TRUE`) fails to sample participants from one or
   more age groups; if FALSE (default), corresponding rows will be set to
   NA, if TRUE the sample will be discarded and a new one taken instead.
+
+- sample.participants.max.tries:
+
+  maximum number of attempts when `sample.all.age.groups = TRUE`;
+  defaults to 1000.
 
 - return.part.weights:
 

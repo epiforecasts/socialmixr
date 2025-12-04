@@ -64,6 +64,7 @@
 <span>  weight.threshold <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  symmetric.norm.threshold <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  sample.all.age.groups <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  sample.participants.max.tries <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  return.part.weights <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  return.demography <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  per.capita <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -149,6 +150,10 @@
 
 <dt id="arg-sample-all-age-groups">sample.all.age.groups<a class="anchor" aria-label="anchor" href="#arg-sample-all-age-groups"></a></dt>
 <dd><p>what to do if sampling participants (with <code>sample.participants = TRUE</code>) fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead.</p></dd>
+
+
+<dt id="arg-sample-participants-max-tries">sample.participants.max.tries<a class="anchor" aria-label="anchor" href="#arg-sample-participants-max-tries"></a></dt>
+<dd><p>maximum number of attempts when <code>sample.all.age.groups = TRUE</code>; defaults to 1000.</p></dd>
 
 
 <dt id="arg-return-part-weights">return.part.weights<a class="anchor" aria-label="anchor" href="#arg-return-part-weights"></a></dt>
