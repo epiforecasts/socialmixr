@@ -832,11 +832,34 @@ sample_from_participants <- function(
   participants,
   contacts,
   age_limits,
-  sample.all.age.groups
+  sample.all.age.groups,
+  max.tries = 1000
 ) {
+  participant_ids <- unique(participants$part_id)
+
+  ## check upfront if sampling all age groups is possible
+  if (sample.all.age.groups) {
+    present_age_limits <- unique(participants$lower.age.limit)
+    missing_age_limits <- setdiff(age_limits, present_age_limits)
+    if (length(missing_age_limits) > 0) {
+      cli::cli_abort(
+        "Cannot sample all age groups: no participants in age groups
+        starting at {.val {missing_age_limits}}."
+      )
+    }
+  }
+
   good_sample <- FALSE
+  tries <- 0L
   while (!good_sample) {
-    participant_ids <- unique(participants$part_id)
+    tries <- tries + 1L
+    if (sample.all.age.groups && tries > max.tries) {
+      cli::cli_abort(
+        "Failed to draw a bootstrap sample covering all age groups after
+        {.val {max.tries}} attempts."
+      )
+    }
+
     ## take a sample from the participants
     part_sample <- sample(participant_ids, replace = TRUE)
     part_age_limits <- unique(
@@ -866,14 +889,16 @@ sample_contacts_participants <- function(
   participants,
   contacts,
   age_limits,
-  sample.all.age.groups
+  sample.all.age.groups,
+  max.tries = 1000
 ) {
   if (sample.participants) {
     sampled_contacts_participants <- sample_from_participants(
       participants,
       contacts,
       age_limits,
-      sample.all.age.groups
+      sample.all.age.groups,
+      max.tries
     )
   } else {
     ## just use all participants

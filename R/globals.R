@@ -89,10 +89,7 @@ utils::globalVariables(c(
   "weight", # <contact_matrix>
   "age.group", # <contact_matrix>
   "cnt_age", # <contact_matrix>
-  "part_id", # <contact_matrix>
   "lower.age.limit", # <contact_matrix>
-  "sampled.weight", # <contact_matrix>
-  "bootstrap.weight", # <contact_matrix>
   "population", # <contact_matrix>
   "part_age", # <contact_matrix>
   "is.weekday", # <contact_matrix>
