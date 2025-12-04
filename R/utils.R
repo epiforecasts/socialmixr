@@ -89,7 +89,10 @@ sample_participants <- function(
       length(setdiff(age.limits, part.age.limits)) == 0
 
     sample.table <- data.table(id = part.sample, weight = 1)
-    sample.table <- sample.table[, list(bootstrap.weight = sum(weight)), by = id]
+    sample.table <- sample.table[,
+      list(bootstrap.weight = sum(weight)),
+      by = id
+    ]
     setnames(sample.table, "id", "part_id")
     setkey(sample.table, part_id)
 
