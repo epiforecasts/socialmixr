@@ -252,25 +252,14 @@ contact_matrix <- function(
   )
 
   ## calculate weighted contact matrix -----------------------------------------
-  if (sample.participants) {
-    sampled <- sample_participants(
-      participants = survey$participants,
-      contacts = survey$contacts,
-      age.limits = age.limits,
-      sample.all.age.groups = sample.all.age.groups,
-      max.tries = sample.participants.max.tries
-    )
-    sampled_contacts_participants <- list(
-      sampled_contacts = sampled$contacts,
-      sampled_participants = sampled$participants
-    )
-  } else {
-    ## just use all participants
-    sampled_contacts_participants <- list(
-      sampled_contacts = survey$contacts[, sampled.weight := weight],
-      sampled_participants = survey$participants[, sampled.weight := weight]
-    )
-  }
+  sampled_contacts_participants <- sample_contacts_participants(
+    sample.participants = sample.participants,
+    participants = survey$participants,
+    contacts = survey$contacts,
+    age_limits = age.limits,
+    sample.all.age.groups = sample.all.age.groups,
+    max.tries = sample.participants.max.tries
+  )
 
   weighted.matrix <- weighted_matrix_array(
     contacts = sampled_contacts_participants$sampled_contacts
