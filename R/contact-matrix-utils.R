@@ -161,12 +161,12 @@ max_participant_age <- function(data) {
 
 #' @autoglobal
 create_age_breaks <- function(age_limits, max_age) {
-  c(age_limits[age_limits < max_age], max_age)
+  c(age_limits, max(max_age, max(age_limits) + 1))
 }
 
 #' @autoglobal
-filter_valid_ages <- function(age_limits, max_age) {
-  age_limits[age_limits < max_age]
+get_age_group_lower_limits <- function(age_limits) {
+  age_limits
 }
 
 #' @autoglobal
@@ -340,7 +340,7 @@ adjust_ppt_age_group_breaks <- function(
   participants[,
     lower.age.limit := reduce_agegroups(
       x = part_age,
-      limits = age_limits[age_limits < max_age]
+      limits = age_limits
     )
   ]
 
@@ -364,7 +364,7 @@ adjust_ppt_age_group_breaks <- function(
     )
   ]
 
-  part_age_group_present <- filter_valid_ages(age_limits, max_age)
+  part_age_group_present <- get_age_group_lower_limits(age_limits)
 
   participants <- add_upper_age_limits(
     participants = participants,
@@ -537,9 +537,7 @@ survey_pop_year <- function(
     survey_pop <- survey_pop_info$survey_pop
     survey_year <- survey_pop_info$survey_year
   } else {
-    max_year <- max_participant_age(participants)
-
-    part_age_group_present <- filter_valid_ages(age_limits, max_year)
+    part_age_group_present <- get_age_group_lower_limits(age_limits)
     # if survey_pop is a data frame with columns 'lower.age.limit' and 'population'
     survey_pop <- survey_pop_from_data(survey_pop, part_age_group_present)
 
@@ -586,9 +584,13 @@ adjust_survey_age_groups <- function(survey_pop, part_age_group_present, ...) {
   survey_pop_max <- max(survey_pop$upper.age.limit)
   survey_pop <- data.table(pop_age(survey_pop, part_age_group_present, ...))
 
+  ## use the actual lower.age.limits from survey_pop (which may be a subset
+  ## of part_age_group_present if population data doesn't cover all ages)
+  actual_age_limits <- survey_pop$lower.age.limit
+
   ## set upper age limits
   survey_pop[,
-    upper.age.limit := c(part_age_group_present[-1], survey_pop_max)
+    upper.age.limit := c(actual_age_limits[-1], survey_pop_max)
   ]
 }
 

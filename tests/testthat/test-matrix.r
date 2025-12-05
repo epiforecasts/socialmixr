@@ -593,21 +593,31 @@ test_that("The age-specific weight should not change the results with single yea
   )
 })
 
-test_that("The selection of age groups based on the participant data is also used for the reference population", {
-  # no problems expected
+test_that("All requested age groups are included even if no participants in some groups", {
+  # Age groups beyond max participant age should still be included
   cm <- suppressWarnings(contact_matrix(
     polymod,
     age.limits = c(0, 18, 50, 100),
     symmetric = FALSE
   ))
 
-  # problems expected if age.group.breaks of the reference population is not updated according to the participant data
+  # All 4 age groups should be present in participants
+  expect_identical(nrow(cm$participants), 4L)
+  expect_true("100+" %in% cm$participants$age.group)
+  # The 100+ group should have 0 participants
+  expect_identical(cm$participants[age.group == "100+", participants], 0L)
+})
+
+test_that("Demography age groups are subset of participant age groups", {
   cm <- suppressWarnings(contact_matrix(
     polymod,
     age.limits = c(0, 18, 50, 100),
     symmetric = TRUE
   ))
-  expect_true(all(cm$demography$age.group == cm$participants$age.group))
+
+  # All demography age groups should be present in participant age groups
+  # (demography might have fewer due to population data limits)
+  expect_true(all(cm$demography$age.group %in% cm$participants$age.group))
 })
 
 test_that("The return.demography overrules other parameters", {
