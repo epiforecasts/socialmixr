@@ -5,6 +5,7 @@
 ### Before committing
 1. Run `devtools::document()` to regenerate documentation from roxygen comments
 2. Run `lintr::lint_package()` to check for style issues (fix any in files you modified)
+3. Add a news entry to NEWS
 
 ### Branching
 - Always create a feature branch for changes (never commit directly to main)
@@ -12,10 +13,7 @@
 
 ### Commit conventions
 - Write short, atomic commit messages describing what changed
-- The repository owner will be the committer; use `sbfnk-bot` as co-author:
-  ```
-  Co-authored-by: sbfnk-bot <242615673+sbfnk-bot@users.noreply.github.com>
-  ```
+- When AI assists with code, indicate this with a bot co-author (e.g., `Co-authored-by: username-bot <email>`)
 - Issue numbers belong in PR descriptions, not commit messages
 - Keep commits focused - one logical change per commit
 
