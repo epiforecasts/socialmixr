@@ -10,6 +10,13 @@
 2.  Run `lintr::lint_package()` to check for style issues (fix any in
     files you modified)
 
+### Branching
+
+- Always create a feature branch for changes (never commit directly to
+  main)
+- Use descriptive branch names (e.g., `fix-age-group-filtering`,
+  `add-new-feature`)
+
 ### Commit conventions
 
 - Write short, atomic commit messages describing what changed
