@@ -79,8 +79,6 @@ as_contact_survey <- function(
     cli::cli_warn("No reference provided.")
   }
 
-  survey <- new_contact_survey(x$participant, x$contacts, x$reference)
-  survey <- clean(survey)
-
-  return(survey)
+  survey <- new_contact_survey(x$participants, x$contacts, x$reference)
+  clean(survey)
 }
