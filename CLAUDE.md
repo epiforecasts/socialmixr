@@ -3,9 +3,11 @@
 ## Development Workflow
 
 ### Before committing
-1. Run `devtools::document()` to regenerate documentation from roxygen comments
-2. Run `lintr::lint_package()` to check for style issues (fix any in files you modified)
-3. Add a news entry to NEWS
+1. Run `devtools::test()` to ensure all tests pass
+2. Run `devtools::document()` to regenerate documentation from roxygen comments
+3. Run `lintr::lint_package()` to check for style issues (fix any in files you modified)
+4. Add a news entry to NEWS.md
+5. Add tests for bug fixes (regression tests) or new features where appropriate
 
 ### Branching
 - Always create a feature branch for changes (never commit directly to main)
