@@ -22,4 +22,4 @@
 ### Pull requests
 - Reference the issue being addressed (e.g., "Fixes #123")
 - Provide detailed explanation in the PR description, not the commit message
-- Do not include "Generated with Claude Code" in PR descriptions
+- Do not include "Generated with Claude Code" or test plans in PR descriptions
