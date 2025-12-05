@@ -20,6 +20,12 @@
 
 ### Breaking changes
 
+- When `age.limits` is not specified, it is now inferred from both
+  participant and contact ages, not just participant ages. This may
+  result in more age groups if contacts include ages beyond the
+  participant age range
+  ([\#230](https://github.com/epiforecasts/socialmixr/issues/230)).
+
 - [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
   now preserves all user-specified `age.limits`, even when no
   participants exist in some age groups. Previously, age groups beyond

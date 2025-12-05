@@ -5,11 +5,16 @@
 ### Before committing
 
 1.  Run
+    [`devtools::test()`](https://devtools.r-lib.org/reference/test.html)
+    to ensure all tests pass
+2.  Run
     [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
     to regenerate documentation from roxygen comments
-2.  Run `lintr::lint_package()` to check for style issues (fix any in
+3.  Run `lintr::lint_package()` to check for style issues (fix any in
     files you modified)
-3.  Add a news entry to NEWS
+4.  Add a news entry to NEWS.md
+5.  Add tests for bug fixes (regression tests) or new features where
+    appropriate
 
 ### Branching
 
@@ -31,4 +36,5 @@
 - Reference the issue being addressed (e.g., “Fixes \#123”)
 - Provide detailed explanation in the PR description, not the commit
   message
-- Do not include “Generated with Claude Code” in PR descriptions
+- Do not include “Generated with Claude Code” or test plans in PR
+  descriptions

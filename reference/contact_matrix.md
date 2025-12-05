@@ -58,7 +58,8 @@ contact_matrix(
 - age.limits:
 
   lower limits of the age groups over which to construct the matrix. If
-  NULL (default), age limits are taken from participant data.
+  NULL (default), age limits are inferred from participant and contact
+  ages.
 
 - filter:
 

@@ -43,9 +43,11 @@
 <h2 id="development-workflow">Development Workflow<a class="anchor" aria-label="anchor" href="#development-workflow"></a></h2>
 <div class="section level3">
 <h3 id="before-committing">Before committing<a class="anchor" aria-label="anchor" href="#before-committing"></a></h3>
-<ol style="list-style-type: decimal"><li>Run <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> to regenerate documentation from roxygen comments</li>
+<ol style="list-style-type: decimal"><li>Run <code><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">devtools::test()</a></code> to ensure all tests pass</li>
+<li>Run <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> to regenerate documentation from roxygen comments</li>
 <li>Run <code>lintr::lint_package()</code> to check for style issues (fix any in files you modified)</li>
-<li>Add a news entry to NEWS</li>
+<li>Add a news entry to NEWS.md</li>
+<li>Add tests for bug fixes (regression tests) or new features where appropriate</li>
 </ol></div>
 <div class="section level3">
 <h3 id="branching">Branching<a class="anchor" aria-label="anchor" href="#branching"></a></h3>
@@ -63,7 +65,7 @@
 <h3 id="pull-requests">Pull requests<a class="anchor" aria-label="anchor" href="#pull-requests"></a></h3>
 <ul><li>Reference the issue being addressed (e.g., “Fixes #123”)</li>
 <li>Provide detailed explanation in the PR description, not the commit message</li>
-<li>Do not include “Generated with Claude Code” in PR descriptions</li>
+<li>Do not include “Generated with Claude Code” or test plans in PR descriptions</li>
 </ul></div>
 </div>
 </div>

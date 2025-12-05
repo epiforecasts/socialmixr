@@ -74,8 +74,8 @@ impute missing values prior to using <code>survey_process_ages</code>, using
 
 <dt id="arg-age-limits">age_limits<a class="anchor" aria-label="anchor" href="#arg-age-limits"></a></dt>
 <dd><p>lower limits of the age groups over which to construct
-the matrix. Defaults to NULL. If NULL, it will construct age limits based
-upon age ranges in participants data of the survey.</p></dd>
+the matrix. Defaults to NULL. If NULL, age limits are inferred from
+participant and contact ages.</p></dd>
 
 
 <dt id="arg-missing-participant-age">missing_participant_age<a class="anchor" aria-label="anchor" href="#arg-missing-participant-age"></a></dt>
@@ -224,7 +224,7 @@ contact with missing age are ignored in the contact analysis</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2181:        NA         NA    Finland       1             84       84   [84,85)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2182:        NA         NA    Finland       1             84       84   [84,85)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2183:        NA         NA    Belgium       1             84       84   [84,85)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2184:        NA         NA Luxembourg       1             85       85   [85,90)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2184:        NA         NA Luxembourg       1             85       85   [85,86)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       upper.age.limit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1:               1</span>
@@ -237,7 +237,7 @@ contact with missing age are ignored in the contact analysis</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2181:              85</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2182:              85</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2183:              85</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2184:              90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2184:              86</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $contacts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        cont_id part_id cnt_age_exact cnt_age_est_min cnt_age_est_max cnt_gender</span>
@@ -432,7 +432,7 @@ contact with missing age are ignored in the contact analysis</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2181:        NA         NA    Finland       1             84       84   [84,85)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2182:        NA         NA    Finland       1             84       84   [84,85)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2183:        NA         NA    Belgium       1             84       84   [84,85)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2184:        NA         NA Luxembourg       1             85       85   [85,90)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2184:        NA         NA Luxembourg       1             85       85   [85,86)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       upper.age.limit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1:               1</span>
@@ -445,7 +445,7 @@ contact with missing age are ignored in the contact analysis</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2181:              85</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2182:              85</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2183:              85</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2184:              90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2184:              86</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $contacts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        cont_id part_id cnt_age_exact cnt_age_est_min cnt_age_est_max cnt_gender</span>

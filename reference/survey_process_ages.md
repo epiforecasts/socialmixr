@@ -27,8 +27,8 @@ survey_process_ages(
 - age_limits:
 
   lower limits of the age groups over which to construct the matrix.
-  Defaults to NULL. If NULL, it will construct age limits based upon age
-  ranges in participants data of the survey.
+  Defaults to NULL. If NULL, age limits are inferred from participant
+  and contact ages.
 
 - missing_participant_age:
 
@@ -176,7 +176,7 @@ polymod_imputed_processed
 #> 2181:        NA         NA    Finland       1             84       84   [84,85)
 #> 2182:        NA         NA    Finland       1             84       84   [84,85)
 #> 2183:        NA         NA    Belgium       1             84       84   [84,85)
-#> 2184:        NA         NA Luxembourg       1             85       85   [85,90)
+#> 2184:        NA         NA Luxembourg       1             85       85   [85,86)
 #>       upper.age.limit
 #>                 <num>
 #>    1:               1
@@ -189,7 +189,7 @@ polymod_imputed_processed
 #> 2181:              85
 #> 2182:              85
 #> 2183:              85
-#> 2184:              90
+#> 2184:              86
 #> 
 #> $contacts
 #>        cont_id part_id cnt_age_exact cnt_age_est_min cnt_age_est_max cnt_gender
@@ -384,7 +384,7 @@ polymod_processed
 #> 2181:        NA         NA    Finland       1             84       84   [84,85)
 #> 2182:        NA         NA    Finland       1             84       84   [84,85)
 #> 2183:        NA         NA    Belgium       1             84       84   [84,85)
-#> 2184:        NA         NA Luxembourg       1             85       85   [85,90)
+#> 2184:        NA         NA Luxembourg       1             85       85   [85,86)
 #>       upper.age.limit
 #>                 <num>
 #>    1:               1
@@ -397,7 +397,7 @@ polymod_processed
 #> 2181:              85
 #> 2182:              85
 #> 2183:              85
-#> 2184:              90
+#> 2184:              86
 #> 
 #> $contacts
 #>        cont_id part_id cnt_age_exact cnt_age_est_min cnt_age_est_max cnt_gender
