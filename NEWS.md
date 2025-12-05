@@ -2,7 +2,9 @@
 
 * Added `survey_impute_ages()`, `impute_participant_ages()`, `impute_contact_ages()`, `survey_process_ages()`, and `survey_country_population()` (#131)
 
-## Breaking changes 
+## Breaking changes
+
+* `contact_matrix()` now preserves all user-specified `age.limits`, even when no participants exist in some age groups. Previously, age groups beyond the maximum participant age were silently dropped. Empty age groups now show 0 participants and NA values in the matrix. This may change matrix dimensions for existing code (#144, #231).
 
 * `contact_matrix(counts = TRUE)$matrix` is now an array rather than an xtabs object. This matches the existing output format of `contact_matrix(counts = FALSE)$matrix` (#118).
 
