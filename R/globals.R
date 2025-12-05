@@ -24,6 +24,9 @@ utils::globalVariables(c(
   "part_age_est_max", # <max_participant_age>
   "part_age", # <max_participant_age>
   "part_age", # <get_age_limits>
+  "part_age_exact", # <get_age_limits>
+  "cnt_age", # <get_age_limits>
+  "cnt_age_exact", # <get_age_limits>
   "country", # <filter_countries>
   "part_age", # <add_part_age>
   "part_age_exact", # <add_part_age>

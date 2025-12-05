@@ -97,7 +97,7 @@ contact_matrix <- function(
   )
 
   # define age limits if not given
-  age.limits <- age.limits %||% get_age_limits(survey$participants)
+  age.limits <- age.limits %||% get_age_limits(survey)
 
   survey$participants <- drop_invalid_ages(
     participants = survey$participants,

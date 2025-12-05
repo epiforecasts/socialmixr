@@ -170,11 +170,30 @@ get_age_group_lower_limits <- function(age_limits) {
 }
 
 #' @autoglobal
-get_age_limits <- function(participants) {
-  unique_ages <- unique(as.integer(participants[, part_age]))
-  unique_non_missing_ages <- unique_ages[!is.na(unique_ages)]
-  all_ages <- sort(unique_non_missing_ages)
-  union(0, all_ages)
+get_age_limits <- function(survey) {
+  participants <- survey$participants
+  contacts <- survey$contacts
+
+  part_ages <- if ("part_age" %in% colnames(participants)) {
+    as.integer(participants[, part_age])
+  } else if ("part_age_exact" %in% colnames(participants)) {
+    as.integer(participants[, part_age_exact])
+  } else {
+    integer(0)
+  }
+
+
+  cnt_ages <- if ("cnt_age" %in% colnames(contacts)) {
+    as.integer(contacts[, cnt_age])
+  } else if ("cnt_age_exact" %in% colnames(contacts)) {
+    as.integer(contacts[, cnt_age_exact])
+  } else {
+    integer(0)
+  }
+
+  all_ages <- c(part_ages, cnt_ages)
+  unique_non_missing_ages <- unique(all_ages[!is.na(all_ages)])
+  union(0, sort(unique_non_missing_ages))
 }
 
 #' @autoglobal

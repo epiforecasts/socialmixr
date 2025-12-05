@@ -45,7 +45,7 @@ survey_process_ages <- function(
   survey$participants <- add_part_age(survey$participants)
 
   # define age limits if not given
-  age_limits <- age_limits %||% get_age_limits(survey$participants)
+  age_limits <- age_limits %||% get_age_limits(survey)
 
   ## Process participant ages: deal with ranges and missing data ---------------
 
