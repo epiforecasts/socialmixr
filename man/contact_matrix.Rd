@@ -38,7 +38,7 @@ contact_matrix(
 
 \item{survey.pop}{survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if NULL (default), will use the country populations from the chosen countries, or all countries in the survey if \code{countries} is NULL.}
 
-\item{age.limits}{lower limits of the age groups over which to construct the matrix. If NULL (default), age limits are taken from participant data.}
+\item{age.limits}{lower limits of the age groups over which to construct the matrix. If NULL (default), age limits are inferred from participant and contact ages.}
 
 \item{filter}{any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given. Default value is NULL; no filtering performed.}
 

@@ -9,8 +9,8 @@
 #'
 #' @param survey a [survey()] object
 #' @param age_limits lower limits of the age groups over which to construct
-#'   the matrix. Defaults to NULL. If NULL, it will construct age limits based
-#'   upon age ranges in participants data of the survey.
+#'   the matrix. Defaults to NULL. If NULL, age limits are inferred from
+#'   participant and contact ages.
 #' @param missing_participant_age if set to "remove" (default), participants
 #'   without age information are removed; if set to "keep", participants with
 #'   missing age are kept and treated as a separate age group
