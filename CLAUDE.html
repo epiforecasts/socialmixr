@@ -45,6 +45,7 @@
 <h3 id="before-committing">Before committing<a class="anchor" aria-label="anchor" href="#before-committing"></a></h3>
 <ol style="list-style-type: decimal"><li>Run <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> to regenerate documentation from roxygen comments</li>
 <li>Run <code>lintr::lint_package()</code> to check for style issues (fix any in files you modified)</li>
+<li>Add a news entry to NEWS</li>
 </ol></div>
 <div class="section level3">
 <h3 id="branching">Branching<a class="anchor" aria-label="anchor" href="#branching"></a></h3>
@@ -53,13 +54,10 @@
 </ul></div>
 <div class="section level3">
 <h3 id="commit-conventions">Commit conventions<a class="anchor" aria-label="anchor" href="#commit-conventions"></a></h3>
-<ul><li><p>Write short, atomic commit messages describing what changed</p></li>
-<li>
-<p>The repository owner will be the committer; use <code>sbfnk-bot</code> as co-author:</p>
-<pre><code>Co-authored-by: sbfnk-bot &lt;242615673+sbfnk-bot@users.noreply.github.com&gt;</code></pre>
-</li>
-<li><p>Issue numbers belong in PR descriptions, not commit messages</p></li>
-<li><p>Keep commits focused - one logical change per commit</p></li>
+<ul><li>Write short, atomic commit messages describing what changed</li>
+<li>When AI assists with code, indicate this with a bot co-author (e.g., <code>Co-authored-by: username-bot &lt;email&gt;</code>)</li>
+<li>Issue numbers belong in PR descriptions, not commit messages</li>
+<li>Keep commits focused - one logical change per commit</li>
 </ul></div>
 <div class="section level3">
 <h3 id="pull-requests">Pull requests<a class="anchor" aria-label="anchor" href="#pull-requests"></a></h3>
