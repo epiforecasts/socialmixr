@@ -7,8 +7,8 @@
 as_contact_survey(
   x,
   id.column = "part_id",
-  country.column = "country",
-  year.column = "year"
+  country.column = NULL,
+  year.column = NULL
 )
 }
 \arguments{
@@ -24,9 +24,9 @@ information needed to reference the survey, in particular it can contain$a
 
 \item{id.column}{the column in both the \code{participants} and \code{contacts} data frames that links contacts to participants}
 
-\item{country.column}{the column in the \code{participants} data frame containing the country in which the participant was queried}
+\item{country.column}{the column in the \code{participants} data frame containing the country in which the participant was queried; if NULL (default), will use "country" column if present}
 
-\item{year.column}{the column in the \code{participants} data frame containing the year in which the participant was queried}
+\item{year.column}{the column in the \code{participants} data frame containing the year in which the participant was queried; if NULL (default), will use "year" column if present}
 }
 \value{
 invisibly returns a character vector of the relevant columns

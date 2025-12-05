@@ -43,3 +43,32 @@ test_that("incorrect structure of data frames is correctly identified", {
     "Names must include the elements \\{'part_id'\\}" ## nolint: nonportable_path_linter
   )
 })
+
+no_country_survey <- copy(erroneous_survey)
+no_country_survey$participants$country <- NULL
+
+no_year_survey <- copy(erroneous_survey)
+no_year_survey$participants$year <- NULL
+
+no_country_year_survey <- copy(erroneous_survey)
+no_country_year_survey$participants$country <- NULL
+no_country_year_survey$participants$year <- NULL
+
+test_that("surveys without country/year columns are accepted", { ## nolint: nonportable_path_linter
+  expect_no_error(as_contact_survey(no_country_survey))
+  expect_no_error(as_contact_survey(no_year_survey))
+  expect_no_error(as_contact_survey(no_country_year_survey))
+})
+
+test_that("explicitly specified missing columns still error", {
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    as_contact_survey(no_country_survey, country.column = "country")
+  )
+  expect_snapshot(
+    error = TRUE,
+    cran = FALSE,
+    as_contact_survey(no_year_survey, year.column = "year")
+  )
+})

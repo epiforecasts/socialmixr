@@ -10,8 +10,8 @@
 #'   information needed to reference the survey, in particular it can contain$a
 #'   "title", "bibtype", "author", "doi", "publisher", "note", "year"
 #' @param id.column the column in both the `participants` and `contacts` data frames that links contacts to participants
-#' @param country.column the column in the `participants` data frame containing the country in which the participant was queried
-#' @param year.column the column in the `participants` data frame containing the year in which the participant was queried
+#' @param country.column the column in the `participants` data frame containing the country in which the participant was queried; if NULL (default), will use "country" column if present
+#' @param year.column the column in the `participants` data frame containing the year in which the participant was queried; if NULL (default), will use "year" column if present
 #' @importFrom checkmate assert_list assert_names assert_data_frame
 #'   assert_character
 #' @importFrom purrr walk
@@ -23,8 +23,8 @@
 as_contact_survey <- function(
   x,
   id.column = "part_id",
-  country.column = "country",
-  year.column = "year"
+  country.column = NULL,
+  year.column = NULL
 ) {
   ## check arguments
   assert_list(x, names = "named")
@@ -41,7 +41,18 @@ as_contact_survey <- function(
   setnames(x$participants, id.column, "part_id")
   setnames(x$contacts, id.column, "part_id")
 
-  ## check optional columns exist if provided
+  ## Auto-detect country/year columns if not specified
+  ## If NULL and default column exists, use it; if NULL and doesn't exist, skip
+  participant_cols <- colnames(x$participants)
+
+  if (is.null(country.column) && "country" %in% participant_cols) {
+    country.column <- "country"
+  }
+  if (is.null(year.column) && "year" %in% participant_cols) {
+    year.column <- "year"
+  }
+
+  ## check optional columns exist if explicitly provided
   to_check <- list(
     country = country.column,
     year = year.column
@@ -52,7 +63,7 @@ as_contact_survey <- function(
     .f = function(column) {
       if (
         !is.null(to_check[[column]]) &&
-          !(to_check[[column]] %in% colnames(x$participants))
+          !(to_check[[column]] %in% participant_cols)
       ) {
         cli::cli_abort(
           "{.arg {column}} column {.val {to_check[[column]]}} does not exist

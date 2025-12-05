@@ -2,6 +2,8 @@
 
 * Added `survey_impute_ages()`, `impute_participant_ages()`, `impute_contact_ages()`, `survey_process_ages()`, and `survey_country_population()` (#131)
 
+* `as_contact_survey()` no longer requires `country` and `year` columns. These columns are now auto-detected if present, but surveys without them can be loaded successfully (#193, #199).
+
 ## Breaking changes
 
 * `contact_matrix()` now preserves all user-specified `age.limits`, even when no participants exist in some age groups. Previously, age groups beyond the maximum participant age were silently dropped. Empty age groups now show 0 participants and NA values in the matrix. This may change matrix dimensions for existing code (#144, #231).
