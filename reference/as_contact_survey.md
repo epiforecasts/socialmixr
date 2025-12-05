@@ -9,8 +9,8 @@ Checks that a survey fulfills all the requirements to work with the
 as_contact_survey(
   x,
   id.column = "part_id",
-  country.column = "country",
-  year.column = "year"
+  country.column = NULL,
+  year.column = NULL
 )
 ```
 
@@ -39,12 +39,14 @@ as_contact_survey(
 - country.column:
 
   the column in the `participants` data frame containing the country in
-  which the participant was queried
+  which the participant was queried; if NULL (default), will use
+  "country" column if present
 
 - year.column:
 
   the column in the `participants` data frame containing the year in
-  which the participant was queried
+  which the participant was queried; if NULL (default), will use "year"
+  column if present
 
 ## Value
 

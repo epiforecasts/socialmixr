@@ -47,8 +47,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">as_contact_survey</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  id.column <span class="op">=</span> <span class="st">"part_id"</span>,</span>
-<span>  country.column <span class="op">=</span> <span class="st">"country"</span>,</span>
-<span>  year.column <span class="op">=</span> <span class="st">"year"</span></span>
+<span>  country.column <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  year.column <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -71,11 +71,11 @@ information needed to reference the survey, in particular it can contain$a
 
 
 <dt id="arg-country-column">country.column<a class="anchor" aria-label="anchor" href="#arg-country-column"></a></dt>
-<dd><p>the column in the <code>participants</code> data frame containing the country in which the participant was queried</p></dd>
+<dd><p>the column in the <code>participants</code> data frame containing the country in which the participant was queried; if NULL (default), will use "country" column if present</p></dd>
 
 
 <dt id="arg-year-column">year.column<a class="anchor" aria-label="anchor" href="#arg-year-column"></a></dt>
-<dd><p>the column in the <code>participants</code> data frame containing the year in which the participant was queried</p></dd>
+<dd><p>the column in the <code>participants</code> data frame containing the year in which the participant was queried; if NULL (default), will use "year" column if present</p></dd>
 
 </dl></div>
     <div class="section level2">

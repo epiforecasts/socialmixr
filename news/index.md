@@ -11,6 +11,13 @@
   [`survey_country_population()`](https://epiforecasts.io/socialmixr/reference/survey_country_population.md)
   ([\#131](https://github.com/epiforecasts/socialmixr/issues/131))
 
+- [`as_contact_survey()`](https://epiforecasts.io/socialmixr/reference/as_contact_survey.md)
+  no longer requires `country` and `year` columns. These columns are now
+  auto-detected if present, but surveys without them can be loaded
+  successfully
+  ([\#193](https://github.com/epiforecasts/socialmixr/issues/193),
+  [\#199](https://github.com/epiforecasts/socialmixr/issues/199)).
+
 ### Breaking changes
 
 - [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)

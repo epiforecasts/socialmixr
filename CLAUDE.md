@@ -20,7 +20,7 @@
 
 ### Commit conventions
 
-- Write short, atomic commit messages describing what changed
+- Write one-sentence commit messages (detail goes in PR description)
 - When AI assists with code, indicate this with a bot co-author (e.g.,
   `Co-authored-by: username-bot <email>`)
 - Issue numbers belong in PR descriptions, not commit messages
@@ -31,3 +31,4 @@
 - Reference the issue being addressed (e.g., “Fixes \#123”)
 - Provide detailed explanation in the PR description, not the commit
   message
+- Do not include “Generated with Claude Code” in PR descriptions
