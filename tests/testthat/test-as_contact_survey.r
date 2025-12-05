@@ -54,7 +54,8 @@ no_country_year_survey <- copy(erroneous_survey)
 no_country_year_survey$participants$country <- NULL
 no_country_year_survey$participants$year <- NULL
 
-test_that("surveys without country/year columns are accepted", { ## nolint: nonportable_path_linter
+test_that("surveys without country/year columns are accepted", {
+  ## nolint: nonportable_path_linter
   expect_no_error(as_contact_survey(no_country_survey))
   expect_no_error(as_contact_survey(no_year_survey))
   expect_no_error(as_contact_survey(no_country_year_survey))
