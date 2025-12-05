@@ -115,7 +115,7 @@ contact_matrix(
 
   if set to "remove" (default), participants without age information are
   removed; if set to "keep", participants with missing age are kept and
-  treated as a separate age group.
+  will appear in the contact matrix in a row labelled "NA".
 
 - missing.contact.age:
 
@@ -123,8 +123,9 @@ contact_matrix(
   age information are removed; if set to "sample", contacts without age
   information are sampled from all the contacts of participants of the
   same age group; if set to "keep", contacts with missing age are kept
-  and treated as a separate age group; if set to "ignore", contact with
-  missing age are ignored in the contact analysis.
+  and will appear in the contact matrix in a column labelled "NA"; if
+  set to "ignore", contacts without age information are removed from the
+  analysis (but the participants that made them are kept).
 
 - weights:
 
