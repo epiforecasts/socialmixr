@@ -182,7 +182,6 @@ get_age_limits <- function(survey) {
     integer(0)
   }
 
-
   cnt_ages <- if ("cnt_age" %in% colnames(contacts)) {
     as.integer(contacts[, cnt_age])
   } else if ("cnt_age_exact" %in% colnames(contacts)) {
