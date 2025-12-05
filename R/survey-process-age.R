@@ -9,8 +9,8 @@
 #'
 #' @param survey a [survey()] object
 #' @param age_limits lower limits of the age groups over which to construct
-#'   the matrix. Defaults to NULL. If NULL, it will construct age limits based
-#'   upon age ranges in participants data of the survey.
+#'   the matrix. Defaults to NULL. If NULL, age limits are inferred from
+#'   participant and contact ages.
 #' @param missing_participant_age if set to "remove" (default), participants
 #'   without age information are removed; if set to "keep", participants with
 #'   missing age are kept and treated as a separate age group
@@ -45,7 +45,7 @@ survey_process_ages <- function(
   survey$participants <- add_part_age(survey$participants)
 
   # define age limits if not given
-  age_limits <- age_limits %||% get_age_limits(survey$participants)
+  age_limits <- age_limits %||% get_age_limits(survey)
 
   ## Process participant ages: deal with ranges and missing data ---------------
 
@@ -73,8 +73,6 @@ survey_process_ages <- function(
   )
 
   # remove contact ages below the age limit, before dealing with missing contact ages
-  # TODO are we sure that we want to use `age.limits` as defined above, because
-  # that means it is defined by the participants age limit?
   survey$contacts <- drop_ages_below_age_limit(
     data = survey$contacts,
     age_limits = age_limits

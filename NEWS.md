@@ -6,6 +6,8 @@
 
 ## Breaking changes
 
+* When `age.limits` is not specified, it is now inferred from both participant and contact ages, not just participant ages. This may result in more age groups if contacts include ages beyond the participant age range (#230).
+
 * `contact_matrix()` now preserves all user-specified `age.limits`, even when no participants exist in some age groups. Previously, age groups beyond the maximum participant age were silently dropped. Empty age groups now show 0 participants and NA values in the matrix. This may change matrix dimensions for existing code (#144, #231).
 
 * `contact_matrix(counts = TRUE)$matrix` is now an array rather than an xtabs object. This matches the existing output format of `contact_matrix(counts = FALSE)$matrix` (#118).

@@ -5,7 +5,7 @@
 #' @param survey a [survey()] object.
 #' @param countries limit to one or more countries; if NULL (default), will use all countries in the survey; these can be given as country names or 2-letter (ISO Alpha-2) country codes.
 #' @param survey.pop survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via `wpp_countries`; if NULL (default), will use the country populations from the chosen countries, or all countries in the survey if `countries` is NULL.
-#' @param age.limits lower limits of the age groups over which to construct the matrix. If NULL (default), age limits are taken from participant data.
+#' @param age.limits lower limits of the age groups over which to construct the matrix. If NULL (default), age limits are inferred from participant and contact ages.
 #' @param filter any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given. Default value is NULL; no filtering performed.
 #' @param counts whether to return counts (instead of means).
 #' @param symmetric whether to make matrix symmetric, such that \eqn{c_{ij}N_i = c_{ji}N_j}.
@@ -97,7 +97,7 @@ contact_matrix <- function(
   )
 
   # define age limits if not given
-  age.limits <- age.limits %||% get_age_limits(survey$participants)
+  age.limits <- age.limits %||% get_age_limits(survey)
 
   survey$participants <- drop_invalid_ages(
     participants = survey$participants,
@@ -127,8 +127,6 @@ contact_matrix <- function(
   )
 
   # remove contact ages below the age limit, before dealing with missing contact ages
-  # TODO are we sure that we want to use `age.limits` as defined above, because
-  # that means it is defined by the participants age limit?
   survey$contacts <- drop_ages_below_age_limit(
     data = survey$contacts,
     age_limits = age.limits
