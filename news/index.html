@@ -42,8 +42,8 @@
 <ul><li>Added <code><a href="../reference/survey_impute_ages.html">survey_impute_ages()</a></code>, <code><a href="../reference/impute_participant_ages.html">impute_participant_ages()</a></code>, <code><a href="../reference/impute_contact_ages.html">impute_contact_ages()</a></code>, <code><a href="../reference/survey_process_ages.html">survey_process_ages()</a></code>, and <code><a href="../reference/survey_country_population.html">survey_country_population()</a></code> (<a href="https://github.com/epiforecasts/socialmixr/issues/131" class="external-link">#131</a>)</li>
 </ul><div class="section level3">
 <h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
-<ul><li>
-<code>contact_matrix(counts = TRUE)$matrix</code> is now an array rather than an xtabs object. This matches the existing output format of <code>contact_matrix(counts = FALSE)$matrix</code> (<a href="https://github.com/epiforecasts/socialmixr/issues/118" class="external-link">#118</a>).</li>
+<ul><li><p><code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> now preserves all user-specified <code>age.limits</code>, even when no participants exist in some age groups. Previously, age groups beyond the maximum participant age were silently dropped. Empty age groups now show 0 participants and NA values in the matrix. This may change matrix dimensions for existing code (<a href="https://github.com/epiforecasts/socialmixr/issues/144" class="external-link">#144</a>, <a href="https://github.com/epiforecasts/socialmixr/issues/231" class="external-link">#231</a>).</p></li>
+<li><p><code>contact_matrix(counts = TRUE)$matrix</code> is now an array rather than an xtabs object. This matches the existing output format of <code>contact_matrix(counts = FALSE)$matrix</code> (<a href="https://github.com/epiforecasts/socialmixr/issues/118" class="external-link">#118</a>).</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>

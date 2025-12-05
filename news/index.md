@@ -13,6 +13,15 @@
 
 ### Breaking changes
 
+- [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  now preserves all user-specified `age.limits`, even when no
+  participants exist in some age groups. Previously, age groups beyond
+  the maximum participant age were silently dropped. Empty age groups
+  now show 0 participants and NA values in the matrix. This may change
+  matrix dimensions for existing code
+  ([\#144](https://github.com/epiforecasts/socialmixr/issues/144),
+  [\#231](https://github.com/epiforecasts/socialmixr/issues/231)).
+
 - `contact_matrix(counts = TRUE)$matrix` is now an array rather than an
   xtabs object. This matches the existing output format of
   `contact_matrix(counts = FALSE)$matrix`
