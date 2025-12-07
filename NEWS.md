@@ -4,6 +4,8 @@
 
 * `as_contact_survey()` no longer requires `country` and `year` columns. These columns are now auto-detected if present, but surveys without them can be loaded successfully (#193, #199).
 
+* Reduced verbosity by removing messages about removing participants/contacts with missing ages (#228).
+
 ## Breaking changes
 
 * When `age.limits` is not specified, it is now inferred from both participant and contact ages, not just participant ages. This may result in more age groups if contacts include ages beyond the participant age range (#230).

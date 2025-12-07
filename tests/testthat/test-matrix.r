@@ -285,10 +285,6 @@ test_that("warning is thrown if participant data has no country", {
   expect_warning(check(x = polymod4), "does not exist")
 })
 
-test_that("user is informed about removing missing data", {
-  expect_message(contact_matrix(survey = polymod), "Removing")
-})
-
 test_that("check result is reported back", {
   withr::local_options(lifecycle_verbosity = "quiet")
   expect_snapshot(check(x = polymod2))

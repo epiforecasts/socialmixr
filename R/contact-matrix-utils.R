@@ -134,15 +134,6 @@ impute_contact_ages <- function(
 #' @autoglobal
 drop_missing_contact_ages <- function(contacts, missing_action) {
   if (missing_action == "ignore" && nrow(contacts[is.na(cnt_age)]) > 0) {
-    cli::cli_inform(
-      c(
-        "Ignore contacts without age information.",
-        # nolint start
-        "i" = "To change this behaviour, set the \\
-          {.code missing.contact.age} option."
-        # nolint end
-      )
-    )
     contacts <- contacts[!is.na(cnt_age), ]
   }
   contacts
@@ -243,15 +234,6 @@ drop_invalid_ages <- function(
   ppt_no_age_info <- participants[is.na(part_age) | part_age < min(age_limits)]
   no_age_info <- nrow(ppt_no_age_info) > 0
   if (missing_action == "remove" && no_age_info) {
-    cli::cli_inform(
-      message = c(
-        "Removing participants without age information.",
-        # nolint start
-        "i" = "To change this behaviour, set the \\
-          {.code missing.participant.age} option."
-        # nolint end
-      )
-    )
     participants <- participants[!is.na(part_age) & part_age >= min(age_limits)]
   }
   participants
@@ -264,15 +246,6 @@ drop_invalid_contact_ages <- function(
   missing_action
 ) {
   if (missing_action == "remove" && nrow(contacts[is.na(cnt_age)]) > 0) {
-    cli::cli_inform(
-      c(
-        "Removing participants that have contacts without age information.",
-        # nolint start
-        "i" = "To change this behaviour, set the \\
-          {.code missing.contact.age} option."
-        # nolint end
-      )
-    )
     missing.age.id <- contacts[is.na(cnt_age), part_id]
     participants <- participants[!(part_id %in% missing.age.id)]
   }
