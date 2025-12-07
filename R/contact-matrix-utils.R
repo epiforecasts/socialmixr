@@ -289,15 +289,12 @@ convert_factor_to_integer <- function(
   factor_cols <- intersect(cols, names(data)[which_factors])
   data[,
     (factor_cols) := lapply(.SD, function(x) {
-      # Try converting factor levels to integers, suppressing warnings
+      # Convert factor levels to integers - non-numeric levels become NA
       num_levels <- suppressWarnings(as.integer(levels(x)))
-      # If any level failed to parse (i.e. non-numeric), warn and fall back
+      # Warn if any level failed to parse (i.e. non-numeric)
       if (any(is.na(num_levels) & !is.na(levels(x)))) {
-        cli::cli_warn("Non-numeric factor levels found in column")
-        # as.integer(x) returns the internal factor codes
-        return(as.integer(x))
+        cli::cli_warn("Non-numeric factor levels found; these will become NA")
       }
-      # Otherwise map each value to its numeric level
       num_levels[x]
     }),
     .SDcols = factor_cols
