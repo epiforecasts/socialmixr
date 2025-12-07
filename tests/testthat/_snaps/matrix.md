@@ -235,11 +235,6 @@
 
     Code
       contact_matrix(survey = polymod5, symmetric = TRUE)
-    Message
-      Removing participants without age information.
-      i To change this behaviour, set the `missing.participant.age` option.
-      Removing participants that have contacts without age information.
-      i To change this behaviour, set the `missing.contact.age` option.
     Condition
       Error in `survey_pop_from_countries()`:
       ! Could not find population data for: "Zamonia".
@@ -284,11 +279,6 @@
     Code
       contact_matrix(survey = polymod, counts = TRUE, symmetric = TRUE, age.limits = c(
         0, 5))
-    Message
-      Removing participants without age information.
-      i To change this behaviour, set the `missing.participant.age` option.
-      Removing participants that have contacts without age information.
-      i To change this behaviour, set the `missing.contact.age` option.
     Condition
       Warning in `contact_matrix()`:
       `symmetric = TRUE` does not make sense with `counts = TRUE`; will not make matrix symmetric.
@@ -331,11 +321,6 @@
     Code
       contact_matrix(polymod_nocountry, age.limits = c(0, 18, 60), symmetric = TRUE,
       survey.pop = "dummy")
-    Message
-      Removing participants without age information.
-      i To change this behaviour, set the `missing.participant.age` option.
-      Removing participants that have contacts without age information.
-      i To change this behaviour, set the `missing.contact.age` option.
     Condition
       Error in `survey_pop_from_countries()`:
       ! Could not find population data for: "dummy".
