@@ -53,10 +53,6 @@ The survey object with processed age data.
 
 ``` r
 polymod_imputed_processed <- polymod |> survey_impute_ages() |> survey_process_ages()
-#> Removing participants without age information.
-#> ℹ To change this behaviour, set the `missing.participant.age` option.
-#> Removing participants that have contacts without age information.
-#> ℹ To change this behaviour, set the `missing.contact.age` option.
 polymod_imputed_processed
 #> $participants
 #> Key: <lower.age.limit>
@@ -261,10 +257,6 @@ polymod_imputed_processed
 #> attr(,"class")
 #> [1] "contact_survey"
 polymod_processed <- polymod |> survey_process_ages()
-#> Removing participants without age information.
-#> ℹ To change this behaviour, set the `missing.participant.age` option.
-#> Removing participants that have contacts without age information.
-#> ℹ To change this behaviour, set the `missing.contact.age` option.
 polymod_processed
 #> $participants
 #> Key: <lower.age.limit>

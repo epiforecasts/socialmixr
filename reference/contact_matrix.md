@@ -210,8 +210,6 @@ contact_matrix(
   countries = "United Kingdom",
   age.limits = c(0, 1, 5, 15)
 )
-#> Removing participants that have contacts without age information.
-#> ℹ To change this behaviour, set the `missing.contact.age` option.
 #> $matrix
 #>          contact.age.group
 #> age.group      [0,1)     [1,5)   [5,15)      15+

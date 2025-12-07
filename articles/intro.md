@@ -31,8 +31,6 @@ An example use would be
 
 ``` r
 contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
-#> Removing participants that have contacts without age information.
-#> ℹ To change this behaviour, set the `missing.contact.age` option.
 #> $matrix
 #>          contact.age.group
 #> age.group      [0,1)     [1,5)   [5,15)      15+
@@ -151,24 +149,14 @@ m <- replicate(
     sample.participants = TRUE
   )
 )
-#> Removing participants that have contacts without age information.
-#> ℹ To change this behaviour, set the `missing.contact.age` option.
-#> Removing participants that have contacts without age information.
-#> ℹ To change this behaviour, set the `missing.contact.age` option.
-#> Removing participants that have contacts without age information.
-#> ℹ To change this behaviour, set the `missing.contact.age` option.
-#> Removing participants that have contacts without age information.
-#> ℹ To change this behaviour, set the `missing.contact.age` option.
-#> Removing participants that have contacts without age information.
-#> ℹ To change this behaviour, set the `missing.contact.age` option.
 mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
 #>          contact.age.group
 #> age.group      [0,1)     [1,5)   [5,15)      15+
-#>    [0,1)  0.23261905 0.6244414 1.282161 5.381484
-#>    [1,5)  0.15606946 1.9394392 1.514694 5.377899
-#>    [5,15) 0.03347559 0.4911626 7.881464 6.151387
-#>    15+    0.03194519 0.3613136 1.287932 9.462115
+#>    [0,1)  0.20000000 1.0502165 1.429481 5.737835
+#>    [1,5)  0.09966444 2.0564043 1.509568 5.656611
+#>    [5,15) 0.02145446 0.5177291 7.786345 6.251892
+#>    15+    0.02801314 0.3407656 1.337497 9.465366
 ```
 
 ## Demography
@@ -230,8 +218,6 @@ function.
 
 ``` r
 contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), symmetric = TRUE)
-#> Removing participants that have contacts without age information.
-#> ℹ To change this behaviour, set the `missing.contact.age` option.
 #> Warning: Not all age groups represented in population data (5-year age band).
 #> ℹ Linearly estimating age group sizes from the 5-year bands.
 #> Warning in normalise_weighted_matrix(survey_pop = survey.pop, weighted_matrix = weighted.matrix, : Large differences in the size of the sub-populations with the current age
@@ -341,8 +327,6 @@ resulting list.
 
 ``` r
 contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), split = TRUE)
-#> Removing participants that have contacts without age information.
-#> ℹ To change this behaviour, set the `missing.contact.age` option.
 #> Warning: Not all age groups represented in population data (5-year age band).
 #> ℹ Linearly estimating age group sizes from the 5-year bands.
 #> $mean.contacts

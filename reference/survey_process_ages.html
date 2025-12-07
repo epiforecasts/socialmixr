@@ -101,10 +101,6 @@ contact with missing age are ignored in the contact analysis</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">polymod_imputed_processed</span> <span class="op">&lt;-</span> <span class="va">polymod</span> <span class="op">|&gt;</span> <span class="fu"><a href="survey_impute_ages.html">survey_impute_ages</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">survey_process_ages</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Removing participants without age information.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the `missing.participant.age` option.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Removing participants that have contacts without age information.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the `missing.contact.age` option.</span>
 <span class="r-in"><span><span class="va">polymod_imputed_processed</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $participants</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Key: &lt;lower.age.limit&gt;</span>
@@ -309,10 +305,6 @@ contact with missing age are ignored in the contact analysis</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "contact_survey"</span>
 <span class="r-in"><span><span class="va">polymod_processed</span> <span class="op">&lt;-</span> <span class="va">polymod</span> <span class="op">|&gt;</span> <span class="fu">survey_process_ages</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Removing participants without age information.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the `missing.participant.age` option.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Removing participants that have contacts without age information.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> To change this behaviour, set the `missing.contact.age` option.</span>
 <span class="r-in"><span><span class="va">polymod_processed</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $participants</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Key: &lt;lower.age.limit&gt;</span>

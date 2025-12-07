@@ -18,6 +18,10 @@
   ([\#193](https://github.com/epiforecasts/socialmixr/issues/193),
   [\#199](https://github.com/epiforecasts/socialmixr/issues/199)).
 
+- Reduced verbosity by removing messages about removing
+  participants/contacts with missing ages
+  ([\#228](https://github.com/epiforecasts/socialmixr/issues/228)).
+
 ### Breaking changes
 
 - When `age.limits` is not specified, it is now inferred from both
