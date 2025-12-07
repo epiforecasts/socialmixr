@@ -4,7 +4,7 @@
 #' This function imputes the participant and contact data in a [survey()]
 #'   object. You can impute these values yourself with
 #'   [impute_participant_ages()] and [impute_contact_ages()]. We recommend
-#'   imputing before processing ages with [survey_process_ages()].
+#'   imputing before processing ages with [process_ages()].
 #'
 #' @param survey A survey object.
 #' @param missing_participant_age if set to "mean" (default), people whose ages
@@ -22,7 +22,7 @@
 #' The modified survey object with imputed ages for participants and contacts.
 #'
 #' @export
-survey_impute_ages <- function(
+impute_ages <- function(
   survey,
   missing_participant_age = c("mean", "sample", "missing"),
   missing_contact_age = c("mean", "sample", "missing")
@@ -59,4 +59,23 @@ survey_impute_ages <- function(
   )
 
   survey
+}
+
+#' @rdname impute_ages
+#' @export
+survey_impute_ages <- function(
+  survey,
+  missing_participant_age = c("mean", "sample", "missing"),
+  missing_contact_age = c("mean", "sample", "missing")
+) {
+  lifecycle::deprecate_warn(
+    "1.0.0",
+    "survey_impute_ages()",
+    "impute_ages()"
+  )
+  impute_ages(
+    survey = survey,
+    missing_participant_age = missing_participant_age,
+    missing_contact_age = missing_contact_age
+  )
 }

@@ -1,12 +1,12 @@
-test_that("survey_impute_ages()", {
+test_that("impute_ages()", {
   # missings are eliminated from contacts and participants
-  polymod_status_quo <- survey_impute_ages(
+  polymod_status_quo <- impute_ages(
     polymod,
     missing_participant_age = "missing",
     missing_contact_age = "missing"
   )
 
-  polymod_impute_mean <- survey_impute_ages(
+  polymod_impute_mean <- impute_ages(
     polymod,
     missing_participant_age = "mean",
     missing_contact_age = "mean"

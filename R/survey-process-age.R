@@ -4,8 +4,8 @@
 #' This function deals with age ranges and missing data in survey data. It
 #'   adjusts the age group breaks to the lower and upper ages in the survey,
 #'   and processes contact age ranges and drops missing values. We suggest you
-#'   impute missing values prior to using `survey_process_ages`, using
-#'   [survey_impute_ages()].
+#'   impute missing values prior to using `process_ages`, using
+#'   [impute_ages()].
 #'
 #' @param survey a [survey()] object
 #' @param age_limits lower limits of the age groups over which to construct
@@ -27,11 +27,11 @@
 #' @export
 #' @autoglobal
 #' @examples
-#' polymod_imputed_processed <- polymod |> survey_impute_ages() |> survey_process_ages()
+#' polymod_imputed_processed <- polymod |> impute_ages() |> process_ages()
 #' polymod_imputed_processed
-#' polymod_processed <- polymod |> survey_process_ages()
+#' polymod_processed <- polymod |> process_ages()
 #' polymod_processed
-survey_process_ages <- function(
+process_ages <- function(
   survey,
   age_limits = NULL,
   missing_participant_age = c("remove", "keep"),
@@ -96,4 +96,25 @@ survey_process_ages <- function(
   )
 
   survey
+}
+
+#' @rdname process_ages
+#' @export
+survey_process_ages <- function(
+  survey,
+  age_limits = NULL,
+  missing_participant_age = c("remove", "keep"),
+  missing_contact_age = c("remove", "sample", "keep", "ignore")
+) {
+  lifecycle::deprecate_warn(
+    "1.0.0",
+    "survey_process_ages()",
+    "process_ages()"
+  )
+  process_ages(
+    survey = survey,
+    age_limits = age_limits,
+    missing_participant_age = missing_participant_age,
+    missing_contact_age = missing_contact_age
+  )
 }
