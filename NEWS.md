@@ -1,6 +1,6 @@
 # socialmixr (development version)
 
-* Added `impute_ages()`, `impute_participant_ages()`, `impute_contact_ages()`, `process_ages()`, and `survey_country_population()` (#131)
+* Added `assign_age_groups()` and `survey_country_population()` (#131, #226)
 
 * `as_contact_survey()` no longer requires `country` and `year` columns. These columns are now auto-detected if present, but surveys without them can be loaded successfully (#193, #199).
 
@@ -21,8 +21,6 @@
 ## Deprecations
 
 We have soft-deprecated `get_survey()`, `download_survey()`, `get_citation()` and `list_surveys()` and moved these to [contactsurveys](https://github.com/epiforecasts/contactsurveys). We have also soft-deprecated `survey_countries()` as this called `get_survey()` internally. This is part of decoupling these features from socialmixr to reduce dependencies (#207 and #179). These will continue to be supported until we move to a major release (version 1.0.0) of socialmixr. In the meantime, we recommend that users use the [contactsurveys](https://github.com/epiforecasts/contactsurveys) package, as these functions have improved caching and support there.
-
-We have also soft-deprecated `survey_impute_ages()` and `survey_process_ages()` in favour of `impute_ages()` and `process_ages()` (#226).
 
 # socialmixr 0.4.0
 

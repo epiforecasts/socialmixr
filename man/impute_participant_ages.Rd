@@ -28,3 +28,4 @@ Imputes participant survey data, where variables are named:
 (hot  deck), or leaves them as missing. These are controlled by the
 \code{estimate} argument.
 }
+\keyword{internal}

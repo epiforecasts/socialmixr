@@ -45,7 +45,7 @@ est_part_age_sample <- function(data) {
 #'   the `estimate` method and whether age columns are present in the data.
 #'
 #' @autoglobal
-#' @export
+#' @keywords internal
 impute_participant_ages <- function(
   participants,
   estimate = c("mean", "sample", "missing")
@@ -111,7 +111,7 @@ est_contact_age_sample <- function(contacts) {
 #'   `estimate` method and whether age columns are present in the data.
 #'
 #' @autoglobal
-#' @export
+#' @keywords internal
 impute_contact_ages <- function(
   contacts,
   estimate = c("mean", "sample", "missing")

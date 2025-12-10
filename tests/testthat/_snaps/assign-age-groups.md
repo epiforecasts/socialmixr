@@ -1,21 +1,21 @@
-# process_ages() appropriately changes dimensions
+# assign_age_groups() appropriately changes dimensions
 
     Code
-      dim(polymod_age_processed$participants)
+      dim(polymod_age_grouped$participants)
     Output
-      [1] 2184   52
+      [1] 7198   52
 
 ---
 
     Code
-      dim(polymod_age_processed$contacts)
+      dim(polymod_age_grouped$contacts)
     Output
       [1] 97904    16
 
-# process_ages() appropriately changes age.group factor
+# assign_age_groups() appropriately changes age.group factor
 
     Code
-      levels(polymod_age_processed$participants$age.group)
+      levels(polymod_age_grouped$participants$age.group)
     Output
         [1] "[0,1)"   "[1,2)"   "[2,3)"   "[3,4)"   "[4,5)"   "[5,6)"   "[6,7)"  
         [8] "[7,8)"   "[8,9)"   "[9,10)"  "[10,11)" "[11,12)" "[12,13)" "[13,14)"
@@ -36,28 +36,28 @@
 ---
 
     Code
-      levels(polymod_age_processed_0_5_10$participants$age.group)
+      levels(polymod_age_grouped_0_5_10$participants$age.group)
     Output
       [1] "[0,5)"  "[5,10)" "10+"   
 
 ---
 
     Code
-      levels(polymod_age_processed_5_10_15$participants$age.group)
+      levels(polymod_age_grouped_5_10_15$participants$age.group)
     Output
       [1] "[5,10)"  "[10,15)" "15+"    
 
 ---
 
     Code
-      range(polymod_age_processed_0_5_10$contacts$cnt_age, na.rm = TRUE)
+      range(polymod_age_grouped_0_5_10$contacts$cnt_age, na.rm = TRUE)
     Output
       [1]  0 99
 
 ---
 
     Code
-      range(polymod_age_processed_5_10_15$contacts$cnt_age, na.rm = TRUE)
+      range(polymod_age_grouped_5_10_15$contacts$cnt_age, na.rm = TRUE)
     Output
       [1]  5 99
 
