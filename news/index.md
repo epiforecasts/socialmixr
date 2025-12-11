@@ -3,13 +3,11 @@
 ## socialmixr (development version)
 
 - Added
-  [`survey_impute_ages()`](https://epiforecasts.io/socialmixr/reference/survey_impute_ages.md),
-  [`impute_participant_ages()`](https://epiforecasts.io/socialmixr/reference/impute_participant_ages.md),
-  [`impute_contact_ages()`](https://epiforecasts.io/socialmixr/reference/impute_contact_ages.md),
-  [`survey_process_ages()`](https://epiforecasts.io/socialmixr/reference/survey_process_ages.md),
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
   and
   [`survey_country_population()`](https://epiforecasts.io/socialmixr/reference/survey_country_population.md)
-  ([\#131](https://github.com/epiforecasts/socialmixr/issues/131))
+  ([\#131](https://github.com/epiforecasts/socialmixr/issues/131),
+  [\#226](https://github.com/epiforecasts/socialmixr/issues/226))
 
 - [`as_contact_survey()`](https://epiforecasts.io/socialmixr/reference/as_contact_survey.md)
   no longer requires `country` and `year` columns. These columns are now
