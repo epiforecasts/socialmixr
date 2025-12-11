@@ -1,6 +1,6 @@
 # socialmixr (development version)
 
-* Added `survey_impute_ages()`, `impute_participant_ages()`, `impute_contact_ages()`, `survey_process_ages()`, and `survey_country_population()` (#131)
+* Added `assign_age_groups()` and `survey_country_population()` (#131, #226)
 
 * `as_contact_survey()` no longer requires `country` and `year` columns. These columns are now auto-detected if present, but surveys without them can be loaded successfully (#193, #199).
 
