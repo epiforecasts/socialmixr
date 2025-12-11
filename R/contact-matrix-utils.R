@@ -454,14 +454,7 @@ survey_pop_from_countries <- function(
     ## get population data for countries from 'wpp' package
     country_pop <- data.table(wpp_age(survey_countries))
 
-    # !! warning: spelling can differ between wpp_age and wpp_countries
-    # (e.g. Viet Nam vs Vietnam)
-    # fix: rename countries using the same approach as in clean(survey,...)
-    country_pop$country <- suppressWarnings(countrycode(
-      sourcevar = country_pop$country,
-      origin = "country.name",
-      destination = "country.name"
-    ))
+    country_pop$country <- normalise_country_names(country_pop$country)
 
     ## check if survey data are from a specific year - in that case
     ## use demographic data from that year, otherwise latest
