@@ -1,5 +1,35 @@
 #' @export
 clean <- function(x, ...) UseMethod("clean")
+
+#' Normalise country names
+#'
+#' Uses the countrycode package to standardise country names. This handles
+#' 2-letter ISO codes, 3-letter ISO codes, and full country names, converting
+#' them all to standardised country names.
+#'
+#' @param countries A vector of country names or codes
+#' @return A character vector of normalised country names
+#' @importFrom data.table fcase
+#' @importFrom countrycode countrycode
+#' @keywords internal
+#' @autoglobal
+normalise_country_names <- function(countries) {
+  origin_code <- fcase(
+    all(nchar(as.character(countries)) == 2),
+    "iso2c",
+    all(nchar(as.character(countries)) == 3),
+    "iso3c",
+    default = "country.name"
+  )
+  converted <- suppressWarnings(countrycode(
+    countries,
+    origin_code,
+    "country.name"
+  ))
+  converted[is.na(converted)] <- as.character(countries[is.na(converted)])
+  converted
+}
+
 #' @name clean
 #' @rdname clean
 #' @title Clean contact survey data
@@ -23,23 +53,7 @@ clean.contact_survey <- function(x, participant.age.column = "part_age", ...) {
 
   ## update country names
   if ("country" %in% colnames(x$participants)) {
-    countries <- x$participants$country
-    origin.code <- fcase(
-      all(nchar(as.character(countries)) == 2),
-      "iso2c",
-      all(nchar(as.character(countries)) == 3),
-      "iso3c",
-      default = "country.name"
-    )
-    converted_countries <- suppressWarnings(countrycode(
-      countries,
-      origin.code,
-      "country.name"
-    ))
-    converted_countries[is.na(
-      converted_countries
-    )] <- as.character(countries[is.na(converted_countries)])
-    x$participants[, country := factor(converted_countries)]
+    x$participants[, country := factor(normalise_country_names(country))]
   }
 
   if (
