@@ -3,34 +3,66 @@ has_names <- function(x, nm) {
   all(nm %in% names(x))
 }
 
+#' Impute ages from ranges (generic helper)
+#'
+#' @description
+#' Generic function to impute ages from min/max ranges. Works for both
+#' participant and contact data by specifying the column prefix.
+#'
+#' @param data A data.table containing age data
+#' @param prefix Column name prefix: "part_age" for participants, "cnt_age" for
+#'   contacts
+#' @param estimate Imputation method: "mean", "sample", or "missing"
+#' @returns The data with ages imputed according to the specified method
 #' @autoglobal
-est_part_age_mean <- function(data) {
-  data[
-    is.na(part_age_exact) &
-      !is.na(part_age_est_min) &
-      !is.na(part_age_est_max),
-    part_age := as.integer(rowMeans(.SD)),
-    .SDcols = c("part_age_est_min", "part_age_est_max")
-  ]
-}
+#' @keywords internal
+impute_ages <- function(
+  data,
+  prefix,
+  estimate = c("mean", "sample", "missing")
+) {
+  estimate <- rlang::arg_match(estimate)
 
-#' @autoglobal
-est_part_age_sample <- function(data) {
-  data[
-    is.na(part_age) &
-      !is.na(part_age_est_min) &
-      !is.na(part_age_est_max) &
-      part_age_est_min <= part_age_est_max,
-    part_age := as.integer(runif(.N, part_age_est_min, part_age_est_max))
-  ]
+  # Build column names from prefix
+  age_col <- prefix
+  exact_col <- paste0(prefix, "_exact")
+  min_col <- paste0(prefix, "_est_min")
+  max_col <- paste0(prefix, "_est_max")
+
+  age_cols_in_data <- has_names(data, c(min_col, max_col))
+  if (!age_cols_in_data || estimate == "missing") {
+    return(data)
+  }
+
+  if (estimate == "mean") {
+    # Impute using mean of min/max range
+    data[
+      is.na(get(exact_col)) &
+        !is.na(get(min_col)) &
+        !is.na(get(max_col)),
+      (age_col) := as.integer(rowMeans(.SD)),
+      .SDcols = c(min_col, max_col)
+    ]
+  } else if (estimate == "sample") {
+    # Impute by sampling uniformly from range
+    data[
+      is.na(get(age_col)) &
+        !is.na(get(min_col)) &
+        !is.na(get(max_col)) &
+        get(min_col) <= get(max_col),
+      (age_col) := as.integer(runif(.N, get(min_col), get(max_col)))
+    ]
+  }
+
+  data
 }
 
 #' Impute participant ages
 #'
 #' @description
 #' Imputes participant survey data, where variables are named:
-#'   "part_age_est_min" and "part_age_est_max". Uses mean imputation,  sampling
-#'   (hot  deck), or leaves them as missing. These are controlled by the
+#'   "part_age_est_min" and "part_age_est_max". Uses mean imputation, sampling
+#'   (hot deck), or leaves them as missing. These are controlled by the
 #'   `estimate` argument.
 #'
 #' @param participants A survey data set of participants
@@ -50,18 +82,7 @@ impute_participant_ages <- function(
   participants,
   estimate = c("mean", "sample", "missing")
 ) {
-  estimate <- rlang::arg_match(estimate)
-  part_age_names <- c("part_age_est_min", "part_age_est_max")
-  age_cols_in_data <- has_names(participants, part_age_names)
-  if (age_cols_in_data) {
-    participants <- switch(
-      estimate,
-      mean = est_part_age_mean(participants),
-      sample = est_part_age_sample(participants),
-      missing = participants
-    )
-  }
-  participants
+  impute_ages(data = participants, prefix = "part_age", estimate = estimate)
 }
 
 #' @autoglobal
@@ -69,34 +90,12 @@ drop_ages_below_age_limit <- function(data, age_limits) {
   data[is.na(cnt_age) | cnt_age >= min(age_limits), ]
 }
 
-#' @autoglobal
-est_contact_age_mean <- function(contacts) {
-  contacts[
-    is.na(cnt_age) &
-      !is.na(cnt_age_est_min) &
-      !is.na(cnt_age_est_max),
-    cnt_age := as.integer(rowMeans(.SD)),
-    .SDcols = c("cnt_age_est_min", "cnt_age_est_max")
-  ]
-}
-
-#' @autoglobal
-est_contact_age_sample <- function(contacts) {
-  contacts[
-    is.na(cnt_age) &
-      !is.na(cnt_age_est_min) &
-      !is.na(cnt_age_est_max) &
-      cnt_age_est_min <= cnt_age_est_max,
-    cnt_age := as.integer(runif(.N, cnt_age_est_min, cnt_age_est_max))
-  ]
-}
-
-#' Impute Contact ages
+#' Impute contact ages
 #'
 #' @description
 #' Imputes contact survey data, where variables are named:
-#'   "cnt_age_est_min" and "cnt_age_est_max". Uses mean imputation,  sampling
-#'   (hot  deck), or leaves them as missing. These are controlled by the
+#'   "cnt_age_est_min" and "cnt_age_est_max". Uses mean imputation, sampling
+#'   (hot deck), or leaves them as missing. These are controlled by the
 #'   `estimate` argument.
 #'
 #' @param contacts a survey data set of contacts
@@ -116,19 +115,7 @@ impute_contact_ages <- function(
   contacts,
   estimate = c("mean", "sample", "missing")
 ) {
-  contact_age_names <- c("cnt_age_est_min", "cnt_age_est_max")
-  age_cols_in_data <- has_names(contacts, contact_age_names)
-  estimate <- rlang::arg_match(estimate)
-  if (age_cols_in_data) {
-    contacts <- switch(
-      estimate,
-      mean = est_contact_age_mean(contacts),
-      sample = est_contact_age_sample(contacts),
-      # note: do nothing when "missing" is specified
-      missing = contacts
-    )
-  }
-  contacts
+  impute_ages(data = contacts, prefix = "cnt_age", estimate = estimate)
 }
 
 #' @autoglobal
@@ -202,24 +189,40 @@ filter_countries <- function(participants, countries) {
   participants
 }
 
+#' Add age column from exact age (generic helper)
+#'
+#' @description
+#' Generic function to add an age column from an exact age column. Works for
+#' both participant and contact data by specifying the column prefix.
+#' If `<prefix>_exact` exists, it overwrites `<prefix>` with its values.
+#' Otherwise, it creates `<prefix>` with NA values if it doesn't exist.
+#'
+#' @param data A data.table containing age data
+#' @param prefix Column name prefix: "part_age" for participants, "cnt_age" for
+#'   contacts
+#' @returns The data with the age column set from exact ages or initialised to NA
+#' @autoglobal
+#' @keywords internal
+add_age <- function(data, prefix) {
+  age_col <- prefix
+  exact_col <- paste0(prefix, "_exact")
+
+  if (exact_col %in% colnames(data)) {
+    data <- data[, (age_col) := as.integer(get(exact_col))]
+  } else if (!(age_col %in% colnames(data))) {
+    data <- data[, (age_col) := NA_integer_]
+  }
+  data
+}
+
 #' @autoglobal
 add_part_age <- function(participants) {
-  if ("part_age_exact" %in% colnames(participants)) {
-    participants <- participants[, part_age := as.integer(part_age_exact)]
-  } else if (!("part_age" %in% colnames(participants))) {
-    participants <- participants[, part_age := NA_integer_]
-  }
-  participants
+  add_age(data = participants, prefix = "part_age")
 }
 
 #' @autoglobal
 add_contact_age <- function(contacts) {
-  if ("cnt_age_exact" %in% colnames(contacts)) {
-    contacts <- contacts[, cnt_age := as.integer(cnt_age_exact)]
-  } else {
-    contacts <- contacts[, cnt_age := NA_integer_]
-  }
-  contacts
+  add_age(data = contacts, prefix = "cnt_age")
 }
 
 #' @autoglobal
