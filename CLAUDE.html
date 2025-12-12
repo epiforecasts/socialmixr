@@ -46,9 +46,15 @@
 <ol style="list-style-type: decimal"><li>Run <code><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">devtools::test()</a></code> to ensure all tests pass</li>
 <li>Run <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> to regenerate documentation from roxygen comments</li>
 <li>Run <code>lintr::lint_package()</code> to check for style issues (fix any in files you modified)</li>
-<li>Add a news entry to NEWS.md</li>
+<li>Add a news entry to NEWS.md (can be edited for unreleased changes)</li>
 <li>Add tests for bug fixes (regression tests) or new features where appropriate</li>
 </ol></div>
+<div class="section level3">
+<h3 id="backwards-compatibility">Backwards compatibility<a class="anchor" aria-label="anchor" href="#backwards-compatibility"></a></h3>
+<ul><li>Only functions exported in a previous CRAN release require deprecation warnings</li>
+<li>Changes between releases (i.e., in the development version) don’t require deprecation</li>
+<li>NEWS.md entries for unreleased changes can be freely edited or consolidated</li>
+</ul></div>
 <div class="section level3">
 <h3 id="branching">Branching<a class="anchor" aria-label="anchor" href="#branching"></a></h3>
 <ul><li>Always create a feature branch for changes (never commit directly to main)</li>

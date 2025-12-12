@@ -1,4 +1,4 @@
-# Impute Contact ages
+# Impute contact ages
 
 Imputes contact survey data, where variables are named:
 "cnt_age_est_min" and "cnt_age_est_max". Uses mean imputation, sampling

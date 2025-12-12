@@ -12,9 +12,18 @@
     to regenerate documentation from roxygen comments
 3.  Run `lintr::lint_package()` to check for style issues (fix any in
     files you modified)
-4.  Add a news entry to NEWS.md
+4.  Add a news entry to NEWS.md (can be edited for unreleased changes)
 5.  Add tests for bug fixes (regression tests) or new features where
     appropriate
+
+### Backwards compatibility
+
+- Only functions exported in a previous CRAN release require deprecation
+  warnings
+- Changes between releases (i.e., in the development version) don’t
+  require deprecation
+- NEWS.md entries for unreleased changes can be freely edited or
+  consolidated
 
 ### Branching
 
