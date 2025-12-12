@@ -24,8 +24,8 @@ the \code{estimate} method and whether age columns are present in the data.
 }
 \description{
 Imputes participant survey data, where variables are named:
-"part_age_est_min" and "part_age_est_max". Uses mean imputation,  sampling
-(hot  deck), or leaves them as missing. These are controlled by the
+"part_age_est_min" and "part_age_est_max". Uses mean imputation, sampling
+(hot deck), or leaves them as missing. These are controlled by the
 \code{estimate} argument.
 }
 \keyword{internal}

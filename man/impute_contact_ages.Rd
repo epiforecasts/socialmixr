@@ -2,7 +2,7 @@
 % Please edit documentation in R/contact-matrix-utils.R
 \name{impute_contact_ages}
 \alias{impute_contact_ages}
-\title{Impute Contact ages}
+\title{Impute contact ages}
 \usage{
 impute_contact_ages(contacts, estimate = c("mean", "sample", "missing"))
 }
@@ -21,8 +21,8 @@ The contact data, potentially with contact ages imputed depending on the
 }
 \description{
 Imputes contact survey data, where variables are named:
-"cnt_age_est_min" and "cnt_age_est_max". Uses mean imputation,  sampling
-(hot  deck), or leaves them as missing. These are controlled by the
+"cnt_age_est_min" and "cnt_age_est_max". Uses mean imputation, sampling
+(hot deck), or leaves them as missing. These are controlled by the
 \code{estimate} argument.
 }
 \keyword{internal}

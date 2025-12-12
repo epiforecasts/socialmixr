@@ -5,20 +5,7 @@ utils::globalVariables(c(
   "..age.unit", # <clean.contact_survey>
   "..high", # <clean.contact_survey>
   "..low", # <clean.contact_survey>
-  "part_age_exact", # <est_part_age_mean>
-  "part_age_est_min", # <est_part_age_mean>
-  "part_age_est_max", # <est_part_age_mean>
-  "part_age", # <est_part_age_mean>
-  "part_age", # <est_part_age_sample>
-  "part_age_est_min", # <est_part_age_sample>
-  "part_age_est_max", # <est_part_age_sample>
   "cnt_age", # <drop_ages_below_age_limit>
-  "cnt_age", # <est_contact_age_mean>
-  "cnt_age_est_min", # <est_contact_age_mean>
-  "cnt_age_est_max", # <est_contact_age_mean>
-  "cnt_age", # <est_contact_age_sample>
-  "cnt_age_est_min", # <est_contact_age_sample>
-  "cnt_age_est_max", # <est_contact_age_sample>
   "cnt_age", # <drop_missing_contact_ages>
   "part_age_exact", # <max_participant_age>
   "part_age_est_max", # <max_participant_age>
@@ -28,10 +15,6 @@ utils::globalVariables(c(
   "cnt_age", # <get_age_limits>
   "cnt_age_exact", # <get_age_limits>
   "country", # <filter_countries>
-  "part_age", # <add_part_age>
-  "part_age_exact", # <add_part_age>
-  "cnt_age", # <add_contact_age>
-  "cnt_age_exact", # <add_contact_age>
   "part_age", # <drop_invalid_ages>
   "cnt_age", # <drop_invalid_contact_ages>
   "part_id", # <drop_invalid_contact_ages>
