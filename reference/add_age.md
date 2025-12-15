@@ -3,7 +3,7 @@
 Generic function to add an age column from an exact age column. Works
 for both participant and contact data by specifying the column prefix.
 If `<prefix>_exact` exists, it overwrites `<prefix>` with its values.
-Otherwise, if `<prefix>` doesn't exist, it creates it with NA values.
+Otherwise, it creates `<prefix>` with NA values if it doesn't exist.
 
 ## Usage
 
