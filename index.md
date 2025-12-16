@@ -65,7 +65,9 @@ specification. Contributions of any kind are welcome!
 [adamkucharski](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Aadamkucharski),
 [chitrams](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Achitrams),
 [IsaacStopard](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3AIsaacStopard),
-[avallecam](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Aavallecam)
+[avallecam](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Aavallecam),
+[LloydChapman](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3ALloydChapman),
+[maishaoshao](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Amaishaoshao)
 
 ### Issue Contributors
 
