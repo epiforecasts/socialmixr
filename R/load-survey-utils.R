@@ -1,3 +1,53 @@
+#' Find the minimal unique key for a data.table
+#'
+#' Given a data.table and a base identifier column, finds the minimal set of
+#' additional columns needed to uniquely identify each row.
+#'
+#' @param data A data.table
+#' @param base_id The base identifier column name (default: "part_id")
+#' @return A character vector of column names that form the unique key
+#' @autoglobal
+#' @keywords internal
+find_unique_key <- function(data, base_id = "part_id") {
+  n_rows <- nrow(data)
+
+  # Already unique?
+  if (uniqueN(data[[base_id]]) == n_rows) {
+    return(base_id)
+  }
+
+  # All other columns, sorted by number of unique values (ascending)
+  # Prefer columns with fewer values - makes for simpler/more meaningful keys
+  candidates <- setdiff(names(data), base_id)
+  # Exclude internal tracking columns
+  candidates <- candidates[!startsWith(candidates, "..")]
+  candidates <- candidates[order(vapply(
+    candidates,
+    function(x) uniqueN(data[[x]]),
+    integer(1)
+  ))]
+
+  # Try single columns first
+  for (col in candidates) {
+    if (uniqueN(data, by = c(base_id, col)) == n_rows) {
+      return(c(base_id, col))
+    }
+  }
+
+  # Try pairs
+  for (i in seq_along(candidates)) {
+    for (j in seq_len(i - 1)) {
+      cols <- c(base_id, candidates[j], candidates[i])
+      if (uniqueN(data, by = cols) == n_rows) {
+        return(cols)
+      }
+    }
+  }
+
+  # No unique key found
+  NULL
+}
+
 #' @autoglobal
 extract_reference <- function(files) {
   reference_files <- grep("\\.json$", files, value = TRUE, ignore.case = TRUE)
@@ -112,11 +162,30 @@ try_merge_additional_files <- function(
           }
         )
 
-        ## first if merge was unique - if not we're ditching the merge
-        if (
-          !is.null(merged) &&
-            anyDuplicated(merged[, "..main_id", with = FALSE]) == 0
-        ) {
+        if (is.null(merged)) {
+          next
+        }
+
+        # Check if merge created duplicates (longitudinal data case)
+        has_duplicates <- anyDuplicated(merged[, "..main_id", with = FALSE]) > 0
+
+        # Determine base ID column for this survey type
+        base_id <- if (type == "participant") "part_id" else "cont_id"
+
+        # If duplicates exist, check if there's a valid unique key
+        # (this handles longitudinal surveys where sday files create multiple
+        # rows per participant)
+        accept_merge <- !has_duplicates
+        if (has_duplicates) {
+          unique_key <- find_unique_key(merged, base_id)
+          if (!is.null(unique_key)) {
+            accept_merge <- TRUE
+            # Update ..main_id to reflect the new unique key
+            merged[, ("..main_id") := seq_len(.N)]
+          }
+        }
+
+        if (accept_merge) {
           ## we're keeping the merge; now check for any warnings to issue
           matched_main <- sum(!is.na(merged[["..merge_id"]]))
           unmatched_main <- nrow(merged) - matched_main
@@ -139,8 +208,6 @@ try_merge_additional_files <- function(
           merged[, ("..merge_id") := NULL]
           main_surveys[[type]] <- merged
           merged_files <- c(merged_files, file)
-        } else {
-          anyDuplicated(merged[, "..main_id", with = FALSE])
         }
       }
       survey_files <- setdiff(survey_files, merged_files)
