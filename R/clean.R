@@ -131,6 +131,13 @@ clean.contact_survey <- function(x, participant.age.column = "part_age", ...) {
         ]
     }
 
+    # include included min and max age
+    x$participants <- x$participants[,
+      paste0(participant.age.column, "_est_min") := ..low
+    ]
+    x$participants <- x$participants[,
+      paste0(participant.age.column, "_est_max") := ..high
+    ]
     x$participants <- x$participants[,
       paste(participant.age.column, "exact", sep = "_") := suppressWarnings(
         as.integer(get(participant.age.column))

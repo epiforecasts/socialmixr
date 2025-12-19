@@ -11,7 +11,8 @@ Authors@R: c(
     person("Christopher", "Jarvis", role = "ctb"),
     person("Alexis", "Robert", , "alexis.robert@lshtm.ac.uk", role = "ctb"),
     person("Niel", "Hens", role = "ctb"),
-    person("Pietro", "Coletti", role = c("col", "dtm"))
+    person("Pietro", "Coletti", role = c("col", "dtm")),
+    person("Lloyd", "Chapman", , "l.chapman4@lancaster.ac.uk", role = "ctb")
   )
 Description: Provides methods for sampling contact matrices from diary
     data for use in infectious disease modelling, as discussed in Mossong
