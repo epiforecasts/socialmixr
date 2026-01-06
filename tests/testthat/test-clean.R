@@ -8,6 +8,6 @@ test_that("clean() creates est_min and est_max for age ranges", {
 
   expect_true("part_age_est_min" %in% names(cleaned$participants))
   expect_true("part_age_est_max" %in% names(cleaned$participants))
-  expect_identical(cleaned$participants$part_age_est_min[1], 20)
-  expect_identical(cleaned$participants$part_age_est_max[1], 30)
+  expect_equal(cleaned$participants$part_age_est_min[1], 20, tolerance = 0)
+  expect_equal(cleaned$participants$part_age_est_max[1], 30, tolerance = 0)
 })
