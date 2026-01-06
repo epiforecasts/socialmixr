@@ -19,6 +19,6 @@ The data with the age column set from exact ages or initialised to NA
 Generic function to add an age column from an exact age column. Works for
 both participant and contact data by specifying the column prefix.
 If \verb{<prefix>_exact} exists, it overwrites \verb{<prefix>} with its values.
-Otherwise, if \verb{<prefix>} doesn't exist, it creates it with NA values.
+Otherwise, it creates \verb{<prefix>} with NA values if it doesn't exist.
 }
 \keyword{internal}
