@@ -27,14 +27,14 @@
 Source:
 [`DESCRIPTION`](https://github.com/epiforecasts/socialmixr/blob/main/DESCRIPTION)
 
-Funk S, Willem L, Gruson H (2025). *socialmixr: Social Mixing Matrices
+Funk S, Willem L, Gruson H (2026). *socialmixr: Social Mixing Matrices
 for Infectious Disease Modelling*. R package version 0.4.0.9000,
 <https://github.com/epiforecasts/socialmixr>.
 
     @Manual{,
       title = {socialmixr: Social Mixing Matrices for Infectious Disease Modelling},
       author = {Sebastian Funk and Lander Willem and Hugo Gruson},
-      year = {2025},
+      year = {2026},
       note = {R package version 0.4.0.9000},
       url = {https://github.com/epiforecasts/socialmixr},
     }

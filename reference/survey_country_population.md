@@ -57,6 +57,7 @@ survey_country_population(polymod)
 #> 20:              95     300205
 #> 21:             100      28212
 #>     lower.age.limit population
+#>               <int>      <num>
 survey_country_population(polymod, countries = "Belgium")
 #>     lower.age.limit population
 #>               <int>      <num>
@@ -82,6 +83,7 @@ survey_country_population(polymod, countries = "Belgium")
 #> 20:              95      11126
 #> 21:             100       1087
 #>     lower.age.limit population
+#>               <int>      <num>
 survey_country_population(polymod, countries = c("Belgium", "Italy"))
 #>     lower.age.limit population
 #>               <int>      <num>
@@ -107,4 +109,5 @@ survey_country_population(polymod, countries = c("Belgium", "Italy"))
 #> 20:              95      93168
 #> 21:             100       8612
 #>     lower.age.limit population
+#>               <int>      <num>
 ```
