@@ -263,9 +263,9 @@ try_merge_additional_files <- function(
       )
       cli::cli_inform(
         c(
-          "Loaded longitudinal data: participants have multiple observations.",
-          "*" = "Unique key: {.val {final_detected_key}}.",
-          i = "To suppress: \\
+          "Detected longitudinal data with unique key: {.val {final_detected_key}}.",
+          "*" = "Will treat individuals with the same {.val part_id} as unique.",
+          i = "To suppress this message, use: \\
                {.code load_survey(..., participant_key = {key_code})}"
         ),
         call = call
