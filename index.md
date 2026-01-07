@@ -42,8 +42,8 @@ specification. Contributions of any kind are welcome!
 [pearsonca](https://github.com/epiforecasts/socialmixr/commits?author=pearsonca),
 [jarvisc1](https://github.com/epiforecasts/socialmixr/commits?author=jarvisc1),
 [jamesmbaazam](https://github.com/epiforecasts/socialmixr/commits?author=jamesmbaazam),
+[LloydChapman](https://github.com/epiforecasts/socialmixr/commits?author=LloydChapman),
 [mariabnd](https://github.com/epiforecasts/socialmixr/commits?author=mariabnd),
-[samclifford](https://github.com/epiforecasts/socialmixr/commits?author=samclifford),
 [ukhsa-tt](https://github.com/epiforecasts/socialmixr/commits?author=ukhsa-tt)
 
 ### Issue Authors
@@ -66,8 +66,8 @@ specification. Contributions of any kind are welcome!
 [chitrams](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Achitrams),
 [IsaacStopard](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3AIsaacStopard),
 [avallecam](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Aavallecam),
-[LloydChapman](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3ALloydChapman),
-[maishaoshao](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Amaishaoshao)
+[maishaoshao](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Amaishaoshao),
+[FrancescoBonacina](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3AFrancescoBonacina)
 
 ### Issue Contributors
 
