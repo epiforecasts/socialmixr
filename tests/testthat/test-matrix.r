@@ -195,7 +195,10 @@ test_that("warning is thrown if missing data exist", {
     missing_participant_age = "keep",
     split = TRUE
   ))
-  expect_true(any(grepl("missing.participant.age|missing_participant_age", warning)))
+  expect_true(any(grepl(
+    "missing.participant.age|missing_participant_age",
+    warning
+  )))
 })
 
 test_that("error is thrown if an unknown argument is passed", {
