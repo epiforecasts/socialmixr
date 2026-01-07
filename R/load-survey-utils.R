@@ -119,6 +119,7 @@ try_merge_additional_files <- function(
   main_surveys,
   survey_files,
   contact_data,
+  participant_key = NULL,
   call = rlang::caller_env()
 ) {
   for (type in main_types) {
@@ -177,19 +178,51 @@ try_merge_additional_files <- function(
         # rows per participant)
         accept_merge <- !has_duplicates
         if (has_duplicates) {
-          unique_key <- find_unique_key(merged, base_id)
+          # Use user-specified key for participants, or auto-detect
+          user_key_applies <- FALSE
+          if (type == "participant" && !is.null(participant_key)) {
+            # Check if all key columns exist in merged data
+            missing_cols <- setdiff(participant_key, names(merged))
+            if (length(missing_cols) == 0) {
+              # All columns present - validate the key works
+              if (anyDuplicated(merged, by = participant_key) == 0L) {
+                unique_key <- participant_key
+                user_key_applies <- TRUE
+              } else {
+                # Key doesn't work - auto-detect instead
+                unique_key <- find_unique_key(merged, base_id)
+              }
+            } else {
+              # Some columns not yet available - auto-detect for now
+              unique_key <- find_unique_key(merged, base_id)
+            }
+          } else {
+            unique_key <- find_unique_key(merged, base_id)
+          }
+
           if (!is.null(unique_key)) {
             accept_merge <- TRUE
             # Update ..main_id to reflect the new unique key
             merged[, ("..main_id") := seq_len(.N)]
-            # Inform user about the detected unique key
-            extra_cols <- setdiff(unique_key, base_id)
-            cli::cli_inform(
-              "Detected longitudinal data in {.file {basename(file)}}: \\
-               each {.val {base_id}} has multiple observations \\
-               distinguished by {.val {extra_cols}}.",
-              call = call
-            )
+            # Only inform when auto-detecting (not when user specified key)
+            if (!user_key_applies) {
+              extra_cols <- setdiff(unique_key, base_id)
+              key_code <- paste0(
+                "c(",
+                paste0("\"", unique_key, "\"", collapse = ", "),
+                ")"
+              )
+              cli::cli_inform(
+                c(
+                  "Detected longitudinal data in {.file {basename(file)}}: \\
+                   each {.val {base_id}} has multiple observations \\
+                   distinguished by {.val {extra_cols}}.",
+                  i = "To suppress, use: \\
+                       {.code load_survey(files, participant_key = {key_code})}"
+                ),
+                call = call
+              )
+            }
           }
         }
 
@@ -254,7 +287,8 @@ join_possible_files <- function(
   survey_files,
   contact_data,
   main_types,
-  main_surveys
+  main_surveys,
+  participant_key = NULL
 ) {
   survey_contact_data <- join_compatible_files(survey_files, contact_data)
   contact_data <- survey_contact_data$contact_data
@@ -265,7 +299,8 @@ join_possible_files <- function(
     main_types,
     main_surveys,
     survey_files,
-    contact_data
+    contact_data,
+    participant_key = participant_key
   )
 
   main_surveys
