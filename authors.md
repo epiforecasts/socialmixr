@@ -22,6 +22,8 @@
 
 - **Pietro Coletti**. Collector, data manager.
 
+- **Lloyd Chapman**. Contributor.
+
 ## Citation
 
 Source:
