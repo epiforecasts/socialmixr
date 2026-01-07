@@ -123,6 +123,10 @@ try_merge_additional_files <- function(
   call = rlang::caller_env()
 ) {
   for (type in main_types) {
+    # Track final detected key for this type (to show one message at end)
+    final_detected_key <- NULL
+    user_key_used <- FALSE
+
     main_cols <- colnames(main_surveys[[type]])
     can_merge <- vapply(
       survey_files,
@@ -204,24 +208,11 @@ try_merge_additional_files <- function(
             accept_merge <- TRUE
             # Update ..main_id to reflect the new unique key
             merged[, ("..main_id") := seq_len(.N)]
-            # Only inform when auto-detecting (not when user specified key)
-            if (!user_key_applies) {
-              extra_cols <- setdiff(unique_key, base_id)
-              key_code <- paste0(
-                "c(",
-                paste0("\"", unique_key, "\"", collapse = ", "),
-                ")"
-              )
-              cli::cli_inform(
-                c(
-                  "Detected longitudinal data in {.file {basename(file)}}: \\
-                   each {.val {base_id}} has multiple observations \\
-                   distinguished by {.val {extra_cols}}.",
-                  i = "To suppress, use: \\
-                       {.code load_survey(files, participant_key = {key_code})}"
-                ),
-                call = call
-              )
+            # Track the key for end-of-type message (only for participants)
+            if (user_key_applies) {
+              user_key_used <- TRUE
+            } else if (type == "participant") {
+              final_detected_key <- unique_key
             }
           }
         }
@@ -266,6 +257,27 @@ try_merge_additional_files <- function(
         merge_files <- names(can_merge[can_merge])
       }
     }
+
+    # Show one message about detected longitudinal data (if not suppressed)
+    if (!is.null(final_detected_key) && !user_key_used) {
+      base_id <- "part_id"
+      extra_cols <- setdiff(final_detected_key, base_id)
+      key_code <- paste0(
+        "c(",
+        paste0("\"", final_detected_key, "\"", collapse = ", "),
+        ")"
+      )
+      cli::cli_inform(
+        c(
+          "Detected longitudinal data: each {.val {base_id}} has multiple \\
+           observations distinguished by {.val {extra_cols}}.",
+          i = "To suppress this message, use: \\
+               {.code load_survey(files, participant_key = {key_code})}"
+        ),
+        call = call
+      )
+    }
+
     main_surveys[[type]] <- main_surveys[[type]][, ..main_id := NULL]
   }
 
