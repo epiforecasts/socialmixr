@@ -32,6 +32,8 @@ information needed to reference the survey, in particular it can contain$a
 
 \item{year_column}{the column in the \code{participants} data frame containing the year in which the participant was queried; if NULL (default), will use "year" column if present}
 
+\item{...}{additional arguments (currently ignored)}
+
 \item{id.column, country.column, year.column}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 Use the underscore versions (e.g., \code{id_column}) instead.}
 }
