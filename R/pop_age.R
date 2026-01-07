@@ -130,5 +130,5 @@ pop_age <- function(
   }
 
   setkeyv(pop, pop_age_column)
-  return(as.data.frame(pop))
+  as.data.frame(pop)
 }

@@ -24,7 +24,7 @@
 #' @examples
 #' \dontrun{
 #' data(polymod)
-#' mij <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 18, 65))$matrix
+#' mij <- contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 18, 65))$matrix
 #' matrix_plot(mij)
 #' }
 #' @author Lander Willem

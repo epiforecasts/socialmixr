@@ -172,11 +172,8 @@
 # error is thrown if age limits are non-numeric
 
     Code
-      contact_matrix(survey = polymod, age.limits = c(0, 5, "fifteen"))
+      contact_matrix(survey = polymod, age_limits = c(0, 5, "fifteen"))
     Condition
-      Warning:
-      The `age.limits` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-      i Please use the `age_limits` argument instead.
       Warning in `check_age_limits_increasing()`:
       NAs introduced by coercion
       Error in `contact_matrix()`:
@@ -197,8 +194,8 @@
 
 # warning is thrown if missing data exist
 
-    The `age.limits` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-    i Please use the `age_limits` argument instead.
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider setting 'missing.contact.age'.
 
 # error is thrown if an unknown argument is passed
 
@@ -211,11 +208,8 @@
 # error is thrown if invalid age limits are passed
 
     Code
-      contact_matrix(survey = polymod, age.limits = c(13, 11))
+      contact_matrix(survey = polymod, age_limits = c(13, 11))
     Condition
-      Warning:
-      The `age.limits` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-      i Please use the `age_limits` argument instead.
       Error in `contact_matrix()`:
       ! `<int>` must be an increasing integer vector of lower age limits.
       i We see: 13 and 11
@@ -230,13 +224,12 @@
 
 # warning is thrown if population needed but no 'year' column present
 
-    The `age.limits` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-    i Please use the `age_limits` argument instead.
+    No information on "year" found in the data. Will use 2015 population data.
 
 # warning is thrown if day of week is asked to be weighed but not present
 
-    The `weigh.dayofweek` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-    i Please use the `weigh_dayofweek` argument instead.
+    `weigh.dayofweek` is "TRUE", but no `dayofweek` column in the data.
+    i Will ignore.
 
 # warning is thrown if country has no survey population
 
@@ -264,33 +257,29 @@
 
 # good suggestions are made
 
-    The `age.limits` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-    i Please use the `age_limits` argument instead.
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider adjusting the age limits.
 
 ---
 
-    The `age.limits` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-    i Please use the `age_limits` argument instead.
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider setting 'missing.participant.age'.
 
 ---
 
-    The `age.limits` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-    i Please use the `age_limits` argument instead.
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider setting 'missing.participant.age' and 'missing.contact.age'.
 
 # nonsensical operations are warned about
 
-    The `age.limits` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-    i Please use the `age_limits` argument instead.
+    `split = TRUE` does not make sense with `counts = TRUE`; will not split the contact matrix.
 
 ---
 
     Code
-      contact_matrix(survey = polymod, counts = TRUE, symmetric = TRUE, age.limits = c(
+      contact_matrix(survey = polymod, counts = TRUE, symmetric = TRUE, age_limits = c(
         0, 5))
     Condition
-      Warning:
-      The `age.limits` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-      i Please use the `age_limits` argument instead.
       Warning in `contact_matrix()`:
       `symmetric = TRUE` does not make sense with `counts = TRUE`; will not make matrix symmetric.
       Warning in `normalise_weighted_matrix()`:
@@ -319,32 +308,27 @@
 
 ---
 
-    The `age.limits` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-    i Please use the `age_limits` argument instead.
+    `split = TRUE` does not work with missing data; will not split the contact matrix.
+    i  Consider setting 'missing.participant.age'.
 
 # warning is thrown if it is assumed that the survey is representative
 
-    The `age.limits` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-    i Please use the `age_limits` argument instead.
+    No `survey.pop` or `countries` given, and no `country` column found in the data.
+    i I don't know which population this is from (assuming the survey is representative).
 
 # User-defined reference populations with open ended age groups are handled correctly
 
     Code
-      contact_matrix(polymod_nocountry, age.limits = c(0, 18, 60), symmetric = TRUE,
-      survey.pop = "dummy")
+      contact_matrix(polymod_nocountry, age_limits = c(0, 18, 60), symmetric = TRUE,
+      survey_pop = "dummy")
     Condition
-      Warning:
-      The `survey.pop` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-      i Please use the `survey_pop` argument instead.
-      Warning:
-      The `age.limits` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-      i Please use the `age_limits` argument instead.
       Error in `survey_pop_from_countries()`:
       ! Could not find population data for: "dummy".
       i Use `wpp_countries()` to get a list of country names.
 
 # Symmetric contact matrices with large normalisation weights throw a warning
 
-    The `age.limits` argument of `contact_matrix()` is deprecated as of socialmixr 1.0.0.
-    i Please use the `age_limits` argument instead.
+    Large differences in the size of the sub-populations with the current age breaks are likely to result in artefacts after making the matrix symmetric.
+    ! Please reconsider the age breaks to obtain more equally sized sub-populations.
+    i Normalization factors: [0.5 and 2.1]
 
