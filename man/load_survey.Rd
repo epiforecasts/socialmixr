@@ -32,6 +32,7 @@ peru_files <- download_survey("https://doi.org/10.5281/zenodo.1095664")
 peru_survey <- load_survey(peru_files)
 
 # For longitudinal surveys, specify the unique key explicitly:
+france_files <- download_survey("https://doi.org/10.5281/zenodo.1157918")
 france_survey <- load_survey(france_files,
   participant_key = c("part_id", "wave", "studyDay")
 )
