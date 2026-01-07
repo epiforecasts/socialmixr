@@ -19,7 +19,10 @@ auto-detect if additional columns are needed and inform you.}
 \item{...}{options for \code{\link[=clean]{clean()}}, which is called at the end of this}
 }
 \value{
-a survey in the correct format
+a survey in the correct format. For longitudinal surveys with
+multiple observations per participant, the returned object includes an
+\code{observation_key} field containing the column names (excluding \code{part_id})
+that distinguish observations for the same participant.
 }
 \description{
 Loads a survey from a local file system. Tables are expected

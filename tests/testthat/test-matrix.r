@@ -1227,3 +1227,17 @@ test_that("sample.all.age.groups with bootstrap succeeds with enough tries", {
   # All age groups should be represented (no NA rows)
   expect_false(anyNA(rowSums(result$matrix)))
 })
+
+test_that("contact_matrix warns for multiple observations per participant", {
+  # Create a survey with duplicate participants
+  survey_dup <- polymod
+  survey_dup$participants <- rbind(
+    survey_dup$participants,
+    survey_dup$participants[1:100, ]
+  )
+
+  expect_warning(
+    contact_matrix(survey = survey_dup, countries = "United Kingdom"),
+    "multiple observations per participant"
+  )
+})

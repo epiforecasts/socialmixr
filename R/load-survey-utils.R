@@ -122,6 +122,9 @@ try_merge_additional_files <- function(
   participant_key = NULL,
   call = rlang::caller_env()
 ) {
+  # Track the observation key for participants (returned to caller)
+  observation_key <- NULL
+
   for (type in main_types) {
     # Track final detected key for this type (to show one message at end)
     final_detected_key <- NULL
@@ -272,6 +275,15 @@ try_merge_additional_files <- function(
       )
     }
 
+    # Store the observation key for participants (excluding part_id since
+    # that's always the participant identifier after internal renaming)
+    if (type == "participant" && !is.null(final_detected_key)) {
+      obs_cols <- setdiff(final_detected_key, "part_id")
+      if (length(obs_cols) > 0) {
+        observation_key <- obs_cols
+      }
+    }
+
     main_surveys[[type]] <- main_surveys[[type]][, ..main_id := NULL]
   }
 
@@ -284,7 +296,10 @@ try_merge_additional_files <- function(
     }
   }
 
-  main_surveys
+  list(
+    surveys = main_surveys,
+    observation_key = observation_key
+  )
 }
 
 ## join files that can be joined
@@ -301,7 +316,7 @@ join_possible_files <- function(
   survey_files <- survey_contact_data$survey_files
 
   ## lastly, merge in any additional files that can be merged
-  main_surveys <- try_merge_additional_files(
+  result <- try_merge_additional_files(
     main_types,
     main_surveys,
     survey_files,
@@ -309,5 +324,8 @@ join_possible_files <- function(
     participant_key = participant_key
   )
 
-  main_surveys
+  list(
+    surveys = result$surveys,
+    observation_key = result$observation_key
+  )
 }
