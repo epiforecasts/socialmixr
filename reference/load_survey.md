@@ -33,7 +33,10 @@ load_survey(files, participant_key = NULL, ...)
 
 ## Value
 
-a survey in the correct format
+a survey in the correct format. For longitudinal surveys with multiple
+observations per participant, the returned object includes an
+`observation_key` field containing the column names (excluding
+`part_id`) that distinguish observations for the same participant.
 
 ## Examples
 

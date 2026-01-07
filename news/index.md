@@ -51,6 +51,11 @@
   ([\#192](https://github.com/epiforecasts/socialmixr/issues/192),
   [\#194](https://github.com/epiforecasts/socialmixr/issues/194)).
 
+- [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  now warns when a survey contains multiple observations per
+  participant, as results will aggregate across all observations
+  ([\#260](https://github.com/epiforecasts/socialmixr/issues/260)).
+
 - A bug was fixed leading to excess contacts with `NA` age if the lowest
   age group did not start at 0.
 

@@ -73,7 +73,10 @@ auto-detect if additional columns are needed and inform you.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>a survey in the correct format</p>
+    <p>a survey in the correct format. For longitudinal surveys with
+multiple observations per participant, the returned object includes an
+<code>observation_key</code> field containing the column names (excluding <code>part_id</code>)
+that distinguish observations for the same participant.</p>
     </div>
 
     <div class="section level2">

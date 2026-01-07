@@ -51,6 +51,7 @@
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
 <ul><li><p><code><a href="../reference/load_survey.html">load_survey()</a></code> now correctly loads longitudinal surveys with repeated observations per participant (e.g., sday files with wave/studyDay columns). Previously, these columns were silently dropped (<a href="https://github.com/epiforecasts/socialmixr/issues/192" class="external-link">#192</a>, <a href="https://github.com/epiforecasts/socialmixr/issues/194" class="external-link">#194</a>).</p></li>
+<li><p><code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> now warns when a survey contains multiple observations per participant, as results will aggregate across all observations (<a href="https://github.com/epiforecasts/socialmixr/issues/260" class="external-link">#260</a>).</p></li>
 <li><p>A bug was fixed leading to excess contacts with <code>NA</code> age if the lowest age group did not start at 0.</p></li>
 </ul></div>
 <div class="section level3">
