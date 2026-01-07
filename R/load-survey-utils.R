@@ -125,7 +125,6 @@ try_merge_additional_files <- function(
   for (type in main_types) {
     # Track final detected key for this type (to show one message at end)
     final_detected_key <- NULL
-    user_key_used <- FALSE
 
     main_cols <- colnames(main_surveys[[type]])
     can_merge <- vapply(
@@ -182,22 +181,16 @@ try_merge_additional_files <- function(
         # rows per participant)
         accept_merge <- !has_duplicates
         if (has_duplicates) {
-          # Use user-specified key for participants, or auto-detect
-          user_key_applies <- FALSE
+          # Use user-specified key for participants if valid, else auto-detect
           if (type == "participant" && !is.null(participant_key)) {
             # Check if all key columns exist in merged data
             missing_cols <- setdiff(participant_key, names(merged))
-            if (length(missing_cols) == 0) {
-              # All columns present - validate the key works
-              if (anyDuplicated(merged, by = participant_key) == 0L) {
-                unique_key <- participant_key
-                user_key_applies <- TRUE
-              } else {
-                # Key doesn't work - auto-detect instead
-                unique_key <- find_unique_key(merged, base_id)
-              }
+            if (length(missing_cols) == 0 &&
+                anyDuplicated(merged, by = participant_key) == 0L) {
+              # User's key works
+              unique_key <- participant_key
             } else {
-              # Some columns not yet available - auto-detect for now
+              # Key doesn't work or columns missing - auto-detect
               unique_key <- find_unique_key(merged, base_id)
             }
           } else {
@@ -208,10 +201,8 @@ try_merge_additional_files <- function(
             accept_merge <- TRUE
             # Update ..main_id to reflect the new unique key
             merged[, ("..main_id") := seq_len(.N)]
-            # Track the key for end-of-type message (only for participants)
-            if (user_key_applies) {
-              user_key_used <- TRUE
-            } else if (type == "participant") {
+            # Track the final detected key (only for participants)
+            if (type == "participant") {
               final_detected_key <- unique_key
             }
           }
@@ -259,7 +250,11 @@ try_merge_additional_files <- function(
     }
 
     # Show one message about detected longitudinal data (if not suppressed)
-    if (!is.null(final_detected_key) && !user_key_used) {
+    # Show if: we detected a key AND (user didn't specify one OR user's key
+    # doesn't match what we detected)
+    user_key_matches <- !is.null(participant_key) &&
+      setequal(final_detected_key, participant_key)
+    if (!is.null(final_detected_key) && !user_key_matches) {
       base_id <- "part_id"
       extra_cols <- setdiff(final_detected_key, base_id)
       key_code <- paste0(
