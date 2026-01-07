@@ -250,13 +250,10 @@ try_merge_additional_files <- function(
     }
 
     # Show one message about detected longitudinal data (if not suppressed)
-    # Show if: we detected a key AND (user didn't specify one OR user's key
-    # doesn't match what we detected)
+    # Show if: we detected a key AND user's key doesn't match
     user_key_matches <- !is.null(participant_key) &&
       setequal(final_detected_key, participant_key)
     if (!is.null(final_detected_key) && !user_key_matches) {
-      base_id <- "part_id"
-      extra_cols <- setdiff(final_detected_key, base_id)
       key_code <- paste0(
         "c(",
         paste0("\"", final_detected_key, "\"", collapse = ", "),
@@ -264,10 +261,9 @@ try_merge_additional_files <- function(
       )
       cli::cli_inform(
         c(
-          "Detected longitudinal data: each {.val {base_id}} has multiple \\
-           observations distinguished by {.val {extra_cols}}.",
-          i = "To suppress this message, use: \\
-               {.code load_survey(files, participant_key = {key_code})}"
+          "Detected longitudinal data with unique key: {.val {final_detected_key}}.",
+          i = "To suppress this message: \\
+               {.code load_survey(..., participant_key = {key_code})}"
         ),
         call = call
       )
