@@ -37,8 +37,10 @@ normalise_country_names <- function(countries) {
 #' @description Cleans survey data to work with the 'contact_matrix' function
 #'
 #' @param x A [survey()] object
-#' @param participant.age.column the column in `x$participants` containing participants' age
+#' @param participant_age_column the column in `x$participants` containing participants' age
 #' @param ... ignored
+#' @param participant.age.column `r lifecycle::badge("deprecated")`
+#'   Use `participant_age_column` instead.
 #' @importFrom data.table fcase
 #' @importFrom countrycode countrycode
 #' @importFrom lubridate period_to_seconds period years
@@ -48,8 +50,19 @@ normalise_country_names <- function(countries) {
 #' cleaned <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
 #' @autoglobal
 #' @export
-clean.contact_survey <- function(x, participant.age.column = "part_age", ...) {
+clean.contact_survey <- function(
+  x,
+  participant_age_column = "part_age",
+  ...,
+  participant.age.column = deprecated()
+) {
   chkDots(...)
+
+  ## Handle deprecated arguments
+  participant_age_column <- deprecate_arg(
+    participant.age.column, participant_age_column,
+    "participant.age.column", "participant_age_column", "clean"
+  )
 
   ## update country names
   if ("country" %in% colnames(x$participants)) {
@@ -58,24 +71,24 @@ clean.contact_survey <- function(x, participant.age.column = "part_age", ...) {
 
   if (
     nrow(x$participants) > 0 &&
-      participant.age.column %in% colnames(x$participants) &&
-      (!is.numeric(x$participants[, get(participant.age.column)]) ||
-        anyNA(x$participants[, get(participant.age.column)]))
+      participant_age_column %in% colnames(x$participants) &&
+      (!is.numeric(x$participants[, get(participant_age_column)]) ||
+        anyNA(x$participants[, get(participant_age_column)]))
   ) {
     ## set any entries not containing numbers to NA
     x$participants <- x$participants[,
-      paste(participant.age.column) := fifelse(
-        grepl("[0-9]", get(participant.age.column)),
-        as.character(get(participant.age.column)),
+      paste(participant_age_column) := fifelse(
+        grepl("[0-9]", get(participant_age_column)),
+        as.character(get(participant_age_column)),
         NA_character_
       )
     ]
     ## fix "under 1"
     x$participants <- x$participants[,
-      paste(participant.age.column) := sub(
+      paste(participant_age_column) := sub(
         "Under ",
         "0-",
-        get(participant.age.column),
+        get(participant_age_column),
         fixed = TRUE
       )
     ]
@@ -83,13 +96,13 @@ clean.contact_survey <- function(x, participant.age.column = "part_age", ...) {
     if (
       any(grepl(
         " ",
-        x$participants[, get(participant.age.column)],
+        x$participants[, get(participant_age_column)],
         fixed = TRUE
       ))
     ) {
       x$participants <- x$participants[,
         ..age.unit := tstrsplit(
-          as.character(get(participant.age.column)),
+          as.character(get(participant_age_column)),
           " ",
           keep = 2L,
           fixed = TRUE
@@ -97,7 +110,7 @@ clean.contact_survey <- function(x, participant.age.column = "part_age", ...) {
       ]
       x$participants <- x$participants[
         ..age.unit := fifelse(
-          !is.na(get(participant.age.column)) & is.na(..age.unit),
+          !is.na(get(participant_age_column)) & is.na(..age.unit),
           "years",
           ..age.unit
         )
@@ -111,7 +124,7 @@ clean.contact_survey <- function(x, participant.age.column = "part_age", ...) {
     limits <- c("..low", "..high")
     x$participants <- x$participants[,
       paste(limits) := tstrsplit(
-        as.character(get(participant.age.column)),
+        as.character(get(participant_age_column)),
         "-",
         fixed = TRUE
       )
@@ -133,17 +146,17 @@ clean.contact_survey <- function(x, participant.age.column = "part_age", ...) {
 
     # include included min and max age
     x$participants <- x$participants[,
-      paste0(participant.age.column, "_est_min") := ..low
+      paste0(participant_age_column, "_est_min") := ..low
     ]
     x$participants <- x$participants[,
-      paste0(participant.age.column, "_est_max") := ..high
+      paste0(participant_age_column, "_est_max") := ..high
     ]
     x$participants <- x$participants[,
-      paste(participant.age.column, "exact", sep = "_") := suppressWarnings(
-        as.integer(get(participant.age.column))
+      paste(participant_age_column, "exact", sep = "_") := suppressWarnings(
+        as.integer(get(participant_age_column))
       )
     ]
-    x$participants[, paste(participant.age.column) := NULL]
+    x$participants[, paste(participant_age_column) := NULL]
 
     x$participants[, ..high := NULL]
     x$participants[, ..low := NULL]
