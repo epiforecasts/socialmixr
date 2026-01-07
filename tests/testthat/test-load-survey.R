@@ -76,7 +76,9 @@ test_that("load_survey handles longitudinal data with sday files", {
   part_counts <- survey$participants[, .N, by = part_id]
   expect_true(any(part_counts$N > 1))
 
-  # Check that observation_key is stored
+  # Check that observation_key is stored and contains the expected columns
   expect_false(is.null(survey$observation_key))
   expect_true("part_id" %in% survey$observation_key)
+  # Beraud France has wave and studyDay creating the longitudinal structure
+  expect_true(any(c("wave", "studyDay") %in% survey$observation_key))
 })
