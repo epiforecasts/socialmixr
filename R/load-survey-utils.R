@@ -182,6 +182,14 @@ try_merge_additional_files <- function(
             accept_merge <- TRUE
             # Update ..main_id to reflect the new unique key
             merged[, ("..main_id") := seq_len(.N)]
+            # Inform user about the detected unique key
+            extra_cols <- setdiff(unique_key, base_id)
+            cli::cli_inform(
+              "Detected longitudinal data in {.file {basename(file)}}: \\
+               each {.val {base_id}} has multiple observations \\
+               distinguished by {.val {extra_cols}}.",
+              call = call
+            )
           }
         }
 
