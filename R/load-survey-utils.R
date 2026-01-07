@@ -185,8 +185,10 @@ try_merge_additional_files <- function(
           if (type == "participant" && !is.null(participant_key)) {
             # Check if all key columns exist in merged data
             missing_cols <- setdiff(participant_key, names(merged))
-            if (length(missing_cols) == 0 &&
-                anyDuplicated(merged, by = participant_key) == 0L) {
+            if (
+              length(missing_cols) == 0 &&
+                anyDuplicated(merged, by = participant_key) == 0L
+            ) {
               # User's key works
               unique_key <- participant_key
             } else {
