@@ -278,7 +278,10 @@ try_merge_additional_files <- function(
     # Store the observation key for participants (excluding part_id since
     # that's always the participant identifier after internal renaming)
     if (type == "participant" && !is.null(final_detected_key)) {
-      observation_key <- setdiff(final_detected_key, "part_id")
+      obs_cols <- setdiff(final_detected_key, "part_id")
+      if (length(obs_cols) > 0) {
+        observation_key <- obs_cols
+      }
     }
 
     main_surveys[[type]] <- main_surveys[[type]][, ..main_id := NULL]
