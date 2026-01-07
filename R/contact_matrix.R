@@ -91,65 +91,116 @@ contact_matrix <- function(
 
   ## Handle deprecated arguments -----------------------------------------------
   survey_pop <- deprecate_arg(
-    survey.pop, survey_pop, "survey.pop", "survey_pop", "contact_matrix"
+    survey.pop,
+    survey_pop,
+    "survey.pop",
+    "survey_pop",
+    "contact_matrix"
   )
   age_limits <- deprecate_arg(
-    age.limits, age_limits, "age.limits", "age_limits", "contact_matrix"
+    age.limits,
+    age_limits,
+    "age.limits",
+    "age_limits",
+    "contact_matrix"
   )
   sample_participants <- deprecate_arg(
-    sample.participants, sample_participants,
-    "sample.participants", "sample_participants", "contact_matrix"
+    sample.participants,
+    sample_participants,
+    "sample.participants",
+    "sample_participants",
+    "contact_matrix"
   )
   estimated_participant_age <- deprecate_arg(
-    estimated.participant.age, estimated_participant_age,
-    "estimated.participant.age", "estimated_participant_age", "contact_matrix"
+    estimated.participant.age,
+    estimated_participant_age,
+    "estimated.participant.age",
+    "estimated_participant_age",
+    "contact_matrix"
   )
   estimated_contact_age <- deprecate_arg(
-    estimated.contact.age, estimated_contact_age,
-    "estimated.contact.age", "estimated_contact_age", "contact_matrix"
+    estimated.contact.age,
+    estimated_contact_age,
+    "estimated.contact.age",
+    "estimated_contact_age",
+    "contact_matrix"
   )
   missing_participant_age <- deprecate_arg(
-    missing.participant.age, missing_participant_age,
-    "missing.participant.age", "missing_participant_age", "contact_matrix"
+    missing.participant.age,
+    missing_participant_age,
+    "missing.participant.age",
+    "missing_participant_age",
+    "contact_matrix"
   )
   missing_contact_age <- deprecate_arg(
-    missing.contact.age, missing_contact_age,
-    "missing.contact.age", "missing_contact_age", "contact_matrix"
+    missing.contact.age,
+    missing_contact_age,
+    "missing.contact.age",
+    "missing_contact_age",
+    "contact_matrix"
   )
   weigh_dayofweek <- deprecate_arg(
-    weigh.dayofweek, weigh_dayofweek,
-    "weigh.dayofweek", "weigh_dayofweek", "contact_matrix"
+    weigh.dayofweek,
+    weigh_dayofweek,
+    "weigh.dayofweek",
+    "weigh_dayofweek",
+    "contact_matrix"
   )
   weigh_age <- deprecate_arg(
-    weigh.age, weigh_age, "weigh.age", "weigh_age", "contact_matrix"
+    weigh.age,
+    weigh_age,
+    "weigh.age",
+    "weigh_age",
+    "contact_matrix"
   )
   weight_threshold <- deprecate_arg(
-    weight.threshold, weight_threshold,
-    "weight.threshold", "weight_threshold", "contact_matrix"
+    weight.threshold,
+    weight_threshold,
+    "weight.threshold",
+    "weight_threshold",
+    "contact_matrix"
   )
   symmetric_norm_threshold <- deprecate_arg(
-    symmetric.norm.threshold, symmetric_norm_threshold,
-    "symmetric.norm.threshold", "symmetric_norm_threshold", "contact_matrix"
+    symmetric.norm.threshold,
+    symmetric_norm_threshold,
+    "symmetric.norm.threshold",
+    "symmetric_norm_threshold",
+    "contact_matrix"
   )
   sample_all_age_groups <- deprecate_arg(
-    sample.all.age.groups, sample_all_age_groups,
-    "sample.all.age.groups", "sample_all_age_groups", "contact_matrix"
+    sample.all.age.groups,
+    sample_all_age_groups,
+    "sample.all.age.groups",
+    "sample_all_age_groups",
+    "contact_matrix"
   )
   sample_participants_max_tries <- deprecate_arg(
-    sample.participants.max.tries, sample_participants_max_tries,
-    "sample.participants.max.tries", "sample_participants_max_tries",
+    sample.participants.max.tries,
+    sample_participants_max_tries,
+    "sample.participants.max.tries",
+    "sample_participants_max_tries",
     "contact_matrix"
   )
   return_part_weights <- deprecate_arg(
-    return.part.weights, return_part_weights,
-    "return.part.weights", "return_part_weights", "contact_matrix"
+    return.part.weights,
+    return_part_weights,
+    "return.part.weights",
+    "return_part_weights",
+    "contact_matrix"
   )
   return_demography <- deprecate_arg(
-    return.demography, return_demography,
-    "return.demography", "return_demography", "contact_matrix"
+    return.demography,
+    return_demography,
+    "return.demography",
+    "return_demography",
+    "contact_matrix"
   )
   per_capita <- deprecate_arg(
-    per.capita, per_capita, "per.capita", "per_capita", "contact_matrix"
+    per.capita,
+    per_capita,
+    "per.capita",
+    "per_capita",
+    "contact_matrix"
   )
 
   ## read arguments and check --------------------------------------------------

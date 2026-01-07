@@ -47,10 +47,18 @@ pop_age <- function(
     age_limits <- age.limits
   }
   pop_age_column <- deprecate_arg(
-    pop.age.column, pop_age_column, "pop.age.column", "pop_age_column", "pop_age"
+    pop.age.column,
+    pop_age_column,
+    "pop.age.column",
+    "pop_age_column",
+    "pop_age"
   )
   pop_column <- deprecate_arg(
-    pop.column, pop_column, "pop.column", "pop_column", "pop_age"
+    pop.column,
+    pop_column,
+    "pop.column",
+    "pop_column",
+    "pop_age"
   )
 
   if (

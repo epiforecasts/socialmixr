@@ -34,14 +34,25 @@ as_contact_survey <- function(
 ) {
   ## Handle deprecated arguments
   id_column <- deprecate_arg(
-    id.column, id_column, "id.column", "id_column", "as_contact_survey"
+    id.column,
+    id_column,
+    "id.column",
+    "id_column",
+    "as_contact_survey"
   )
   country_column <- deprecate_arg(
-    country.column, country_column, "country.column", "country_column",
+    country.column,
+    country_column,
+    "country.column",
+    "country_column",
     "as_contact_survey"
   )
   year_column <- deprecate_arg(
-    year.column, year_column, "year.column", "year_column", "as_contact_survey"
+    year.column,
+    year_column,
+    "year.column",
+    "year_column",
+    "as_contact_survey"
   )
   ## check arguments
   assert_list(x, names = "named")

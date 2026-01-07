@@ -60,8 +60,11 @@ clean.contact_survey <- function(
 
   ## Handle deprecated arguments
   participant_age_column <- deprecate_arg(
-    participant.age.column, participant_age_column,
-    "participant.age.column", "participant_age_column", "clean"
+    participant.age.column,
+    participant_age_column,
+    "participant.age.column",
+    "participant_age_column",
+    "clean"
   )
 
   ## update country names
