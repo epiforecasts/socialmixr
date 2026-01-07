@@ -50,7 +50,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
-<ul><li>A bug was fixed leading to excess contacts with <code>NA</code> age if the lowest age group did not start at 0.</li>
+<ul><li><p><code><a href="../reference/load_survey.html">load_survey()</a></code> now correctly loads longitudinal surveys with repeated observations per participant (e.g., sday files with wave/studyDay columns). Previously, these columns were silently dropped (<a href="https://github.com/epiforecasts/socialmixr/issues/192" class="external-link">#192</a>, <a href="https://github.com/epiforecasts/socialmixr/issues/194" class="external-link">#194</a>).</p></li>
+<li><p>A bug was fixed leading to excess contacts with <code>NA</code> age if the lowest age group did not start at 0.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="deprecations-development-version">Deprecations<a class="anchor" aria-label="anchor" href="#deprecations-development-version"></a></h3>

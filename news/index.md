@@ -44,6 +44,13 @@
 
 ### Bug fixes
 
+- [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
+  now correctly loads longitudinal surveys with repeated observations
+  per participant (e.g., sday files with wave/studyDay columns).
+  Previously, these columns were silently dropped
+  ([\#192](https://github.com/epiforecasts/socialmixr/issues/192),
+  [\#194](https://github.com/epiforecasts/socialmixr/issues/194)).
+
 - A bug was fixed leading to excess contacts with `NA` age if the lowest
   age group did not start at 0.
 
