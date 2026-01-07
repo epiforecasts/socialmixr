@@ -192,10 +192,10 @@ test_that("warning is thrown if missing data exist", {
   )
   warning <- capture_warnings(contact_matrix(
     survey = polymod,
-    missing.participant.age = "keep",
+    missing_participant_age = "keep",
     split = TRUE
   ))
-  expect_match(warning[2], "missing.participant.age")
+  expect_true(any(grepl("missing.participant.age|missing_participant_age", warning)))
 })
 
 test_that("error is thrown if an unknown argument is passed", {

@@ -7,28 +7,44 @@
 contact_matrix(
   survey,
   countries = NULL,
-  survey.pop = NULL,
-  age.limits = NULL,
+  survey_pop = NULL,
+  age_limits = NULL,
   filter = NULL,
   counts = FALSE,
   symmetric = FALSE,
   split = FALSE,
-  sample.participants = FALSE,
-  estimated.participant.age = c("mean", "sample", "missing"),
-  estimated.contact.age = c("mean", "sample", "missing"),
-  missing.participant.age = c("remove", "keep"),
-  missing.contact.age = c("remove", "sample", "keep", "ignore"),
+  sample_participants = FALSE,
+  estimated_participant_age = c("mean", "sample", "missing"),
+  estimated_contact_age = c("mean", "sample", "missing"),
+  missing_participant_age = c("remove", "keep"),
+  missing_contact_age = c("remove", "sample", "keep", "ignore"),
   weights = NULL,
-  weigh.dayofweek = FALSE,
-  weigh.age = FALSE,
-  weight.threshold = NA,
-  symmetric.norm.threshold = 2,
-  sample.all.age.groups = FALSE,
-  sample.participants.max.tries = 1000,
-  return.part.weights = FALSE,
-  return.demography = NA,
-  per.capita = FALSE,
-  ...
+  weigh_dayofweek = FALSE,
+  weigh_age = FALSE,
+  weight_threshold = NA,
+  symmetric_norm_threshold = 2,
+  sample_all_age_groups = FALSE,
+  sample_participants_max_tries = 1000,
+  return_part_weights = FALSE,
+  return_demography = NA,
+  per_capita = FALSE,
+  ...,
+  survey.pop = deprecated(),
+  age.limits = deprecated(),
+  sample.participants = deprecated(),
+  estimated.participant.age = deprecated(),
+  estimated.contact.age = deprecated(),
+  missing.participant.age = deprecated(),
+  missing.contact.age = deprecated(),
+  weigh.dayofweek = deprecated(),
+  weigh.age = deprecated(),
+  weight.threshold = deprecated(),
+  symmetric.norm.threshold = deprecated(),
+  sample.all.age.groups = deprecated(),
+  sample.participants.max.tries = deprecated(),
+  return.part.weights = deprecated(),
+  return.demography = deprecated(),
+  per.capita = deprecated()
 )
 }
 \arguments{
@@ -36,9 +52,9 @@ contact_matrix(
 
 \item{countries}{limit to one or more countries; if NULL (default), will use all countries in the survey; these can be given as country names or 2-letter (ISO Alpha-2) country codes.}
 
-\item{survey.pop}{survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if NULL (default), will use the country populations from the chosen countries, or all countries in the survey if \code{countries} is NULL.}
+\item{survey_pop}{survey population -- either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via \code{wpp_countries}; if NULL (default), will use the country populations from the chosen countries, or all countries in the survey if \code{countries} is NULL.}
 
-\item{age.limits}{lower limits of the age groups over which to construct the matrix. If NULL (default), age limits are inferred from participant and contact ages.}
+\item{age_limits}{lower limits of the age groups over which to construct the matrix. If NULL (default), age limits are inferred from participant and contact ages.}
 
 \item{filter}{any filters to apply to the data, given as list of the form (column=filter_value) - only contacts that have 'filter_value' in 'column' will be considered. If multiple filters are given, they are all applied independently and in the sequence given. Default value is NULL; no filtering performed.}
 
@@ -48,37 +64,40 @@ contact_matrix(
 
 \item{split}{whether to split the contact matrix into the mean number of contacts, in each age group (split further into the product of the mean number of contacts across the whole population (\code{mean.contacts}), a normalisation constant (\code{normalisation}) and age-specific variation in contacts (\code{contacts})), multiplied with an assortativity matrix (\code{assortativity}) and a population multiplier (\code{demography}). For more detail on this, see the "Getting Started" vignette.}
 
-\item{sample.participants}{whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this.}
+\item{sample_participants}{whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this.}
 
-\item{estimated.participant.age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
+\item{estimated_participant_age}{if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing}
 
-\item{estimated.contact.age}{if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing.}
+\item{estimated_contact_age}{if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing.}
 
-\item{missing.participant.age}{if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and will appear in the contact matrix in a row labelled "NA".}
+\item{missing_participant_age}{if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and will appear in the contact matrix in a row labelled "NA".}
 
-\item{missing.contact.age}{if set to "remove" (default), participants that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and will appear in the contact matrix in a column labelled "NA"; if set to "ignore", contacts without age information are removed from the analysis (but the participants that made them are kept).}
+\item{missing_contact_age}{if set to "remove" (default), participants that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and will appear in the contact matrix in a column labelled "NA"; if set to "ignore", contacts without age information are removed from the analysis (but the participants that made them are kept).}
 
 \item{weights}{column names(s) of the participant data of the \code{\link[=survey]{survey()}} object with user-specified weights (default = empty vector).}
 
-\item{weigh.dayofweek}{whether to weigh social contacts data by the day of the week (weight (5/7 / N_week / N) for weekdays and (2/7 / N_weekend / N) for weekends).}
+\item{weigh_dayofweek}{whether to weigh social contacts data by the day of the week (weight (5/7 / N_week / N) for weekdays and (2/7 / N_weekend / N) for weekends).}
 
-\item{weigh.age}{whether to weigh social contacts data by the age of the participants (vs. the populations' age distribution).}
+\item{weigh_age}{whether to weigh social contacts data by the age of the participants (vs. the populations' age distribution).}
 
-\item{weight.threshold}{threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff).}
+\item{weight_threshold}{threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff).}
 
-\item{symmetric.norm.threshold}{threshold value for the normalization weights when \code{symmetric = TRUE} before showing a warning that that large differences in the size of the sub-populations are likely to result in artefacts when making the matrix symmetric (default 2).}
+\item{symmetric_norm_threshold}{threshold value for the normalization weights when \code{symmetric = TRUE} before showing a warning that that large differences in the size of the sub-populations are likely to result in artefacts when making the matrix symmetric (default 2).}
 
-\item{sample.all.age.groups}{what to do if sampling participants (with \code{sample.participants = TRUE}) fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead.}
+\item{sample_all_age_groups}{what to do if sampling participants (with \code{sample_participants = TRUE}) fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead.}
 
-\item{sample.participants.max.tries}{maximum number of attempts when \code{sample.all.age.groups = TRUE}; defaults to 1000.}
+\item{sample_participants_max_tries}{maximum number of attempts when \code{sample_all_age_groups = TRUE}; defaults to 1000.}
 
-\item{return.part.weights}{boolean to return the participant weights.}
+\item{return_part_weights}{boolean to return the participant weights.}
 
-\item{return.demography}{boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters).}
+\item{return_demography}{boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters).}
 
-\item{per.capita}{whether to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE').}
+\item{per_capita}{whether to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE').}
 
 \item{...}{further arguments to pass to \code{\link[=get_survey]{get_survey()}}, \code{\link[=check]{check()}} and \code{\link[=pop_age]{pop_age()}} (especially column names).}
+
+\item{survey.pop, age.limits, sample.participants, estimated.participant.age, estimated.contact.age, missing.participant.age, missing.contact.age, weigh.dayofweek, weigh.age, weight.threshold, symmetric.norm.threshold, sample.all.age.groups, sample.participants.max.tries, return.part.weights, return.demography, per.capita}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use the
+underscore-separated versions of these arguments instead.}
 }
 \value{
 a contact matrix, and the underlying demography of the surveyed population
@@ -91,7 +110,7 @@ data(polymod)
 contact_matrix(
   survey = polymod,
   countries = "United Kingdom",
-  age.limits = c(0, 1, 5, 15)
+  age_limits = c(0, 1, 5, 15)
 )
 }
 \author{
