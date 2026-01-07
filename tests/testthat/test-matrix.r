@@ -1231,6 +1231,20 @@ test_that("sample_all_age_groups with bootstrap succeeds with enough tries", {
   expect_false(anyNA(rowSums(result$matrix)))
 })
 
+test_that("contact_matrix warns for multiple observations per participant", {
+  # Create a survey with duplicate participants
+  survey_dup <- polymod
+  survey_dup$participants <- rbind(
+    survey_dup$participants,
+    survey_dup$participants[1:100, ]
+  )
+
+  expect_warning(
+    contact_matrix(survey = survey_dup, countries = "United Kingdom"),
+    "multiple observations per participant"
+  )
+})
+
 test_that("deprecated argument names produce warnings", {
   # Test contact_matrix() deprecated arguments
   lifecycle::expect_deprecated(

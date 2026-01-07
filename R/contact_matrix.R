@@ -216,6 +216,32 @@ contact_matrix <- function(
   check_if_contact_survey(survey)
   check_age_limits_increasing(age_limits)
 
+  ## Warn if survey has multiple observations per participant ------------------
+  n_participants <- uniqueN(survey$participants$part_id)
+  n_rows <- nrow(survey$participants)
+  if (n_participants < n_rows) {
+    obs_key <- survey$observation_key
+    if (!is.null(obs_key) && length(obs_key) > 0) {
+      cli::cli_warn(
+        c(
+          "Survey contains multiple observations per participant \\
+           ({n_rows} rows, {n_participants} unique participants).",
+          "*" = "Results will aggregate across all observations.",
+          i = "Use {.arg filter} to select by {.val {obs_key}}."
+        )
+      )
+    } else {
+      cli::cli_warn(
+        c(
+          "Survey contains multiple observations per participant \\
+           ({n_rows} rows, {n_participants} unique participants).",
+          "*" = "Results will aggregate across all observations.",
+          i = "Use the {.arg filter} argument to select specific observations."
+        )
+      )
+    }
+  }
+
   ## Filter to specific countries ----------------------------------------------
   # If a survey contains data from multiple countries or if countries specified
   survey$participants <- filter_countries(survey$participants, countries)
