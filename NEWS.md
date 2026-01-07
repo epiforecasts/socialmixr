@@ -18,6 +18,8 @@
 
 * `load_survey()` now correctly loads longitudinal surveys with repeated observations per participant (e.g., sday files with wave/studyDay columns). Previously, these columns were silently dropped (#192, #194).
 
+* `contact_matrix()` now warns when a survey contains multiple observations per participant, as results will aggregate across all observations (#260).
+
 * A bug was fixed leading to excess contacts with `NA` age if the lowest age group did not start at 0.
 
 ## Deprecations

@@ -48,13 +48,15 @@ load_survey <- function(files, participant_key = NULL, ...) {
   }
 
   ## join files that can be joined
-  main_surveys <- join_possible_files(
+  result <- join_possible_files(
     survey_files,
     contact_data,
     main_types,
     main_surveys,
     participant_key = participant_key
   )
+  main_surveys <- result$surveys
+  observation_key <- result$observation_key
 
   new_survey <- as_contact_survey(
     list(
@@ -63,6 +65,11 @@ load_survey <- function(files, participant_key = NULL, ...) {
       reference = reference
     )
   )
+
+  # Store observation key if longitudinal data was detected
+  if (!is.null(observation_key)) {
+    new_survey$observation_key <- observation_key
+  }
 
   if (!is.null(new_survey$reference)) {
     cli::cli_inform(

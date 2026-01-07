@@ -75,4 +75,8 @@ test_that("load_survey handles longitudinal data with sday files", {
   # Check that we have multiple rows per participant
   part_counts <- survey$participants[, .N, by = part_id]
   expect_true(any(part_counts$N > 1))
+
+  # Check that observation_key is stored
+  expect_false(is.null(survey$observation_key))
+  expect_true("part_id" %in% survey$observation_key)
 })
