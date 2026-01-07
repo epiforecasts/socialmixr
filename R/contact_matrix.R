@@ -88,7 +88,6 @@ contact_matrix <- function(
   return.demography = deprecated(),
   per.capita = deprecated()
 ) {
-
   ## Handle deprecated arguments -----------------------------------------------
   survey_pop <- deprecate_arg(
     survey.pop,
