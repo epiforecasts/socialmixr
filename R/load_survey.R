@@ -26,8 +26,8 @@
 #' }
 #' @return a survey in the correct format. For longitudinal surveys with
 #'   multiple observations per participant, the returned object includes an
-#'   `observation_key` field containing the column names that uniquely
-#'   identify each observation.
+#'   `observation_key` field containing the column names (excluding `part_id`)
+#'   that distinguish observations for the same participant.
 #' @export
 load_survey <- function(files, participant_key = NULL, ...) {
   check_files_exist(files)
