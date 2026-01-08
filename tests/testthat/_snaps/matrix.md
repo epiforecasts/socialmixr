@@ -228,7 +228,7 @@
 
 # warning is thrown if day of week is asked to be weighed but not present
 
-    `weigh.dayofweek` is "TRUE", but no `dayofweek` column in the data.
+    `weigh_dayofweek` is "TRUE", but no `dayofweek` column in the data.
     i Will ignore.
 
 # warning is thrown if country has no survey population
