@@ -4,7 +4,7 @@
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `list_surveys()` has been deprecated in favour of
-#'   [contactsurveys::list_surveys()].
+#'   `contactsurveys::list_surveys()`.
 #'
 #' @return character vector of surveys
 #' @inheritParams get_survey
@@ -88,7 +88,7 @@ list_surveys <- function(clear_cache = FALSE) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `survey_countries()` has been deprecated in favour of using
-#'   [contactsurveys::download_survey()], and [load_survey()], and then
+#'   `contactsurveys::download_survey()`, and [load_survey()], and then
 #'   exploring the country column yourself.
 #'
 #' @param country.column column in the survey indicating the country

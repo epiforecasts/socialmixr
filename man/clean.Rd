@@ -5,14 +5,22 @@
 \alias{clean.contact_survey}
 \title{Clean contact survey data}
 \usage{
-\method{clean}{contact_survey}(x, participant.age.column = "part_age", ...)
+\method{clean}{contact_survey}(
+  x,
+  participant_age_column = "part_age",
+  ...,
+  participant.age.column = deprecated()
+)
 }
 \arguments{
 \item{x}{A \code{\link[=survey]{survey()}} object}
 
-\item{participant.age.column}{the column in \code{x$participants} containing participants' age}
+\item{participant_age_column}{the column in \code{x$participants} containing participants' age}
 
 \item{...}{ignored}
+
+\item{participant.age.column}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+Use \code{participant_age_column} instead.}
 }
 \value{
 a cleaned survey in the correct format

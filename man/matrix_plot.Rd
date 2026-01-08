@@ -62,7 +62,7 @@ This is a function using basic R graphics to visualise a social contact matrix.
 \examples{
 \dontrun{
 data(polymod)
-mij <- contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 18, 65))$matrix
+mij <- contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 18, 65))$matrix
 matrix_plot(mij)
 }
 }

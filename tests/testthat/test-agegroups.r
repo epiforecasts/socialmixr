@@ -27,7 +27,7 @@ test_that("age groups are ordered factors", {
 test_that("pop_age doesn't change total population size", {
   ages_it_2015 <- wpp_age("Italy", 2015)
 
-  ages_it_2015_10 <- pop_age(ages_it_2015, age.limit = seq(0, 100, by = 10))
+  ages_it_2015_10 <- pop_age(ages_it_2015, age_limits = seq(0, 100, by = 10))
 
   expect_identical(
     sum(ages_it_2015$population),
@@ -35,14 +35,16 @@ test_that("pop_age doesn't change total population size", {
   )
 
   # Even with interpolation
+  # nolint start: implicit_assignment_linter
   expect_warning(
-    ages_it_2015_cat <- pop_age(ages_it_2015, age.limit = c(0, 18, 40, 65)), # nolint
+    ages_it_2015_cat <- pop_age(ages_it_2015, age_limits = c(0, 18, 40, 65)),
     "Linearly estimating"
   )
+  # nolint end
 
   expect_snapshot_warning(
     cran = FALSE,
-    pop_age(ages_it_2015, age.limit = c(0, 18, 40, 65))
+    pop_age(ages_it_2015, age_limits = c(0, 18, 40, 65))
   )
 
   expect_identical(

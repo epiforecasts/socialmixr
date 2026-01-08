@@ -4,11 +4,11 @@
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `download_survey()` has been deprecated in favour of
-#'   [contactsurveys::download_survey()].
+#'   `contactsurveys::download_survey()`.
 #'
 #' `download_survey()` downloads survey data from Zenodo.
 #'
-#' @param survey a URL (see [contactsurveys::list_surveys()])
+#' @param survey a URL (see `contactsurveys::list_surveys()`)
 #' @param dir a directory to save the files to; if not given, will save to a
 #'   temporary directory
 #' @param sleep time to sleep between requests to avoid overloading the server

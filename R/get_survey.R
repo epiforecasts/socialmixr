@@ -5,7 +5,7 @@
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `get_survey()` has been deprecated in favour of using
-#'   [contactsurveys::download_survey()] and then [load_survey()].
+#'   `contactsurveys::download_survey()` and then [load_survey()].
 #'
 #' Downloads survey data, or extracts them from files, and returns a clean data
 #' set. If a survey URL is accessed multiple times, the data will be cached

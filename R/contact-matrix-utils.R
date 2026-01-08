@@ -605,7 +605,7 @@ weight_by_day_of_week <- function(
   if (!found_dayofweek) {
     cli::cli_warn(
       message = c(
-        "{.code weigh.dayofweek} is {.val TRUE}, but no {.col dayofweek} \\
+        "{.code weigh_dayofweek} is {.val TRUE}, but no {.col dayofweek} \\
           column in the data.",
         # nolint start
         "i" = "Will ignore."
@@ -667,9 +667,9 @@ weigh_by_user_defined <- function(participants, weights) {
 }
 
 #' @autoglobal
-truncate_renormalise_weights <- function(participants, weight.threshold) {
-  if (!is.null(weight.threshold) && !is.na(weight.threshold)) {
-    participants[weight > weight.threshold, weight := weight.threshold]
+truncate_renormalise_weights <- function(participants, weight_threshold) {
+  if (!is.null(weight_threshold) && !is.na(weight_threshold)) {
+    participants[weight > weight_threshold, weight := weight_threshold]
     # re-normalise
     participants[, weight := weight / sum(weight) * .N, by = age.group]
   }
@@ -681,19 +681,19 @@ participant_weights <- function(
   participants,
   survey_pop_full,
   weights,
-  weigh.dayofweek,
-  weigh.age,
-  weight.threshold
+  weigh_dayofweek,
+  weigh_age,
+  weight_threshold
 ) {
   participants[, weight := 1]
 
   ## assign weights to participants to account for weekend/weekday variation
-  if (weigh.dayofweek) {
+  if (weigh_dayofweek) {
     participants <- weight_by_day_of_week(participants)
   }
 
   ## assign weights to participants, to account for age variation
-  if (weigh.age) {
+  if (weigh_age) {
     participants <- weight_by_age(participants, survey_pop_full)
   }
 
@@ -706,7 +706,7 @@ participant_weights <- function(
   participants[, weight := weight / sum(weight) * .N, by = age.group]
 
   # option to truncate overall participant weights (if not NULL or NA)
-  participants <- truncate_renormalise_weights(participants, weight.threshold)
+  participants <- truncate_renormalise_weights(participants, weight_threshold)
 
   participants
 }
@@ -818,13 +818,13 @@ sample_from_participants <- function(
   participants,
   contacts,
   age_limits,
-  sample.all.age.groups,
+  sample_all_age_groups,
   max.tries = 1000
 ) {
   participant_ids <- unique(participants$part_id)
 
   ## check upfront if sampling all age groups is possible
-  if (sample.all.age.groups) {
+  if (sample_all_age_groups) {
     present_age_limits <- unique(participants$lower.age.limit)
     missing_age_limits <- setdiff(age_limits, present_age_limits)
     if (length(missing_age_limits) > 0) {
@@ -839,7 +839,7 @@ sample_from_participants <- function(
   tries <- 0L
   while (!good_sample) {
     tries <- tries + 1L
-    if (sample.all.age.groups && tries > max.tries) {
+    if (sample_all_age_groups && tries > max.tries) {
       cli::cli_abort(
         "Failed to draw a bootstrap sample covering all age groups after
         {.val {max.tries}} attempts."
@@ -852,7 +852,7 @@ sample_from_participants <- function(
       participants[part_id %in% part_sample, lower.age.limit]
     )
     age_limits_match_part <- setequal(age_limits, part_age_limits)
-    good_sample <- !sample.all.age.groups || age_limits_match_part
+    good_sample <- !sample_all_age_groups || age_limits_match_part
 
     sample_table <- create_bootstrap_weights(part_sample)
 
@@ -871,19 +871,19 @@ sample_from_participants <- function(
 
 #' @autoglobal
 sample_contacts_participants <- function(
-  sample.participants,
+  sample_participants,
   participants,
   contacts,
   age_limits,
-  sample.all.age.groups,
+  sample_all_age_groups,
   max.tries = 1000
 ) {
-  if (sample.participants) {
+  if (sample_participants) {
     sampled_contacts_participants <- sample_from_participants(
       participants,
       contacts,
       age_limits,
-      sample.all.age.groups,
+      sample_all_age_groups,
       max.tries
     )
   } else {
@@ -918,7 +918,7 @@ calculate_weighted_matrix <- function(
   survey_pop = survey_pop,
   symmetric,
   counts,
-  symmetric.norm.threshold
+  symmetric_norm_threshold
 ) {
   weighted_matrix <- weighted_matrix_array(
     contacts = sampled_contacts
@@ -939,7 +939,7 @@ calculate_weighted_matrix <- function(
     weighted_matrix <- normalise_weighted_matrix(
       survey_pop = survey_pop,
       weighted_matrix = weighted_matrix,
-      symmetric.norm.threshold = symmetric.norm.threshold
+      symmetric_norm_threshold = symmetric_norm_threshold
     )
   }
   weighted_matrix
@@ -1027,7 +1027,7 @@ normalisation_factors <- function(normalised_matrix, weighted_matrix) {
 normalise_weighted_matrix <- function(
   survey_pop,
   weighted_matrix,
-  symmetric.norm.threshold,
+  symmetric_norm_threshold,
   call = rlang::caller_env()
 ) {
   ## set c_{ij} N_i and c_{ji} N_j (which should both be equal) to
@@ -1040,7 +1040,7 @@ normalise_weighted_matrix <- function(
   warn_norm_fct_exceed_thresh(
     normalised_weighted_matrix = normalised_weighted_matrix,
     weighted_matrix = weighted_matrix,
-    symmetric_norm_threshold = symmetric.norm.threshold
+    symmetric_norm_threshold = symmetric_norm_threshold
   )
 
   normalised_weighted_matrix
@@ -1120,29 +1120,29 @@ n_participants_per_age_group <- function(participants) {
 #' @autoglobal
 return_participant_weights <- function(
   survey_participants,
-  weigh.age,
-  weigh.dayofweek
+  weigh_age,
+  weigh_dayofweek
 ) {
   # default
   part_weights <- survey_participants[, .N, by = list(age.group, weight)]
   part_weights <- part_weights[order(age.group, weight), ]
 
   # add age and/or dayofweek info
-  if (weigh.age && weigh.dayofweek) {
+  if (weigh_age && weigh_dayofweek) {
     part_weights <- survey_participants[,
       .N,
       by = list(age.group, participant.age = part_age, is.weekday, weight)
     ]
   }
 
-  if (weigh.age && !weigh.dayofweek) {
+  if (weigh_age && !weigh_dayofweek) {
     part_weights <- survey_participants[,
       .N,
       by = list(age.group, participant.age = part_age, weight)
     ]
   }
 
-  if (weigh.dayofweek && !weigh.age) {
+  if (weigh_dayofweek && !weigh_age) {
     part_weights <- survey_participants[,
       .N,
       by = list(age.group, is.weekday, weight)

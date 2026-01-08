@@ -6,36 +6,42 @@
 \usage{
 pop_age(
   pop,
-  age.limits,
-  pop.age.column = "lower.age.limit",
-  pop.column = "population",
-  ...
+  age_limits,
+  pop_age_column = "lower.age.limit",
+  pop_column = "population",
+  ...,
+  age.limits = deprecated(),
+  pop.age.column = deprecated(),
+  pop.column = deprecated()
 )
 }
 \arguments{
-\item{pop}{a data frame with columns indicating lower age limits and population sizes (see 'age.column' and 'pop.column')}
+\item{pop}{a data frame with columns indicating lower age limits and population sizes (see 'age_column' and 'pop_column')}
 
-\item{age.limits}{lower age limits of age groups to extract}
+\item{age_limits}{lower age limits of age groups to extract}
 
-\item{pop.age.column}{column in the 'pop' data frame indicating the lower age group limit}
+\item{pop_age_column}{column in the 'pop' data frame indicating the lower age group limit}
 
-\item{pop.column}{column in the 'pop' data frame indicating the population size}
+\item{pop_column}{column in the 'pop' data frame indicating the population size}
 
 \item{...}{ignored}
+
+\item{age.limits, pop.age.column, pop.column}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+Use the underscore versions (e.g., \code{age_limits}) instead.}
 }
 \value{
 data frame of age-specific population data
 }
 \description{
-This changes population data to have age groups with the given age.limits, extrapolating linearly between age groups (if more are requested than available) and summing populations (if fewer are requested than available)
+This changes population data to have age groups with the given age_limits, extrapolating linearly between age groups (if more are requested than available) and summing populations (if fewer are requested than available)
 }
 \examples{
 ages_it_2015 <- wpp_age("Italy", 2015)
 
 # Modify the age data.frame to get age groups of 10 years instead of 5
-pop_age(ages_it_2015, age.limit = seq(0, 100, by = 10))
+pop_age(ages_it_2015, age_limits = seq(0, 100, by = 10))
 
 # The function will also automatically interpolate if necessary
-pop_age(ages_it_2015, age.limit = c(0, 18, 40, 65))
+pop_age(ages_it_2015, age_limits = c(0, 18, 40, 65))
 
 }

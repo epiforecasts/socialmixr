@@ -1,11 +1,9 @@
-suppressWarnings({
-  dta <- contact_matrix(
-    polymod,
-    countries = "United Kingdom",
-    age.limits = c(0, 18, 65),
-    per.capita = TRUE
-  )
-})
+dta <- contact_matrix(
+  polymod,
+  countries = "United Kingdom",
+  age_limits = c(0, 18, 65),
+  per_capita = TRUE
+)
 
 test_that("contact matrix can be plotted", {
   pdf(file = NULL)

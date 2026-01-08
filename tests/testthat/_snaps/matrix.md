@@ -172,7 +172,7 @@
 # error is thrown if age limits are non-numeric
 
     Code
-      contact_matrix(survey = polymod, age.limits = c(0, 5, "fifteen"))
+      contact_matrix(survey = polymod, age_limits = c(0, 5, "fifteen"))
     Condition
       Warning in `check_age_limits_increasing()`:
       NAs introduced by coercion
@@ -208,7 +208,7 @@
 # error is thrown if invalid age limits are passed
 
     Code
-      contact_matrix(survey = polymod, age.limits = c(13, 11))
+      contact_matrix(survey = polymod, age_limits = c(13, 11))
     Condition
       Error in `contact_matrix()`:
       ! `<int>` must be an increasing integer vector of lower age limits.
@@ -228,7 +228,7 @@
 
 # warning is thrown if day of week is asked to be weighed but not present
 
-    `weigh.dayofweek` is "TRUE", but no `dayofweek` column in the data.
+    `weigh_dayofweek` is "TRUE", but no `dayofweek` column in the data.
     i Will ignore.
 
 # warning is thrown if country has no survey population
@@ -277,7 +277,7 @@
 ---
 
     Code
-      contact_matrix(survey = polymod, counts = TRUE, symmetric = TRUE, age.limits = c(
+      contact_matrix(survey = polymod, counts = TRUE, symmetric = TRUE, age_limits = c(
         0, 5))
     Condition
       Warning in `contact_matrix()`:
@@ -319,8 +319,8 @@
 # User-defined reference populations with open ended age groups are handled correctly
 
     Code
-      contact_matrix(polymod_nocountry, age.limits = c(0, 18, 60), symmetric = TRUE,
-      survey.pop = "dummy")
+      contact_matrix(polymod_nocountry, age_limits = c(0, 18, 60), symmetric = TRUE,
+      survey_pop = "dummy")
     Condition
       Error in `survey_pop_from_countries()`:
       ! Could not find population data for: "dummy".
