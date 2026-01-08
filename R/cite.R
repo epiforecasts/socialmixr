@@ -4,7 +4,7 @@
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `get_citation()` has been deprecated in favour of
-#'   [contactsurveys::get_citation()].
+#'   `contactsurveys::get_citation()`.
 #'
 #' Gets a full citation for a [survey()].
 #'

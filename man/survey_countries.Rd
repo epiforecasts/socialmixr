@@ -21,7 +21,7 @@ list of countries
 }
 \details{
 \code{survey_countries()} has been deprecated in favour of using
-\code{\link[contactsurveys:download_survey]{contactsurveys::download_survey()}}, and \code{\link[=load_survey]{load_survey()}}, and then
+\code{contactsurveys::download_survey()}, and \code{\link[=load_survey]{load_survey()}}, and then
 exploring the country column yourself.
 }
 \examples{

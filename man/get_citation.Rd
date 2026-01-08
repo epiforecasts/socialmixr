@@ -16,7 +16,7 @@ citation as bibentry
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 \code{get_citation()} has been deprecated in favour of
-\code{\link[contactsurveys:get_citation]{contactsurveys::get_citation()}}.
+\code{contactsurveys::get_citation()}.
 
 Gets a full citation for a \code{\link[=survey]{survey()}}.
 }
