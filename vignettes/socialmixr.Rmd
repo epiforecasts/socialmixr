@@ -44,7 +44,7 @@ data(polymod)
 An example use would be
 
 ```{r}
-contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 1, 5, 15))
 ```
 
 This generates a contact matrix from the UK part of the POLYMOD study, with age groups 0-1, 1-5, 5-15 and 15+ years. It contains the mean number of contacts that each member of an age group (row) has reported with members of the same or another age group (column).
@@ -94,8 +94,8 @@ m <- replicate(
   n = 5,
   contact_matrix(
     polymod,
-    countries = "United Kingdom", age.limits = c(0, 1, 5, 15),
-    sample.participants = TRUE
+    countries = "United Kingdom", age_limits = c(0, 1, 5, 15),
+    sample_participants = TRUE
   )
 )
 mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
@@ -104,14 +104,14 @@ mr
 
 # Demography
 
-Obtaining symmetric contact matrices, splitting out their components (see below) and age-specific participant weights require information about the underlying demographic composition of the survey population. This can be passed to `contact_matrix()` as the `survey.pop` argument, a `data.frame` with two columns, `lower.age.limit` (denoting the lower end of the age groups) and `population` (denoting the number of people in each age group). If no `survey.pop` is not given, `contact_matrix()` will try to obtain the age structure of the population (as per the `countries` argument) from the [World Population Prospects](https://population.un.org/wpp/) of the United Nations, using estimates from the year that closest matches the year in which the contact survey was conducted.
+Obtaining symmetric contact matrices, splitting out their components (see below) and age-specific participant weights require information about the underlying demographic composition of the survey population. This can be passed to `contact_matrix()` as the `survey_pop` argument, a `data.frame` with two columns, `lower.age.limit` (denoting the lower end of the age groups) and `population` (denoting the number of people in each age group). If no `survey_pop` is not given, `contact_matrix()` will try to obtain the age structure of the population (as per the `countries` argument) from the [World Population Prospects](https://population.un.org/wpp/) of the United Nations, using estimates from the year that closest matches the year in which the contact survey was conducted.
 
-If demographic information is used, this is returned by `contact_matrix()` as the `demography` field in the results list. It is possible to enforce or prevent the function to return demography data by using the `return.demography` option.
+If demographic information is used, this is returned by `contact_matrix()` as the `demography` field in the results list. It is possible to enforce or prevent the function to return demography data by using the `return_demography` option.
 
 ```{r, warning=FALSE, message=FALSE}
 contact_matrix(polymod,
-  countries = "United Kingdom", age.limits = c(0, 20),
-  return.demography = TRUE
+  countries = "United Kingdom", age_limits = c(0, 20),
+  return_demography = TRUE
 )$demography
 ```
 
@@ -129,7 +129,7 @@ $$m'_{ij} = \frac{1}{2N_i} (m_{ij} N_i + m_{ji} N_j)$$
 To get this version of the contact matrix, use `symmetric = TRUE` when calling the `contact_matrix()` function.
 
 ```{r}
-contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), symmetric = TRUE)
+contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 1, 5, 15), symmetric = TRUE)
 ```
 
 # Contact rates per capita
@@ -138,13 +138,13 @@ The contact matrix per capita $c_{ij}$ contains the social contact rates of one 
 
 $$c_{ij} =  \tfrac{m_{ij}}{N_{j}}$$
 
-To get the per capita contact matrix, use `per.capita = TRUE` when calling the `contact_matrix()` function. Please note that if the option `symmetric = TRUE` is specified, the contact matrix $m_{ij}$ can show asymmetry if the sub-population sizes are different, but the contact matrix per capita will be fully symmetric:
+To get the per capita contact matrix, use `per_capita = TRUE` when calling the `contact_matrix()` function. Please note that if the option `symmetric = TRUE` is specified, the contact matrix $m_{ij}$ can show asymmetry if the sub-population sizes are different, but the contact matrix per capita will be fully symmetric:
 
 $$c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}$$
 
 
 ```{r message=FALSE, warning=FALSE}
-contact_matrix(survey = polymod, countries = "Germany", age.limits = c(0, 60), symmetric = TRUE, per.capita = TRUE)
+contact_matrix(survey = polymod, countries = "Germany", age_limits = c(0, 60), symmetric = TRUE, per_capita = TRUE)
 ```
 
 # Splitting contact matrices
@@ -158,7 +158,7 @@ where $c$ is the mean number of contacts across the whole population, $c q d_i$ 
 To model the contact matrix in this way with the `contact_matrix()` function, set `split = TRUE`. The components of the matrix are returned as elements `mean.contacts` ($c$), `normalisation` ($q$), `contacts` ($d_i$), `matrix` ($a_{ij}$) and `demography` ($n_j$) of the resulting list.
 
 ```{r}
-contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), split = TRUE)
+contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 1, 5, 15), split = TRUE)
 ```
 
 # Filtering
@@ -167,13 +167,13 @@ The `filter` argument to `contact_matrix()` can be used to select particular par
 
 ```{r, warning=FALSE, message=FALSE}
 # contact matrix for school-related contacts
-contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_school = 1))$matrix
+contact_matrix(polymod, age_limits = c(0, 20, 60), filter = list(cnt_school = 1))$matrix
 
 # contact matrix for work-related contacts involving physical contact
-contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_work = 1, phys_contact = 1))$matrix
+contact_matrix(polymod, age_limits = c(0, 20, 60), filter = list(cnt_work = 1, phys_contact = 1))$matrix
 
 # contact matrix for daily contacts at home with males
-contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_home = 1, cnt_gender = "M", duration_multi = 5))$matrix
+contact_matrix(polymod, age_limits = c(0, 20, 60), filter = list(cnt_home = 1, cnt_gender = "M", duration_multi = 5))$matrix
 ```
 
 # Participant weights
@@ -194,12 +194,12 @@ $$\tilde{w}_{i} =  \tfrac{w_{i}}{\sum_{}^{} w_{}} * N $$
 If the social contact analysis is based on stratification by splitting the population into non-overlapping groups, it requires the weights to be standardized so that the weighted totals within mutually exclusive cells equal the known population totals [@kolenikov_post-stratification_2016]. The post-stratification cells need to be mutually exclusive and cover the whole population. The post-stratified (PS) weight for participant $i$ of \mbox{group $g$} is:
 $$\tilde{w}^{PS}_{i} =  \tfrac{w_{i}}{\sum_{\text{j}}^{\text{group g}} w_{j}} * N_g$$
 
-Temporal weights are activated in `contact_matrix()` by `weigh.dayofweek = TRUE` and age-specific weights by `weight.age = TRUE`. The post-stratification weights are calculated by default. It is possible to obtain the participant weights via the option `return.part.weights = TRUE`.
+Temporal weights are activated in `contact_matrix()` by `weigh_dayofweek = TRUE` and age-specific weights by `weigh_age = TRUE`. The post-stratification weights are calculated by default. It is possible to obtain the participant weights via the option `return_part_weights = TRUE`.
 
 ```{r message=FALSE, warning=FALSE}
 contact_matrix(
-  survey = polymod, age.limits = c(0, 18, 60), weigh.dayofweek = TRUE,
-  weigh.age = TRUE, return.part.weights = TRUE
+  survey = polymod, age_limits = c(0, 18, 60), weigh_dayofweek = TRUE,
+  weigh_age = TRUE, return_part_weights = TRUE
 )
 ```
 
@@ -209,18 +209,18 @@ The `contact_matrix()` allows to specify and use your own participant weights. T
 
 ```{r message=FALSE, warning=FALSE}
 # e.g. use household size as (dummy) weight to provide more importance to participant data from large households
-contact_matrix(survey = polymod, age.limits = c(0, 18, 60), weights = "hh_size")
+contact_matrix(survey = polymod, age_limits = c(0, 18, 60), weights = "hh_size")
 ```
 
 
 ## Weight threshold
 
-If the survey population differs extensively from the demography, some participants can end up with relatively high weights and as such, an excessive contribution to the population average. This warrants the limitation of single participant influences by a truncation of the weights. To enable this in `contact_matrix()`, you need to provide a numeric `weight.threshold`. This truncation is applied on the standardized weights, followed by another standardization to make sure that the sum of the weights still equals the sample size. The latter can lead to final weights of which some little exceed the given threshold value. 
+If the survey population differs extensively from the demography, some participants can end up with relatively high weights and as such, an excessive contribution to the population average. This warrants the limitation of single participant influences by a truncation of the weights. To enable this in `contact_matrix()`, you need to provide a numeric `weight_threshold`. This truncation is applied on the standardized weights, followed by another standardization to make sure that the sum of the weights still equals the sample size. The latter can lead to final weights of which some little exceed the given threshold value. 
 
 ```{r message=FALSE, warning=FALSE}
 contact_matrix(
-  survey = polymod, age.limits = c(0, 18, 60), weigh.dayofweek = TRUE,
-  weigh.age = TRUE, return.part.weights = TRUE, weight.threshold = 3
+  survey = polymod, age_limits = c(0, 18, 60), weigh_dayofweek = TRUE,
+  weigh_age = TRUE, return_part_weights = TRUE, weight_threshold = 3
 )
 ```
 
