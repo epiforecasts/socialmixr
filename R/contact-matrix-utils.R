@@ -918,7 +918,7 @@ calculate_weighted_matrix <- function(
   survey_pop = survey_pop,
   symmetric,
   counts,
-  symmetric.norm.threshold
+  symmetric_norm_threshold
 ) {
   weighted_matrix <- weighted_matrix_array(
     contacts = sampled_contacts
@@ -939,7 +939,7 @@ calculate_weighted_matrix <- function(
     weighted_matrix <- normalise_weighted_matrix(
       survey_pop = survey_pop,
       weighted_matrix = weighted_matrix,
-      symmetric.norm.threshold = symmetric.norm.threshold
+      symmetric_norm_threshold = symmetric_norm_threshold
     )
   }
   weighted_matrix
