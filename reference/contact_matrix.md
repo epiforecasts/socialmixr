@@ -8,28 +8,44 @@ Samples a contact survey
 contact_matrix(
   survey,
   countries = NULL,
-  survey.pop = NULL,
-  age.limits = NULL,
+  survey_pop = NULL,
+  age_limits = NULL,
   filter = NULL,
   counts = FALSE,
   symmetric = FALSE,
   split = FALSE,
-  sample.participants = FALSE,
-  estimated.participant.age = c("mean", "sample", "missing"),
-  estimated.contact.age = c("mean", "sample", "missing"),
-  missing.participant.age = c("remove", "keep"),
-  missing.contact.age = c("remove", "sample", "keep", "ignore"),
+  sample_participants = FALSE,
+  estimated_participant_age = c("mean", "sample", "missing"),
+  estimated_contact_age = c("mean", "sample", "missing"),
+  missing_participant_age = c("remove", "keep"),
+  missing_contact_age = c("remove", "sample", "keep", "ignore"),
   weights = NULL,
-  weigh.dayofweek = FALSE,
-  weigh.age = FALSE,
-  weight.threshold = NA,
-  symmetric.norm.threshold = 2,
-  sample.all.age.groups = FALSE,
-  sample.participants.max.tries = 1000,
-  return.part.weights = FALSE,
-  return.demography = NA,
-  per.capita = FALSE,
-  ...
+  weigh_dayofweek = FALSE,
+  weigh_age = FALSE,
+  weight_threshold = NA,
+  symmetric_norm_threshold = 2,
+  sample_all_age_groups = FALSE,
+  sample_participants_max_tries = 1000,
+  return_part_weights = FALSE,
+  return_demography = NA,
+  per_capita = FALSE,
+  ...,
+  survey.pop = deprecated(),
+  age.limits = deprecated(),
+  sample.participants = deprecated(),
+  estimated.participant.age = deprecated(),
+  estimated.contact.age = deprecated(),
+  missing.participant.age = deprecated(),
+  missing.contact.age = deprecated(),
+  weigh.dayofweek = deprecated(),
+  weigh.age = deprecated(),
+  weight.threshold = deprecated(),
+  symmetric.norm.threshold = deprecated(),
+  sample.all.age.groups = deprecated(),
+  sample.participants.max.tries = deprecated(),
+  return.part.weights = deprecated(),
+  return.demography = deprecated(),
+  per.capita = deprecated()
 )
 ```
 
@@ -46,7 +62,7 @@ contact_matrix(
   countries in the survey; these can be given as country names or
   2-letter (ISO Alpha-2) country codes.
 
-- survey.pop:
+- survey_pop:
 
   survey population – either a data frame with columns 'lower.age.limit'
   and 'population', or a character vector giving the name(s) of a
@@ -55,7 +71,7 @@ contact_matrix(
   from the chosen countries, or all countries in the survey if
   `countries` is NULL.
 
-- age.limits:
+- age_limits:
 
   lower limits of the age groups over which to construct the matrix. If
   NULL (default), age limits are inferred from participant and contact
@@ -88,14 +104,14 @@ contact_matrix(
   (`assortativity`) and a population multiplier (`demography`). For more
   detail on this, see the "Getting Started" vignette.
 
-- sample.participants:
+- sample_participants:
 
   whether to sample participants randomly (with replacement); done
   multiple times this can be used to assess uncertainty in the generated
   contact matrices. See the "Bootstrapping" section in the vignette for
   how to do this.
 
-- estimated.participant.age:
+- estimated_participant_age:
 
   if set to "mean" (default), people whose ages are given as a range (in
   columns named "...\_est_min" and "...\_est_max") but not exactly (in a
@@ -103,7 +119,7 @@ contact_matrix(
   the range; if set to "sample", the age will be sampled from the range;
   if set to "missing", age ranges will be treated as missing
 
-- estimated.contact.age:
+- estimated_contact_age:
 
   if set to "mean" (default), contacts whose ages are given as a range
   (in columns named "...\_est_min" and "...\_est_max") but not exactly
@@ -112,13 +128,13 @@ contact_matrix(
   from the range; if set to "missing", age ranges will be treated as
   missing.
 
-- missing.participant.age:
+- missing_participant_age:
 
   if set to "remove" (default), participants without age information are
   removed; if set to "keep", participants with missing age are kept and
   will appear in the contact matrix in a row labelled "NA".
 
-- missing.contact.age:
+- missing_contact_age:
 
   if set to "remove" (default), participants that have contacts without
   age information are removed; if set to "sample", contacts without age
@@ -134,52 +150,52 @@ contact_matrix(
   [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md)
   object with user-specified weights (default = empty vector).
 
-- weigh.dayofweek:
+- weigh_dayofweek:
 
   whether to weigh social contacts data by the day of the week (weight
   (5/7 / N_week / N) for weekdays and (2/7 / N_weekend / N) for
   weekends).
 
-- weigh.age:
+- weigh_age:
 
   whether to weigh social contacts data by the age of the participants
   (vs. the populations' age distribution).
 
-- weight.threshold:
+- weight_threshold:
 
   threshold value for the standardized weights before running an
   additional standardisation (default 'NA' = no cutoff).
 
-- symmetric.norm.threshold:
+- symmetric_norm_threshold:
 
   threshold value for the normalization weights when `symmetric = TRUE`
   before showing a warning that that large differences in the size of
   the sub-populations are likely to result in artefacts when making the
   matrix symmetric (default 2).
 
-- sample.all.age.groups:
+- sample_all_age_groups:
 
   what to do if sampling participants (with
-  `sample.participants = TRUE`) fails to sample participants from one or
+  `sample_participants = TRUE`) fails to sample participants from one or
   more age groups; if FALSE (default), corresponding rows will be set to
   NA, if TRUE the sample will be discarded and a new one taken instead.
 
-- sample.participants.max.tries:
+- sample_participants_max_tries:
 
-  maximum number of attempts when `sample.all.age.groups = TRUE`;
+  maximum number of attempts when `sample_all_age_groups = TRUE`;
   defaults to 1000.
 
-- return.part.weights:
+- return_part_weights:
 
   boolean to return the participant weights.
 
-- return.demography:
+- return_demography:
 
   boolean to explicitly return demography data that corresponds to the
   survey data (default 'NA' = if demography data is requested by other
   function parameters).
 
-- per.capita:
+- per_capita:
 
   whether to return a matrix with contact rates per capita (default is
   FALSE and not possible if 'counts=TRUE' or 'split=TRUE').
@@ -191,6 +207,16 @@ contact_matrix(
   [`check()`](https://epiforecasts.io/socialmixr/reference/check.md) and
   [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
   (especially column names).
+
+- survey.pop, age.limits, sample.participants,
+  estimated.participant.age, estimated.contact.age,
+  missing.participant.age, missing.contact.age, weigh.dayofweek,
+  weigh.age, weight.threshold, symmetric.norm.threshold,
+  sample.all.age.groups, sample.participants.max.tries,
+  return.part.weights, return.demography, per.capita:
+
+  **\[deprecated\]** Use the underscore-separated versions of these
+  arguments instead.
 
 ## Value
 
@@ -208,7 +234,7 @@ data(polymod)
 contact_matrix(
   survey = polymod,
   countries = "United Kingdom",
-  age.limits = c(0, 1, 5, 15)
+  age_limits = c(0, 1, 5, 15)
 )
 #> $matrix
 #>          contact.age.group

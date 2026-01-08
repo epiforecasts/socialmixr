@@ -30,7 +30,7 @@ data(polymod)
 An example use would be
 
 ``` r
-contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15))
+contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 1, 5, 15))
 #> $matrix
 #>          contact.age.group
 #> age.group      [0,1)     [1,5)   [5,15)      15+
@@ -151,8 +151,8 @@ m <- replicate(
   n = 5,
   contact_matrix(
     polymod,
-    countries = "United Kingdom", age.limits = c(0, 1, 5, 15),
-    sample.participants = TRUE
+    countries = "United Kingdom", age_limits = c(0, 1, 5, 15),
+    sample_participants = TRUE
   )
 )
 mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
@@ -172,10 +172,10 @@ Obtaining symmetric contact matrices, splitting out their components
 about the underlying demographic composition of the survey population.
 This can be passed to
 [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-as the `survey.pop` argument, a `data.frame` with two columns,
+as the `survey_pop` argument, a `data.frame` with two columns,
 `lower.age.limit` (denoting the lower end of the age groups) and
 `population` (denoting the number of people in each age group). If no
-`survey.pop` is not given,
+`survey_pop` is not given,
 [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
 will try to obtain the age structure of the population (as per the
 `countries` argument) from the [World Population
@@ -187,12 +187,12 @@ If demographic information is used, this is returned by
 [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
 as the `demography` field in the results list. It is possible to enforce
 or prevent the function to return demography data by using the
-`return.demography` option.
+`return_demography` option.
 
 ``` r
 contact_matrix(polymod,
-  countries = "United Kingdom", age.limits = c(0, 20),
-  return.demography = TRUE
+  countries = "United Kingdom", age_limits = c(0, 20),
+  return_demography = TRUE
 )$demography
 #>    age.group population proportion  year
 #>       <char>      <num>      <num> <int>
@@ -223,10 +223,10 @@ calling the
 function.
 
 ``` r
-contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), symmetric = TRUE)
+contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 1, 5, 15), symmetric = TRUE)
 #> Warning: Not all age groups represented in population data (5-year age band).
 #> ℹ Linearly estimating age group sizes from the 5-year bands.
-#> Warning in normalise_weighted_matrix(survey_pop = survey.pop, weighted_matrix = weighted.matrix, : Large differences in the size of the sub-populations with the current age
+#> Warning in normalise_weighted_matrix(survey_pop = survey_pop, weighted_matrix = weighted.matrix, : Large differences in the size of the sub-populations with the current age
 #> breaks are likely to result in artefacts after making the matrix symmetric.
 #> ! Please reconsider the age breaks to obtain more equally sized
 #>   sub-populations.
@@ -268,7 +268,7 @@ are calculated as follows:
 
 $$c_{ij} = \frac{m_{ij}}{N_{j}}$$
 
-To get the per capita contact matrix, use `per.capita = TRUE` when
+To get the per capita contact matrix, use `per_capita = TRUE` when
 calling the
 [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
 function. Please note that if the option `symmetric = TRUE` is
@@ -279,7 +279,7 @@ will be fully symmetric:
 $$c\prime_{ij} = \frac{m_{ij}N_{i} + m_{ji}N_{j}}{2N_{i}N_{j}} = c\prime_{ji}$$
 
 ``` r
-contact_matrix(survey = polymod, countries = "Germany", age.limits = c(0, 60), symmetric = TRUE, per.capita = TRUE)
+contact_matrix(survey = polymod, countries = "Germany", age_limits = c(0, 60), symmetric = TRUE, per_capita = TRUE)
 #> $matrix
 #>          contact.age.group
 #> age.group   [0,60)       60+
@@ -332,7 +332,7 @@ as elements `mean.contacts` ($c$), `normalisation` ($q$), `contacts`
 resulting list.
 
 ``` r
-contact_matrix(polymod, countries = "United Kingdom", age.limits = c(0, 1, 5, 15), split = TRUE)
+contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 1, 5, 15), split = TRUE)
 #> Warning: Not all age groups represented in population data (5-year age band).
 #> ℹ Linearly estimating age group sizes from the 5-year bands.
 #> $mean.contacts
@@ -383,7 +383,7 @@ in ‘column’ will be considered for the generated contact matrix:
 
 ``` r
 # contact matrix for school-related contacts
-contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_school = 1))$matrix
+contact_matrix(polymod, age_limits = c(0, 20, 60), filter = list(cnt_school = 1))$matrix
 #>          contact.age.group
 #> age.group     [0,20)    [20,60)        60+
 #>   [0,20)  5.17103805 1.09641670 0.03583303
@@ -391,7 +391,7 @@ contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_school = 1)
 #>   60+     0.08980827 0.07366297 0.03531786
 
 # contact matrix for work-related contacts involving physical contact
-contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_work = 1, phys_contact = 1))$matrix
+contact_matrix(polymod, age_limits = c(0, 20, 60), filter = list(cnt_work = 1, phys_contact = 1))$matrix
 #>          contact.age.group
 #> age.group     [0,20)    [20,60)         60+
 #>   [0,20)  0.04285187 0.06353897 0.009235316
@@ -399,7 +399,7 @@ contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_work = 1, p
 #>   60+     0.04238143 0.29465187 0.062563068
 
 # contact matrix for daily contacts at home with males
-contact_matrix(polymod, age.limits = c(0, 20, 60), filter = list(cnt_home = 1, cnt_gender = "M", duration_multi = 5))$matrix
+contact_matrix(polymod, age_limits = c(0, 20, 60), filter = list(cnt_home = 1, cnt_gender = "M", duration_multi = 5))$matrix
 #>          contact.age.group
 #> age.group     [0,20)   [20,60)        60+
 #>   [0,20)  0.39268563 0.5858884 0.03103066
@@ -448,15 +448,15 @@ $${\widetilde{w}}_{i}^{PS} = \frac{w_{i}}{\sum\limits_{\text{j}}^{\text{group g}
 
 Temporal weights are activated in
 [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-by `weigh.dayofweek = TRUE` and age-specific weights by
-`weight.age = TRUE`. The post-stratification weights are calculated by
+by `weigh_dayofweek = TRUE` and age-specific weights by
+`weigh_age = TRUE`. The post-stratification weights are calculated by
 default. It is possible to obtain the participant weights via the option
-`return.part.weights = TRUE`.
+`return_part_weights = TRUE`.
 
 ``` r
 contact_matrix(
-  survey = polymod, age.limits = c(0, 18, 60), weigh.dayofweek = TRUE,
-  weigh.age = TRUE, return.part.weights = TRUE
+  survey = polymod, age_limits = c(0, 18, 60), weigh_dayofweek = TRUE,
+  weigh_age = TRUE, return_part_weights = TRUE
 )
 #> $matrix
 #>          contact.age.group
@@ -505,7 +505,7 @@ to weight the reported contacts via the `weights` argument.
 
 ``` r
 # e.g. use household size as (dummy) weight to provide more importance to participant data from large households
-contact_matrix(survey = polymod, age.limits = c(0, 18, 60), weights = "hh_size")
+contact_matrix(survey = polymod, age_limits = c(0, 18, 60), weights = "hh_size")
 #> $matrix
 #>          contact.age.group
 #> age.group    [0,18)   [18,60)       60+
@@ -529,7 +529,7 @@ excessive contribution to the population average. This warrants the
 limitation of single participant influences by a truncation of the
 weights. To enable this in
 [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md),
-you need to provide a numeric `weight.threshold`. This truncation is
+you need to provide a numeric `weight_threshold`. This truncation is
 applied on the standardized weights, followed by another standardization
 to make sure that the sum of the weights still equals the sample size.
 The latter can lead to final weights of which some little exceed the
@@ -537,8 +537,8 @@ given threshold value.
 
 ``` r
 contact_matrix(
-  survey = polymod, age.limits = c(0, 18, 60), weigh.dayofweek = TRUE,
-  weigh.age = TRUE, return.part.weights = TRUE, weight.threshold = 3
+  survey = polymod, age_limits = c(0, 18, 60), weigh_dayofweek = TRUE,
+  weigh_age = TRUE, return_part_weights = TRUE, weight_threshold = 3
 )
 #> $matrix
 #>          contact.age.group

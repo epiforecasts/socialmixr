@@ -61,26 +61,38 @@
 
 ### Deprecations
 
-We have soft-deprecated
-[`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md),
-[`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md),
-[`get_citation()`](https://epiforecasts.io/socialmixr/reference/get_citation.md)
-and
-[`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md)
-and moved these to
-[contactsurveys](https://github.com/epiforecasts/contactsurveys). We
-have also soft-deprecated
-[`survey_countries()`](https://epiforecasts.io/socialmixr/reference/survey_countries.md)
-as this called
-[`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md)
-internally. This is part of decoupling these features from socialmixr to
-reduce dependencies
-([\#207](https://github.com/epiforecasts/socialmixr/issues/207) and
-[\#179](https://github.com/epiforecasts/socialmixr/issues/179)). These
-will continue to be supported until we move to a major release (version
-1.0.0) of socialmixr. In the meantime, we recommend that users use the
-[contactsurveys](https://github.com/epiforecasts/contactsurveys)
-package, as these functions have improved caching and support there.
+- Argument names with dots (e.g., `age.limits`) have been deprecated in
+  favour of underscores (e.g., `age_limits`) in
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md),
+  [`as_contact_survey()`](https://epiforecasts.io/socialmixr/reference/as_contact_survey.md),
+  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md),
+  and
+  [`clean()`](https://epiforecasts.io/socialmixr/reference/clean.md).
+  The old argument names still work but will produce deprecation
+  warnings
+  ([\#160](https://github.com/epiforecasts/socialmixr/issues/160)).
+
+- We have soft-deprecated
+  [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md),
+  [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md),
+  [`get_citation()`](https://epiforecasts.io/socialmixr/reference/get_citation.md)
+  and
+  [`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md)
+  and moved these to
+  [contactsurveys](https://github.com/epiforecasts/contactsurveys). We
+  have also soft-deprecated
+  [`survey_countries()`](https://epiforecasts.io/socialmixr/reference/survey_countries.md)
+  as this called
+  [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md)
+  internally. This is part of decoupling these features from socialmixr
+  to reduce dependencies
+  ([\#207](https://github.com/epiforecasts/socialmixr/issues/207) and
+  [\#179](https://github.com/epiforecasts/socialmixr/issues/179)). These
+  will continue to be supported until we move to a major release
+  (version 1.0.0) of socialmixr. In the meantime, we recommend that
+  users use the
+  [contactsurveys](https://github.com/epiforecasts/contactsurveys)
+  package, as these functions have improved caching and support there.
 
 ## socialmixr 0.4.0
 

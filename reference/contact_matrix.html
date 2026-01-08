@@ -47,28 +47,44 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">contact_matrix</span><span class="op">(</span></span>
 <span>  <span class="va">survey</span>,</span>
 <span>  countries <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  survey.pop <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  age.limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  survey_pop <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  age_limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  filter <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  counts <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  symmetric <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  split <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  sample.participants <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  estimated.participant.age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sample"</span>, <span class="st">"missing"</span><span class="op">)</span>,</span>
-<span>  estimated.contact.age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sample"</span>, <span class="st">"missing"</span><span class="op">)</span>,</span>
-<span>  missing.participant.age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"remove"</span>, <span class="st">"keep"</span><span class="op">)</span>,</span>
-<span>  missing.contact.age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"remove"</span>, <span class="st">"sample"</span>, <span class="st">"keep"</span>, <span class="st">"ignore"</span><span class="op">)</span>,</span>
+<span>  sample_participants <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  estimated_participant_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sample"</span>, <span class="st">"missing"</span><span class="op">)</span>,</span>
+<span>  estimated_contact_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sample"</span>, <span class="st">"missing"</span><span class="op">)</span>,</span>
+<span>  missing_participant_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"remove"</span>, <span class="st">"keep"</span><span class="op">)</span>,</span>
+<span>  missing_contact_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"remove"</span>, <span class="st">"sample"</span>, <span class="st">"keep"</span>, <span class="st">"ignore"</span><span class="op">)</span>,</span>
 <span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  weigh.dayofweek <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  weigh.age <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  weight.threshold <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  symmetric.norm.threshold <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  sample.all.age.groups <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  sample.participants.max.tries <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>  return.part.weights <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  return.demography <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  per.capita <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  weigh_dayofweek <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  weigh_age <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  weight_threshold <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  symmetric_norm_threshold <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  sample_all_age_groups <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  sample_participants_max_tries <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  return_part_weights <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  return_demography <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  per_capita <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  survey.pop <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  age.limits <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  sample.participants <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  estimated.participant.age <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  estimated.contact.age <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  missing.participant.age <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  missing.contact.age <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  weigh.dayofweek <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  weigh.age <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  weight.threshold <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  symmetric.norm.threshold <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  sample.all.age.groups <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  sample.participants.max.tries <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  return.part.weights <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  return.demography <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  per.capita <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -84,11 +100,11 @@
 <dd><p>limit to one or more countries; if NULL (default), will use all countries in the survey; these can be given as country names or 2-letter (ISO Alpha-2) country codes.</p></dd>
 
 
-<dt id="arg-survey-pop">survey.pop<a class="anchor" aria-label="anchor" href="#arg-survey-pop"></a></dt>
+<dt id="arg-survey-pop">survey_pop<a class="anchor" aria-label="anchor" href="#arg-survey-pop"></a></dt>
 <dd><p>survey population – either a data frame with columns 'lower.age.limit' and 'population', or a character vector giving the name(s) of a country or countries from the list that can be obtained via <code>wpp_countries</code>; if NULL (default), will use the country populations from the chosen countries, or all countries in the survey if <code>countries</code> is NULL.</p></dd>
 
 
-<dt id="arg-age-limits">age.limits<a class="anchor" aria-label="anchor" href="#arg-age-limits"></a></dt>
+<dt id="arg-age-limits">age_limits<a class="anchor" aria-label="anchor" href="#arg-age-limits"></a></dt>
 <dd><p>lower limits of the age groups over which to construct the matrix. If NULL (default), age limits are inferred from participant and contact ages.</p></dd>
 
 
@@ -108,23 +124,23 @@
 <dd><p>whether to split the contact matrix into the mean number of contacts, in each age group (split further into the product of the mean number of contacts across the whole population (<code>mean.contacts</code>), a normalisation constant (<code>normalisation</code>) and age-specific variation in contacts (<code>contacts</code>)), multiplied with an assortativity matrix (<code>assortativity</code>) and a population multiplier (<code>demography</code>). For more detail on this, see the "Getting Started" vignette.</p></dd>
 
 
-<dt id="arg-sample-participants">sample.participants<a class="anchor" aria-label="anchor" href="#arg-sample-participants"></a></dt>
+<dt id="arg-sample-participants">sample_participants<a class="anchor" aria-label="anchor" href="#arg-sample-participants"></a></dt>
 <dd><p>whether to sample participants randomly (with replacement); done multiple times this can be used to assess uncertainty in the generated contact matrices. See the "Bootstrapping" section in the vignette for how to do this.</p></dd>
 
 
-<dt id="arg-estimated-participant-age">estimated.participant.age<a class="anchor" aria-label="anchor" href="#arg-estimated-participant-age"></a></dt>
+<dt id="arg-estimated-participant-age">estimated_participant_age<a class="anchor" aria-label="anchor" href="#arg-estimated-participant-age"></a></dt>
 <dd><p>if set to "mean" (default), people whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing</p></dd>
 
 
-<dt id="arg-estimated-contact-age">estimated.contact.age<a class="anchor" aria-label="anchor" href="#arg-estimated-contact-age"></a></dt>
+<dt id="arg-estimated-contact-age">estimated_contact_age<a class="anchor" aria-label="anchor" href="#arg-estimated-contact-age"></a></dt>
 <dd><p>if set to "mean" (default), contacts whose ages are given as a range (in columns named "..._est_min" and "..._est_max") but not exactly (in a column named "..._exact") will have their age set to the mid-point of the range; if set to "sample", the age will be sampled from the range; if set to "missing", age ranges will be treated as missing.</p></dd>
 
 
-<dt id="arg-missing-participant-age">missing.participant.age<a class="anchor" aria-label="anchor" href="#arg-missing-participant-age"></a></dt>
+<dt id="arg-missing-participant-age">missing_participant_age<a class="anchor" aria-label="anchor" href="#arg-missing-participant-age"></a></dt>
 <dd><p>if set to "remove" (default), participants without age information are removed; if set to "keep", participants with missing age are kept and will appear in the contact matrix in a row labelled "NA".</p></dd>
 
 
-<dt id="arg-missing-contact-age">missing.contact.age<a class="anchor" aria-label="anchor" href="#arg-missing-contact-age"></a></dt>
+<dt id="arg-missing-contact-age">missing_contact_age<a class="anchor" aria-label="anchor" href="#arg-missing-contact-age"></a></dt>
 <dd><p>if set to "remove" (default), participants that have contacts without age information are removed; if set to "sample", contacts without age information are sampled from all the contacts of participants of the same age group; if set to "keep", contacts with missing age are kept and will appear in the contact matrix in a column labelled "NA"; if set to "ignore", contacts without age information are removed from the analysis (but the participants that made them are kept).</p></dd>
 
 
@@ -132,44 +148,49 @@
 <dd><p>column names(s) of the participant data of the <code><a href="survey.html">survey()</a></code> object with user-specified weights (default = empty vector).</p></dd>
 
 
-<dt id="arg-weigh-dayofweek">weigh.dayofweek<a class="anchor" aria-label="anchor" href="#arg-weigh-dayofweek"></a></dt>
+<dt id="arg-weigh-dayofweek">weigh_dayofweek<a class="anchor" aria-label="anchor" href="#arg-weigh-dayofweek"></a></dt>
 <dd><p>whether to weigh social contacts data by the day of the week (weight (5/7 / N_week / N) for weekdays and (2/7 / N_weekend / N) for weekends).</p></dd>
 
 
-<dt id="arg-weigh-age">weigh.age<a class="anchor" aria-label="anchor" href="#arg-weigh-age"></a></dt>
+<dt id="arg-weigh-age">weigh_age<a class="anchor" aria-label="anchor" href="#arg-weigh-age"></a></dt>
 <dd><p>whether to weigh social contacts data by the age of the participants (vs. the populations' age distribution).</p></dd>
 
 
-<dt id="arg-weight-threshold">weight.threshold<a class="anchor" aria-label="anchor" href="#arg-weight-threshold"></a></dt>
+<dt id="arg-weight-threshold">weight_threshold<a class="anchor" aria-label="anchor" href="#arg-weight-threshold"></a></dt>
 <dd><p>threshold value for the standardized weights before running an additional standardisation (default 'NA' = no cutoff).</p></dd>
 
 
-<dt id="arg-symmetric-norm-threshold">symmetric.norm.threshold<a class="anchor" aria-label="anchor" href="#arg-symmetric-norm-threshold"></a></dt>
+<dt id="arg-symmetric-norm-threshold">symmetric_norm_threshold<a class="anchor" aria-label="anchor" href="#arg-symmetric-norm-threshold"></a></dt>
 <dd><p>threshold value for the normalization weights when <code>symmetric = TRUE</code> before showing a warning that that large differences in the size of the sub-populations are likely to result in artefacts when making the matrix symmetric (default 2).</p></dd>
 
 
-<dt id="arg-sample-all-age-groups">sample.all.age.groups<a class="anchor" aria-label="anchor" href="#arg-sample-all-age-groups"></a></dt>
-<dd><p>what to do if sampling participants (with <code>sample.participants = TRUE</code>) fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead.</p></dd>
+<dt id="arg-sample-all-age-groups">sample_all_age_groups<a class="anchor" aria-label="anchor" href="#arg-sample-all-age-groups"></a></dt>
+<dd><p>what to do if sampling participants (with <code>sample_participants = TRUE</code>) fails to sample participants from one or more age groups; if FALSE (default), corresponding rows will be set to NA, if TRUE the sample will be discarded and a new one taken instead.</p></dd>
 
 
-<dt id="arg-sample-participants-max-tries">sample.participants.max.tries<a class="anchor" aria-label="anchor" href="#arg-sample-participants-max-tries"></a></dt>
-<dd><p>maximum number of attempts when <code>sample.all.age.groups = TRUE</code>; defaults to 1000.</p></dd>
+<dt id="arg-sample-participants-max-tries">sample_participants_max_tries<a class="anchor" aria-label="anchor" href="#arg-sample-participants-max-tries"></a></dt>
+<dd><p>maximum number of attempts when <code>sample_all_age_groups = TRUE</code>; defaults to 1000.</p></dd>
 
 
-<dt id="arg-return-part-weights">return.part.weights<a class="anchor" aria-label="anchor" href="#arg-return-part-weights"></a></dt>
+<dt id="arg-return-part-weights">return_part_weights<a class="anchor" aria-label="anchor" href="#arg-return-part-weights"></a></dt>
 <dd><p>boolean to return the participant weights.</p></dd>
 
 
-<dt id="arg-return-demography">return.demography<a class="anchor" aria-label="anchor" href="#arg-return-demography"></a></dt>
+<dt id="arg-return-demography">return_demography<a class="anchor" aria-label="anchor" href="#arg-return-demography"></a></dt>
 <dd><p>boolean to explicitly return demography data that corresponds to the survey data (default 'NA' = if demography data is requested by other function parameters).</p></dd>
 
 
-<dt id="arg-per-capita">per.capita<a class="anchor" aria-label="anchor" href="#arg-per-capita"></a></dt>
+<dt id="arg-per-capita">per_capita<a class="anchor" aria-label="anchor" href="#arg-per-capita"></a></dt>
 <dd><p>whether to return a matrix with contact rates per capita (default is FALSE and not possible if 'counts=TRUE' or 'split=TRUE').</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>further arguments to pass to <code><a href="get_survey.html">get_survey()</a></code>, <code><a href="check.html">check()</a></code> and <code><a href="pop_age.html">pop_age()</a></code> (especially column names).</p></dd>
+
+
+<dt id="arg-survey-pop-age-limits-sample-participants-estimated-participant-age-estimated-contact-age-missing-participant-age-missing-contact-age-weigh-dayofweek-weigh-age-weight-threshold-symmetric-norm-threshold-sample-all-age-groups-sample-participants-max-tries-return-part-weights-return-demography-per-capita">survey.pop, age.limits, sample.participants, estimated.participant.age, estimated.contact.age, missing.participant.age, missing.contact.age, weigh.dayofweek, weigh.age, weight.threshold, symmetric.norm.threshold, sample.all.age.groups, sample.participants.max.tries, return.part.weights, return.demography, per.capita<a class="anchor" aria-label="anchor" href="#arg-survey-pop-age-limits-sample-participants-estimated-participant-age-estimated-contact-age-missing-participant-age-missing-contact-age-weigh-dayofweek-weigh-age-weight-threshold-symmetric-norm-threshold-sample-all-age-groups-sample-participants-max-tries-return-part-weights-return-demography-per-capita"></a></dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Use the
+underscore-separated versions of these arguments instead.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -187,7 +208,7 @@
 <span class="r-in"><span><span class="fu">contact_matrix</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  survey <span class="op">=</span> <span class="va">polymod</span>,</span></span>
 <span class="r-in"><span>  countries <span class="op">=</span> <span class="st">"United Kingdom"</span>,</span></span>
-<span class="r-in"><span>  age.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $matrix</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          contact.age.group</span>

@@ -8,9 +8,13 @@ Checks that a survey fulfills all the requirements to work with the
 ``` r
 as_contact_survey(
   x,
-  id.column = "part_id",
-  country.column = NULL,
-  year.column = NULL
+  id_column = "part_id",
+  country_column = NULL,
+  year_column = NULL,
+  ...,
+  id.column = deprecated(),
+  country.column = deprecated(),
+  year.column = deprecated()
 )
 ```
 
@@ -31,22 +35,31 @@ as_contact_survey(
     particular it can contain\$a "title", "bibtype", "author", "doi",
     "publisher", "note", "year"
 
-- id.column:
+- id_column:
 
   the column in both the `participants` and `contacts` data frames that
   links contacts to participants
 
-- country.column:
+- country_column:
 
   the column in the `participants` data frame containing the country in
   which the participant was queried; if NULL (default), will use
   "country" column if present
 
-- year.column:
+- year_column:
 
   the column in the `participants` data frame containing the year in
   which the participant was queried; if NULL (default), will use "year"
   column if present
+
+- ...:
+
+  additional arguments (currently ignored)
+
+- id.column, country.column, year.column:
+
+  **\[deprecated\]** Use the underscore versions (e.g., `id_column`)
+  instead.
 
 ## Value
 
