@@ -4,7 +4,8 @@
 #' @return data frame of age-specific population data
 #' @importFrom data.table data.table setkeyv
 #' @param pop a data frame with columns indicating lower age limits and population sizes (see 'age_column' and 'pop_column')
-#' @param age_limits lower age limits of age groups to extract
+#' @param age_limits lower age limits of age groups to extract; if NULL
+#'   (default), the population data is returned unchanged
 #' @param pop_age_column column in the 'pop' data frame indicating the lower age group limit
 #' @param pop_column column in the 'pop' data frame indicating the population size
 #' @param ... ignored
@@ -26,7 +27,7 @@
 #' @export
 pop_age <- function(
   pop,
-  age_limits,
+  age_limits = NULL,
   pop_age_column = "lower.age.limit",
   pop_column = "population",
   ...,
@@ -37,7 +38,6 @@ pop_age <- function(
   chkDots(...)
 
   ## Handle deprecated arguments
-  # Special handling for age_limits since it's an optional argument (no default)
   if (lifecycle::is_present(age.limits)) {
     lifecycle::deprecate_warn(
       "1.0.0",
@@ -73,7 +73,7 @@ pop_age <- function(
   pop <- data.table(pop)
   setkeyv(pop, pop_age_column)
 
-  if (!missing(age_limits)) {
+  if (!is.null(age_limits)) {
     age_limits <- sort(age_limits)
     max_age <- max(pop[, pop_age_column, with = FALSE])
     missing_ages <- setdiff(

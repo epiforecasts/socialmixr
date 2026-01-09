@@ -53,6 +53,18 @@ test_that("pop_age doesn't change total population size", {
   )
 })
 
+test_that("pop_age returns data unchanged when age_limits is NULL", {
+  ages_it_2015 <- wpp_age("Italy", 2015)
+
+  # Calling without age_limits should return identical data
+  result <- pop_age(ages_it_2015)
+  expect_identical(result, ages_it_2015)
+
+  # Explicitly passing NULL should also work
+  result_null <- pop_age(ages_it_2015, age_limits = NULL)
+  expect_identical(result_null, ages_it_2015)
+})
+
 test_that("pop_age throws warnings or errors", {
   expect_snapshot(
     error = TRUE,
