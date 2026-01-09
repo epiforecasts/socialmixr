@@ -87,7 +87,7 @@ get_citation(polymod)
 
 # Bootstrapping
 
-To get an idea of uncertainty of the contact matrices, a bootstrap can be used using the  `sample.participants` argument of `contact_matrix()`. If this argument is set to TRUE, participants are sampled (with replacement, to get the same number of participants of the original study) every time the `contact_matrix()` function is called, and thus a different matrix returned every time. From these matrices, derived quantities can be obtained, for example the mean:
+To get an idea of uncertainty of the contact matrices, a bootstrap can be used using the  `sample_participants` argument of `contact_matrix()`. If this argument is set to TRUE, participants are sampled (with replacement, to get the same number of participants of the original study) every time the `contact_matrix()` function is called, and thus a different matrix returned every time. From these matrices, derived quantities can be obtained, for example the mean:
 
 ```{r}
 m <- replicate(
