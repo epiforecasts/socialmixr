@@ -2,6 +2,7 @@
 
 utils::globalVariables(c(
   "country", # <clean.contact_survey>
+  "..age.value", # <clean.contact_survey>
   "..age.unit", # <clean.contact_survey>
   "..high", # <clean.contact_survey>
   "..low", # <clean.contact_survey>

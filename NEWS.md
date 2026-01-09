@@ -22,6 +22,8 @@
 
 * A bug was fixed leading to excess contacts with `NA` age if the lowest age group did not start at 0.
 
+* Fixed bugs in `clean()` that caused errors or incorrect results when processing age values with units (e.g., "6 months", "52 weeks") (#256).
+
 ## Deprecations
 
 * Argument names with dots (e.g., `age.limits`) have been deprecated in favour of underscores (e.g., `age_limits`) in `contact_matrix()`, `as_contact_survey()`, `pop_age()`, and `clean()`. The old argument names still work but will produce deprecation warnings (#160).

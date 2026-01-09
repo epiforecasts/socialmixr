@@ -16,7 +16,7 @@ pop_age(
 )
 }
 \arguments{
-\item{pop}{a data frame with columns indicating lower age limits and population sizes (see 'age_column' and 'pop_column')}
+\item{pop}{a data frame with columns indicating lower age limits and population sizes (see 'pop_age_column' and 'pop_column')}
 
 \item{age_limits}{lower age limits of age groups to extract}
 

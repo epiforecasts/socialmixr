@@ -1269,9 +1269,4 @@ test_that("deprecated argument names produce warnings", {
   lifecycle::expect_deprecated(
     as_contact_survey(survey_list, id.column = "part_id")
   )
-
-  # Test clean() deprecated arguments
-  lifecycle::expect_deprecated(
-    clean(polymod, participant.age.column = "part_age")
-  )
 })

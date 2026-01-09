@@ -3,7 +3,7 @@
 #' This changes population data to have age groups with the given age_limits, extrapolating linearly between age groups (if more are requested than available) and summing populations (if fewer are requested than available)
 #' @return data frame of age-specific population data
 #' @importFrom data.table data.table setkeyv
-#' @param pop a data frame with columns indicating lower age limits and population sizes (see 'age_column' and 'pop_column')
+#' @param pop a data frame with columns indicating lower age limits and population sizes (see 'pop_age_column' and 'pop_column')
 #' @param age_limits lower age limits of age groups to extract
 #' @param pop_age_column column in the 'pop' data frame indicating the lower age group limit
 #' @param pop_column column in the 'pop' data frame indicating the population size
