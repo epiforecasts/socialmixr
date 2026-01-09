@@ -22,7 +22,7 @@
 
 * A bug was fixed leading to excess contacts with `NA` age if the lowest age group did not start at 0.
 
-* Fixed a data.table syntax error in `clean()` that caused errors when processing age values with units (e.g., "6 months") (#256).
+* Fixed bugs in `clean()` that caused errors or incorrect results when processing age values with units (e.g., "6 months", "52 weeks") (#256).
 
 ## Deprecations
 
