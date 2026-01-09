@@ -14,12 +14,13 @@ test_that("clean() normalises 2-letter ISO country codes", {
   participants <- data.frame(
     part_id = 1:3,
     part_age = c(20, 30, 40),
-    country = c("GB", "DE", "FR")
+    country = c("GB", "DE", "FR"),
+    stringsAsFactors = FALSE
   )
   survey <- create_test_survey(participants)
   cleaned <- clean(survey)
 
-  expect_equal(
+  expect_identical(
     as.character(cleaned$participants$country),
     c("United Kingdom", "Germany", "France")
   )
@@ -29,12 +30,13 @@ test_that("clean() normalises 3-letter ISO country codes", {
   participants <- data.frame(
     part_id = 1:3,
     part_age = c(20, 30, 40),
-    country = c("GBR", "DEU", "FRA")
+    country = c("GBR", "DEU", "FRA"),
+    stringsAsFactors = FALSE
   )
   survey <- create_test_survey(participants)
   cleaned <- clean(survey)
 
-  expect_equal(
+  expect_identical(
     as.character(cleaned$participants$country),
     c("United Kingdom", "Germany", "France")
   )
@@ -44,12 +46,13 @@ test_that("clean() normalises full country names", {
   participants <- data.frame(
     part_id = 1:3,
     part_age = c(20, 30, 40),
-    country = c("United Kingdom", "Germany", "France")
+    country = c("United Kingdom", "Germany", "France"),
+    stringsAsFactors = FALSE
   )
   survey <- create_test_survey(participants)
   cleaned <- clean(survey)
 
-  expect_equal(
+  expect_identical(
     as.character(cleaned$participants$country),
     c("United Kingdom", "Germany", "France")
   )
@@ -60,12 +63,13 @@ test_that("clean() preserves completely unrecognised country names", {
   participants <- data.frame(
     part_id = 1:2,
     part_age = c(20, 30),
-    country = c("Germany", "XYZABC123")
+    country = c("Germany", "XYZABC123"),
+    stringsAsFactors = FALSE
   )
   survey <- create_test_survey(participants)
   cleaned <- clean(survey)
 
-  expect_equal(
+  expect_identical(
     as.character(cleaned$participants$country),
     c("Germany", "XYZABC123")
   )
@@ -75,13 +79,14 @@ test_that("clean() preserves completely unrecognised country names", {
 test_that("clean() sets non-numeric age entries to NA", {
   participants <- data.frame(
     part_id = 1:4,
-    part_age = c("25", "unknown", "N/A", "thirty")
+    part_age = c("25", "unknown", "N/A", "thirty"),
+    stringsAsFactors = FALSE
   )
 
   survey <- create_test_survey(participants)
   cleaned <- clean(survey)
 
-  expect_equal(cleaned$participants$part_age_exact[1], 25)
+  expect_identical(cleaned$participants$part_age_exact[1], 25L)
   expect_true(is.na(cleaned$participants$part_age_exact[2]))
   expect_true(is.na(cleaned$participants$part_age_exact[3]))
   expect_true(is.na(cleaned$participants$part_age_exact[4]))
@@ -91,13 +96,14 @@ test_that("clean() sets non-numeric age entries to NA", {
 test_that("clean() converts 'Under X' format to '0-X'", {
   participants <- data.frame(
     part_id = 1:3,
-    part_age = c("Under 1", "Under 5", "Under 18")
+    part_age = c("Under 1", "Under 5", "Under 18"),
+    stringsAsFactors = FALSE
   )
   survey <- create_test_survey(participants)
   cleaned <- clean(survey)
 
-  expect_equal(cleaned$participants$part_age_est_min, c(0, 0, 0))
-  expect_equal(cleaned$participants$part_age_est_max, c(1, 5, 18))
+  expect_identical(cleaned$participants$part_age_est_min, c(0, 0, 0))
+  expect_identical(cleaned$participants$part_age_est_max, c(1, 5, 18))
 })
 
 # Test 4: Age range parsing
@@ -118,33 +124,36 @@ test_that("clean() creates est_min and est_max for age ranges", {
 test_that("clean() handles single age values (no range)", {
   participants <- data.frame(
     part_id = 1:2,
-    part_age = c("25", "30")
+    part_age = c("25", "30"),
+    stringsAsFactors = FALSE
   )
   survey <- create_test_survey(participants)
   cleaned <- clean(survey)
 
   # For single values, est_min and est_max should be the same
-  expect_equal(cleaned$participants$part_age_est_min, c(25, 30))
-  expect_equal(cleaned$participants$part_age_est_max, c(25, 30))
+  expect_identical(cleaned$participants$part_age_est_min, c(25, 30))
+  expect_identical(cleaned$participants$part_age_est_max, c(25, 30))
 })
 
 # Test 5: Exact age column creation
 test_that("clean() creates part_age_exact from numeric ages", {
   participants <- data.frame(
     part_id = 1:3,
-    part_age = c("25", "30", "45")
+    part_age = c("25", "30", "45"),
+    stringsAsFactors = FALSE
   )
   survey <- create_test_survey(participants)
   cleaned <- clean(survey)
 
   expect_true("part_age_exact" %in% names(cleaned$participants))
-  expect_equal(cleaned$participants$part_age_exact, c(25L, 30L, 45L))
+  expect_identical(cleaned$participants$part_age_exact, c(25L, 30L, 45L))
 })
 
 test_that("clean() sets part_age_exact to NA for age ranges", {
   participants <- data.frame(
     part_id = 1:2,
-    part_age = c("25-30", "40-50")
+    part_age = c("25-30", "40-50"),
+    stringsAsFactors = FALSE
   )
   survey <- create_test_survey(participants)
   cleaned <- clean(survey)
@@ -169,7 +178,8 @@ test_that("clean() handles survey that doesn't need cleaning", {
 test_that("clean() handles empty participants", {
   participants <- data.frame(
     part_id = integer(0),
-    part_age = character(0)
+    part_age = character(0),
+    stringsAsFactors = FALSE
   )
   contacts <- data.frame(
     part_id = integer(0),
@@ -177,19 +187,20 @@ test_that("clean() handles empty participants", {
   )
   survey <- new_contact_survey(participants, contacts)
 
-  expect_no_error(cleaned <- clean(survey))
-  expect_equal(nrow(cleaned$participants), 0)
+  cleaned <- clean(survey)
+  expect_identical(nrow(cleaned$participants), 0L)
 })
 
 # Test 8: Survey without country column
 test_that("clean() handles survey without country column", {
   participants <- data.frame(
     part_id = 1:2,
-    part_age = c("25", "30")
+    part_age = c("25", "30"),
+    stringsAsFactors = FALSE
   )
   survey <- create_test_survey(participants)
 
-  expect_no_error(cleaned <- clean(survey))
+  cleaned <- clean(survey)
   expect_false("country" %in% names(cleaned$participants))
 })
 
@@ -197,15 +208,16 @@ test_that("clean() handles survey without country column", {
 test_that("clean() works with custom participant_age_column", {
   participants <- data.frame(
     part_id = 1:2,
-    age = c("20-30", "40-50")
+    age = c("20-30", "40-50"),
+    stringsAsFactors = FALSE
   )
   survey <- create_test_survey(participants)
   cleaned <- clean(survey, participant_age_column = "age")
 
   expect_true("age_est_min" %in% names(cleaned$participants))
   expect_true("age_est_max" %in% names(cleaned$participants))
-  expect_equal(cleaned$participants$age_est_min, c(20, 40))
-  expect_equal(cleaned$participants$age_est_max, c(30, 50))
+  expect_identical(cleaned$participants$age_est_min, c(20, 40))
+  expect_identical(cleaned$participants$age_est_max, c(30, 50))
 })
 
 # Test 10: Deprecated argument warning
@@ -225,14 +237,15 @@ test_that("clean() handles already numeric age column", {
   cleaned <- clean(survey)
 
   # Numeric ages without NAs shouldn't trigger age cleaning
-  expect_equal(cleaned$participants$part_age, c(25, 30, 45))
+  expect_identical(cleaned$participants$part_age, c(25, 30, 45))
 })
 
 # Test 12: Age unit conversion (months to years)
 test_that("clean() converts months to years", {
   participants <- data.frame(
     part_id = 1:2,
-    part_age = c("6 months", "18 months")
+    part_age = c("6 months", "18 months"),
+    stringsAsFactors = FALSE
   )
   survey <- create_test_survey(participants)
   cleaned <- clean(survey)
@@ -244,7 +257,8 @@ test_that("clean() converts months to years", {
 test_that("clean() converts weeks to years", {
   participants <- data.frame(
     part_id = 1:2,
-    part_age = c("52 weeks", "26 weeks")
+    part_age = c("52 weeks", "26 weeks"),
+    stringsAsFactors = FALSE
   )
   survey <- create_test_survey(participants)
   cleaned <- clean(survey)
@@ -264,8 +278,8 @@ test_that("clean() handles mix of valid and NA ages", {
 
   # NA values should trigger age cleaning but numeric values are preserved
   expect_true("part_age_est_min" %in% names(cleaned$participants))
-  expect_equal(cleaned$participants$part_age_est_min[1], 25)
+  expect_identical(cleaned$participants$part_age_est_min[1], 25)
   expect_true(is.na(cleaned$participants$part_age_est_min[2]))
-  expect_equal(cleaned$participants$part_age_est_min[3], 30)
+  expect_identical(cleaned$participants$part_age_est_min[3], 30)
   expect_true(is.na(cleaned$participants$part_age_est_min[4]))
 })
