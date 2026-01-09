@@ -18,6 +18,7 @@ test_that("list_survey() gives deprecation warning", {
 test_that("surveys can be downloaded", {
   skip_if_offline("zenodo.org")
   skip_on_cran()
+  skip_on_ci()
 
   s <- suppressMessages(suppressWarnings(get_survey("10.5281/zenodo.1095664"))) # nolint
 
