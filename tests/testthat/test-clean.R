@@ -109,9 +109,12 @@ test_that("clean() converts 'Under X' format to '0-X'", {
 # Test 4: Age range parsing
 test_that("clean() creates est_min and est_max for age ranges", {
   survey <- polymod
+  # Avoid mutating polymod by reference (participants is a data.table)
+  survey$participants <- data.table::copy(survey$participants)
+
   # Replace exact ages with ranges
-  survey$participants$part_age <- "20-30"
-  survey$participants$part_age_exact <- NULL
+  survey$participants[, part_age := "20-30"]
+  survey$participants[, part_age_exact := NULL]
 
   cleaned <- clean(survey)
 
