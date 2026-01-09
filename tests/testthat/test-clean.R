@@ -228,7 +228,32 @@ test_that("clean() handles already numeric age column", {
   expect_equal(cleaned$participants$part_age, c(25, 30, 45))
 })
 
-# Test 12: Mixed NA and valid ages
+# Test 12: Age unit conversion (months to years)
+test_that("clean() converts months to years", {
+  participants <- data.frame(
+    part_id = 1:2,
+    part_age = c("6 months", "18 months")
+  )
+  survey <- create_test_survey(participants)
+  cleaned <- clean(survey)
+
+  expect_equal(cleaned$participants$part_age_est_min[1], 0.5, tolerance = 0.01)
+  expect_equal(cleaned$participants$part_age_est_min[2], 1.5, tolerance = 0.01)
+})
+
+test_that("clean() converts weeks to years", {
+  participants <- data.frame(
+    part_id = 1:2,
+    part_age = c("52 weeks", "26 weeks")
+  )
+  survey <- create_test_survey(participants)
+  cleaned <- clean(survey)
+
+  expect_equal(cleaned$participants$part_age_est_min[1], 1, tolerance = 0.02)
+  expect_equal(cleaned$participants$part_age_est_min[2], 0.5, tolerance = 0.02)
+})
+
+# Test 13: Mixed NA and valid ages
 test_that("clean() handles mix of valid and NA ages", {
   participants <- data.frame(
     part_id = 1:4,
