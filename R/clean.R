@@ -111,7 +111,7 @@ clean.contact_survey <- function(
           fixed = TRUE
         )
       ]
-      x$participants <- x$participants[
+      x$participants <- x$participants[,
         ..age.unit := fifelse(
           !is.na(get(participant_age_column)) & is.na(..age.unit),
           "years",
