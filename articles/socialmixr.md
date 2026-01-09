@@ -100,7 +100,7 @@ survey_countries(polymod)
 #> ℹ We recommend using contactsurveys::download_survey() to download your
 #>   surveys, and then you can load them with socialmixr::load_survey() and
 #>   explore which countries are in the data.
-#> This warning is displayed once every 8 hours.
+#> This warning is displayed once per session.
 #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 #> generated.
 #> [1] "Italy"          "Germany"        "Luxembourg"     "Netherlands"   
@@ -123,7 +123,7 @@ e.g.
 get_citation(polymod)
 #> Warning: `get_citation()` was deprecated in socialmixr 0.5.0.
 #> ℹ Please use `contactsurveys::get_citation()` instead.
-#> This warning is displayed once every 8 hours.
+#> This warning is displayed once per session.
 #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 #> generated.
 #> Mossong J, Hens N, Jit M, Beutels P, Auranen K, Mikolajczyk R, Massari
@@ -136,7 +136,7 @@ get_citation(polymod)
 ## Bootstrapping
 
 To get an idea of uncertainty of the contact matrices, a bootstrap can
-be used using the `sample.participants` argument of
+be used using the `sample_participants` argument of
 [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md).
 If this argument is set to TRUE, participants are sampled (with
 replacement, to get the same number of participants of the original

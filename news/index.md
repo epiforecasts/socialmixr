@@ -59,6 +59,12 @@
 - A bug was fixed leading to excess contacts with `NA` age if the lowest
   age group did not start at 0.
 
+- Fixed bugs in
+  [`clean()`](https://epiforecasts.io/socialmixr/reference/clean.md)
+  that caused errors or incorrect results when processing age values
+  with units (e.g., “6 months”, “52 weeks”)
+  ([\#256](https://github.com/epiforecasts/socialmixr/issues/256)).
+
 ### Deprecations
 
 - Argument names with dots (e.g., `age.limits`) have been deprecated in

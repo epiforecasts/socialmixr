@@ -61,7 +61,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Funk</h4>
             
-            <h4 data-toc-skip class="date">2026-01-08</h4>
+            <h4 data-toc-skip class="date">2026-01-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
       <div class="d-none name"><code>socialmixr.Rmd</code></div>
@@ -147,7 +147,7 @@ use the <code>survey_countries</code> function</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> We recommend using contactsurveys::download_survey() to download your</span></span>
 <span><span class="co">#&gt;   surveys, and then you can load them with socialmixr::load_survey() and</span></span>
 <span><span class="co">#&gt;   explore which countries are in the data.</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once per session.</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="co">#&gt; [1] "Italy"          "Germany"        "Luxembourg"     "Netherlands"   </span></span>
@@ -164,7 +164,7 @@ given survey can be obtained using <code><a href="../reference/get_citation.html
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_citation.html">get_citation</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: `get_citation()` was deprecated in socialmixr 0.5.0.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `contactsurveys::get_citation()` instead.</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once per session.</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="co">#&gt; Mossong J, Hens N, Jit M, Beutels P, Auranen K, Mikolajczyk R, Massari</span></span>
@@ -177,7 +177,7 @@ given survey can be obtained using <code><a href="../reference/get_citation.html
 <h2 id="bootstrapping">Bootstrapping<a class="anchor" aria-label="anchor" href="#bootstrapping"></a>
 </h2>
 <p>To get an idea of uncertainty of the contact matrices, a bootstrap
-can be used using the <code>sample.participants</code> argument of
+can be used using the <code>sample_participants</code> argument of
 <code><a href="../reference/contact_matrix.html">contact_matrix()</a></code>. If this argument is set to TRUE,
 participants are sampled (with replacement, to get the same number of
 participants of the original study) every time the
