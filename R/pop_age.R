@@ -112,8 +112,8 @@ pop_age <- function(
       pop <- pop[, ..upper.age.limit := c(pop[[pop_age_column]][-1], NA)]
       pop[
         !is.na(..original.upper.age.limit),
-        population := round(
-          population *
+        paste(pop_column) := round(
+          get(pop_column) *
             (..upper.age.limit - get(pop_age_column)) /
             (..original.upper.age.limit - ..original.lower.age.limit)
         )
