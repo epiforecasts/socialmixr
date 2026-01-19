@@ -1,5 +1,7 @@
 # Changelog
 
+## socialmixr (development version)
+
 ## socialmixr 0.5.0
 
 CRAN release: 2026-01-19
@@ -10,14 +12,6 @@ age group assignment and population data retrieval, more intuitive
 handling of age limits, and the beginning of a transition to the
 [contactsurveys](https://github.com/epiforecasts/contactsurveys) package
 for survey downloads.
-
-We thank Nicholas Tierney ([@njtierney](https://github.com/njtierney)),
-Lander Willem ([@lwillem](https://github.com/lwillem)), Hugo Gruson
-([@Bisaloo](https://github.com/Bisaloo)), Lloyd Chapman
-([@LloydChapman](https://github.com/LloydChapman)), James Azam
-([@jamesmbaazam](https://github.com/jamesmbaazam)), and Abdoelnaser
-Degoot ([@Degoot-AM](https://github.com/Degoot-AM)) for their
-contributions to this release.
 
 ### Breaking changes
 
