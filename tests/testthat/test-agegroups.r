@@ -53,6 +53,31 @@ test_that("pop_age doesn't change total population size", {
   )
 })
 
+test_that("pop_age works with custom column names and interpolation", {
+  # Create test data with non-standard column names
+  pop_data <- data.frame(
+    age_lower = c(0, 5, 10, 15, 20),
+    pop_count = c(1000, 1200, 1100, 900, 800)
+  )
+
+  # Test with interpolation (age_limits not matching existing groups)
+  # nolint start: implicit_assignment_linter
+  result <- suppressWarnings(
+    pop_age(
+      pop_data,
+      age_limits = c(0, 8, 15),
+      pop_age_column = "age_lower",
+      pop_column = "pop_count"
+    )
+  )
+  # nolint end
+
+  expect_named(result, c("age_lower", "pop_count"))
+  expect_identical(result$age_lower, c(0, 8, 15))
+  # Total population should be preserved
+  expect_identical(sum(result$pop_count), sum(pop_data$pop_count))
+})
+
 test_that("pop_age throws warnings or errors", {
   expect_snapshot(
     error = TRUE,
