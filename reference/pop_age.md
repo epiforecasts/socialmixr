@@ -10,7 +10,7 @@ requested than available)
 ``` r
 pop_age(
   pop,
-  age_limits,
+  age_limits = NULL,
   pop_age_column = "lower.age.limit",
   pop_column = "population",
   ...,
@@ -29,7 +29,8 @@ pop_age(
 
 - age_limits:
 
-  lower age limits of age groups to extract
+  lower age limits of age groups to extract; if NULL (default), the
+  population data is returned unchanged
 
 - pop_age_column:
 
