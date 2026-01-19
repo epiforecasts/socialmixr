@@ -67,6 +67,16 @@
 
 ### Deprecations
 
+- The `missing_contact_age = "sample"` option in
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  and
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
+  has been soft-deprecated and will be removed in a future version. Use
+  `"remove"` to exclude contacts with missing ages, `"keep"` to retain
+  them as a separate age group, or `"ignore"` to drop only those
+  contacts
+  ([\#273](https://github.com/epiforecasts/socialmixr/issues/273)).
+
 - Argument names with dots (e.g., `age.limits`) have been deprecated in
   favour of underscores (e.g., `age_limits`) in
   [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md),
