@@ -68,7 +68,7 @@ The survey object with processed age data.
 ## Examples
 
 ``` r
-polymod_grouped <- polymod |> assign_age_groups()
+polymod_grouped <- assign_age_groups(polymod)
 polymod_grouped
 #> $participants
 #> Key: <lower.age.limit>
@@ -272,7 +272,7 @@ polymod_grouped
 #> 
 #> attr(,"class")
 #> [1] "contact_survey"
-polymod_custom <- polymod |> assign_age_groups(age_limits = c(0, 5, 10, 15))
+polymod_custom <- assign_age_groups(polymod, age_limits = c(0, 5, 10, 15))
 polymod_custom
 #> $participants
 #> Key: <lower.age.limit>

@@ -9,7 +9,7 @@ ranges, handles missing values, and assigns age groups."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">socialmixr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,7 @@ ranges, handles missing values, and assigns age groups."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Assign age groups in survey data</h1>
-      <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/R/assign-age-groups.R" class="external-link"><code>R/assign-age-groups.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/v0.5.0/R/assign-age-groups.R" class="external-link"><code>R/assign-age-groups.R</code></a></small>
       <div class="d-none name"><code>assign_age_groups.Rd</code></div>
     </div>
 
@@ -110,7 +110,7 @@ contact with missing age are ignored in the contact analysis</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">polymod_grouped</span> <span class="op">&lt;-</span> <span class="va">polymod</span> <span class="op">|&gt;</span> <span class="fu">assign_age_groups</span><span class="op">(</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">polymod_grouped</span> <span class="op">&lt;-</span> <span class="fu">assign_age_groups</span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">polymod_grouped</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $participants</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Key: &lt;lower.age.limit&gt;</span>
@@ -314,7 +314,7 @@ contact with missing age are ignored in the contact analysis</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "contact_survey"</span>
-<span class="r-in"><span><span class="va">polymod_custom</span> <span class="op">&lt;-</span> <span class="va">polymod</span> <span class="op">|&gt;</span> <span class="fu">assign_age_groups</span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">polymod_custom</span> <span class="op">&lt;-</span> <span class="fu">assign_age_groups</span><span class="op">(</span><span class="va">polymod</span>, age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">polymod_custom</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $participants</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Key: &lt;lower.age.limit&gt;</span>

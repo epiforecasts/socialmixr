@@ -1,13 +1,49 @@
 # Changelog
 
-## socialmixr (development version)
+## socialmixr 0.5.0
 
-- Added
-  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
-  and
-  [`survey_country_population()`](https://epiforecasts.io/socialmixr/reference/survey_country_population.md)
-  ([\#131](https://github.com/epiforecasts/socialmixr/issues/131),
-  [\#226](https://github.com/epiforecasts/socialmixr/issues/226))
+CRAN release: 2026-01-19
+
+This release focuses on improved modularity and flexibility for contact
+matrix workflows. Key highlights include new standalone functions for
+age group assignment and population data retrieval, more intuitive
+handling of age limits, and the beginning of a transition to the
+[contactsurveys](https://github.com/epiforecasts/contactsurveys) package
+for survey downloads.
+
+We thank Nicholas Tierney ([@njtierney](https://github.com/njtierney)),
+Lander Willem ([@lwillem](https://github.com/lwillem)), Hugo Gruson
+([@Bisaloo](https://github.com/Bisaloo)), Lloyd Chapman
+([@LloydChapman](https://github.com/LloydChapman)), James Azam
+([@jamesmbaazam](https://github.com/jamesmbaazam)), and Abdoelnaser
+Degoot ([@Degoot-AM](https://github.com/Degoot-AM)) for their
+contributions to this release.
+
+### Breaking changes
+
+- [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  now preserves all user-specified `age_limits`, even when no
+  participants exist in some age groups. Previously, age groups beyond
+  the maximum participant age were silently dropped. Empty age groups
+  now show 0 participants and NA values in the matrix. This may change
+  matrix dimensions for existing code
+  ([@Bisaloo](https://github.com/Bisaloo),
+  [\#144](https://github.com/epiforecasts/socialmixr/issues/144),
+  [\#231](https://github.com/epiforecasts/socialmixr/issues/231)).
+
+- `contact_matrix(counts = TRUE)$matrix` now returns an array rather
+  than an xtabs object. This matches the existing output format of
+  `contact_matrix(counts = FALSE)$matrix`
+  ([@Bisaloo](https://github.com/Bisaloo),
+  [\#118](https://github.com/epiforecasts/socialmixr/issues/118)).
+
+- When `age_limits` is not specified, it is now inferred from both
+  participant and contact ages, not just participant ages. This may
+  result in more age groups if contacts include ages beyond the
+  participant age range
+  ([\#230](https://github.com/epiforecasts/socialmixr/issues/230)).
+
+### New features
 
 - [`as_contact_survey()`](https://epiforecasts.io/socialmixr/reference/as_contact_survey.md)
   no longer requires `country` and `year` columns. These columns are now
@@ -16,66 +52,44 @@
   ([\#193](https://github.com/epiforecasts/socialmixr/issues/193),
   [\#199](https://github.com/epiforecasts/socialmixr/issues/199)).
 
+- New
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
+  and
+  [`survey_country_population()`](https://epiforecasts.io/socialmixr/reference/survey_country_population.md)
+  functions allow modular pre-processing of survey data
+  ([\#131](https://github.com/epiforecasts/socialmixr/issues/131),
+  [\#226](https://github.com/epiforecasts/socialmixr/issues/226)).
+
 - Reduced verbosity by removing messages about removing
   participants/contacts with missing ages
   ([\#228](https://github.com/epiforecasts/socialmixr/issues/228)).
 
-### Breaking changes
-
-- When `age.limits` is not specified, it is now inferred from both
-  participant and contact ages, not just participant ages. This may
-  result in more age groups if contacts include ages beyond the
-  participant age range
-  ([\#230](https://github.com/epiforecasts/socialmixr/issues/230)).
-
-- [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-  now preserves all user-specified `age.limits`, even when no
-  participants exist in some age groups. Previously, age groups beyond
-  the maximum participant age were silently dropped. Empty age groups
-  now show 0 participants and NA values in the matrix. This may change
-  matrix dimensions for existing code
-  ([\#144](https://github.com/epiforecasts/socialmixr/issues/144),
-  [\#231](https://github.com/epiforecasts/socialmixr/issues/231)).
-
-- `contact_matrix(counts = TRUE)$matrix` is now an array rather than an
-  xtabs object. This matches the existing output format of
-  `contact_matrix(counts = FALSE)$matrix`
-  ([\#118](https://github.com/epiforecasts/socialmixr/issues/118)).
-
 ### Bug fixes
 
-- [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
-  now correctly loads longitudinal surveys with repeated observations
-  per participant (e.g., sday files with wave/studyDay columns).
-  Previously, these columns were silently dropped
-  ([\#192](https://github.com/epiforecasts/socialmixr/issues/192),
-  [\#194](https://github.com/epiforecasts/socialmixr/issues/194)).
+- [`clean()`](https://epiforecasts.io/socialmixr/reference/clean.md) now
+  correctly processes age values with units (e.g., “6 months”, “52
+  weeks”) ([@LloydChapman](https://github.com/LloydChapman),
+  [\#250](https://github.com/epiforecasts/socialmixr/issues/250),
+  [\#256](https://github.com/epiforecasts/socialmixr/issues/256)).
 
 - [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
   now warns when a survey contains multiple observations per
   participant, as results will aggregate across all observations
   ([\#260](https://github.com/epiforecasts/socialmixr/issues/260)).
 
-- A bug was fixed leading to excess contacts with `NA` age if the lowest
-  age group did not start at 0.
+- [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
+  now correctly loads longitudinal surveys with repeated observations
+  per participant (e.g., sday files with wave/studyDay columns).
+  Previously, these columns were silently dropped
+  ([@njtierney](https://github.com/njtierney),
+  [\#192](https://github.com/epiforecasts/socialmixr/issues/192),
+  [\#194](https://github.com/epiforecasts/socialmixr/issues/194)).
 
-- Fixed bugs in
-  [`clean()`](https://epiforecasts.io/socialmixr/reference/clean.md)
-  that caused errors or incorrect results when processing age values
-  with units (e.g., “6 months”, “52 weeks”)
-  ([\#256](https://github.com/epiforecasts/socialmixr/issues/256)).
+- Fixed a bug leading to excess contacts with `NA` age if the lowest age
+  group did not start at 0 ([@lwillem](https://github.com/lwillem),
+  [\#170](https://github.com/epiforecasts/socialmixr/issues/170)).
 
 ### Deprecations
-
-- The `missing_contact_age = "sample"` option in
-  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-  and
-  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
-  has been soft-deprecated and will be removed in a future version. Use
-  `"remove"` to exclude contacts with missing ages, `"keep"` to retain
-  them as a separate age group, or `"ignore"` to drop only those
-  contacts
-  ([\#273](https://github.com/epiforecasts/socialmixr/issues/273)).
 
 - Argument names with dots (e.g., `age.limits`) have been deprecated in
   favour of underscores (e.g., `age_limits`) in
@@ -88,27 +102,28 @@
   warnings
   ([\#160](https://github.com/epiforecasts/socialmixr/issues/160)).
 
-- We have soft-deprecated
-  [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md),
+- [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md),
   [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md),
-  [`get_citation()`](https://epiforecasts.io/socialmixr/reference/get_citation.md)
+  [`get_citation()`](https://epiforecasts.io/socialmixr/reference/get_citation.md),
+  [`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md),
   and
-  [`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md)
-  and moved these to
-  [contactsurveys](https://github.com/epiforecasts/contactsurveys). We
-  have also soft-deprecated
   [`survey_countries()`](https://epiforecasts.io/socialmixr/reference/survey_countries.md)
-  as this called
-  [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md)
-  internally. This is part of decoupling these features from socialmixr
-  to reduce dependencies
-  ([\#207](https://github.com/epiforecasts/socialmixr/issues/207) and
-  [\#179](https://github.com/epiforecasts/socialmixr/issues/179)). These
-  will continue to be supported until we move to a major release
-  (version 1.0.0) of socialmixr. In the meantime, we recommend that
-  users use the
-  [contactsurveys](https://github.com/epiforecasts/contactsurveys)
-  package, as these functions have improved caching and support there.
+  have been soft-deprecated and moved to
+  [contactsurveys](https://github.com/epiforecasts/contactsurveys). This
+  is part of decoupling these features from socialmixr to reduce
+  dependencies ([@njtierney](https://github.com/njtierney),
+  [\#179](https://github.com/epiforecasts/socialmixr/issues/179),
+  [\#207](https://github.com/epiforecasts/socialmixr/issues/207)). These
+  will continue to work until version 1.0.0.
+
+- The `missing_contact_age = "sample"` option in
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  and
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
+  has been soft-deprecated. Use `"remove"` to exclude contacts with
+  missing ages, `"keep"` to retain them as a separate age group, or
+  `"ignore"` to drop only those contacts
+  ([\#273](https://github.com/epiforecasts/socialmixr/issues/273)).
 
 ## socialmixr 0.4.0
 
