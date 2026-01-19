@@ -54,6 +54,18 @@ assign_age_groups <- function(
   missing_participant_age <- rlang::arg_match(missing_participant_age)
   missing_contact_age <- rlang::arg_match(missing_contact_age)
 
+  if (missing_contact_age == "sample") {
+    lifecycle::deprecate_warn(
+      "0.5.0",
+      "assign_age_groups(missing_contact_age = 'sample')",
+      details = paste(
+        "Sampling missing contact ages will be removed in a future version.",
+        "Use 'remove' to exclude contacts with missing ages, 'keep' to retain",
+        "them as a separate age group, or 'ignore' to drop only those contacts."
+      )
+    )
+  }
+
   ## set contact age and participant age if it's not in the data
   survey$participants <- add_part_age(survey$participants)
   survey$contacts <- add_contact_age(survey$contacts)
