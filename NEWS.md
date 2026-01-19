@@ -26,6 +26,8 @@
 
 ## Deprecations
 
+* The `missing_contact_age = "sample"` option in `contact_matrix()` and `assign_age_groups()` has been soft-deprecated and will be removed in a future version. Use `"remove"` to exclude contacts with missing ages, `"keep"` to retain them as a separate age group, or `"ignore"` to drop only those contacts (#273).
+
 * Argument names with dots (e.g., `age.limits`) have been deprecated in favour of underscores (e.g., `age_limits`) in `contact_matrix()`, `as_contact_survey()`, `pop_age()`, and `clean()`. The old argument names still work but will produce deprecation warnings (#160).
 
 * We have soft-deprecated `get_survey()`, `download_survey()`, `get_citation()` and `list_surveys()` and moved these to [contactsurveys](https://github.com/epiforecasts/contactsurveys). We have also soft-deprecated `survey_countries()` as this called `get_survey()` internally. This is part of decoupling these features from socialmixr to reduce dependencies (#207 and #179). These will continue to be supported until we move to a major release (version 1.0.0) of socialmixr. In the meantime, we recommend that users use the [contactsurveys](https://github.com/epiforecasts/contactsurveys) package, as these functions have improved caching and support there.
