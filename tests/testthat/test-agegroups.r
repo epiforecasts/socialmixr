@@ -53,6 +53,23 @@ test_that("pop_age doesn't change total population size", {
   )
 })
 
+test_that("pop_age returns data unchanged when age_limits is NULL", {
+  ages_it_2015 <- wpp_age("Italy", 2015)
+
+  # Calling without age_limits should return identical data
+  result <- pop_age(ages_it_2015)
+  expect_identical(result, ages_it_2015)
+
+  # Explicitly passing NULL should also work
+  result_null <- pop_age(ages_it_2015, age_limits = NULL)
+  expect_identical(result_null, ages_it_2015)
+
+  # Data.table input should also be returned unchanged
+  ages_dt <- data.table::as.data.table(ages_it_2015)
+  result_dt <- pop_age(ages_dt)
+  expect_identical(result_dt, ages_dt)
+})
+
 test_that("pop_age works with custom column names and interpolation", {
   # Create test data with non-standard column names
   pop_data <- data.frame(
