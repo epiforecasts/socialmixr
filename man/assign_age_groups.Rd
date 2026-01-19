@@ -52,8 +52,8 @@ This function processes age data in a survey object. It imputes ages from
 ranges, handles missing values, and assigns age groups.
 }
 \examples{
-polymod_grouped <- polymod |> assign_age_groups()
+polymod_grouped <- assign_age_groups(polymod)
 polymod_grouped
-polymod_custom <- polymod |> assign_age_groups(age_limits = c(0, 5, 10, 15))
+polymod_custom <- assign_age_groups(polymod, age_limits = c(0, 5, 10, 15))
 polymod_custom
 }

@@ -1,36 +1,72 @@
-# socialmixr (development version)
+# socialmixr 0.5.0
 
-* Added `assign_age_groups()` and `survey_country_population()` (#131, #226)
-
-* `as_contact_survey()` no longer requires `country` and `year` columns. These columns are now auto-detected if present, but surveys without them can be loaded successfully (#193, #199).
-
-* Reduced verbosity by removing messages about removing participants/contacts with missing ages (#228).
+This release focuses on improved modularity and flexibility for contact matrix
+workflows. Key highlights include new standalone functions for age group
+assignment and population data retrieval, more intuitive handling of age
+limits, and the beginning of a transition to the
+[contactsurveys](https://github.com/epiforecasts/contactsurveys) package for
+survey downloads.
 
 ## Breaking changes
 
-* When `age.limits` is not specified, it is now inferred from both participant and contact ages, not just participant ages. This may result in more age groups if contacts include ages beyond the participant age range (#230).
+* `contact_matrix()` now preserves all user-specified `age_limits`, even when
+  no participants exist in some age groups. Previously, age groups beyond the
+  maximum participant age were silently dropped. Empty age groups now show
+  0 participants and NA values in the matrix. This may change matrix dimensions
+  for existing code (@Bisaloo, #144, #231).
 
-* `contact_matrix()` now preserves all user-specified `age.limits`, even when no participants exist in some age groups. Previously, age groups beyond the maximum participant age were silently dropped. Empty age groups now show 0 participants and NA values in the matrix. This may change matrix dimensions for existing code (#144, #231).
+* `contact_matrix(counts = TRUE)$matrix` now returns an array rather than an
+  xtabs object. This matches the existing output format of
+  `contact_matrix(counts = FALSE)$matrix` (@Bisaloo, #118).
 
-* `contact_matrix(counts = TRUE)$matrix` is now an array rather than an xtabs object. This matches the existing output format of `contact_matrix(counts = FALSE)$matrix` (#118).
+* When `age_limits` is not specified, it is now inferred from both participant
+  and contact ages, not just participant ages. This may result in more age
+  groups if contacts include ages beyond the participant age range (#230).
+
+## New features
+
+* `as_contact_survey()` no longer requires `country` and `year` columns. These
+  columns are now auto-detected if present, but surveys without them can be
+  loaded successfully (#193, #199).
+
+* New `assign_age_groups()` and `survey_country_population()` functions allow
+  modular pre-processing of survey data (#131, #226).
+
+* Reduced verbosity by removing messages about removing participants/contacts
+  with missing ages (#228).
 
 ## Bug fixes
 
-* `load_survey()` now correctly loads longitudinal surveys with repeated observations per participant (e.g., sday files with wave/studyDay columns). Previously, these columns were silently dropped (#192, #194).
+* `clean()` now correctly processes age values with units (e.g., "6 months",
+  "52 weeks") (@LloydChapman, #250, #256).
 
-* `contact_matrix()` now warns when a survey contains multiple observations per participant, as results will aggregate across all observations (#260).
+* `contact_matrix()` now warns when a survey contains multiple observations per
+  participant, as results will aggregate across all observations (#260).
 
-* A bug was fixed leading to excess contacts with `NA` age if the lowest age group did not start at 0.
+* `load_survey()` now correctly loads longitudinal surveys with repeated
+  observations per participant (e.g., sday files with wave/studyDay columns).
+  Previously, these columns were silently dropped (@njtierney, #192, #194).
 
-* Fixed bugs in `clean()` that caused errors or incorrect results when processing age values with units (e.g., "6 months", "52 weeks") (#256).
+* Fixed a bug leading to excess contacts with `NA` age if the lowest age group
+  did not start at 0 (@lwillem, #170).
 
 ## Deprecations
 
-* The `missing_contact_age = "sample"` option in `contact_matrix()` and `assign_age_groups()` has been soft-deprecated and will be removed in a future version. Use `"remove"` to exclude contacts with missing ages, `"keep"` to retain them as a separate age group, or `"ignore"` to drop only those contacts (#273).
+* Argument names with dots (e.g., `age.limits`) have been deprecated in favour
+  of underscores (e.g., `age_limits`) in `contact_matrix()`,
+  `as_contact_survey()`, `pop_age()`, and `clean()`. The old argument names
+  still work but will produce deprecation warnings (#160).
 
-* Argument names with dots (e.g., `age.limits`) have been deprecated in favour of underscores (e.g., `age_limits`) in `contact_matrix()`, `as_contact_survey()`, `pop_age()`, and `clean()`. The old argument names still work but will produce deprecation warnings (#160).
+* `get_survey()`, `download_survey()`, `get_citation()`, `list_surveys()`, and
+  `survey_countries()` have been soft-deprecated and moved to
+  [contactsurveys](https://github.com/epiforecasts/contactsurveys). This is
+  part of decoupling these features from socialmixr to reduce dependencies
+  (@njtierney, #179, #207). These will continue to work until version 1.0.0.
 
-* We have soft-deprecated `get_survey()`, `download_survey()`, `get_citation()` and `list_surveys()` and moved these to [contactsurveys](https://github.com/epiforecasts/contactsurveys). We have also soft-deprecated `survey_countries()` as this called `get_survey()` internally. This is part of decoupling these features from socialmixr to reduce dependencies (#207 and #179). These will continue to be supported until we move to a major release (version 1.0.0) of socialmixr. In the meantime, we recommend that users use the [contactsurveys](https://github.com/epiforecasts/contactsurveys) package, as these functions have improved caching and support there.
+* The `missing_contact_age = "sample"` option in `contact_matrix()` and
+ `assign_age_groups()` has been soft-deprecated. Use `"remove"` to exclude
+  contacts with missing ages, `"keep"` to retain them as a separate age group,
+  or `"ignore"` to drop only those contacts (#273).
 
 # socialmixr 0.4.0
 
@@ -48,7 +84,7 @@
   ```r
   # No longer works!
   contact_matrix("10.5281/zenodo.1095664")
-  
+
   # Recommended workflow
   get_survey("10.5281/zenodo.1095664") |>
     contact_matrix()
@@ -70,7 +106,7 @@
 ## Internal changes
 
 * Code quality is now ensured through continuous integration and the lintr package (#69).
-* [Cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity) of `download_survey()` has been reduced by externalising the `find_common_prefix()` function and failing early instead of relying on unnecessary if/else sequences 
+* [Cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity) of `download_survey()` has been reduced by externalising the `find_common_prefix()` function and failing early instead of relying on unnecessary if/else sequences
 * More generous filename checks now pass files named e.g. "..._participants_common..." an not only "...participant_common..."
 * The package now sets a custom user agent when downloading survey data (#82).
 * A problem was fixed where attempted joins of files could lead to blowing up memory use (#75).
@@ -135,7 +171,7 @@ to wpp2017 package
 * more consistency checks and tests
 * performance improvements when weighting
 * 'pop_age' can now be called by the user
- 
+
 # socialmixr 0.1.2
 
 * improved downloading form Zenodo; only a single download is used now
