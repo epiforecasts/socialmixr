@@ -63,6 +63,11 @@ test_that("pop_age returns data unchanged when age_limits is NULL", {
   # Explicitly passing NULL should also work
   result_null <- pop_age(ages_it_2015, age_limits = NULL)
   expect_identical(result_null, ages_it_2015)
+
+  # Data.table input should also be returned unchanged
+  ages_dt <- data.table::as.data.table(ages_it_2015)
+  result_dt <- pop_age(ages_dt)
+  expect_identical(result_dt, ages_dt)
 })
 
 test_that("pop_age throws warnings or errors", {

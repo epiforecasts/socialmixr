@@ -70,64 +70,67 @@ pop_age <- function(
     )
   }
 
+  ## Return early if no age_limits specified - data stays truly unchanged
+  if (is.null(age_limits)) {
+    return(pop)
+  }
+
   pop <- data.table(pop)
   setkeyv(pop, pop_age_column)
 
-  if (!is.null(age_limits)) {
-    age_limits <- sort(age_limits)
-    max_age <- max(pop[, pop_age_column, with = FALSE])
-    missing_ages <- setdiff(
-      age_limits[age_limits <= max_age],
-      pop[[pop_age_column]]
-    )
-    if (length(missing_ages) > 0) {
-      cli::cli_warn(
-        c(
-          "Not all age groups represented in population data (5-year age band).",
-          # nolint start
-          "i" = "Linearly estimating age group sizes from the 5-year bands."
-          # nolint end
-        )
+  age_limits <- sort(age_limits)
+  max_age <- max(pop[, pop_age_column, with = FALSE])
+  missing_ages <- setdiff(
+    age_limits[age_limits <= max_age],
+    pop[[pop_age_column]]
+  )
+  if (length(missing_ages) > 0) {
+    cli::cli_warn(
+      c(
+        "Not all age groups represented in population data (5-year age band).",
+        # nolint start
+        "i" = "Linearly estimating age group sizes from the 5-year bands."
+        # nolint end
       )
-      ..original.upper.age.limit <- NULL
-      pop <- pop[,
-        ..original.upper.age.limit := c(pop[[pop_age_column]][-1], NA)
-      ]
-      pop <- pop[, ..original.lower.age.limit := get(pop_age_column)]
-      all_ages <- data.frame(age_limits[
-        age_limits <= max(pop[[pop_age_column]])
-      ])
-      colnames(all_ages) <- pop_age_column
-      pop <- merge(pop, all_ages, all = TRUE, by = pop_age_column)
-      pop <- pop[, ..segment := cumsum(!is.na(..original.lower.age.limit))]
-      pop <- pop[,
-        ..original.lower.age.limit := ..original.lower.age.limit[1],
-        by = ..segment
-      ]
-      pop <- pop[,
-        ..original.upper.age.limit := ..original.upper.age.limit[1],
-        by = ..segment
-      ]
-      pop <- pop[, paste(pop_column) := get(pop_column)[1], by = ..segment]
-      pop <- pop[, ..upper.age.limit := c(pop[[pop_age_column]][-1], NA)]
-      pop[
-        !is.na(..original.upper.age.limit),
-        population := round(
-          population *
-            (..upper.age.limit - get(pop_age_column)) /
-            (..original.upper.age.limit - ..original.lower.age.limit)
-        )
-      ]
-      pop <- pop[, c(pop_age_column, pop_column), with = FALSE]
-    }
-
-    pop <- pop[get(pop_age_column) >= min(age_limits)]
+    )
+    ..original.upper.age.limit <- NULL
     pop <- pop[,
-      paste(pop_age_column) := reduce_agegroups(get(pop_age_column), age_limits)
+      ..original.upper.age.limit := c(pop[[pop_age_column]][-1], NA)
     ]
-    pop <- pop[, list(..population = sum(get(pop_column))), by = pop_age_column]
-    setnames(pop, "..population", pop_column)
+    pop <- pop[, ..original.lower.age.limit := get(pop_age_column)]
+    all_ages <- data.frame(age_limits[
+      age_limits <= max(pop[[pop_age_column]])
+    ])
+    colnames(all_ages) <- pop_age_column
+    pop <- merge(pop, all_ages, all = TRUE, by = pop_age_column)
+    pop <- pop[, ..segment := cumsum(!is.na(..original.lower.age.limit))]
+    pop <- pop[,
+      ..original.lower.age.limit := ..original.lower.age.limit[1],
+      by = ..segment
+    ]
+    pop <- pop[,
+      ..original.upper.age.limit := ..original.upper.age.limit[1],
+      by = ..segment
+    ]
+    pop <- pop[, paste(pop_column) := get(pop_column)[1], by = ..segment]
+    pop <- pop[, ..upper.age.limit := c(pop[[pop_age_column]][-1], NA)]
+    pop[
+      !is.na(..original.upper.age.limit),
+      population := round(
+        population *
+          (..upper.age.limit - get(pop_age_column)) /
+          (..original.upper.age.limit - ..original.lower.age.limit)
+      )
+    ]
+    pop <- pop[, c(pop_age_column, pop_column), with = FALSE]
   }
+
+  pop <- pop[get(pop_age_column) >= min(age_limits)]
+  pop <- pop[,
+    paste(pop_age_column) := reduce_agegroups(get(pop_age_column), age_limits)
+  ]
+  pop <- pop[, list(..population = sum(get(pop_column))), by = pop_age_column]
+  setnames(pop, "..population", pop_column)
 
   setkeyv(pop, pop_age_column)
   as.data.frame(pop)
