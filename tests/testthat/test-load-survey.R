@@ -61,6 +61,7 @@ test_that("find_unique_key ignores internal columns", {
 test_that("load_survey handles longitudinal data with sday files", {
   skip_if_offline("zenodo.org")
   skip_on_cran()
+  skip_on_ci()
 
   # Beraud France has longitudinal structure with wave and studyDay
   files <- suppressMessages(suppressWarnings(

@@ -103,15 +103,20 @@ clean.contact_survey <- function(
         fixed = TRUE
       ))
     ) {
+      ## extract numeric part and unit (e.g., "6 months" -> "6" and "months")
       x$participants <- x$participants[,
-        ..age.unit := tstrsplit(
+        c("..age.value", "..age.unit") := tstrsplit(
           as.character(get(participant_age_column)),
           " ",
-          keep = 2L,
           fixed = TRUE
         )
       ]
-      x$participants <- x$participants[
+      ## update age column to just the numeric part
+      x$participants <- x$participants[,
+        paste(participant_age_column) := ..age.value
+      ]
+      x$participants[, ..age.value := NULL]
+      x$participants <- x$participants[,
         ..age.unit := fifelse(
           !is.na(get(participant_age_column)) & is.na(..age.unit),
           "years",
@@ -139,11 +144,17 @@ clean.contact_survey <- function(
     seconds_in_year <- period_to_seconds(years(1))
     for (limit in limits) {
       x$participants <- x$participants[, paste(limit) := as.numeric(get(limit))]
+      ## period() is not vectorized, so we need to apply it row by row
       x$participants <-
         x$participants[
           ..age.unit != "years" & !is.na(get(limit)),
-          paste(limit) := period_to_seconds(period(get(limit), ..age.unit)) /
-            seconds_in_year,
+          paste(limit) := mapply(
+            function(val, unit) {
+              period_to_seconds(period(val, unit)) / seconds_in_year
+            },
+            get(limit),
+            ..age.unit
+          ),
         ]
     }
 
