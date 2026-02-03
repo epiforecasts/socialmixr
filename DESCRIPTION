@@ -5,6 +5,8 @@ Authors@R: c(
     person("Sebastian", "Funk", , "sebastian.funk@lshtm.ac.uk", role = c("aut", "cre")),
     person("Lander", "Willem", role = "aut"),
     person("Hugo", "Gruson", role = "aut"),
+    person("Nicholas", "Tierney", , "nicholas.tierney@gmail.com", role = "aut",
+           comment = c(ORCID = "0000-0003-1460-8722")),
     person("Maria", "Bekker-Nielsen Dunbar", role = "ctb"),
     person("Carl A. B.", "Pearson", role = "ctb"),
     person("Sam", "Clifford", , "sj.clifford@gmail.com", role = "ctb"),
