@@ -41,6 +41,7 @@ Imports:
     rlang,
     methods
 Suggests:
+    contactsurveys,
     ggplot2,
     here,
     knitr,

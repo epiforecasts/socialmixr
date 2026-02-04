@@ -16,8 +16,6 @@ vignette: >
 
 ```{r setup, include = FALSE}
 library(knitr)
-library(socialmixr)
-library(ggplot2)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -27,18 +25,24 @@ data.table::setDTthreads(1)
 
 [socialmixr](https://github.com/epiforecasts/socialmixr) is an `R` package to derive social mixing matrices from survey data. These are particularly useful for age-structured [infectious disease models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease). For background on age-specific mixing matrices and what data inform them, see, for example, the paper on POLYMOD by [@mossong_social_2008].
 
+# Setup
+
+This vignette uses the POLYMOD survey data which is included in socialmixr, and ggplot2 for plotting:
+
+```{r}
+library(socialmixr)
+library(ggplot2)
+data(polymod)
+```
+
+To download other surveys from the [Social contact data](https://zenodo.org/communities/social_contact_data) community on Zenodo, use the [contactsurveys](https://cran.r-project.org/package=contactsurveys) package.
+
 # Usage
 
 At the heart of the `socialmixr` package is the `contact_matrix()` function. This extracts a contact matrix from survey data. You can use the `R` help to find out about usage of the `contact_matrix()` function, including a list of examples:
 
 ```{r eval=FALSE}
 ?contact_matrix
-```
-
-The POLYMOD data are included with the package and can be loaded using
-
-```{r}
-data(polymod)
 ```
 
 An example use would be
@@ -49,41 +53,13 @@ contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 1, 5, 15
 
 This generates a contact matrix from the UK part of the POLYMOD study, with age groups 0-1, 1-5, 5-15 and 15+ years. It contains the mean number of contacts that each member of an age group (row) has reported with members of the same or another age group (column).
 
-# Surveys
-
-The key argument to the `contact_matrix()` function is the `survey` that it supposed to use. The `socialmixr` package includes the POLYMOD survey, which will be used if not survey is specified. It also provides access to all surveys in the [Social contact data](https://zenodo.org/communities/social_contact_data) community on [Zenodo](https://zenodo.org). The available surveys can be listed (if an internet connection is available) with
-
-```{r eval=FALSE}
-list_surveys()
-```
-
-A survey can be downloaded using the `get_survey()` command. This will get the relevant data of a survey given its Zenodo DOI (as returned by `list_surveys()`). All other relevant commands in the `socialmixr` package accept a DOI, but if a survey is to be used repeatedly it is worth downloading it and storing it locally to avoid the need for a network connection and speed up processing.
-
-```{r eval=FALSE}
-peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
-saveRDS(peru_survey, "peru.rds")
-```
-
-This way, the `peru` data set can be loaded in the future without the need for an internet connection using
-
-```{r eval=FALSE}
-peru_survey <- readRDS("peru.rds")
-```
-
-Some surveys may contain data from multiple countries. To check this, use the `survey_countries` function
+Some surveys contain data from multiple countries. The POLYMOD survey, for example, contains data from:
 
 ```{r}
-survey_countries(polymod)
+unique(polymod$participants$country)
 ```
 
 If one wishes to get a contact matrix for one or more specific countries, a `countries` argument can be passed to `contact_matrix()`. If this is not done, the different surveys contained in a dataset are combined as if they were one single sample (i.e., not applying any population-weighting by country or other correction).
-
-
-By default, socialmixr uses the POLYMOD survey. A reference for any given survey can be obtained using `get_citation()`, e.g.
-
-```{r}
-get_citation(polymod)
-```
 
 # Bootstrapping
 
