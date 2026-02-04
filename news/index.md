@@ -2,6 +2,8 @@
 
 ## socialmixr 0.5.1
 
+CRAN release: 2026-02-04
+
 This is a patch release with a bug fix and documentation updates.
 
 - [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
