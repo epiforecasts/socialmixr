@@ -1,23 +1,17 @@
 # Changelog
 
-## socialmixr 0.5.1
-
-This is a patch release with a bug fix and documentation updates.
-
-- [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
-  no longer fails when merging contact files that lack a `cont_id`
-  column
-  ([\#278](https://github.com/epiforecasts/socialmixr/issues/278)).
-
-- The vignette now points to the
-  [contactsurveys](https://cran.r-project.org/package=contactsurveys)
-  package for downloading surveys from Zenodo, and no longer uses
-  deprecated functions
-  ([\#269](https://github.com/epiforecasts/socialmixr/issues/269)).
+## socialmixr (development version)
 
 - Added Nicholas Tierney ([@njtierney](https://github.com/njtierney)) as
   package author
   ([\#277](https://github.com/epiforecasts/socialmixr/issues/277)).
+- Fixed
+  [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
+  failing when merging contact files that lack a `cont_id` column
+  ([\#278](https://github.com/epiforecasts/socialmixr/issues/278)).
+- Updated vignette to point to contactsurveys package for downloading
+  surveys, removing use of deprecated functions
+  ([\#269](https://github.com/epiforecasts/socialmixr/issues/269)).
 
 ## socialmixr 0.5.0
 

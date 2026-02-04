@@ -30,16 +30,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/epiforecasts/socialmixr/blob/v0.5.1/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/epiforecasts/socialmixr/blob/main/DESCRIPTION)
 
 Funk S, Willem L, Gruson H, Tierney N (2026). *socialmixr: Social Mixing
-Matrices for Infectious Disease Modelling*. R package version 0.5.1,
-<https://github.com/epiforecasts/socialmixr>.
+Matrices for Infectious Disease Modelling*. R package version
+0.5.0.9000, <https://github.com/epiforecasts/socialmixr>.
 
     @Manual{,
       title = {socialmixr: Social Mixing Matrices for Infectious Disease Modelling},
       author = {Sebastian Funk and Lander Willem and Hugo Gruson and Nicholas Tierney},
       year = {2026},
-      note = {R package version 0.5.1},
+      note = {R package version 0.5.0.9000},
       url = {https://github.com/epiforecasts/socialmixr},
     }
