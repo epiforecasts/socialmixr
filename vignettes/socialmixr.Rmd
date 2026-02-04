@@ -30,8 +30,8 @@ data.table::setDTthreads(1)
 This vignette uses the POLYMOD survey data which is included in socialmixr, and ggplot2 for plotting:
 
 ```{r}
-library(socialmixr)
-library(ggplot2)
+library(socialmixr) # nolint: library_call_linter.
+library(ggplot2) # nolint: library_call_linter.
 data(polymod)
 ```
 
