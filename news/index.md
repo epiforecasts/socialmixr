@@ -5,6 +5,10 @@
 - Added Nicholas Tierney ([@njtierney](https://github.com/njtierney)) as
   package author
   ([\#277](https://github.com/epiforecasts/socialmixr/issues/277)).
+- Fixed
+  [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
+  failing when merging contact files that lack a `cont_id` column
+  ([\#278](https://github.com/epiforecasts/socialmixr/issues/278)).
 
 ## socialmixr 0.5.0
 
