@@ -176,16 +176,19 @@ try_merge_additional_files <- function(
         # Check if merge created duplicates (longitudinal data case)
         has_duplicates <- anyDuplicated(merged[, "..main_id", with = FALSE]) > 0
 
-        # Determine base ID column for this survey type
-        base_id <- if (type == "participant") "part_id" else "cont_id"
-
         # If duplicates exist, check if there's a valid unique key
         # (this handles longitudinal surveys where sday files create multiple
         # rows per participant)
         accept_merge <- !has_duplicates
+        if (has_duplicates && type == "contact") {
+          # No methodology for longitudinal contacts - reject merge with
+          # duplicates
+          next
+        }
         if (has_duplicates) {
-          # Use user-specified key for participants if valid, else auto-detect
-          if (type == "participant" && !is.null(participant_key)) {
+          # Only participants reach here (contacts exit early above)
+          # Use user-specified key if valid, else auto-detect
+          if (!is.null(participant_key)) {
             # Check if all key columns exist in merged data
             missing_cols <- setdiff(participant_key, names(merged))
             if (
@@ -196,20 +199,17 @@ try_merge_additional_files <- function(
               unique_key <- participant_key
             } else {
               # Key doesn't work or columns missing - auto-detect
-              unique_key <- find_unique_key(merged, base_id)
+              unique_key <- find_unique_key(merged, "part_id")
             }
           } else {
-            unique_key <- find_unique_key(merged, base_id)
+            unique_key <- find_unique_key(merged, "part_id")
           }
 
           if (!is.null(unique_key)) {
             accept_merge <- TRUE
             # Update ..main_id to reflect the new unique key
             merged[, ("..main_id") := seq_len(.N)]
-            # Track the final detected key (only for participants)
-            if (type == "participant") {
-              final_detected_key <- unique_key
-            }
+            final_detected_key <- unique_key
           }
         }
 
