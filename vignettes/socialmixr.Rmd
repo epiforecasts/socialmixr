@@ -6,13 +6,18 @@ bibliography: socialmixr.bib
 nocite: '@*'
 link-citations: true
 output:
-  rmarkdown::html_vignette: 
+  rmarkdown::html_vignette:
     toc: true
 vignette: >
   %\VignetteIndexEntry{Introduction to socialmixr}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+```{r}
+library(socialmixr)
+library(ggplot2)
+```
 
 ```{r setup, include = FALSE}
 library(knitr)
@@ -27,15 +32,11 @@ data.table::setDTthreads(1)
 
 # Setup
 
-This vignette uses the POLYMOD survey data which is included in socialmixr, and ggplot2 for plotting:
+This vignette uses the POLYMOD survey data which is included in socialmixr, and ggplot2 for plotting. To download other surveys from the [Social contact data](https://zenodo.org/communities/social_contact_data) community on Zenodo, use the [contactsurveys](https://cran.r-project.org/package=contactsurveys) package.
 
 ```{r}
-library(socialmixr) # nolint: library_call_linter.
-library(ggplot2) # nolint: library_call_linter.
 data(polymod)
 ```
-
-To download other surveys from the [Social contact data](https://zenodo.org/communities/social_contact_data) community on Zenodo, use the [contactsurveys](https://cran.r-project.org/package=contactsurveys) package.
 
 # Usage
 
