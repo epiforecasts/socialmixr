@@ -163,10 +163,10 @@
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;          contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)      15+</span></span>
-<span><span class="co">#&gt;    [0,1)  0.32058824 1.0097222 1.545294 6.212026</span></span>
-<span><span class="co">#&gt;    [1,5)  0.12824349 2.3852635 1.650184 5.671638</span></span>
-<span><span class="co">#&gt;    [5,15) 0.02656895 0.4905255 7.417363 6.241942</span></span>
-<span><span class="co">#&gt;    15+    0.02923107 0.3606624 1.321965 9.761370</span></span></code></pre></div>
+<span><span class="co">#&gt;    [0,1)  0.37561216 0.6435266 1.379317 5.780858</span></span>
+<span><span class="co">#&gt;    [1,5)  0.11454766 2.3258400 1.515118 5.620802</span></span>
+<span><span class="co">#&gt;    [5,15) 0.02405496 0.5197021 7.948155 6.122486</span></span>
+<span><span class="co">#&gt;    15+    0.03186913 0.3503571 1.264086 9.673188</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
 </h2>
@@ -1127,13 +1127,13 @@
 </h2>
 <section class="level2"><h3 id="using-ggplot2">Using ggplot2<a class="anchor" aria-label="anchor" href="#using-ggplot2"></a>
 </h3>
-<p>The contact matrices can be plotted by using the <code>geom_tile()</code> function of the <code>ggplot2</code> package.</p>
+<p>The contact matrices can be plotted by using the <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a></code> function of the <code>ggplot2</code> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">reshape2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/melt.html" class="external-link">melt</a></span><span class="op">(</span><span class="va">mr</span>, varnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age.group"</span>, <span class="st">"age.group.contact"</span><span class="op">)</span>, value.name <span class="op">=</span> <span class="st">"contacts"</span><span class="op">)</span></span>
-<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">age.group</span>, y <span class="op">=</span> <span class="va">age.group.contact</span>, fill <span class="op">=</span> <span class="va">contacts</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_tile</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age.group</span>, y <span class="op">=</span> <span class="va">age.group.contact</span>, fill <span class="op">=</span> <span class="va">contacts</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="intro_files/figure-html/unnamed-chunk-35-1.png" width="384"></p>

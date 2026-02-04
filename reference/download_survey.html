@@ -47,7 +47,7 @@ download_survey() downloads survey data from Zenodo."></head><body>
     <div class="ref-description section level2">
     <p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a></p>
 <p><code>download_survey()</code> has been deprecated in favour of
-<code>contactsurveys::download_survey()</code>.</p>
+<code><a href="http://epiforecasts.io/contactsurveys/reference/download_survey.html" class="external-link">contactsurveys::download_survey()</a></code>.</p>
 <p><code>download_survey()</code> downloads survey data from Zenodo.</p>
     </div>
 
@@ -61,7 +61,7 @@ download_survey() downloads survey data from Zenodo."></head><body>
 
 
 <dl><dt id="arg-survey">survey<a class="anchor" aria-label="anchor" href="#arg-survey"></a></dt>
-<dd><p>a URL (see <code>contactsurveys::list_surveys()</code>)</p></dd>
+<dd><p>a URL (see <code><a href="http://epiforecasts.io/contactsurveys/reference/list_surveys.html" class="external-link">contactsurveys::list_surveys()</a></code>)</p></dd>
 
 
 <dt id="arg-dir">dir<a class="anchor" aria-label="anchor" href="#arg-dir"></a></dt>
@@ -84,10 +84,10 @@ temporary directory</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># we recommend using the contactsurveys package for download_survey()</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># if needed, discover surveys with:</span></span></span>
-<span class="r-in"><span><span class="fu">contactsurveys</span><span class="fu">::</span><span class="fu">list_surveys</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">contactsurveys</span><span class="fu">::</span><span class="fu"><a href="http://epiforecasts.io/contactsurveys/reference/list_surveys.html" class="external-link">list_surveys</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">peru_survey</span> <span class="op">&lt;-</span> <span class="fu">download_survey</span><span class="op">(</span><span class="st">"https://doi.org/10.5281/zenodo.1095664"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># --&gt;</span></span></span>
-<span class="r-in"><span><span class="va">peru_survey</span> <span class="op">&lt;-</span> <span class="fu">contactsurveys</span><span class="fu">::</span><span class="fu">download_survey</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">peru_survey</span> <span class="op">&lt;-</span> <span class="fu">contactsurveys</span><span class="fu">::</span><span class="fu"><a href="http://epiforecasts.io/contactsurveys/reference/download_survey.html" class="external-link">download_survey</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="st">"https://doi.org/10.5281/zenodo.1095664"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>

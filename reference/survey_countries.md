@@ -32,7 +32,8 @@ list of countries
 ## Details
 
 `survey_countries()` has been deprecated in favour of using
-`contactsurveys::download_survey()`, and
+[`contactsurveys::download_survey()`](http://epiforecasts.io/contactsurveys/reference/download_survey.md),
+and
 [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md),
 and then exploring the country column yourself.
 

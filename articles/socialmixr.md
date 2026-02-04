@@ -8,6 +8,22 @@ For background on age-specific mixing matrices and what data inform
 them, see, for example, the paper on POLYMOD by ([Mossong et al.
 2008](#ref-mossong_social_2008)).
 
+## Setup
+
+This vignette uses the POLYMOD survey data which is included in
+socialmixr, and ggplot2 for plotting. To download other surveys from the
+[Social contact
+data](https://zenodo.org/communities/social_contact_data) community on
+Zenodo, use the
+[contactsurveys](https://cran.r-project.org/package=contactsurveys)
+package.
+
+``` r
+library(socialmixr)
+library(ggplot2)
+data(polymod)
+```
+
 ## Usage
 
 At the heart of the `socialmixr` package is the
@@ -19,12 +35,6 @@ function, including a list of examples:
 
 ``` r
 ?contact_matrix
-```
-
-The POLYMOD data are included with the package and can be loaded using
-
-``` r
-data(polymod)
 ```
 
 An example use would be
@@ -53,58 +63,14 @@ with age groups 0-1, 1-5, 5-15 and 15+ years. It contains the mean
 number of contacts that each member of an age group (row) has reported
 with members of the same or another age group (column).
 
-## Surveys
-
-The key argument to the
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-function is the `survey` that it supposed to use. The `socialmixr`
-package includes the POLYMOD survey, which will be used if not survey is
-specified. It also provides access to all surveys in the [Social contact
-data](https://zenodo.org/communities/social_contact_data) community on
-[Zenodo](https://zenodo.org). The available surveys can be listed (if an
-internet connection is available) with
+Some surveys contain data from multiple countries. The POLYMOD survey,
+for example, contains data from:
 
 ``` r
-list_surveys()
-```
-
-A survey can be downloaded using the
-[`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md)
-command. This will get the relevant data of a survey given its Zenodo
-DOI (as returned by
-[`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md)).
-All other relevant commands in the `socialmixr` package accept a DOI,
-but if a survey is to be used repeatedly it is worth downloading it and
-storing it locally to avoid the need for a network connection and speed
-up processing.
-
-``` r
-peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
-saveRDS(peru_survey, "peru.rds")
-```
-
-This way, the `peru` data set can be loaded in the future without the
-need for an internet connection using
-
-``` r
-peru_survey <- readRDS("peru.rds")
-```
-
-Some surveys may contain data from multiple countries. To check this,
-use the `survey_countries` function
-
-``` r
-survey_countries(polymod)
-#> Warning: `survey_countries()` was deprecated in socialmixr 0.5.0.
-#> ℹ Please use `contactsurveys::download_survey()` instead.
-#> ℹ We recommend using contactsurveys::download_survey() to download your
-#>   surveys, and then you can load them with socialmixr::load_survey() and
-#>   explore which countries are in the data.
-#> This warning is displayed once per session.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
-#> [1] "Italy"          "Germany"        "Luxembourg"     "Netherlands"   
-#> [5] "Poland"         "United Kingdom" "Finland"        "Belgium"
+unique(polymod$participants$country)
+#> [1] Italy          Germany        Luxembourg     Netherlands    Poland        
+#> [6] United Kingdom Finland        Belgium       
+#> 8 Levels: Belgium Finland Germany Italy Luxembourg Netherlands ... United Kingdom
 ```
 
 If one wishes to get a contact matrix for one or more specific
@@ -113,25 +79,6 @@ countries, a `countries` argument can be passed to
 If this is not done, the different surveys contained in a dataset are
 combined as if they were one single sample (i.e., not applying any
 population-weighting by country or other correction).
-
-By default, socialmixr uses the POLYMOD survey. A reference for any
-given survey can be obtained using
-[`get_citation()`](https://epiforecasts.io/socialmixr/reference/get_citation.md),
-e.g.
-
-``` r
-get_citation(polymod)
-#> Warning: `get_citation()` was deprecated in socialmixr 0.5.0.
-#> ℹ Please use `contactsurveys::get_citation()` instead.
-#> This warning is displayed once per session.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
-#> Mossong J, Hens N, Jit M, Beutels P, Auranen K, Mikolajczyk R, Massari
-#> M, Salmaso S, Tomba GS, Wallinga J, Heijne J, Sadkowska-Todys M,
-#> Rosinska M, Edmunds WJ (2017). "POLYMOD social contact data."
-#> doi:10.5281/zenodo.1157934 <https://doi.org/10.5281/zenodo.1157934>,
-#> Version 1.1.
-```
 
 ## Bootstrapping
 
@@ -765,8 +712,9 @@ average equals:
 
 ### Using ggplot2
 
-The contact matrices can be plotted by using the `geom_tile()` function
-of the `ggplot2` package.
+The contact matrices can be plotted by using the
+[`geom_tile()`](https://ggplot2.tidyverse.org/reference/geom_tile.html)
+function of the `ggplot2` package.
 
 ``` r
 df <- reshape2::melt(mr, varnames = c("age.group", "age.group.contact"), value.name = "contacts")
@@ -775,7 +723,7 @@ ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) +
   geom_tile()
 ```
 
-![](socialmixr_files/figure-html/unnamed-chunk-35-1.png)
+![](socialmixr_files/figure-html/unnamed-chunk-31-1.png)
 
 ### Using R base
 
@@ -788,13 +736,13 @@ cells. Heat colors are used by default, though this can be changed.
 matrix_plot(mr)
 ```
 
-![](socialmixr_files/figure-html/unnamed-chunk-36-1.png)
+![](socialmixr_files/figure-html/unnamed-chunk-32-1.png)
 
 ``` r
 matrix_plot(mr, color.palette = gray.colors)
 ```
 
-![](socialmixr_files/figure-html/unnamed-chunk-36-2.png)
+![](socialmixr_files/figure-html/unnamed-chunk-32-2.png)
 
 ## References
 

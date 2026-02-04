@@ -3,7 +3,8 @@
 **\[deprecated\]**
 
 `get_survey()` has been deprecated in favour of using
-`contactsurveys::download_survey()` and then
+[`contactsurveys::download_survey()`](http://epiforecasts.io/contactsurveys/reference/download_survey.md)
+and then
 [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md).
 
 Downloads survey data, or extracts them from files, and returns a clean

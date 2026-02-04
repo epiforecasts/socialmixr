@@ -70,7 +70,7 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><code>survey_countries()</code> has been deprecated in favour of using
-<code>contactsurveys::download_survey()</code>, and <code><a href="load_survey.html">load_survey()</a></code>, and then
+<code><a href="http://epiforecasts.io/contactsurveys/reference/download_survey.html" class="external-link">contactsurveys::download_survey()</a></code>, and <code><a href="load_survey.html">load_survey()</a></code>, and then
 exploring the country column yourself.</p>
     </div>
 
@@ -89,7 +89,7 @@ exploring the country column yourself.</p>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">doi_peru</span> <span class="op">&lt;-</span> <span class="st">"10.5281/zenodo.1095664"</span> <span class="co"># nolint</span></span></span>
 <span class="r-in"><span><span class="co"># download the data with the contactsurveys package</span></span></span>
-<span class="r-in"><span><span class="va">peru_survey</span> <span class="op">&lt;-</span> <span class="fu">contactsurveys</span><span class="fu">::</span><span class="fu">download_survey</span><span class="op">(</span><span class="va">doi_peru</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">peru_survey</span> <span class="op">&lt;-</span> <span class="fu">contactsurveys</span><span class="fu">::</span><span class="fu"><a href="http://epiforecasts.io/contactsurveys/reference/download_survey.html" class="external-link">download_survey</a></span><span class="op">(</span><span class="va">doi_peru</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># load the survey with socialmixr</span></span></span>
 <span class="r-in"><span><span class="va">peru_data</span> <span class="op">&lt;-</span> <span class="fu">socialmixr</span><span class="fu">::</span><span class="fu"><a href="load_survey.html">load_survey</a></span><span class="op">(</span><span class="va">peru_survey</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># find the unique country - assuming your data has a "country" column:</span></span></span>

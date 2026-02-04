@@ -61,7 +61,7 @@ using load_survey()."></head><body>
     <div class="ref-description section level2">
     <p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a></p>
 <p><code>get_survey()</code> has been deprecated in favour of using
-<code>contactsurveys::download_survey()</code> and then <code><a href="load_survey.html">load_survey()</a></code>.</p>
+<code><a href="http://epiforecasts.io/contactsurveys/reference/download_survey.html" class="external-link">contactsurveys::download_survey()</a></code> and then <code><a href="load_survey.html">load_survey()</a></code>.</p>
 <p>Downloads survey data, or extracts them from files, and returns a clean data
 set. If a survey URL is accessed multiple times, the data will be cached
 (unless <code>clear_cache</code> is set to <code>TRUE</code>) to avoid repeated downloads.</p>
@@ -108,7 +108,7 @@ downloads.</p></dd>
 <span class="r-in"><span><span class="va">peru_doi</span> <span class="op">&lt;-</span> <span class="st">"https://doi.org/10.5281/zenodo.1095664"</span></span></span>
 <span class="r-in"><span><span class="va">peru_survey</span> <span class="op">&lt;-</span> <span class="fu">get_survey</span><span class="op">(</span><span class="va">peru_doi</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co">## --&gt; We now recommend:</span></span></span>
-<span class="r-in"><span><span class="va">peru_survey</span> <span class="op">&lt;-</span> <span class="fu">contactsurveys</span><span class="fu">::</span><span class="fu">download_survey</span><span class="op">(</span><span class="va">peru_doi</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">peru_survey</span> <span class="op">&lt;-</span> <span class="fu">contactsurveys</span><span class="fu">::</span><span class="fu"><a href="http://epiforecasts.io/contactsurveys/reference/download_survey.html" class="external-link">download_survey</a></span><span class="op">(</span><span class="va">peru_doi</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">peru_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_survey.html">load_survey</a></span><span class="op">(</span><span class="va">peru_survey</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>

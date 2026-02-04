@@ -9,6 +9,9 @@
   [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
   failing when merging contact files that lack a `cont_id` column
   ([\#278](https://github.com/epiforecasts/socialmixr/issues/278)).
+- Updated vignette to point to contactsurveys package for downloading
+  surveys, removing use of deprecated functions
+  ([\#269](https://github.com/epiforecasts/socialmixr/issues/269)).
 
 ## socialmixr 0.5.0
 

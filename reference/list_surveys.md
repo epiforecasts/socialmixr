@@ -3,7 +3,7 @@
 **\[deprecated\]**
 
 `list_surveys()` has been deprecated in favour of
-`contactsurveys::list_surveys()`.
+[`contactsurveys::list_surveys()`](http://epiforecasts.io/contactsurveys/reference/list_surveys.md).
 
 ## Usage
 

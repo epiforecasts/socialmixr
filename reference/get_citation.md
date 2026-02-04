@@ -3,7 +3,7 @@
 **\[deprecated\]**
 
 `get_citation()` has been deprecated in favour of
-`contactsurveys::get_citation()`.
+[`contactsurveys::get_citation()`](http://epiforecasts.io/contactsurveys/reference/get_citation.md).
 
 Gets a full citation for a
 [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md).

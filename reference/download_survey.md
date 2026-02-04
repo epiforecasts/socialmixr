@@ -3,7 +3,7 @@
 **\[deprecated\]**
 
 `download_survey()` has been deprecated in favour of
-`contactsurveys::download_survey()`.
+[`contactsurveys::download_survey()`](http://epiforecasts.io/contactsurveys/reference/download_survey.md).
 
 `download_survey()` downloads survey data from Zenodo.
 
@@ -17,7 +17,8 @@ download_survey(survey, dir = NULL, sleep = 1)
 
 - survey:
 
-  a URL (see `contactsurveys::list_surveys()`)
+  a URL (see
+  [`contactsurveys::list_surveys()`](http://epiforecasts.io/contactsurveys/reference/list_surveys.md))
 
 - dir:
 

@@ -153,10 +153,10 @@ mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
 #>          contact.age.group
 #> age.group      [0,1)     [1,5)   [5,15)      15+
-#>    [0,1)  0.32058824 1.0097222 1.545294 6.212026
-#>    [1,5)  0.12824349 2.3852635 1.650184 5.671638
-#>    [5,15) 0.02656895 0.4905255 7.417363 6.241942
-#>    15+    0.02923107 0.3606624 1.321965 9.761370
+#>    [0,1)  0.37561216 0.6435266 1.379317 5.780858
+#>    [1,5)  0.11454766 2.3258400 1.515118 5.620802
+#>    [5,15) 0.02405496 0.5197021 7.948155 6.122486
+#>    15+    0.03186913 0.3503571 1.264086 9.673188
 ```
 
 ## Demography
@@ -759,8 +759,9 @@ average equals:
 
 ### Using ggplot2
 
-The contact matrices can be plotted by using the `geom_tile()` function
-of the `ggplot2` package.
+The contact matrices can be plotted by using the
+[`geom_tile()`](https://ggplot2.tidyverse.org/reference/geom_tile.html)
+function of the `ggplot2` package.
 
 ``` r
 df <- reshape2::melt(mr, varnames = c("age.group", "age.group.contact"), value.name = "contacts")
