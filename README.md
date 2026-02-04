@@ -37,7 +37,9 @@ vignette](https://epiforecasts.io/socialmixr/articles/socialmixr.html).
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+
 <!-- prettier-ignore-start -->
+
 <!-- markdownlint-disable -->
 
 All contributions to this project are gratefully acknowledged using the
@@ -90,5 +92,7 @@ specification. Contributions of any kind are welcome!
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Ajoshwlambert">joshwlambert</a>
 
 <!-- markdownlint-enable -->
+
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
