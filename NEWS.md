@@ -1,4 +1,4 @@
-# socialmixr (development version)
+# socialmixr 0.5.1
 
 * Added Nicholas Tierney (@njtierney) as package author (#277).
 * Fixed `load_survey()` failing when merging contact files that lack a `cont_id`
