@@ -1,10 +1,16 @@
 # socialmixr 0.5.1
 
+This is a patch release with a bug fix and documentation updates.
+
+* `load_survey()` no longer fails when merging contact files that lack a
+  `cont_id` column (#278).
+
+* The vignette now points to the
+ [contactsurveys](https://cran.r-project.org/package=contactsurveys) package
+  for downloading surveys from Zenodo, and no longer uses deprecated functions
+  (#269).
+
 * Added Nicholas Tierney (@njtierney) as package author (#277).
-* Fixed `load_survey()` failing when merging contact files that lack a `cont_id`
-  column (#278).
-* Updated vignette to point to contactsurveys package for downloading surveys,
-  removing use of deprecated functions (#269).
 
 # socialmixr 0.5.0
 
