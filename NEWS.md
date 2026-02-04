@@ -1,5 +1,7 @@
 # socialmixr (development version)
 
+* Added Nicholas Tierney (@njtierney) as package author (#277).
+
 # socialmixr 0.5.0
 
 This release focuses on improved modularity and flexibility for contact matrix
