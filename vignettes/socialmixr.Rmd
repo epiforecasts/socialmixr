@@ -14,13 +14,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r}
-library(socialmixr)
-library(ggplot2)
-```
-
 ```{r setup, include = FALSE}
-library(knitr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -35,6 +29,8 @@ data.table::setDTthreads(1)
 This vignette uses the POLYMOD survey data which is included in socialmixr, and ggplot2 for plotting. To download other surveys from the [Social contact data](https://zenodo.org/communities/social_contact_data) community on Zenodo, use the [contactsurveys](https://cran.r-project.org/package=contactsurveys) package.
 
 ```{r}
+library(socialmixr)
+library(ggplot2)
 data(polymod)
 ```
 
@@ -221,7 +217,7 @@ survey_data <- data.frame(
 survey_data$age.group <- 1 - (survey_data$age < 3) + 1
 survey_data$age.group <- as.factor(c("A", "B"))[survey_data$age.group]
 
-kable(survey_data)
+knitr::kable(survey_data)
 ```
 
 The summary statistics for the sample (N) and reference population (P) are as follows
@@ -247,7 +243,7 @@ cat(paste("unweighted average number of contacts:", round(mean(survey_data$m_i),
 
 and age-specific unweighted averages on the number of contacts:
 ```{r, echo=FALSE}
-kable(aggregate(m_i ~ age + age.group, data = survey_data, mean))
+knitr::kable(aggregate(m_i ~ age + age.group, data = survey_data, mean))
 ```
 
 ### Weight by day of week
@@ -275,7 +271,7 @@ survey_data$w_dot_tilde <- survey_data$w_dot / sum(survey_data$w_dot) * N
 survey_data[, -(1:4)] <- round(survey_data[, -(1:4)], digits = 2)
 
 # print
-kable(survey_data)
+knitr::kable(survey_data)
 
 # remove the 'dot' weights
 survey_data$w_dot <- NULL
@@ -290,7 +286,7 @@ Using the standardized weights, we are able to calculate the weighted number of 
 survey_data["m_i * w_tilde"] <- survey_data$m_i * survey_data$w_tilde
 
 # show table
-kable(survey_data)
+knitr::kable(survey_data)
 
 # remove the weighted number of contacts
 survey_data$`m_i * w_tilde` <- NULL
@@ -301,7 +297,7 @@ cat(paste("weighted average number of contacts:", round(mean(survey_data$m_i * s
 If the population-based weights are directly used in age-specific groups, the contact behavior of the 3 year-old participant, which participated during week day, is inflated due to the under-representation of week days in the survey sample. In addition, the number of contacts for 1 year-old participants is decreased because of the over-representation of weekend days in the survey. Using the population-weights within the two aggregated age groups, we obtain a more intuitive weighting for age group A, but it is still skewed for individuals in age group B. As such, this weighted average for age group B has no meaning in terms of social contact behavior:
 
 ```{r, echo=FALSE}
-kable(list(
+knitr::kable(list(
   aggregate(m_i * w_tilde ~ age, data = survey_data, mean),
   aggregate(m_i * w_tilde ~ age.group, data = survey_data, mean)
 ))
@@ -320,13 +316,13 @@ for (i in seq_len(nrow(survey_data))) {
 # round
 survey_data[, -(1:4)] <- round(survey_data[, -(1:4)], digits = 2)
 
-kable(survey_data)
+knitr::kable(survey_data)
 ```
 
 The weighted means equal:
 
 ```{r, echo=FALSE}
-kable(aggregate(m_i * w_PS ~ age.group, data = survey_data, mean))
+knitr::kable(aggregate(m_i * w_PS ~ age.group, data = survey_data, mean))
 ```
 
 ### Weight by age
@@ -354,7 +350,7 @@ for (i in seq_len(nrow(survey_data))) {
 survey_data[, -(1:4)] <- round(survey_data[, -(1:4)], digits = 2)
 
 # print
-kable(survey_data)
+knitr::kable(survey_data)
 
 cat(paste("weighted average number of contacts:", round(mean(survey_data$m_i * survey_data$w_tilde), digits = 2)))
 ```
@@ -362,7 +358,7 @@ cat(paste("weighted average number of contacts:", round(mean(survey_data$m_i * s
 If the age-specific weights are directly used within the age groups, the contact behavior for age group B is inflated to unrealistic levels and the number of contacts for age group A is artificially low:
 
 ```{r, echo=FALSE}
-kable(list(
+knitr::kable(list(
   aggregate(m_i * w_tilde ~ age, data = survey_data, mean),
   aggregate(m_i * w_tilde ~ age.group, data = survey_data, mean)
 ))
@@ -371,7 +367,7 @@ kable(list(
 Using the post-stratification weights, we end up with:
 
 ```{r, echo=FALSE}
-kable(aggregate(m_i * w_PS ~ age.group, data = survey_data, mean))
+knitr::kable(aggregate(m_i * w_PS ~ age.group, data = survey_data, mean))
 ```
 
 
@@ -410,7 +406,7 @@ survey_data$w_tilde <- survey_data$w / sum(survey_data$w) * N
 
 # round
 survey_data[, -(1:4)] <- round(survey_data[, -(1:4)], digits = 2)
-kable(survey_data)
+knitr::kable(survey_data)
 
 cat(paste("unweighted average number of contacts:", round(mean(survey_data$m_i), digits = 2)))
 cat(paste("weighted average number of contacts:", round(mean(survey_data$m_i * survey_data$w_tilde), digits = 2)))
