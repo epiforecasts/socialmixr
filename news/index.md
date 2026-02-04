@@ -2,6 +2,10 @@
 
 ## socialmixr (development version)
 
+- Added Nicholas Tierney ([@njtierney](https://github.com/njtierney)) as
+  package author
+  ([\#277](https://github.com/epiforecasts/socialmixr/issues/277)).
+
 ## socialmixr 0.5.0
 
 CRAN release: 2026-01-19

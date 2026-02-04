@@ -8,6 +8,9 @@
 
 - **Hugo Gruson**. Author.
 
+- **Nicholas Tierney**. Author.
+  [](https://orcid.org/0000-0003-1460-8722)
+
 - **Maria Bekker-Nielsen Dunbar**. Contributor.
 
 - **Carl A. B. Pearson**. Contributor.
@@ -29,13 +32,13 @@
 Source:
 [`DESCRIPTION`](https://github.com/epiforecasts/socialmixr/blob/main/DESCRIPTION)
 
-Funk S, Willem L, Gruson H (2026). *socialmixr: Social Mixing Matrices
-for Infectious Disease Modelling*. R package version 0.5.0.9000,
-<https://github.com/epiforecasts/socialmixr>.
+Funk S, Willem L, Gruson H, Tierney N (2026). *socialmixr: Social Mixing
+Matrices for Infectious Disease Modelling*. R package version
+0.5.0.9000, <https://github.com/epiforecasts/socialmixr>.
 
     @Manual{,
       title = {socialmixr: Social Mixing Matrices for Infectious Disease Modelling},
-      author = {Sebastian Funk and Lander Willem and Hugo Gruson},
+      author = {Sebastian Funk and Lander Willem and Hugo Gruson and Nicholas Tierney},
       year = {2026},
       note = {R package version 0.5.0.9000},
       url = {https://github.com/epiforecasts/socialmixr},
