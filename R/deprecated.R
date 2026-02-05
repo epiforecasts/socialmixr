@@ -66,7 +66,10 @@ get_survey <- function(survey, clear_cache = FALSE, ...) {
   if (inherits(survey, "contact_survey")) {
     new_survey <- copy(survey)
   } else if (is.character(survey)) {
-    files <- download_survey(survey)
+    files <- withr::with_options(
+      list(lifecycle_verbosity = "quiet"),
+      download_survey(survey)
+    )
     new_survey <- load_survey(files)
   } else {
     cli::cli_abort(
@@ -413,16 +416,19 @@ get_citation <- function(x) {
 # Internal helpers for deprecated functions -----------------------------------
 
 find_common_prefix <- function(vec) {
+  if (length(vec) == 0) return("")
+  if (length(vec) == 1) return(vec[[1]])
+  min_len <- min(nchar(vec))
   # find initial longest common prefix of file names
   i <- 1
   finish <- FALSE
   lcs <- ""
-  while (!finish) {
+  while (!finish && i <= min_len) {
     initial_bits <- vapply(vec, substr, start = 1, stop = i, "x")
     if (length(unique(initial_bits)) > 1) {
       finish <- TRUE
     } else {
-      lcs <- unique(initial_bits)
+      lcs <- initial_bits[[1]]
       i <- i + 1
     }
   }
