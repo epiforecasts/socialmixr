@@ -58,8 +58,8 @@ get_survey <- function(survey, clear_cache = FALSE, ...) {
 
 #' Internal function to get survey data
 #' @autoglobal
-#' @param survey a DOI or url to get the survey from, or a [survey()] object (in which case only cleaning is done).
-#' @param ... options for [clean()], which is called at the end of this
+#' @param survey a DOI or url to get the survey from, or a [survey()] object.
+#' @param ... currently unused
 #' @importFrom data.table copy
 #' @keywords internal
 .get_survey <- function(survey, ...) {
@@ -353,7 +353,10 @@ survey_countries <- function(survey, country.column = "country", ...) {
     download your surveys, and then you can load them with \\
     socialmixr::load_survey() and explore which countries are in the data."
   )
-  survey <- get_survey(survey, ...)
+  survey <- withr::with_options(
+    list(lifecycle_verbosity = "quiet"),
+    get_survey(survey, ...)
+  )
   as.character(unique(survey[["participants"]][[country.column]]))
 }
 
@@ -386,7 +389,10 @@ get_citation <- function(x) {
     what = "get_citation()",
     with = "contactsurveys::get_citation()"
   )
-  survey <- get_survey(x)
+  survey <- withr::with_options(
+    list(lifecycle_verbosity = "quiet"),
+    get_survey(x)
+  )
   if (is.null(survey$reference)) {
     cli::cli_abort("No citation defined for {survey$name %||% 'survey'}.")
   }

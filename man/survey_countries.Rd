@@ -7,7 +7,7 @@
 survey_countries(survey, country.column = "country", ...)
 }
 \arguments{
-\item{survey}{a DOI or url to get the survey from, or a \code{\link[=survey]{survey()}} object (in which case only cleaning is done).}
+\item{survey}{a DOI or url to get the survey from, or a \code{\link[=survey]{survey()}} object.}
 
 \item{country.column}{column in the survey indicating the country}
 

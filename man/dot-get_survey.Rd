@@ -7,9 +7,9 @@
 .get_survey(survey, ...)
 }
 \arguments{
-\item{survey}{a DOI or url to get the survey from, or a \code{\link[=survey]{survey()}} object (in which case only cleaning is done).}
+\item{survey}{a DOI or url to get the survey from, or a \code{\link[=survey]{survey()}} object.}
 
-\item{...}{options for \code{\link[=clean]{clean()}}, which is called at the end of this}
+\item{...}{currently unused}
 }
 \description{
 Internal function to get survey data

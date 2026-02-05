@@ -1,6 +1,9 @@
 set.seed(123)
 
-withr::local_options(lifecycle_verbosity = "quiet", .local_envir = teardown_env())
+withr::local_options(
+  lifecycle_verbosity = "quiet",
+  .local_envir = teardown_env()
+)
 polymod2 <- get_survey(polymod)
 polymod3 <- get_survey(polymod)
 polymod4 <- get_survey(polymod)
