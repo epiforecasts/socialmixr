@@ -1,3 +1,11 @@
+# socialmixr (development version)
+
+* `get_survey()`, `download_survey()`, `list_surveys()`, `get_citation()`, and
+  `survey_countries()` now warn unconditionally when called. These functions
+  were soft-deprecated in 0.5.0 and users should switch to the
+  [contactsurveys](https://cran.r-project.org/package=contactsurveys) package
+  (#269).
+
 # socialmixr 0.5.1
 
 This is a patch release with a bug fix and documentation updates.

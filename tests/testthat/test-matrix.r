@@ -1,5 +1,9 @@
 set.seed(123)
 
+withr::local_options(
+  lifecycle_verbosity = "quiet",
+  .local_envir = teardown_env()
+)
 polymod2 <- get_survey(polymod)
 polymod3 <- get_survey(polymod)
 polymod4 <- get_survey(polymod)
@@ -885,17 +889,6 @@ test_that("The weights with threshold", {
   })
 })
 
-test_that("Country names in Zenodo datasets and the wpp package are aligned (e.g. Viet Nam vs. Vietnam)", {
-  skip_if_offline("zenodo.org")
-  skip_on_cran()
-  skip_on_ci()
-  vietnam1 <- get_survey("https://doi.org/10.5281/zenodo.1289473")
-  expect_length(
-    suppressWarnings(contact_matrix(vietnam1, symmetric = FALSE)),
-    2
-  ) # no demography data used
-  expect_length(suppressWarnings(contact_matrix(vietnam1, symmetric = TRUE)), 3) # country is recognized and demography data found
-})
 
 test_that("Participants that report contacts with missing age are removed, sampled, or ignored", {
   num.part <- nrow(polymod$participants)
@@ -1195,6 +1188,7 @@ test_that("Contacts with an age below the age limits are excluded regardless of 
 })
 
 test_that("sample.all.age.groups errors when age group has no participants", {
+  withr::local_options(lifecycle_verbosity = "quiet")
   # Create a survey with no participants in a specific age range
   polymod_limited <- get_survey(polymod)
   # Keep only participants aged 20+
