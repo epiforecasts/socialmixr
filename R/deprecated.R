@@ -223,7 +223,7 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
       function(i) {
         zenodo_url <- zenodo_links[i, ]$url
         temp <- file.path(dir, zenodo_links[i, ]$file_name)
-        message("Downloading ", zenodo_url)
+        cli::cli_inform("Downloading {.url {zenodo_url}}")
         Sys.sleep(sleep)
         dl <- curl_download(zenodo_url, temp)
         temp
@@ -294,7 +294,8 @@ list_surveys <- function(clear_cache = FALSE) {
     record_list,
     1,
     function(x) {
-      min(grep("^https://doi.org/.*zenodo", x[relations], value = TRUE))
+      matches <- grep("^https://doi.org/.*zenodo", x[relations], value = TRUE)
+      if (length(matches) == 0) NA_character_ else matches[1]
     }
   )
   record_list <- record_list[, common_doi := DOIs]
