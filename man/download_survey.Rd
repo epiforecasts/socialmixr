@@ -38,3 +38,6 @@ peru_survey <- contactsurveys::download_survey(
 )
 }
 }
+\seealso{
+load_survey
+}

@@ -113,7 +113,7 @@ get_survey <- function(survey, clear_cache = FALSE, ...) {
 #' )
 #' }
 #' @return a vector of filenames that can be used with [load_survey]
-#  @seealso load_survey
+#' @seealso load_survey
 #' @export
 download_survey <- function(survey, dir = NULL, sleep = 1) {
   lifecycle::deprecate_warn(
@@ -420,7 +420,7 @@ find_common_prefix <- function(vec) {
     return("")
   }
   if (length(vec) == 1) {
-    return(vec[[1]])
+    return("")
   }
   min_len <- min(nchar(vec))
   # find initial longest common prefix of file names
