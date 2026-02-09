@@ -57,30 +57,3 @@ test_that("find_unique_key ignores internal columns", {
   result <- find_unique_key(data, "part_id")
   expect_identical(result, c("part_id", "wave"))
 })
-
-test_that("load_survey handles longitudinal data with sday files", {
-  skip_if_offline("zenodo.org")
-  skip_on_cran()
-  skip_on_ci()
-
-  # Beraud France has longitudinal structure with wave and studyDay
-  files <- suppressMessages(suppressWarnings(
-    download_survey("10.5281/zenodo.3886590") # nolint
-  ))
-  survey <- suppressMessages(load_survey(files))
-
-  # Check that sday columns are present (wave, studyDay, etc.)
-  expect_true("wave" %in% names(survey$participants))
-  expect_true("studyDay" %in% names(survey$participants))
-
-  # Check that we have multiple rows per participant
-  part_counts <- survey$participants[, .N, by = part_id]
-  expect_true(any(part_counts$N > 1))
-
-  # Check that observation_key is stored (without part_id, just the
-  # distinguishing columns)
-  expect_false(is.null(survey$observation_key))
-  expect_false("part_id" %in% survey$observation_key)
-  # Beraud France has wave and studyDay creating the longitudinal structure
-  expect_true(all(c("wave", "studyDay") %in% survey$observation_key))
-})

@@ -5,7 +5,7 @@ test_that("list of countries is not empty", {
 })
 
 test_that("survey_countries() sends deprecation warning", {
-  expect_snapshot_warning(
+  lifecycle::expect_deprecated(
     survey_countries(polymod)
   )
 })
