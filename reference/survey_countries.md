@@ -14,7 +14,7 @@ survey_countries(survey, country.column = "country", ...)
 
   a DOI or url to get the survey from, or a
   [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md)
-  object (in which case only cleaning is done).
+  object.
 
 - country.column:
 

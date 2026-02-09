@@ -1,5 +1,19 @@
 # Changelog
 
+## socialmixr (development version)
+
+- [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md),
+  [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md),
+  [`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md),
+  [`get_citation()`](https://epiforecasts.io/socialmixr/reference/get_citation.md),
+  and
+  [`survey_countries()`](https://epiforecasts.io/socialmixr/reference/survey_countries.md)
+  now warn unconditionally when called. These functions were
+  soft-deprecated in 0.5.0 and users should switch to the
+  [contactsurveys](https://cran.r-project.org/package=contactsurveys)
+  package
+  ([\#269](https://github.com/epiforecasts/socialmixr/issues/269)).
+
 ## socialmixr 0.5.1
 
 CRAN release: 2026-02-04

@@ -35,6 +35,10 @@ download_survey(survey, dir = NULL, sleep = 1)
 a vector of filenames that can be used with
 [load_survey](https://epiforecasts.io/socialmixr/reference/load_survey.md)
 
+## See also
+
+load_survey
+
 ## Examples
 
 ``` r
