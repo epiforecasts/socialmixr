@@ -416,8 +416,12 @@ get_citation <- function(x) {
 # Internal helpers for deprecated functions -----------------------------------
 
 find_common_prefix <- function(vec) {
-  if (length(vec) == 0) return("")
-  if (length(vec) == 1) return(vec[[1]])
+  if (length(vec) == 0) {
+    return("")
+  }
+  if (length(vec) == 1) {
+    return(vec[[1]])
+  }
   min_len <- min(nchar(vec))
   # find initial longest common prefix of file names
   i <- 1
