@@ -79,6 +79,8 @@ specification. Contributions of any kind are welcome!
 
 ## All functions
 
+- [`agegroups_to_limits()`](https://epiforecasts.io/socialmixr/reference/agegroups_to_limits.md)
+  : Convert age groups to lower age limits
 - [`as_contact_survey()`](https://epiforecasts.io/socialmixr/reference/as_contact_survey.md)
   : Check contact survey data
 - [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)

@@ -2,6 +2,19 @@
 
 ## socialmixr (development version)
 
+- [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  now uses
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
+  internally, reducing code duplication and demonstrating the modular
+  workflow
+  ([\#227](https://github.com/epiforecasts/socialmixr/issues/227)).
+
+- New
+  [`agegroups_to_limits()`](https://epiforecasts.io/socialmixr/reference/agegroups_to_limits.md)
+  function converts age group labels back to lower age limits, the
+  inverse of
+  [`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md).
+
 - [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md),
   [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md),
   [`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md),
