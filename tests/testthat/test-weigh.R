@@ -3,8 +3,10 @@ polymod_grouped <- assign_age_groups(polymod_uk, age_limits = c(0, 5, 15))
 
 test_that("weigh() with dayofweek groups produces correct weights", {
   result <- weigh(
-    polymod_grouped, "dayofweek",
-    target = c(5, 2), groups = list(1:5, 6:7)
+    polymod_grouped,
+    "dayofweek",
+    target = c(5, 2),
+    groups = list(1:5, 6:7)
   )
 
   ppt <- result$participants
@@ -19,15 +21,18 @@ test_that("weigh() with dayofweek groups produces correct weights", {
   expect_equal(unique(ppt$weight[weekday]), 5 / n_weekday, tolerance = 1e-10)
   expect_equal(unique(ppt$weight[weekend]), 2 / n_weekend, tolerance = 1e-10)
   expect_equal(
-    unique(ppt$weight[no_dow]), 7 / nrow(ppt),
+    unique(ppt$weight[no_dow]),
+    7 / nrow(ppt),
     tolerance = 1e-10
   )
 })
 
 test_that("weigh() with dayofweek groups matches legacy on non-NA rows", {
   result <- weigh(
-    polymod_grouped, "dayofweek",
-    target = c(5, 2), groups = list(1:5, 6:7)
+    polymod_grouped,
+    "dayofweek",
+    target = c(5, 2),
+    groups = list(1:5, 6:7)
   )
 
   ref <- copy(polymod_grouped)
@@ -94,8 +99,10 @@ test_that("multiple weigh() calls accumulate", {
     weigh("dayofweek", target = c(5, 2), groups = list(1:5, 6:7))
 
   single <- weigh(
-    polymod_grouped, "dayofweek",
-    target = c(5, 2), groups = list(1:5, 6:7)
+    polymod_grouped,
+    "dayofweek",
+    target = c(5, 2),
+    groups = list(1:5, 6:7)
   )
 
   expect_equal(
@@ -110,8 +117,11 @@ test_that("weigh() auto-creates weight column", {
   if ("weight" %in% colnames(survey$participants)) {
     survey$participants[, weight := NULL]
   }
-  result <- weigh(survey, "dayofweek",
-    target = c(5, 2), groups = list(1:5, 6:7)
+  result <- weigh(
+    survey,
+    "dayofweek",
+    target = c(5, 2),
+    groups = list(1:5, 6:7)
   )
   expect_true("weight" %in% colnames(result$participants))
 })
@@ -125,9 +135,7 @@ test_that("weigh() errors for missing column", {
 
 test_that("weigh() does not modify original", {
   original <- copy(polymod_grouped$participants)
-  weigh(polymod_grouped, "dayofweek",
-    target = c(5, 2), groups = list(1:5, 6:7)
-  )
+  weigh(polymod_grouped, "dayofweek", target = c(5, 2), groups = list(1:5, 6:7))
   expect_identical(polymod_grouped$participants, original)
 })
 
@@ -135,8 +143,11 @@ test_that("weigh() does not modify original", {
 test_that("weigh() errors for mismatched target/groups lengths", {
   # nolint end
   expect_error(
-    weigh(polymod_grouped, "dayofweek",
-      target = c(5, 2, 1), groups = list(1:5, 6:7)
+    weigh(
+      polymod_grouped,
+      "dayofweek",
+      target = c(5, 2, 1),
+      groups = list(1:5, 6:7)
     ),
     "same length"
   )
