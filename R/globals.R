@@ -9,8 +9,6 @@ utils::globalVariables(c(
   "weight", # <compute_matrix>
   "age.group", # <compute_matrix>
   "sampled.weight", # <compute_matrix>
-  "lower.age.limit", # <compute_matrix>
-  "population", # <compute_matrix>
   "cnt_age", # <drop_ages_below_age_limit>
   "cnt_age", # <drop_missing_contact_ages>
   "part_age_exact", # <max_participant_age>

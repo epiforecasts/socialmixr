@@ -4,17 +4,7 @@
 \alias{compute_matrix}
 \title{Compute contact matrix from prepared survey data}
 \usage{
-compute_matrix(
-  survey,
-  by = "age.group",
-  survey_pop = NULL,
-  symmetric = FALSE,
-  split = FALSE,
-  per_capita = FALSE,
-  counts = FALSE,
-  symmetric_norm_threshold = 2,
-  ...
-)
+compute_matrix(survey, by = "age.group", counts = FALSE)
 }
 \arguments{
 \item{survey}{a \code{\link[=survey]{survey()}} object with age groups assigned (via
@@ -22,35 +12,17 @@ compute_matrix(
 
 \item{by}{column to group by; currently only \code{"age.group"} is supported}
 
-\item{survey_pop}{survey population -- either a data frame with columns
-\code{lower.age.limit} and \code{population}, a character vector of country name(s),
-or \code{NULL} (default). If \code{NULL} and the survey is not representative,
-population data are looked up from the survey's country column.}
-
-\item{symmetric}{whether to make the matrix symmetric, such that
-\eqn{c_{ij}N_i = c_{ji}N_j}}
-
-\item{split}{whether to split the contact matrix into components (see
-\code{\link[=contact_matrix]{contact_matrix()}} for details)}
-
-\item{per_capita}{whether to return per-capita contact rates}
-
 \item{counts}{whether to return counts instead of means}
-
-\item{symmetric_norm_threshold}{threshold for the normalisation warning when
-\code{symmetric = TRUE} (default 2)}
-
-\item{...}{further arguments passed to \code{\link[=pop_age]{pop_age()}}}
 }
 \value{
-a list with the same structure as \code{\link[=contact_matrix]{contact_matrix()}}:
-\code{matrix}, \code{participants}, and optionally \code{demography},
-\code{mean.contacts}, \code{normalisation}, \code{contacts}, \code{matrix.per.capita}
+a list with elements \code{matrix} and \code{participants}
 }
 \description{
 Computes a contact matrix from a \code{contact_survey} that has been processed
 by \code{\link[=assign_age_groups]{assign_age_groups()}} and optionally \code{\link[=weigh]{weigh()}}. This is the final step
 in the pipeline workflow.
+
+For symmetrisation, use \code{contactmatrix::cm_make_symmetric()} on the result.
 }
 \examples{
 data(polymod)

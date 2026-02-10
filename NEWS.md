@@ -9,7 +9,9 @@
 
 * New `compute_matrix()` function computes a contact matrix from a prepared
   survey, completing the pipeline workflow alongside `assign_age_groups()` and
-  `weigh()` (#161).
+  `weigh()`. It focuses on turning weighted survey data into a matrix;
+  post-processing such as symmetrisation is available via
+  `contactmatrix::cm_make_symmetric()` (#161).
 
 * `contact_matrix()` now uses `assign_age_groups()` internally, reducing code
   duplication and demonstrating the modular workflow (#227).
