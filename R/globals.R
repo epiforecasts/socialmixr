@@ -26,7 +26,6 @@ utils::globalVariables(c(
   "country", # <get_survey_countries>
   "population", # <survey_pop_from_countries>
   "lower.age.limit", # <survey_pop_from_countries>
-  "part_age", # <survey_pop_from_countries>
   "lower.age.limit", # <add_survey_upper_age_limit>
   "population", # <add_survey_upper_age_limit>
   "upper.age.limit", # <adjust_survey_age_groups>

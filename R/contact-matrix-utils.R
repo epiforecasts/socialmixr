@@ -486,10 +486,7 @@ survey_pop_from_countries <- function(
   }
 
   if (survey_representative) {
-    survey_pop <- participants[,
-      lower.age.limit := reduce_agegroups(part_age, age_limits)
-    ]
-    survey_pop <- survey_pop[, list(population = .N), by = lower.age.limit]
+    survey_pop <- participants[, list(population = .N), by = lower.age.limit]
     survey_pop <- survey_pop[!is.na(lower.age.limit)]
     if ("year" %in% colnames(participants)) {
       survey_year <- participants[, median(year, na.rm = TRUE)]

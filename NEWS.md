@@ -1,5 +1,11 @@
 # socialmixr (development version)
 
+* `contact_matrix()` now uses `assign_age_groups()` internally, reducing code
+  duplication and demonstrating the modular workflow (#227).
+
+* New `agegroups_to_limits()` function converts age group labels back to lower
+  age limits, the inverse of `limits_to_agegroups()`.
+
 * `get_survey()`, `download_survey()`, `list_surveys()`, `get_citation()`, and
   `survey_countries()` now warn unconditionally when called. These functions
   were soft-deprecated in 0.5.0 and users should switch to the
