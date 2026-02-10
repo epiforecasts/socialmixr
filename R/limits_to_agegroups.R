@@ -52,3 +52,18 @@ limits_to_agegroups <- function(
   names(agegroups) <- limits
   return(unname(agegroups[as.character(x)]))
 }
+
+#' Convert age groups to lower age limits
+#'
+#' Inverse of [limits_to_agegroups()]. Extracts lower age limits from age group
+#'   labels.
+#' @param x age groups (a factor, as produced by [limits_to_agegroups()] or
+#'   [assign_age_groups()])
+#' @return a numeric vector of lower age limits
+#' @examples
+#' agegroups_to_limits(limits_to_agegroups(c(0, 5, 10), notation = "brackets"))
+#' @export
+agegroups_to_limits <- function(x) {
+  lvls <- if (is.factor(x)) levels(x) else unique(as.character(x))
+  as.numeric(sub("^\\[?(\\d+).*", "\\1", lvls))
+}

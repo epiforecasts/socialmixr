@@ -2,6 +2,7 @@
 
 S3method(check,contact_survey)
 S3method(clean,contact_survey)
+export(agegroups_to_limits)
 export(as_contact_survey)
 export(assign_age_groups)
 export(check)
