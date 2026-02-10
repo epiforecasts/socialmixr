@@ -20,8 +20,8 @@ test_that("weigh() with dayofweek groups produces correct weights", {
   expect_equal(unique(ppt$weight[weekday]), 5 / n_weekday)
   # weekend weights: 2 / n_weekend
   expect_equal(unique(ppt$weight[weekend]), 2 / n_weekend)
-  # unmatched (NA dayofweek) keep weight = 1
-  expect_true(all(ppt$weight[no_dow] == 1))
+  # unmatched (NA dayofweek) get average weight: sum(target) / n_total
+  expect_equal(unique(ppt$weight[no_dow]), 7 / nrow(ppt))
 })
 
 test_that("weigh() with dayofweek groups matches legacy on non-NA rows", {

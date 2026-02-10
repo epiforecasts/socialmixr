@@ -99,9 +99,10 @@ weigh_grouped <- function(participants, by, target, groups) {
   }
 
   group_counts <- tabulate(group_idx, nbins = length(groups))
+  n_total <- length(col_vals)
   weight_factor <- ifelse(
     is.na(group_idx),
-    1,
+    sum(target) / n_total,
     target[group_idx] / group_counts[group_idx]
   )
 
