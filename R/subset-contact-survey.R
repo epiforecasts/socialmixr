@@ -46,6 +46,15 @@
     return(new_contact_survey(participants, contacts, x$reference))
   }
 
+  if (found_in_part && found_in_cont) {
+    cli::cli_abort(
+      "Expression references columns from both participants \\
+       ({.val {part_cols}}) and contacts ({.val {cont_cols}}). \\
+       Filter one table at a time, e.g. \\
+       {.code survey[part_col == x][cnt_col == y]}."
+    )
+  }
+
   env <- parent.frame()
 
   if (found_in_part) {

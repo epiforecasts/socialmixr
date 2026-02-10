@@ -99,6 +99,15 @@ weigh_grouped <- function(participants, by, target, groups) {
   }
 
   group_counts <- tabulate(group_idx, nbins = length(groups))
+  empty <- which(group_counts == 0L)
+  if (length(empty) > 0L) {
+    cli::cli_warn(
+      "Group{?s} {.val {empty}} ha{?s/ve} no matching participants; \\
+       their target weights will be ignored."
+    )
+    target[empty] <- 0
+    group_counts[empty] <- 1L
+  }
   n_total <- length(col_vals)
   weight_factor <- ifelse(
     is.na(group_idx),

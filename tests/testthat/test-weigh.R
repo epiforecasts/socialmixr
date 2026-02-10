@@ -133,6 +133,18 @@ test_that("weigh() errors for missing column", {
   )
 })
 
+test_that("weigh() warns for empty groups", {
+  expect_warning(
+    weigh(
+      polymod_grouped,
+      "dayofweek",
+      target = c(5, 2, 1),
+      groups = list(1:5, 6:7, 99:100)
+    ),
+    "no matching participants"
+  )
+})
+
 test_that("weigh() does not modify original", {
   original <- copy(polymod_grouped$participants)
   weigh(polymod_grouped, "dayofweek", target = c(5, 2), groups = list(1:5, 6:7))

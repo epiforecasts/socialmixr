@@ -46,6 +46,13 @@ test_that("[.contact_survey returns contact_survey class", {
   expect_named(result, c("participants", "contacts", "reference"))
 })
 
+test_that("[.contact_survey errors for cross-table expressions", {
+  expect_error(
+    polymod[country == "United Kingdom" & cnt_age_exact < 10],
+    "both participants.*contacts"
+  )
+})
+
 test_that("[.contact_survey warns for unknown columns", {
   expect_warning(
     polymod[nonexistent_col == "foo"],
