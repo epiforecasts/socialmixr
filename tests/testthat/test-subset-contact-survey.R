@@ -20,7 +20,7 @@ test_that("[.contact_survey filters by contact column", {
     na.rm = TRUE
   ))
   # participants are kept when only contacts are filtered
-  expect_equal(
+  expect_identical(
     nrow(young_contacts$participants),
     nrow(polymod$participants)
   )
@@ -28,7 +28,7 @@ test_that("[.contact_survey filters by contact column", {
 
 test_that("[.contact_survey keeps participants when only contacts filtered", {
   filtered <- polymod[cnt_age_exact < 5]
-  expect_equal(
+  expect_identical(
     nrow(filtered$participants),
     nrow(polymod$participants)
   )
@@ -56,11 +56,11 @@ test_that("[.contact_survey warns for unknown columns", {
 test_that("[.contact_survey does not modify original", {
   original_nrow <- nrow(polymod$participants)
   uk <- polymod[country == "United Kingdom"]
-  expect_equal(nrow(polymod$participants), original_nrow)
+  expect_identical(nrow(polymod$participants), original_nrow)
 })
 
 test_that("[.contact_survey with no filter returns copy", {
   result <- polymod[]
   expect_s3_class(result, "contact_survey")
-  expect_equal(nrow(result$participants), nrow(polymod$participants))
+  expect_identical(nrow(result$participants), nrow(polymod$participants))
 })

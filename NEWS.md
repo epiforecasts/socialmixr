@@ -1,5 +1,16 @@
 # socialmixr (development version)
 
+* New `[.contact_survey` method allows filtering survey objects with
+  expressions, e.g. `polymod[country == "United Kingdom"]` (#161).
+
+* New `weigh()` function for composable participant weighting: supports
+  day-of-week groups, named target vectors, direct numeric columns, and
+  population post-stratification (#161).
+
+* New `compute_matrix()` function computes a contact matrix from a prepared
+  survey, completing the pipeline workflow alongside `assign_age_groups()` and
+  `weigh()` (#161).
+
 * `contact_matrix()` now uses `assign_age_groups()` internally, reducing code
   duplication and demonstrating the modular workflow (#227).
 

@@ -16,12 +16,12 @@ test_that("weigh() with dayofweek groups produces correct weights", {
   n_weekday <- sum(weekday)
   n_weekend <- sum(weekend)
 
-  # weekday weights: 5 / n_weekday
-  expect_equal(unique(ppt$weight[weekday]), 5 / n_weekday)
-  # weekend weights: 2 / n_weekend
-  expect_equal(unique(ppt$weight[weekend]), 2 / n_weekend)
-  # unmatched (NA dayofweek) get average weight: sum(target) / n_total
-  expect_equal(unique(ppt$weight[no_dow]), 7 / nrow(ppt))
+  expect_equal(unique(ppt$weight[weekday]), 5 / n_weekday, tolerance = 1e-10)
+  expect_equal(unique(ppt$weight[weekend]), 2 / n_weekend, tolerance = 1e-10)
+  expect_equal(
+    unique(ppt$weight[no_dow]), 7 / nrow(ppt),
+    tolerance = 1e-10
+  )
 })
 
 test_that("weigh() with dayofweek groups matches legacy on non-NA rows", {
@@ -35,8 +35,6 @@ test_that("weigh() with dayofweek groups matches legacy on non-NA rows", {
   ref$participants <- weight_by_day_of_week(ref$participants)
 
   has_dow <- !is.na(result$participants$dayofweek)
-  # Relative weights within weekday/weekend groups should be the same
-  # (uniform within each group)
   expect_true(all(
     result$participants$weight[has_dow] > 0
   ))
@@ -64,7 +62,8 @@ test_that("weigh() with population df matches weight_by_age()", {
 
   expect_equal(
     result$participants$weight,
-    ref$participants$weight
+    ref$participants$weight,
+    tolerance = 1e-10
   )
 })
 
@@ -84,7 +83,8 @@ test_that("weigh() direct numeric works", {
   result <- weigh(survey, "test_wt")
   expect_equal(
     result$participants$weight,
-    survey$participants$test_wt
+    survey$participants$test_wt,
+    tolerance = 1e-10
   )
 })
 
@@ -100,7 +100,8 @@ test_that("multiple weigh() calls accumulate", {
 
   expect_equal(
     result$participants$weight,
-    single$participants$weight^2
+    single$participants$weight^2,
+    tolerance = 1e-10
   )
 })
 
@@ -127,10 +128,12 @@ test_that("weigh() does not modify original", {
   weigh(polymod_grouped, "dayofweek",
     target = c(5, 2), groups = list(1:5, 6:7)
   )
-  expect_equal(polymod_grouped$participants, original)
+  expect_identical(polymod_grouped$participants, original)
 })
 
+# nolint start: nonportable_path_linter
 test_that("weigh() errors for mismatched target/groups lengths", {
+  # nolint end
   expect_error(
     weigh(polymod_grouped, "dayofweek",
       target = c(5, 2, 1), groups = list(1:5, 6:7)

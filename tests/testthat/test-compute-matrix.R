@@ -7,8 +7,8 @@ test_that("compute_matrix() produces a basic contact matrix", {
   expect_true("matrix" %in% names(result))
   expect_true("participants" %in% names(result))
   expect_true(is.matrix(result$matrix) || is.array(result$matrix))
-  expect_equal(nrow(result$matrix), 3)
-  expect_equal(ncol(result$matrix), 3)
+  expect_identical(nrow(result$matrix), 3L)
+  expect_identical(ncol(result$matrix), 3L)
 })
 
 test_that("compute_matrix() symmetric satisfies reciprocity", {
@@ -18,7 +18,6 @@ test_that("compute_matrix() symmetric satisfies reciprocity", {
     symmetric = TRUE
   )
   expect_true("demography" %in% names(result))
-  # reciprocity: c[i,j] * N[i] == c[j,i] * N[j]
   pop <- result$demography$population
   cn <- unname(result$matrix * pop)
   expect_equal(cn, t(cn), tolerance = 1e-10)
@@ -86,7 +85,7 @@ test_that("pipeline matches contact_matrix() without weighting", {
     symmetric = TRUE
   )
 
-  expect_equal(result_pipe$matrix, result_legacy$matrix)
+  expect_identical(result_pipe$matrix, result_legacy$matrix)
 })
 
 test_that("pipeline with dayofweek weighting is close to contact_matrix()", {
@@ -108,7 +107,6 @@ test_that("pipeline with dayofweek weighting is close to contact_matrix()", {
     symmetric = TRUE
   )
 
-  # Close match — differences due to cleaner NA dayofweek handling in weigh()
   expect_equal(
     result_pipe$matrix,
     result_legacy$matrix,
