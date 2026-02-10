@@ -63,6 +63,11 @@ weigh <- function(survey, by, target = NULL, groups = NULL, ...) {
   } else if (is.data.frame(target)) {
     participants <- weigh_population(participants, by, target, ...)
   } else if (!is.null(names(target))) {
+    if (!is.null(groups)) {
+      cli::cli_warn(
+        "{.arg groups} is ignored when {.arg target} is a named vector."
+      )
+    }
     participants <- weigh_named(participants, by, target)
   } else if (!is.null(groups)) {
     participants <- weigh_grouped(participants, by, target, groups)

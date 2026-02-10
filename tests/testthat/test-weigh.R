@@ -27,7 +27,7 @@ test_that("weigh() with dayofweek groups produces correct weights", {
   )
 })
 
-test_that("weigh() with dayofweek groups matches legacy on non-NA rows", {
+test_that("weigh() with dayofweek groups produces positive weights for non-NA rows", {
   result <- weigh(
     polymod_grouped,
     "dayofweek",
@@ -35,16 +35,9 @@ test_that("weigh() with dayofweek groups matches legacy on non-NA rows", {
     groups = list(1:5, 6:7)
   )
 
-  ref <- copy(polymod_grouped)
-  ref$participants[, weight := 1]
-  ref$participants <- weight_by_day_of_week(ref$participants)
-
   has_dow <- !is.na(result$participants$dayofweek)
   expect_true(all(
     result$participants$weight[has_dow] > 0
-  ))
-  expect_true(all(
-    ref$participants$weight[has_dow] > 0
   ))
 })
 

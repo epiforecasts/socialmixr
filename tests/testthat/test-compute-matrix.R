@@ -110,6 +110,6 @@ test_that("pipeline with dayofweek weighting is close to contact_matrix()", {
   expect_equal(
     result_pipe$matrix,
     result_legacy$matrix,
-    tolerance = 0.15
+    tolerance = 0.10
   )
 })

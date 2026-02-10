@@ -149,7 +149,7 @@ compute_matrix <- function(
   retained_dimnames <- dimnames(weighted_matrix)
 
   ret <- list()
-  if (split && !counts && !na_in_weighted_matrix(weighted_matrix)) {
+  if (split && !counts && !na_in_mtx) {
     splitted <- split_mean_norm_contacts(
       weighted_matrix = weighted_matrix,
       population = survey_pop$population
