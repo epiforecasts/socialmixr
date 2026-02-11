@@ -19,7 +19,7 @@
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix()
 #'
-#' @importFrom data.table copy
+#' @importFrom data.table copy uniqueN
 #' @export
 #' @autoglobal
 compute_matrix <- function(
@@ -29,6 +29,34 @@ compute_matrix <- function(
 ) {
   check_if_contact_survey(survey)
   survey <- copy(survey)
+
+  ## Warn if survey has multiple observations per participant ------------------
+  n_participants <- uniqueN(survey$participants$part_id)
+  n_rows <- nrow(survey$participants)
+  if (n_participants < n_rows) {
+    obs_key <- survey$observation_key
+    if (!is.null(obs_key) && length(obs_key) > 0) {
+      cli::cli_warn(
+        c(
+          "Survey contains multiple observations per participant \\
+           ({n_rows} rows, {n_participants} unique participants).",
+          "*" = "Results will aggregate across all observations.",
+          i = "Use {.code survey[{obs_key} == ...]} to select specific \\
+               observations before calling {.fn compute_matrix}."
+        )
+      )
+    } else {
+      cli::cli_warn(
+        c(
+          "Survey contains multiple observations per participant \\
+           ({n_rows} rows, {n_participants} unique participants).",
+          "*" = "Results will aggregate across all observations.",
+          i = "Filter the survey with {.code survey[...]} to select \\
+               specific observations before calling {.fn compute_matrix}."
+        )
+      )
+    }
+  }
 
   if (by != "age.group") {
     cli::cli_abort(

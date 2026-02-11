@@ -36,6 +36,26 @@ test_that("compute_matrix() errors for unsupported by", {
   )
 })
 
+test_that("compute_matrix() warns for multiple observations per participant", {
+  survey <- polymod_uk_grouped
+  # Duplicate participants to simulate longitudinal data
+  survey$participants <- rbind(survey$participants, survey$participants)
+  expect_warning(
+    compute_matrix(survey),
+    "multiple observations"
+  )
+})
+
+test_that("compute_matrix() warning mentions observation_key when present", {
+  survey <- polymod_uk_grouped
+  survey$participants <- rbind(survey$participants, survey$participants)
+  survey$observation_key <- "wave"
+  expect_warning(
+    compute_matrix(survey),
+    "wave"
+  )
+})
+
 test_that("pipeline matches contact_matrix() without weighting", {
   result_pipe <- polymod |>
     (\(s) s[country == "United Kingdom"])() |>

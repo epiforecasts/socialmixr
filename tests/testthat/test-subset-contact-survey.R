@@ -71,3 +71,12 @@ test_that("[.contact_survey with no filter returns copy", {
   expect_s3_class(result, "contact_survey")
   expect_identical(nrow(result$participants), nrow(polymod$participants))
 })
+
+test_that("[.contact_survey preserves extra fields", {
+  survey <- polymod
+  survey$observation_key <- c("wave", "studyDay")
+  survey$custom_field <- "test_value"
+  filtered <- survey[country == "United Kingdom"]
+  expect_identical(filtered$observation_key, c("wave", "studyDay"))
+  expect_identical(filtered$custom_field, "test_value")
+})

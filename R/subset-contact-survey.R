@@ -1,3 +1,20 @@
+#' Clone a contact survey with new participant/contact data
+#'
+#' Copies all fields from the original survey object, replacing only
+#' `participants` and `contacts` with the supplied data.
+#'
+#' @param x a `contact_survey` object
+#' @param participants new participants data.table
+#' @param contacts new contacts data.table
+#' @returns a `contact_survey` object with all fields from `x` preserved
+#' @keywords internal
+clone_survey <- function(x, participants, contacts) {
+  result <- x
+  result$participants <- data.table(participants)
+  result$contacts <- data.table(contacts)
+  result
+}
+
 #' Subset a contact survey
 #'
 #' @description
@@ -43,7 +60,7 @@
         "Column{?s} {.val {unknown}} not found in participants or contacts."
       )
     }
-    return(new_contact_survey(participants, contacts, x$reference))
+    return(clone_survey(x, participants, contacts))
   }
 
   if (found_in_part && found_in_cont) {
@@ -68,5 +85,5 @@
     contacts <- contacts[rows]
   }
 
-  new_contact_survey(participants, contacts, x$reference)
+  clone_survey(x, participants, contacts)
 }
