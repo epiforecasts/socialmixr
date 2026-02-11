@@ -49,8 +49,8 @@ if ("survey_weight" \%in\% names(polymod$participants)) {
   polymod |> weigh("survey_weight")
 }
 
-# Dayofweek weighting with groups
+# Dayofweek weighting with groups (POLYMOD uses 0 = Sunday, 6 = Saturday)
 polymod |>
-  weigh("dayofweek", target = c(5, 2), groups = list(1:5, 6:7))
+  weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6)))
 
 }

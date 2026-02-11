@@ -76,7 +76,7 @@ test_that("pipeline with dayofweek weighting is close to contact_matrix()", {
   result_pipe <- polymod |>
     (\(s) s[country == "United Kingdom"])() |>
     assign_age_groups(age_limits = c(0, 5, 15)) |>
-    weigh("dayofweek", target = c(5, 2), groups = list(1:5, 6:7)) |>
+    weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6))) |>
     compute_matrix()
 
   result_legacy <- contact_matrix(
@@ -87,9 +87,12 @@ test_that("pipeline with dayofweek weighting is close to contact_matrix()", {
     symmetric = FALSE
   )
 
+  ## Small difference remains because legacy lumps NA dayofweek with weekends,
+
+  ## while weigh() assigns them a neutral average weight.
   expect_equal(
     result_pipe$matrix,
     result_legacy$matrix,
-    tolerance = 0.10
+    tolerance = 0.03
   )
 })
