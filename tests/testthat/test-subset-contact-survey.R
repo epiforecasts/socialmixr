@@ -53,6 +53,20 @@ test_that("[.contact_survey errors for cross-table expressions", {
   )
 })
 
+test_that("[.contact_survey allows filtering by part_id", {
+  ids <- polymod$participants$part_id[1:5]
+  result <- polymod[part_id %in% ids]
+  expect_identical(nrow(result$participants), 5L)
+  expect_true(all(result$contacts$part_id %in% ids))
+})
+
+test_that("[.contact_survey errors for numeric indexing", {
+  expect_error(
+    polymod[1:10],
+    "Column-based expressions"
+  )
+})
+
 test_that("[.contact_survey warns for unknown columns", {
   expect_warning(
     polymod[nonexistent_col == "foo"],
@@ -70,6 +84,7 @@ test_that("[.contact_survey with no filter returns copy", {
   result <- polymod[]
   expect_s3_class(result, "contact_survey")
   expect_identical(nrow(result$participants), nrow(polymod$participants))
+  expect_false(identical(result$participants, polymod$participants))
 })
 
 test_that("[.contact_survey preserves extra fields", {

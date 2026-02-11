@@ -40,18 +40,54 @@ clone_survey <- function(x, participants, contacts) {
 `[.contact_survey` <- function(x, i, ...) {
   expr <- substitute(i)
   if (missing(i) || is.null(expr)) {
-    return(x)
+    return(clone_survey(x, copy(x$participants), copy(x$contacts)))
   }
 
   participants <- copy(x$participants)
   contacts <- copy(x$contacts)
 
   ref_vars <- all.vars(expr)
+
+  if (length(ref_vars) == 0) {
+    cli::cli_abort(
+      "Column-based expressions are required, e.g. \\
+       {.code survey[country == \"UK\"]}. \\
+       Numeric or logical indexing is not supported."
+    )
+  }
+
   part_cols <- intersect(ref_vars, colnames(participants))
   cont_cols <- intersect(ref_vars, colnames(contacts))
 
+  ## Columns in both tables: allow if they are only key columns (part_id),
+
+  ## otherwise error.
+  shared <- intersect(part_cols, cont_cols)
+  if (length(shared) > 0) {
+    non_key <- setdiff(shared, "part_id")
+    if (length(non_key) > 0) {
+      cli::cli_abort(
+        "Expression references columns from both participants \\
+         ({.val {part_cols}}) and contacts ({.val {cont_cols}}). \\
+         Filter one table at a time, e.g. \\
+         {.code survey[part_col == x][cnt_col == y]}."
+      )
+    }
+    ## Shared key columns only — treat as participant-side
+    cont_cols <- setdiff(cont_cols, shared)
+  }
+
   found_in_part <- length(part_cols) > 0
   found_in_cont <- length(cont_cols) > 0
+
+  if (found_in_part && found_in_cont) {
+    cli::cli_abort(
+      "Expression references columns from both participants \\
+       ({.val {part_cols}}) and contacts ({.val {cont_cols}}). \\
+       Filter one table at a time, e.g. \\
+       {.code survey[part_col == x][cnt_col == y]}."
+    )
+  }
 
   if (!found_in_part && !found_in_cont) {
     unknown <- setdiff(ref_vars, c(colnames(participants), colnames(contacts)))
@@ -63,24 +99,13 @@ clone_survey <- function(x, participants, contacts) {
     return(clone_survey(x, participants, contacts))
   }
 
-  if (found_in_part && found_in_cont) {
-    cli::cli_abort(
-      "Expression references columns from both participants \\
-       ({.val {part_cols}}) and contacts ({.val {cont_cols}}). \\
-       Filter one table at a time, e.g. \\
-       {.code survey[part_col == x][cnt_col == y]}."
-    )
-  }
-
   env <- parent.frame()
 
   if (found_in_part) {
     rows <- eval(expr, participants, env)
     participants <- participants[rows]
     contacts <- contacts[part_id %in% participants$part_id]
-  }
-
-  if (found_in_cont && !found_in_part) {
+  } else {
     rows <- eval(expr, contacts, env)
     contacts <- contacts[rows]
   }

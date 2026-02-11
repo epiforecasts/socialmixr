@@ -126,6 +126,45 @@ test_that("weigh() errors for missing column", {
   )
 })
 
+test_that("weigh() errors for non-numeric direct column", {
+  expect_error(
+    weigh(polymod_grouped, "country"),
+    "must be numeric"
+  )
+})
+
+test_that("weigh_named() warns for unmatched values", {
+  survey <- copy(polymod_grouped)
+  survey$participants[, test_col := sample(c("A", "B", "C"), .N, replace = TRUE)]
+  expect_warning(
+    weigh(survey, "test_col", target = c(A = 1, B = 2)),
+    "C"
+  )
+})
+
+test_that("weigh_grouped() warns for non-NA unmatched values", {
+  expect_warning(
+    weigh(
+      polymod_grouped,
+      "dayofweek",
+      target = c(5, 2),
+      groups = list(1:3, 4:5)
+    ),
+    "do not match any group"
+  )
+})
+
+test_that("weigh_grouped() does not warn when only NAs are unmatched", {
+  expect_no_warning(
+    weigh(
+      polymod_grouped,
+      "dayofweek",
+      target = c(5, 2),
+      groups = list(1:5, c(0, 6))
+    )
+  )
+})
+
 test_that("weigh() warns for empty groups", {
   expect_warning(
     weigh(

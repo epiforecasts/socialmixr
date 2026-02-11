@@ -61,7 +61,7 @@ weigh <- function(survey, by, target = NULL, groups = NULL, ...) {
   if (is.null(target) && is.null(groups)) {
     participants <- weigh_direct(participants, by)
   } else if (is.data.frame(target)) {
-    participants <- weigh_population(participants, by, target, ...)
+    participants <- weigh_population(participants, target, ...)
   } else if (!is.null(names(target))) {
     if (!is.null(groups)) {
       cli::cli_warn(
@@ -84,6 +84,12 @@ weigh <- function(survey, by, target = NULL, groups = NULL, ...) {
 
 #' @autoglobal
 weigh_direct <- function(participants, by) {
+  if (!is.numeric(participants[[by]])) {
+    cli::cli_abort(
+      "Column {.val {by}} must be numeric for direct weighting \\
+       (without {.arg target}). Got {.cls {class(participants[[by]])}}."
+    )
+  }
   participants[, weight := weight * get(by)]
   participants
 }
@@ -113,6 +119,15 @@ weigh_grouped <- function(participants, by, target, groups) {
     target[empty] <- 0
     group_counts[empty] <- 1L
   }
+  unmatched_non_na <- is.na(group_idx) & !is.na(col_vals)
+  n_unmatched <- sum(unmatched_non_na)
+  if (n_unmatched > 0) {
+    cli::cli_warn(
+      "{n_unmatched} participant{?s} ha{?s/ve} values in {.val {by}} \\
+       that do not match any group; an average weight will be used."
+    )
+  }
+
   n_total <- length(col_vals)
   weight_factor <- ifelse(
     is.na(group_idx),
@@ -131,6 +146,16 @@ weigh_named <- function(participants, by, target) {
   matched_target <- target[col_vals]
   matched_counts <- as.numeric(val_counts[col_vals])
 
+  unmatched <- setdiff(unique(col_vals[!is.na(col_vals)]), names(target))
+  n_unmatched <- length(unmatched)
+  if (n_unmatched > 0) {
+    cli::cli_warn(
+      "{n_unmatched} value{?s} in column {.val {by}} not found in \\
+       {.arg target} names ({.val {unmatched}}); \\
+       {?its/their} weight{?s} will be set to {.val NA}."
+    )
+  }
+
   weight_factor <- ifelse(
     is.na(matched_target),
     NA_real_,
@@ -142,7 +167,7 @@ weigh_named <- function(participants, by, target) {
 }
 
 #' @autoglobal
-weigh_population <- function(participants, by, target, ...) {
+weigh_population <- function(participants, target, ...) {
   if (!all(c("lower.age.limit", "population") %in% colnames(target))) {
     cli::cli_abort(
       "Data frame {.arg target} must have columns {.val lower.age.limit} \\
