@@ -29,13 +29,6 @@ test_that("compute_matrix() errors when age.group missing", {
   )
 })
 
-test_that("compute_matrix() errors for unsupported by", {
-  expect_error(
-    compute_matrix(polymod_uk_grouped, by = "country"),
-    "age.group"
-  )
-})
-
 test_that("compute_matrix() warns for multiple observations per participant", {
   survey <- polymod_uk_grouped
   # Duplicate participants to simulate longitudinal data

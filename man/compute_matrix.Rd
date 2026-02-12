@@ -4,13 +4,11 @@
 \alias{compute_matrix}
 \title{Compute contact matrix from prepared survey data}
 \usage{
-compute_matrix(survey, by = "age.group", counts = FALSE)
+compute_matrix(survey, counts = FALSE)
 }
 \arguments{
 \item{survey}{a \code{\link[=survey]{survey()}} object with age groups assigned (via
 \code{\link[=assign_age_groups]{assign_age_groups()}})}
-
-\item{by}{column to group by; currently only \code{"age.group"} is supported}
 
 \item{counts}{whether to return counts instead of means}
 }

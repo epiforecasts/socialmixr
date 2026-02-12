@@ -102,8 +102,6 @@ utils::globalVariables(c(
   "weight", # <weigh_direct>
   "weight", # <weigh_grouped>
   "weight", # <weigh_named>
-  "lower.age.limit", # <weigh_population>
-  "upper.age.limit", # <weigh_population>
   "sex", # <wpp_age>
   "country", # <wpp_age>
   "name", # <wpp_age>

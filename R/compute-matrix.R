@@ -9,7 +9,6 @@
 #'
 #' @param survey a [survey()] object with age groups assigned (via
 #'   [assign_age_groups()])
-#' @param by column to group by; currently only `"age.group"` is supported
 #' @param counts whether to return counts instead of means
 #' @returns a list with elements `matrix` and `participants`
 #'
@@ -24,7 +23,6 @@
 #' @autoglobal
 compute_matrix <- function(
   survey,
-  by = "age.group",
   counts = FALSE
 ) {
   check_if_contact_survey(survey)
@@ -58,16 +56,9 @@ compute_matrix <- function(
     }
   }
 
-  if (by != "age.group") {
+  if (!"age.group" %in% colnames(survey$participants)) {
     cli::cli_abort(
-      "Only {.val age.group} is currently supported for {.arg by}. \\
-       See {.url https://github.com/epiforecasts/socialmixr/issues/143}."
-    )
-  }
-
-  if (!by %in% colnames(survey$participants)) {
-    cli::cli_abort(
-      "Column {.val {by}} not found in participant data. \\
+      "Column {.val age.group} not found in participant data. \\
        Call {.fn assign_age_groups} first."
     )
   }
