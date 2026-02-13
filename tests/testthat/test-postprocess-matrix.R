@@ -17,7 +17,7 @@ test_that("symmetrise() satisfies reciprocity", {
 
   # c_ij * N_i should equal c_ji * N_j, i.e. M * N should be symmetric
   n <- resolved$population
-  scaled <- sym$matrix * n              # M[i,j] * N[i] via column recycling
+  scaled <- sym$matrix * n # M[i,j] * N[i] via column recycling
 
   expect_equal(unname(scaled), unname(t(scaled)), tolerance = 1e-10)
 })
