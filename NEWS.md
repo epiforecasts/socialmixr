@@ -1,5 +1,31 @@
 # socialmixr (development version)
 
+* New `[.contact_survey` method allows filtering survey objects with
+  expressions, e.g. `polymod[country == "United Kingdom"]` (#161).
+
+* New `weigh()` function for composable participant weighting: supports
+  day-of-week groups, named target vectors, direct numeric columns, and
+  population post-stratification (#161).
+
+* New `compute_matrix()` function computes a contact matrix from a prepared
+  survey, completing the pipeline workflow alongside `assign_age_groups()` and
+  `weigh()` (#161).
+
+* New post-processing functions `symmetrise()`, `split_matrix()`, and
+  `per_capita()` operate on `compute_matrix()` output. `symmetrise()` enforces
+  reciprocity, `split_matrix()` decomposes into mean contacts, normalisation,
+  and an assortativity matrix, and `per_capita()` converts to per-capita rates.
+  Example workflow (#161):
+
+    ```
+    pop <- wpp_age("United Kingdom", 2005)
+    polymod |>
+      _[country == "United Kingdom"] |>
+      assign_age_groups(age_limits = c(0, 5, 15)) |>
+      compute_matrix() |>
+      symmetrise(survey_pop = pop)
+    ```
+
 * `contact_matrix()` now uses `assign_age_groups()` internally, reducing code
   duplication and demonstrating the modular workflow (#227).
 
