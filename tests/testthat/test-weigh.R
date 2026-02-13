@@ -135,7 +135,9 @@ test_that("weigh() errors for non-numeric direct column", {
 
 test_that("weigh_named() warns for unmatched values", {
   survey <- copy(polymod_grouped)
-  survey$participants[, test_col := sample(c("A", "B", "C"), .N, replace = TRUE)]
+  survey$participants[,
+    test_col := sample(c("A", "B", "C"), .N, replace = TRUE)
+  ]
   expect_warning(
     weigh(survey, "test_col", target = c(A = 1, B = 2)),
     "C"
@@ -179,7 +181,12 @@ test_that("weigh() warns for empty groups", {
 
 test_that("weigh() does not modify original", {
   original <- copy(polymod_grouped$participants)
-  weigh(polymod_grouped, "dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6)))
+  weigh(
+    polymod_grouped,
+    "dayofweek",
+    target = c(5, 2),
+    groups = list(1:5, c(0, 6))
+  )
   expect_identical(polymod_grouped$participants, original)
 })
 
