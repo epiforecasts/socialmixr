@@ -20,7 +20,8 @@ Computes a contact matrix from a \code{contact_survey} that has been processed
 by \code{\link[=assign_age_groups]{assign_age_groups()}} and optionally \code{\link[=weigh]{weigh()}}. This is the final step
 in the pipeline workflow.
 
-For symmetrisation, use \code{contactmatrix::cm_make_symmetric()} on the result.
+For post-processing, pipe the result into \code{\link[=symmetrise]{symmetrise()}},
+\code{\link[=split_matrix]{split_matrix()}}, or \code{\link[=per_capita]{per_capita()}}.
 }
 \examples{
 data(polymod)

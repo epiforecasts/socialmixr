@@ -9,9 +9,22 @@
 
 * New `compute_matrix()` function computes a contact matrix from a prepared
   survey, completing the pipeline workflow alongside `assign_age_groups()` and
-  `weigh()`. It focuses on turning weighted survey data into a matrix;
-  post-processing such as symmetrisation is available via
-  `contactmatrix::cm_make_symmetric()` (#161).
+  `weigh()` (#161).
+
+* New post-processing functions `symmetrise()`, `split_matrix()`, and
+  `per_capita()` operate on `compute_matrix()` output. `symmetrise()` enforces
+  reciprocity, `split_matrix()` decomposes into mean contacts, normalisation,
+  and an assortativity matrix, and `per_capita()` converts to per-capita rates.
+  Example workflow (#161):
+
+    ```
+    pop <- wpp_age("United Kingdom", 2005)
+    polymod |>
+      _[country == "United Kingdom"] |>
+      assign_age_groups(age_limits = c(0, 5, 15)) |>
+      compute_matrix() |>
+      symmetrise(survey_pop = pop)
+    ```
 
 * `contact_matrix()` now uses `assign_age_groups()` internally, reducing code
   duplication and demonstrating the modular workflow (#227).

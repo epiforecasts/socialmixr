@@ -5,7 +5,8 @@
 #' by [assign_age_groups()] and optionally [weigh()]. This is the final step
 #' in the pipeline workflow.
 #'
-#' For symmetrisation, use `contactmatrix::cm_make_symmetric()` on the result.
+#' For post-processing, pipe the result into [symmetrise()],
+#' [split_matrix()], or [per_capita()].
 #'
 #' @param survey a [survey()] object with age groups assigned (via
 #'   [assign_age_groups()])
