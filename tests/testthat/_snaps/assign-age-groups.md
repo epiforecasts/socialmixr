@@ -10,7 +10,7 @@
     Code
       dim(polymod_age_grouped$contacts)
     Output
-      [1] 97904    16
+      [1] 97904    17
 
 # assign_age_groups() appropriately changes age.group factor
 

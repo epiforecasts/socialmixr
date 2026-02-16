@@ -64,8 +64,12 @@ compute_matrix <- function(
     )
   }
 
-  ## Recover age_limits from assigned age groups --------------------------------
-  age_limits <- agegroups_to_limits(survey$participants$age.group)
+  if (!"contact.age.group" %in% colnames(survey$contacts)) {
+    cli::cli_abort(
+      "Column {.val contact.age.group} not found in contact data. \\
+       Call {.fn assign_age_groups} first."
+    )
+  }
 
   ## Initialise weight if not present ------------------------------------------
   if (!"weight" %in% colnames(survey$participants)) {
@@ -79,15 +83,6 @@ compute_matrix <- function(
   survey$contacts <- merge_participants_contacts(
     participants = survey$participants,
     contacts = survey$contacts
-  )
-
-  max_age <- max_participant_age(survey$participants)
-
-  ## Add contact age groups ----------------------------------------------------
-  survey$contacts <- add_contact_age_groups(
-    contacts = survey$contacts,
-    age_breaks = create_age_breaks(age_limits, max_age),
-    age_groups = age_group_labels(survey$participants)
   )
 
   ## Build weighted matrix (no bootstrap — use all participants) ---------------

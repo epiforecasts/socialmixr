@@ -1,17 +1,17 @@
-#' Clone a contact survey with new participant/contact data
+#' Assemble a contact survey with new participant/contact data
 #'
-#' Copies all fields from the original survey object, replacing only
-#' `participants` and `contacts` with the supplied data.
+#' Creates a new survey object preserving all fields from the original,
+#' replacing only `participants` and `contacts` with the supplied data.
 #'
 #' @param x a `contact_survey` object
 #' @param participants new participants data.table
 #' @param contacts new contacts data.table
 #' @returns a `contact_survey` object with all fields from `x` preserved
 #' @keywords internal
-clone_survey <- function(x, participants, contacts) {
+assemble_survey <- function(x, participants, contacts) {
   result <- x
-  result$participants <- data.table(participants)
-  result$contacts <- data.table(contacts)
+  result$participants <- participants
+  result$contacts <- contacts
   result
 }
 
@@ -40,7 +40,7 @@ clone_survey <- function(x, participants, contacts) {
 `[.contact_survey` <- function(x, i, ...) {
   expr <- substitute(i)
   if (missing(i) || is.null(expr)) {
-    return(clone_survey(x, copy(x$participants), copy(x$contacts)))
+    return(assemble_survey(x, copy(x$participants), copy(x$contacts)))
   }
 
   participants <- copy(x$participants)
@@ -96,7 +96,7 @@ clone_survey <- function(x, participants, contacts) {
         "Column{?s} {.val {unknown}} not found in participants or contacts."
       )
     }
-    return(clone_survey(x, participants, contacts))
+    return(assemble_survey(x, participants, contacts))
   }
 
   env <- parent.frame()
@@ -110,5 +110,5 @@ clone_survey <- function(x, participants, contacts) {
     contacts <- contacts[rows]
   }
 
-  clone_survey(x, participants, contacts)
+  assemble_survey(x, participants, contacts)
 }
