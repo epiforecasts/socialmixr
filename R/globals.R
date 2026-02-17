@@ -6,6 +6,9 @@ utils::globalVariables(c(
   "..age.unit", # <clean.contact_survey>
   "..high", # <clean.contact_survey>
   "..low", # <clean.contact_survey>
+  "weight", # <compute_matrix>
+  "age.group", # <compute_matrix>
+  "sampled.weight", # <compute_matrix>
   "cnt_age", # <drop_ages_below_age_limit>
   "cnt_age", # <drop_missing_contact_ages>
   "part_age_exact", # <max_participant_age>
@@ -93,7 +96,12 @@ utils::globalVariables(c(
   "..original.lower.age.limit", # <pop_age>
   "..segment", # <pop_age>
   "..upper.age.limit", # <pop_age>
+  "part_id", # <[.contact_survey>
   "population", # <survey_country_population>
+  "weight", # <weigh>
+  "weight", # <weigh_direct>
+  "weight", # <weigh_grouped>
+  "weight", # <weigh_named>
   "sex", # <wpp_age>
   "country", # <wpp_age>
   "name", # <wpp_age>

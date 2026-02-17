@@ -127,5 +127,13 @@ assign_age_groups <- function(
     age_limits = age_limits
   )
 
+  ## assign contact age groups based on participant age groups ------------------
+  max_age <- max_participant_age(survey$participants)
+  survey$contacts <- add_contact_age_groups(
+    contacts = survey$contacts,
+    age_breaks = create_age_breaks(age_limits, max_age),
+    age_groups = age_group_labels(survey$participants)
+  )
+
   survey
 }
