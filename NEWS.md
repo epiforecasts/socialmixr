@@ -17,7 +17,7 @@
   and an assortativity matrix, and `per_capita()` converts to per-capita rates.
   Example workflow (#161):
 
-    ```
+    ```r
     pop <- wpp_age("United Kingdom", 2005)
     polymod |>
       _[country == "United Kingdom"] |>
