@@ -2,6 +2,50 @@
 
 ## socialmixr (development version)
 
+- New `[.contact_survey` method allows filtering survey objects with
+  expressions, e.g. `polymod[country == "United Kingdom"]`
+  ([\#161](https://github.com/epiforecasts/socialmixr/issues/161)).
+
+- New [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  function for composable participant weighting: supports day-of-week
+  groups, named target vectors, direct numeric columns, and population
+  post-stratification
+  ([\#161](https://github.com/epiforecasts/socialmixr/issues/161)).
+
+- New
+  [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
+  function computes a contact matrix from a prepared survey, completing
+  the pipeline workflow alongside
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
+  and [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  ([\#161](https://github.com/epiforecasts/socialmixr/issues/161)).
+
+- New post-processing functions
+  [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md),
+  and
+  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md)
+  operate on
+  [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
+  output.
+  [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md)
+  enforces reciprocity,
+  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
+  decomposes into mean contacts, normalisation, and an assortativity
+  matrix, and
+  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md)
+  converts to per-capita rates. Example workflow
+  ([\#161](https://github.com/epiforecasts/socialmixr/issues/161)):
+
+  ``` r
+  pop <- wpp_age("United Kingdom", 2005)
+  polymod |>
+    _[country == "United Kingdom"] |>
+    assign_age_groups(age_limits = c(0, 5, 15)) |>
+    compute_matrix() |>
+    symmetrise(survey_pop = pop)
+  ```
+
 - [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
   now uses
   [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)

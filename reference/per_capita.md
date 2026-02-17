@@ -1,0 +1,61 @@
+# Convert a contact matrix to per-capita rates
+
+Divides each column of the contact matrix by the population of the
+corresponding age group, giving the contact rate of age group i with one
+individual of age group j.
+
+## Usage
+
+``` r
+per_capita(x, survey_pop, ...)
+```
+
+## Arguments
+
+- x:
+
+  a list as returned by
+  [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md),
+  with elements `matrix` and `participants`
+
+- survey_pop:
+
+  a data frame with columns `lower.age.limit` and `population` (e.g.
+  from
+  [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md))
+
+- ...:
+
+  passed to
+  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+  for interpolation
+
+## Value
+
+`x` with `$matrix` replaced by the per-capita version
+
+## Examples
+
+``` r
+data(polymod)
+pop <- wpp_age("United Kingdom", 2005)
+polymod |>
+  (\(s) s[country == "United Kingdom"])() |>
+  assign_age_groups(age_limits = c(0, 5, 15)) |>
+  compute_matrix() |>
+  per_capita(survey_pop = pop)
+#> $matrix
+#>          contact.age.group
+#> age.group        [0,5)       [5,15)          15+
+#>    [0,5)  5.547112e-07 1.938376e-07 1.117610e-07
+#>    [5,15) 1.532896e-07 1.075909e-06 1.257024e-07
+#>    15+    1.130535e-07 1.747666e-07 1.940255e-07
+#> 
+#> $participants
+#>    age.group participants proportion
+#>       <char>        <int>      <num>
+#> 1:     [0,5)           95 0.09396637
+#> 2:    [5,15)          204 0.20178042
+#> 3:       15+          712 0.70425321
+#> 
+```
