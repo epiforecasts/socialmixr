@@ -23,6 +23,12 @@ assemble_survey <- function(x, participants, contacts) {
 #' @param x object to copy
 #' @param ... additional arguments passed to methods
 #' @returns a deep copy of `x`
+#'
+#' @note This function may mask [data.table::copy()] depending on package
+#'   load order. The default method delegates to `data.table::copy()`, so
+#'   behaviour is identical for data.tables. If you need to ensure you are
+#'   calling the data.table version, use `data.table::copy()` explicitly.
+#'
 #' @export
 copy <- function(x, ...) {
   UseMethod("copy")

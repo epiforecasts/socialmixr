@@ -24,3 +24,9 @@ a deep copy of \code{x}
 Generic function for creating deep copies. For \code{contact_survey} objects,
 this ensures the internal data.tables are also deep copied.
 }
+\note{
+This function may mask \code{\link[data.table:copy]{data.table::copy()}} depending on package
+load order. The default method delegates to \code{data.table::copy()}, so
+behaviour is identical for data.tables. If you need to ensure you are
+calling the data.table version, use \code{data.table::copy()} explicitly.
+}
