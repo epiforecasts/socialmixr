@@ -39,8 +39,7 @@
 
   ``` r
   pop <- wpp_age("United Kingdom", 2005)
-  polymod |>
-    _[country == "United Kingdom"] |>
+  polymod[country == "United Kingdom"] |>
     assign_age_groups(age_limits = c(0, 5, 15)) |>
     compute_matrix() |>
     symmetrise(survey_pop = pop)
@@ -52,6 +51,30 @@
   internally, reducing code duplication and demonstrating the modular
   workflow
   ([\#227](https://github.com/epiforecasts/socialmixr/issues/227)).
+
+- [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
+  gains a `weight_threshold` parameter to cap extreme weights before
+  normalisation, matching the
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  option
+  ([\#131](https://github.com/epiforecasts/socialmixr/issues/131)).
+
+- [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  now uses
+  [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  internally for all weighting (day-of-week, age, and user-defined),
+  reducing code duplication. Internal helpers
+  [`warn_multiple_observations()`](https://epiforecasts.io/socialmixr/reference/warn_multiple_observations.md)
+  and
+  [`normalise_weights()`](https://epiforecasts.io/socialmixr/reference/normalise_weights.md)
+  are extracted for sharing with
+  [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
+  ([\#131](https://github.com/epiforecasts/socialmixr/issues/131)).
+
+- Fixed bug where participants with NA `dayofweek` were incorrectly
+  weighted as weekend days. They now receive an average weight across
+  all days
+  ([\#131](https://github.com/epiforecasts/socialmixr/issues/131)).
 
 - New
   [`agegroups_to_limits()`](https://epiforecasts.io/socialmixr/reference/agegroups_to_limits.md)

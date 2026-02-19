@@ -56,7 +56,7 @@ in the pipeline workflow.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compute_matrix</span><span class="op">(</span><span class="va">survey</span>, counts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compute_matrix</span><span class="op">(</span><span class="va">survey</span>, counts <span class="op">=</span> <span class="cn">FALSE</span>, weight_threshold <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -70,6 +70,11 @@ in the pipeline workflow.</p>
 
 <dt id="arg-counts">counts<a class="anchor" aria-label="anchor" href="#arg-counts"></a></dt>
 <dd><p>whether to return counts instead of means</p></dd>
+
+
+<dt id="arg-weight-threshold">weight_threshold<a class="anchor" aria-label="anchor" href="#arg-weight-threshold"></a></dt>
+<dd><p>numeric; if provided, weights above this threshold
+are capped to the threshold value and then re-normalised (default NULL)</p></dd>
 
 </dl></div>
     <div class="section level2">

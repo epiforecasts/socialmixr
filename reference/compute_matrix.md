@@ -16,7 +16,7 @@ or
 ## Usage
 
 ``` r
-compute_matrix(survey, counts = FALSE)
+compute_matrix(survey, counts = FALSE, weight_threshold = NULL)
 ```
 
 ## Arguments
@@ -30,6 +30,11 @@ compute_matrix(survey, counts = FALSE)
 - counts:
 
   whether to return counts instead of means
+
+- weight_threshold:
+
+  numeric; if provided, weights above this threshold are capped to the
+  threshold value and then re-normalised (default NULL)
 
 ## Value
 

@@ -93,8 +93,6 @@ specification. Contributions of any kind are welcome!
   : Compute contact matrix from prepared survey data
 - [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
   : Generate a contact matrix from diary survey data
-- [`copy(`*`<contact_survey>`*`)`](https://epiforecasts.io/socialmixr/reference/copy.contact_survey.md)
-  : Deep copy a contact survey
 - [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md)
   **\[deprecated\]** : Download a survey from its Zenodo repository
 - [`get_citation()`](https://epiforecasts.io/socialmixr/reference/get_citation.md)

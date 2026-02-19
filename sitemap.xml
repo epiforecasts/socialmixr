@@ -18,7 +18,7 @@
 <url><loc>https://epiforecasts.io/socialmixr/reference/clean.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/compute_matrix.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/contact_matrix.html</loc></url>
-<url><loc>https://epiforecasts.io/socialmixr/reference/copy.contact_survey.html</loc></url>
+<url><loc>https://epiforecasts.io/socialmixr/reference/copy_survey.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/deprecate_arg.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/dot-get_survey.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/download_survey.html</loc></url>
@@ -36,6 +36,7 @@
 <url><loc>https://epiforecasts.io/socialmixr/reference/matrix_plot.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/new_contact_survey.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/normalise_country_names.html</loc></url>
+<url><loc>https://epiforecasts.io/socialmixr/reference/normalise_weights.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/per_capita.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/polymod.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/pop_age.html</loc></url>
@@ -47,6 +48,7 @@
 <url><loc>https://epiforecasts.io/socialmixr/reference/survey_countries.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/survey_country_population.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/symmetrise.html</loc></url>
+<url><loc>https://epiforecasts.io/socialmixr/reference/warn_multiple_observations.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/weigh.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/wpp_age.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/wpp_countries.html</loc></url>
