@@ -15,37 +15,18 @@ assemble_survey <- function(x, participants, contacts) {
   result
 }
 
-#' Deep copy an object
+#' Deep copy a contact survey
 #'
-#' Generic function for creating deep copies. For `contact_survey` objects,
-#' this ensures the internal data.tables are also deep copied.
+#' Creates a deep copy of a `contact_survey` object, including its
+#' `participants` and `contacts` data.tables.
 #'
-#' @param x object to copy
-#' @param ... additional arguments passed to methods
-#' @returns a deep copy of `x`
-#'
-#' @note This function may mask [data.table::copy()] depending on package
-#'   load order. The default method delegates to `data.table::copy()`, so
-#'   behaviour is identical for data.tables. If you need to ensure you are
-#'   calling the data.table version, use `data.table::copy()` explicitly.
-#'
-#' @export
-copy <- function(x, ...) {
-  UseMethod("copy")
-}
-
-#' @rdname copy
-#' @export
-copy.default <- function(x, ...) {
-  data.table::copy(x)
-}
-
-#' @rdname copy
-#' @export
-copy.contact_survey <- function(x, ...) {
-  result <- x
-  result$participants <- data.table::copy(x$participants)
-  result$contacts <- data.table::copy(x$contacts)
+#' @param survey a `contact_survey` object
+#' @returns a deep copy of the survey
+#' @keywords internal
+copy_survey <- function(survey) {
+  result <- survey
+  result$participants <- data.table::copy(survey$participants)
+  result$contacts <- data.table::copy(survey$contacts)
   result
 }
 

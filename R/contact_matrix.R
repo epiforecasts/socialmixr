@@ -222,9 +222,9 @@ contact_matrix <- function(
     )
   }
 
-  survey <- copy(survey)
-
   check_if_contact_survey(survey)
+
+  survey <- copy_survey(survey)
   check_age_limits_increasing(age_limits)
 
   ## Warn if survey has multiple observations per participant ------------------

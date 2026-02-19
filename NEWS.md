@@ -3,11 +3,6 @@
 * New `[.contact_survey` method allows filtering survey objects with
   expressions, e.g. `polymod[country == "United Kingdom"]` (#161).
 
-* New `copy()` S3 generic with a method for `contact_survey` objects that
-  deep copies the internal data.tables. The default method delegates to
-  `data.table::copy()`. Note: this may mask `data.table::copy()` depending
-  on package load order (#161).
-
 * New `weigh()` function for composable participant weighting: supports
   day-of-week groups, named target vectors, direct numeric columns, and
   population post-stratification (#161).

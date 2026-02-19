@@ -30,7 +30,7 @@ compute_matrix <- function(
   weight_threshold = NULL
 ) {
   check_if_contact_survey(survey)
-  survey <- copy(survey)
+  survey <- copy_survey(survey)
 
   ## Warn if survey has multiple observations per participant ------------------
   warn_multiple_observations(

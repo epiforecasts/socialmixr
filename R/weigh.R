@@ -44,7 +44,7 @@
 #' @autoglobal
 weigh <- function(survey, by, target = NULL, groups = NULL, ...) {
   check_if_contact_survey(survey)
-  survey <- copy(survey)
+  survey <- copy_survey(survey)
   participants <- survey$participants
 
   if (!by %in% colnames(participants)) {
