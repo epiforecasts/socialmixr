@@ -7,7 +7,6 @@ utils::globalVariables(c(
   "..high", # <clean.contact_survey>
   "..low", # <clean.contact_survey>
   "weight", # <compute_matrix>
-  "age.group", # <compute_matrix>
   "sampled.weight", # <compute_matrix>
   "cnt_age", # <drop_ages_below_age_limit>
   "cnt_age", # <drop_missing_contact_ages>
@@ -44,10 +43,7 @@ utils::globalVariables(c(
   "weight.age", # <weight_by_age>
   "weight", # <weight_by_age>
   "weight", # <weigh_by_user_defined>
-  "weight", # <truncate_renormalise_weights>
-  "age.group", # <truncate_renormalise_weights>
-  "weight", # <participant_weights>
-  "age.group", # <participant_weights>
+  "weight", # <normalise_weights>
   "part_id", # <merge_participants_contacts>
   "cnt_age", # <sample_present_age>
   "age.group", # <sample_present_age>
@@ -76,12 +72,13 @@ utils::globalVariables(c(
   "proportion", # <return_participant_weights>
   "participants", # <return_participant_weights>
   "weight", # <contact_matrix>
-  "age.group", # <contact_matrix>
+  "is.weekday", # <contact_matrix>
+  "dayofweek", # <contact_matrix>
   "cnt_age", # <contact_matrix>
   "lower.age.limit", # <contact_matrix>
+  "age.group", # <contact_matrix>
   "population", # <contact_matrix>
   "part_age", # <contact_matrix>
-  "is.weekday", # <contact_matrix>
   "proportion", # <contact_matrix>
   "participants", # <contact_matrix>
   "file_name", # <download_survey>

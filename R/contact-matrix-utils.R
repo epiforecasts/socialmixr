@@ -3,6 +3,58 @@ has_names <- function(x, nm) {
   all(nm %in% names(x))
 }
 
+#' Warn if survey has multiple observations per participant
+#'
+#' @description
+#' Issues a warning when a survey contains multiple observations per
+#' participant (more rows than unique part_id values).
+#'
+#' @param participants participant data.table
+#' @param observation_key optional column name(s) identifying observations
+#' @param filter_hint character; "pipeline" for pipeline-style hint or
+#'   "legacy" for contact_matrix-style hint
+#' @returns NULL invisibly
+#' @keywords internal
+#' @autoglobal
+warn_multiple_observations <- function(
+  participants,
+  observation_key = NULL,
+  filter_hint = c("pipeline", "legacy")
+) {
+  filter_hint <- match.arg(filter_hint)
+  n_participants <- uniqueN(participants$part_id)
+  n_rows <- nrow(participants)
+  if (n_participants >= n_rows) {
+    return(invisible(NULL))
+  }
+
+  has_obs_key <- !is.null(observation_key) && length(observation_key) > 0
+  hint <- if (has_obs_key && filter_hint == "pipeline") {
+    cli::format_inline(
+      "Use {.code survey[{observation_key} == ...]} to select specific \\
+       observations before calling {.fn compute_matrix}."
+    )
+  } else if (has_obs_key) {
+    cli::format_inline(
+      "Use {.arg filter} to select by {.val {observation_key}}."
+    )
+  } else if (filter_hint == "pipeline") {
+    "Filter the survey with {.code survey[...]} to select specific \\
+     observations before calling {.fn compute_matrix}."
+  } else {
+    "Use the {.arg filter} argument to select specific observations."
+  }
+
+  cli::cli_warn(c(
+    "Survey contains multiple observations per participant \\
+     ({n_rows} rows, {n_participants} unique participants).",
+    "*" = "Results will aggregate across all observations.",
+    i = hint
+  ))
+
+  invisible(NULL)
+}
+
 #' Impute ages from ranges (generic helper)
 #'
 #' @description
@@ -663,49 +715,33 @@ weigh_by_user_defined <- function(participants, weights) {
   participants
 }
 
+#' Post-stratification weight normalisation
+#'
+#' @description
+#' Normalises participant weights within groups so that they sum to the number
+#' of participants in each group. Optionally truncates extreme weights to a
+#' threshold and re-normalises.
+#'
+#' @param participants participant data.table with a `weight` column
+#' @param by character; column name(s) to group by (default "age.group")
+#' @param threshold numeric; if provided, weights above this value are capped
+#'   and the weights are re-normalised (default NULL)
+#' @returns the participants data.table (modified by reference)
+#' @keywords internal
 #' @autoglobal
-truncate_renormalise_weights <- function(participants, weight_threshold) {
-  if (!is.null(weight_threshold) && !is.na(weight_threshold)) {
-    participants[weight > weight_threshold, weight := weight_threshold]
-    # re-normalise
-    participants[, weight := weight / sum(weight) * .N, by = age.group]
-  }
-  participants
-}
-
-#' @autoglobal
-participant_weights <- function(
+normalise_weights <- function(
   participants,
-  survey_pop_full,
-  weights,
-  weigh_dayofweek,
-  weigh_age,
-  weight_threshold
+  by = "age.group",
+  threshold = NULL
 ) {
-  participants[, weight := 1]
+  participants[, weight := weight / sum(weight) * .N, by = c(by)]
 
-  ## assign weights to participants to account for weekend/weekday variation
-  if (weigh_dayofweek) {
-    participants <- weight_by_day_of_week(participants)
+  if (!is.null(threshold) && !is.na(threshold)) {
+    participants[weight > threshold, weight := threshold]
+    participants[, weight := weight / sum(weight) * .N, by = c(by)]
   }
 
-  ## assign weights to participants, to account for age variation
-  if (weigh_age) {
-    participants <- weight_by_age(participants, survey_pop_full)
-  }
-
-  ## option to weigh the contact data with user-defined participant weights
-  if (length(weights) > 0) {
-    participants <- weigh_by_user_defined(participants, weights)
-  }
-
-  # post-stratification weight standardisation: by age.group
-  participants[, weight := weight / sum(weight) * .N, by = age.group]
-
-  # option to truncate overall participant weights (if not NULL or NA)
-  participants <- truncate_renormalise_weights(participants, weight_threshold)
-
-  participants
+  invisible(participants)
 }
 
 ## merge participants and contacts into a single data table

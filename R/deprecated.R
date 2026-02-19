@@ -60,11 +60,10 @@ get_survey <- function(survey, clear_cache = FALSE, ...) {
 #' @autoglobal
 #' @param survey a DOI or url to get the survey from, or a [survey()] object.
 #' @param ... currently unused
-#' @importFrom data.table copy
 #' @keywords internal
 .get_survey <- function(survey, ...) {
   if (inherits(survey, "contact_survey")) {
-    new_survey <- copy(survey)
+    new_survey <- copy_survey(survey)
   } else if (is.character(survey)) {
     files <- withr::with_options(
       list(lifecycle_verbosity = "quiet"),

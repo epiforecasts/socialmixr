@@ -20,15 +20,14 @@ assemble_survey <- function(x, participants, contacts) {
 #' Creates a deep copy of a `contact_survey` object, including its
 #' `participants` and `contacts` data.tables.
 #'
-#' @param x a `contact_survey` object
+#' @param survey a `contact_survey` object
 #' @returns a deep copy of the survey
-#' @importFrom data.table copy
-#' @method copy contact_survey
-#' @export
-copy.contact_survey <- function(x) {
-  x$participants <- copy(x$participants)
-  x$contacts <- copy(x$contacts)
-  x
+#' @keywords internal
+copy_survey <- function(survey) {
+  result <- survey
+  result$participants <- data.table::copy(survey$participants)
+  result$contacts <- data.table::copy(survey$contacts)
+  result
 }
 
 #' Subset a contact survey
@@ -49,7 +48,6 @@ copy.contact_survey <- function(x) {
 #' data(polymod)
 #' polymod[country == "United Kingdom"]
 #'
-#' @importFrom data.table copy
 #' @method [ contact_survey
 #' @export
 #' @autoglobal

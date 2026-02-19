@@ -772,7 +772,8 @@ test_that("The return.part.weights option", {
         1
     ))
 
-    # with dayofweek weights activated, we should receive 4 weights, different from 1
+    # with dayofweek weights activated, we should receive 6 weights
+    # (2 age groups × 3 day types: weekday, weekend, NA dayofweek)
     expect_length(
       contact_matrix(
         survey = polymod,
@@ -780,7 +781,7 @@ test_that("The return.part.weights option", {
         weigh_dayofweek = TRUE,
         return_part_weights = TRUE
       )$participants.weights$weight,
-      4
+      6
     )
     expect_false(all(
       contact_matrix(

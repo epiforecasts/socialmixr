@@ -19,8 +19,7 @@
 
     ```r
     pop <- wpp_age("United Kingdom", 2005)
-    polymod |>
-      _[country == "United Kingdom"] |>
+    polymod[country == "United Kingdom"] |>
       assign_age_groups(age_limits = c(0, 5, 15)) |>
       compute_matrix() |>
       symmetrise(survey_pop = pop)
@@ -28,6 +27,17 @@
 
 * `contact_matrix()` now uses `assign_age_groups()` internally, reducing code
   duplication and demonstrating the modular workflow (#227).
+
+* `compute_matrix()` gains a `weight_threshold` parameter to cap extreme weights
+  before normalisation, matching the `contact_matrix()` option (#131).
+
+* `contact_matrix()` now uses `weigh()` internally for all weighting
+  (day-of-week, age, and user-defined), reducing code duplication. Internal
+  helpers `warn_multiple_observations()` and `normalise_weights()` are
+  extracted for sharing with `compute_matrix()` (#131).
+
+* Fixed bug where participants with NA `dayofweek` were incorrectly weighted
+  as weekend days. They now receive an average weight across all days (#131).
 
 * New `agegroups_to_limits()` function converts age group labels back to lower
   age limits, the inverse of `limits_to_agegroups()`.

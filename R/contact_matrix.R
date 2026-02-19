@@ -32,7 +32,6 @@
 #' @return a contact matrix, and the underlying demography of the surveyed population
 #' @importFrom stats xtabs runif median
 #' @importFrom utils data globalVariables
-#' @importFrom data.table copy
 #' @importFrom countrycode countrycode
 #' @importFrom rlang %||%
 #' @import data.table
@@ -223,36 +222,17 @@ contact_matrix <- function(
     )
   }
 
-  survey <- copy(survey)
-
   check_if_contact_survey(survey)
+
+  survey <- copy_survey(survey)
   check_age_limits_increasing(age_limits)
 
   ## Warn if survey has multiple observations per participant ------------------
-  n_participants <- uniqueN(survey$participants$part_id)
-  n_rows <- nrow(survey$participants)
-  if (n_participants < n_rows) {
-    obs_key <- survey$observation_key
-    if (!is.null(obs_key) && length(obs_key) > 0) {
-      cli::cli_warn(
-        c(
-          "Survey contains multiple observations per participant \\
-           ({n_rows} rows, {n_participants} unique participants).",
-          "*" = "Results will aggregate across all observations.",
-          i = "Use {.arg filter} to select by {.val {obs_key}}."
-        )
-      )
-    } else {
-      cli::cli_warn(
-        c(
-          "Survey contains multiple observations per participant \\
-           ({n_rows} rows, {n_participants} unique participants).",
-          "*" = "Results will aggregate across all observations.",
-          i = "Use the {.arg filter} argument to select specific observations."
-        )
-      )
-    }
-  }
+  warn_multiple_observations(
+    participants = survey$participants,
+    observation_key = survey$observation_key,
+    filter_hint = "legacy"
+  )
 
   ## Filter to specific countries ----------------------------------------------
   # If a survey contains data from multiple countries or if countries specified
@@ -324,30 +304,47 @@ contact_matrix <- function(
   ## Process weights -----------------------------------------------------------
   survey$participants[, weight := 1]
 
-  ## assign weights to participants to account for weekend/weekday variation
   if (weigh_dayofweek) {
-    survey$participants <- weight_by_day_of_week(survey$participants)
+    if ("dayofweek" %in% colnames(survey$participants)) {
+      survey <- weigh(
+        survey,
+        "dayofweek",
+        target = c(5, 2),
+        groups = list(1:5, c(0, 6))
+      )
+      # Add is.weekday for return_part_weights compatibility
+      # Use fifelse to preserve NA (NA %in% 1:5 would return FALSE)
+      survey$participants[,
+        is.weekday := fifelse(is.na(dayofweek), NA, dayofweek %in% 1:5)
+      ]
+    } else {
+      cli::cli_warn(
+        c(
+          "{.code weigh_dayofweek} is {.val TRUE}, but no {.col dayofweek} \\
+            column in the data.",
+          i = "Will ignore."
+        )
+      )
+      weigh_dayofweek <- FALSE
+    }
   }
 
-  ## assign weights to participants, to account for age variation
   if (weigh_age) {
-    survey$participants <- weight_by_age(survey$participants, survey_pop.full)
+    survey <- weigh(survey, "part_age", target = survey_pop.full)
   }
 
-  ## option to weigh the contact data with user-defined participant weights
   if (length(weights) > 0) {
-    survey$participants <- weigh_by_user_defined(survey$participants, weights)
+    for (w in weights) {
+      survey <- weigh(survey, w)
+    }
   }
 
-  # post-stratification weight standardisation: by age.group
-  survey$participants[, weight := weight / sum(weight) * .N, by = age.group]
-
-  # option to truncate overall participant weights (if not NULL or NA)
-  if (!is.null(weight_threshold) && !is.na(weight_threshold)) {
-    survey$participants[weight > weight_threshold, weight := weight_threshold]
-    # re-normalise
-    survey$participants[, weight := weight / sum(weight) * .N, by = age.group]
-  }
+  # Post-stratification normalisation (with optional threshold)
+  normalise_weights(
+    survey$participants,
+    by = "age.group",
+    threshold = weight_threshold
+  )
 
   ## merge participants and contacts into a single data table ------------------
   survey$contacts <- merge_participants_contacts(
