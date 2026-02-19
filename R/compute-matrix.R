@@ -21,7 +21,7 @@
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix()
 #'
-#' @importFrom data.table copy uniqueN
+#' @importFrom data.table uniqueN
 #' @export
 #' @autoglobal
 compute_matrix <- function(

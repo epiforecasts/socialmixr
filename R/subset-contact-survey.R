@@ -61,7 +61,6 @@ copy.contact_survey <- function(x, ...) {
 #' data(polymod)
 #' polymod[country == "United Kingdom"]
 #'
-#' @importFrom data.table copy
 #' @method [ contact_survey
 #' @export
 #' @autoglobal

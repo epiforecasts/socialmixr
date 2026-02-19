@@ -40,7 +40,6 @@
 #' polymod |>
 #'   weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6)))
 #'
-#' @importFrom data.table copy
 #' @export
 #' @autoglobal
 weigh <- function(survey, by, target = NULL, groups = NULL, ...) {

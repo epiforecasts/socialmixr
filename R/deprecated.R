@@ -60,7 +60,6 @@ get_survey <- function(survey, clear_cache = FALSE, ...) {
 #' @autoglobal
 #' @param survey a DOI or url to get the survey from, or a [survey()] object.
 #' @param ... currently unused
-#' @importFrom data.table copy
 #' @keywords internal
 .get_survey <- function(survey, ...) {
   if (inherits(survey, "contact_survey")) {
