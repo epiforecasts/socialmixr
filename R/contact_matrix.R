@@ -313,7 +313,10 @@ contact_matrix <- function(
         groups = list(1:5, c(0, 6))
       )
       # Add is.weekday for return_part_weights compatibility
-      survey$participants[, is.weekday := dayofweek %in% 1:5]
+      # Use fifelse to preserve NA (NA %in% 1:5 would return FALSE)
+      survey$participants[,
+        is.weekday := fifelse(is.na(dayofweek), NA, dayofweek %in% 1:5)
+      ]
     } else {
       cli::cli_warn(
         c(
