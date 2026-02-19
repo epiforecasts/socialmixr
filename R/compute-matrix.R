@@ -11,6 +11,8 @@
 #' @param survey a [survey()] object with age groups assigned (via
 #'   [assign_age_groups()])
 #' @param counts whether to return counts instead of means
+#' @param weight_threshold numeric; if provided, weights above this threshold
+#'   are capped to the threshold value and then re-normalised (default NULL)
 #' @returns a list with elements `matrix` and `participants`
 #'
 #' @examples
@@ -24,38 +26,18 @@
 #' @autoglobal
 compute_matrix <- function(
   survey,
-  counts = FALSE
+  counts = FALSE,
+  weight_threshold = NULL
 ) {
   check_if_contact_survey(survey)
   survey <- copy(survey)
 
   ## Warn if survey has multiple observations per participant ------------------
-  n_participants <- uniqueN(survey$participants$part_id)
-  n_rows <- nrow(survey$participants)
-  if (n_participants < n_rows) {
-    obs_key <- survey$observation_key
-    if (!is.null(obs_key) && length(obs_key) > 0) {
-      cli::cli_warn(
-        c(
-          "Survey contains multiple observations per participant \\
-           ({n_rows} rows, {n_participants} unique participants).",
-          "*" = "Results will aggregate across all observations.",
-          i = "Use {.code survey[{obs_key} == ...]} to select specific \\
-               observations before calling {.fn compute_matrix}."
-        )
-      )
-    } else {
-      cli::cli_warn(
-        c(
-          "Survey contains multiple observations per participant \\
-           ({n_rows} rows, {n_participants} unique participants).",
-          "*" = "Results will aggregate across all observations.",
-          i = "Filter the survey with {.code survey[...]} to select \\
-               specific observations before calling {.fn compute_matrix}."
-        )
-      )
-    }
-  }
+  warn_multiple_observations(
+    participants = survey$participants,
+    observation_key = survey$observation_key,
+    filter_hint = "pipeline"
+  )
 
   if (!"age.group" %in% colnames(survey$participants)) {
     cli::cli_abort(
@@ -76,8 +58,8 @@ compute_matrix <- function(
     survey$participants[, weight := 1]
   }
 
-  ## Post-stratification normalisation -----------------------------------------
-  survey$participants[, weight := weight / sum(weight) * .N, by = age.group]
+  ## Post-stratification normalisation (with optional threshold) ---------------
+  normalise_weights(survey$participants, threshold = weight_threshold)
 
   ## Merge participants and contacts -------------------------------------------
   survey$contacts <- merge_participants_contacts(

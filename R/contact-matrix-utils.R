@@ -3,6 +3,58 @@ has_names <- function(x, nm) {
   all(nm %in% names(x))
 }
 
+#' Warn if survey has multiple observations per participant
+#'
+#' @description
+#' Issues a warning when a survey contains multiple observations per
+#' participant (more rows than unique part_id values).
+#'
+#' @param participants participant data.table
+#' @param observation_key optional column name(s) identifying observations
+#' @param filter_hint character; "pipeline" for pipeline-style hint or
+#'   "legacy" for contact_matrix-style hint
+#' @returns NULL invisibly
+#' @keywords internal
+#' @autoglobal
+warn_multiple_observations <- function(
+  participants,
+  observation_key = NULL,
+  filter_hint = c("pipeline", "legacy")
+) {
+  filter_hint <- match.arg(filter_hint)
+  n_participants <- uniqueN(participants$part_id)
+  n_rows <- nrow(participants)
+  if (n_participants >= n_rows) {
+    return(invisible(NULL))
+  }
+
+  has_obs_key <- !is.null(observation_key) && length(observation_key) > 0
+  hint <- if (has_obs_key && filter_hint == "pipeline") {
+    cli::format_inline(
+      "Use {.code survey[{observation_key} == ...]} to select specific \\
+       observations before calling {.fn compute_matrix}."
+    )
+  } else if (has_obs_key) {
+    cli::format_inline(
+      "Use {.arg filter} to select by {.val {observation_key}}."
+    )
+  } else if (filter_hint == "pipeline") {
+    "Filter the survey with {.code survey[...]} to select specific \\
+     observations before calling {.fn compute_matrix}."
+  } else {
+    "Use the {.arg filter} argument to select specific observations."
+  }
+
+  cli::cli_warn(c(
+    "Survey contains multiple observations per participant \\
+     ({n_rows} rows, {n_participants} unique participants).",
+    "*" = "Results will aggregate across all observations.",
+    i = hint
+  ))
+
+  invisible(NULL)
+}
+
 #' Impute ages from ranges (generic helper)
 #'
 #' @description
@@ -660,6 +712,31 @@ weigh_by_user_defined <- function(participants, weights) {
       participants[, weight := weight * get(weights[i])]
     }
   }
+  participants
+}
+
+#' Post-stratification weight normalisation
+#'
+#' @description
+#' Normalises participant weights within groups so that they sum to the number
+#' of participants in each group. Optionally truncates extreme weights to a
+#' threshold and re-normalises.
+#'
+#' @param participants participant data.table with a `weight` column
+#' @param by character; column name(s) to group by (default "age.group")
+#' @param threshold numeric; if provided, weights above this value are capped
+#'   and the weights are re-normalised (default NULL)
+#' @returns the participants data.table (modified by reference)
+#' @keywords internal
+#' @autoglobal
+normalise_weights <- function(participants, by = "age.group", threshold = NULL) {
+  participants[, weight := weight / sum(weight) * .N, by = c(by)]
+
+  if (!is.null(threshold) && !is.na(threshold)) {
+    participants[weight > threshold, weight := threshold]
+    participants[, weight := weight / sum(weight) * .N, by = c(by)]
+  }
+
   participants
 }
 

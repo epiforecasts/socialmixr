@@ -4,13 +4,16 @@
 \alias{compute_matrix}
 \title{Compute contact matrix from prepared survey data}
 \usage{
-compute_matrix(survey, counts = FALSE)
+compute_matrix(survey, counts = FALSE, weight_threshold = NULL)
 }
 \arguments{
 \item{survey}{a \code{\link[=survey]{survey()}} object with age groups assigned (via
 \code{\link[=assign_age_groups]{assign_age_groups()}})}
 
 \item{counts}{whether to return counts instead of means}
+
+\item{weight_threshold}{numeric; if provided, weights above this threshold
+are capped to the threshold value and then re-normalised (default NULL)}
 }
 \value{
 a list with elements \code{matrix} and \code{participants}
