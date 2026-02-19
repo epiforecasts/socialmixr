@@ -44,10 +44,6 @@ utils::globalVariables(c(
   "weight", # <weight_by_age>
   "weight", # <weigh_by_user_defined>
   "weight", # <normalise_weights>
-  "weight", # <truncate_renormalise_weights>
-  "age.group", # <truncate_renormalise_weights>
-  "weight", # <participant_weights>
-  "age.group", # <participant_weights>
   "part_id", # <merge_participants_contacts>
   "cnt_age", # <sample_present_age>
   "age.group", # <sample_present_age>

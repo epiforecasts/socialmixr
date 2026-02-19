@@ -741,52 +741,7 @@ normalise_weights <- function(
     participants[, weight := weight / sum(weight) * .N, by = c(by)]
   }
 
-  participants
-}
-
-#' @autoglobal
-truncate_renormalise_weights <- function(participants, weight_threshold) {
-  if (!is.null(weight_threshold) && !is.na(weight_threshold)) {
-    participants[weight > weight_threshold, weight := weight_threshold]
-    # re-normalise
-    participants[, weight := weight / sum(weight) * .N, by = age.group]
-  }
-  participants
-}
-
-#' @autoglobal
-participant_weights <- function(
-  participants,
-  survey_pop_full,
-  weights,
-  weigh_dayofweek,
-  weigh_age,
-  weight_threshold
-) {
-  participants[, weight := 1]
-
-  ## assign weights to participants to account for weekend/weekday variation
-  if (weigh_dayofweek) {
-    participants <- weight_by_day_of_week(participants)
-  }
-
-  ## assign weights to participants, to account for age variation
-  if (weigh_age) {
-    participants <- weight_by_age(participants, survey_pop_full)
-  }
-
-  ## option to weigh the contact data with user-defined participant weights
-  if (length(weights) > 0) {
-    participants <- weigh_by_user_defined(participants, weights)
-  }
-
-  # post-stratification weight standardisation: by age.group
-  participants[, weight := weight / sum(weight) * .N, by = age.group]
-
-  # option to truncate overall participant weights (if not NULL or NA)
-  participants <- truncate_renormalise_weights(participants, weight_threshold)
-
-  participants
+  invisible(participants)
 }
 
 ## merge participants and contacts into a single data table
