@@ -308,7 +308,8 @@ contact_matrix <- function(
   if (weigh_dayofweek) {
     if ("dayofweek" %in% colnames(survey$participants)) {
       survey <- weigh(
-        survey, "dayofweek",
+        survey,
+        "dayofweek",
         target = c(5, 2),
         groups = list(1:5, c(0, 6))
       )
@@ -336,7 +337,11 @@ contact_matrix <- function(
   }
 
   # Post-stratification normalisation (with optional threshold)
-  normalise_weights(survey$participants, by = "age.group", threshold = weight_threshold)
+  normalise_weights(
+    survey$participants,
+    by = "age.group",
+    threshold = weight_threshold
+  )
 
   ## merge participants and contacts into a single data table ------------------
   survey$contacts <- merge_participants_contacts(

@@ -729,7 +729,11 @@ weigh_by_user_defined <- function(participants, weights) {
 #' @returns the participants data.table (modified by reference)
 #' @keywords internal
 #' @autoglobal
-normalise_weights <- function(participants, by = "age.group", threshold = NULL) {
+normalise_weights <- function(
+  participants,
+  by = "age.group",
+  threshold = NULL
+) {
   participants[, weight := weight / sum(weight) * .N, by = c(by)]
 
   if (!is.null(threshold) && !is.na(threshold)) {
