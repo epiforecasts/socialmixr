@@ -19,8 +19,7 @@
 
     ```r
     pop <- wpp_age("United Kingdom", 2005)
-    polymod |>
-      _[country == "United Kingdom"] |>
+    polymod[country == "United Kingdom"] |>
       assign_age_groups(age_limits = c(0, 5, 15)) |>
       compute_matrix() |>
       symmetrise(survey_pop = pop)
