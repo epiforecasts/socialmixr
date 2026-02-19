@@ -194,8 +194,9 @@
 
 # warning is thrown if missing data exist
 
-    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
-    i  Consider setting 'missing.contact.age'.
+    `wpp_age()` was deprecated in socialmixr 0.6.0.
+    Pass population data directly via the {.arg survey_pop} argument instead.
+    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
 
 # error is thrown if an unknown argument is passed
 
@@ -224,7 +225,9 @@
 
 # warning is thrown if population needed but no 'year' column present
 
-    No information on "year" found in the data. Will use 2015 population data.
+    `wpp_age()` was deprecated in socialmixr 0.6.0.
+    Pass population data directly via the {.arg survey_pop} argument instead.
+    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
 
 # warning is thrown if day of week is asked to be weighed but not present
 
@@ -236,9 +239,13 @@
     Code
       contact_matrix(survey = polymod5, symmetric = TRUE)
     Condition
+      Warning:
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
+      Pass population data directly via the {.arg survey_pop} argument instead.
+      i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
       Error in `survey_pop_from_countries()`:
       ! Could not find population data for: "Zamonia".
-      i Use `wpp_countries()` to get a list of country names.
+      i Pass population data directly via the `survey_pop` argument.
 
 # warning is thrown if contact survey has no age information
 
@@ -257,22 +264,27 @@
 
 # good suggestions are made
 
-    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
-    i  Consider adjusting the age limits.
+    `wpp_age()` was deprecated in socialmixr 0.6.0.
+    Pass population data directly via the {.arg survey_pop} argument instead.
+    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
 
 ---
 
-    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
-    i  Consider setting 'missing.participant.age'.
+    `wpp_age()` was deprecated in socialmixr 0.6.0.
+    Pass population data directly via the {.arg survey_pop} argument instead.
+    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
 
 ---
 
-    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
-    i  Consider setting 'missing.participant.age' and 'missing.contact.age'.
+    `wpp_age()` was deprecated in socialmixr 0.6.0.
+    Pass population data directly via the {.arg survey_pop} argument instead.
+    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
 
 # nonsensical operations are warned about
 
-    `split = TRUE` does not make sense with `counts = TRUE`; will not split the contact matrix.
+    `wpp_age()` was deprecated in socialmixr 0.6.0.
+    Pass population data directly via the {.arg survey_pop} argument instead.
+    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
 
 ---
 
@@ -280,6 +292,10 @@
       contact_matrix(survey = polymod, counts = TRUE, symmetric = TRUE, age_limits = c(
         0, 5))
     Condition
+      Warning:
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
+      Pass population data directly via the {.arg survey_pop} argument instead.
+      i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
       Warning in `contact_matrix()`:
       `symmetric = TRUE` does not make sense with `counts = TRUE`; will not make matrix symmetric.
       Warning in `normalise_weighted_matrix()`:
@@ -308,8 +324,9 @@
 
 ---
 
-    `split = TRUE` does not work with missing data; will not split the contact matrix.
-    i  Consider setting 'missing.participant.age'.
+    `wpp_age()` was deprecated in socialmixr 0.6.0.
+    Pass population data directly via the {.arg survey_pop} argument instead.
+    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
 
 # warning is thrown if it is assumed that the survey is representative
 
@@ -322,13 +339,17 @@
       contact_matrix(polymod_nocountry, age_limits = c(0, 18, 60), symmetric = TRUE,
       survey_pop = "dummy")
     Condition
+      Warning:
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
+      Pass population data directly via the {.arg survey_pop} argument instead.
+      i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
       Error in `survey_pop_from_countries()`:
       ! Could not find population data for: "dummy".
-      i Use `wpp_countries()` to get a list of country names.
+      i Pass population data directly via the `survey_pop` argument.
 
 # Symmetric contact matrices with large normalisation weights throw a warning
 
-    Large differences in the size of the sub-populations with the current age breaks are likely to result in artefacts after making the matrix symmetric.
-    ! Please reconsider the age breaks to obtain more equally sized sub-populations.
-    i Normalization factors: [0.5 and 2.1]
+    `wpp_age()` was deprecated in socialmixr 0.6.0.
+    Pass population data directly via the {.arg survey_pop} argument instead.
+    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
 

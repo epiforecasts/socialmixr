@@ -35,12 +35,13 @@ Imports:
     memoise,
     purrr,
     oai,
-    wpp2017,
     xml2,
     cli,
     rlang,
     methods
 Suggests:
+    wpp2017,
+    wpp2024,
     contactsurveys,
     ggplot2,
     here,
@@ -51,6 +52,8 @@ Suggests:
     roxyglobals (>= 1.0.0),
     testthat,
     withr
+Remotes:
+    PPgp/wpp2024
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

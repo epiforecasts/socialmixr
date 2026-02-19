@@ -1,19 +1,59 @@
 #' Get age-specific population data according to the World Population Prospects 2017 edition
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function is deprecated in favour of passing population data directly
+#' to [contact_matrix()] via the `survey_pop` argument. Additionally, the
+#' underlying `wpp2017` data is outdated. For more recent population data,
+#' use the `wpp2024` package from GitHub.
+#'
+#' @details
 #' This uses data from the `wpp2017` package but combines male and female,
 #' and converts age groups to lower age limits. If the requested year is not present
 #' in the historical data, wpp projections are used.
+#'
 #' @return data frame of age-specific population data
-#' @import wpp2017
 #' @importFrom data.table dcast melt fread
 #' @importFrom countrycode countrycode
 #' @param countries countries, will return all if not given
 #' @param years years, will return all if not given
 #' @autoglobal
 #' @examples
-#' wpp_age("Italy", c(1990, 2000))
+#' if (requireNamespace("wpp2017", quietly = TRUE)) {
+#'   wpp_age("Italy", c(1990, 2000))
+#' }
+#'
+#' # For more recent data, use wpp2024 from GitHub:
+#' # remotes::install_github("PPgp/wpp2024")
+#' # library(wpp2024)
+#' # data(popAge1dt)
+#' # uk_pop <- popAge1dt[name == "United Kingdom" & year == 2020,
+#' #                     .(lower.age.limit = age, population = pop * 1000)]
+#' # contact_matrix(polymod, countries = "United Kingdom", survey_pop = uk_pop)
 #' @export
 wpp_age <- function(countries, years) {
+  lifecycle::deprecate_soft(
+    "0.6.0",
+    "wpp_age()",
+    details = c(
+      "Pass population data directly via the {.arg survey_pop} argument instead.",
+      i = "The underlying {.pkg wpp2017} data is also outdated; \\
+           use {.pkg wpp2024} from GitHub for more recent data."
+    )
+  )
+
+  if (!requireNamespace("wpp2017", quietly = TRUE)) {
+    cli::cli_abort(
+      c(
+        "The {.pkg wpp2017} package is required but not installed.",
+        i = "Install it with: {.code install.packages(\"wpp2017\")}, \\
+             or use more recent data from {.pkg wpp2024} (GitHub only) \\
+             and pass it directly via the {.arg survey_pop} argument."
+      )
+    )
+  }
+
   popM <- fread(system.file("data", "popM.txt", package = "wpp2017"))
   popF <- fread(system.file("data", "popF.txt", package = "wpp2017"))
 

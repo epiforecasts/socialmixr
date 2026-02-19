@@ -18,11 +18,14 @@
   Example workflow (#161):
 
     ```r
-    pop <- wpp_age("United Kingdom", 2005)
+    uk_pop <- data.frame(
+      lower.age.limit = c(0, 5, 15),
+      population = c(3500000, 6000000, 50000000)
+    )
     polymod[country == "United Kingdom"] |>
       assign_age_groups(age_limits = c(0, 5, 15)) |>
       compute_matrix() |>
-      symmetrise(survey_pop = pop)
+      symmetrise(survey_pop = uk_pop)
     ```
 
 * `contact_matrix()` now uses `assign_age_groups()` internally, reducing code
@@ -41,6 +44,12 @@
 
 * New `agegroups_to_limits()` function converts age group labels back to lower
   age limits, the inverse of `limits_to_agegroups()`.
+
+* `wpp_age()` and `wpp_countries()` are now soft-deprecated. Pass population
+  data directly via the `survey_pop` argument instead. The underlying `wpp2017`
+  data is also outdated; the `wpp2024` package from GitHub provides more recent
+  data. The `wpp2017` package is now a suggested dependency rather than a
+  required import (#258).
 
 * `get_survey()`, `download_survey()`, `list_surveys()`, `get_citation()`, and
   `survey_countries()` now warn unconditionally when called. These functions
