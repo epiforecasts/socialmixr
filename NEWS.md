@@ -30,7 +30,7 @@
   duplication and demonstrating the modular workflow (#227).
 
 * `compute_matrix()` gains a `weight_threshold` parameter to cap extreme weights
-  before normalization, matching the `contact_matrix()` option (#131).
+  before normalisation, matching the `contact_matrix()` option (#131).
 
 * `contact_matrix()` now uses `weigh()` internally for all weighting
   (day-of-week, age, and user-defined), reducing code duplication. Internal

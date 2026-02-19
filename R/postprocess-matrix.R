@@ -204,6 +204,18 @@ per_capita <- function(x, survey_pop, ...) {
     ...
   )
 
+  if (na_in_weighted_matrix(x$matrix)) {
+    cli::cli_abort(
+      c(
+        "Cannot compute per-capita rates for a matrix containing {.val NA} \\
+         values.",
+        # nolint start
+        "i" = "{build_na_warning(x$matrix)}"
+        # nolint end
+      )
+    )
+  }
+
   x$matrix <- matrix_per_capita(
     weighted_matrix = x$matrix,
     survey_pop = resolved_pop

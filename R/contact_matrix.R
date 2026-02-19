@@ -323,6 +323,7 @@ contact_matrix <- function(
           i = "Will ignore."
         )
       )
+      weigh_dayofweek <- FALSE
     }
   }
 
