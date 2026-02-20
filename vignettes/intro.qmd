@@ -132,7 +132,8 @@ contact_matrix(polymod, countries = "United Kingdom", survey_pop = custom_pop)
 For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`):
 
 ```{r eval=requireNamespace("wpp2024", quietly = TRUE), message=FALSE, warning=FALSE}
-uk_pop <- wpp2024::popAge1dt[name == "United Kingdom" & year == 2020,
+data("popAge1dt", package = "wpp2024")
+uk_pop <- popAge1dt[name == "United Kingdom" & year == 2020,
   .(lower.age.limit = age, population = pop * 1000)
 ]
 contact_matrix(polymod, countries = "United Kingdom", survey_pop = uk_pop)
