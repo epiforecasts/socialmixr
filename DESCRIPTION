@@ -40,8 +40,6 @@ Imports:
     rlang,
     methods
 Suggests:
-    wpp2017,
-    wpp2024,
     contactsurveys,
     ggplot2,
     here,
@@ -51,7 +49,9 @@ Suggests:
     rmarkdown,
     roxyglobals (>= 1.0.0),
     testthat,
-    withr
+    withr,
+    wpp2017,
+    wpp2024
 Remotes:
     PPgp/wpp2024
 VignetteBuilder: 
