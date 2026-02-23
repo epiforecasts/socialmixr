@@ -112,6 +112,130 @@ join_compatible_files <- function(survey_files, contact_data) {
   )
 }
 
+#' Identify which survey files share columns with a main table
+#' @autoglobal
+#' @keywords internal
+get_mergeable_files <- function(survey_files, contact_data, main_cols) {
+  can_merge <- vapply(
+    survey_files,
+    function(x) {
+      any(colnames(contact_data[[x]]) %in% main_cols)
+    },
+    TRUE
+  )
+  names(can_merge[can_merge])
+}
+
+#' Resolve the unique key for a merged data.table with duplicates
+#'
+#' Validates a user-provided participant_key or auto-detects one via
+#' find_unique_key().
+#' @autoglobal
+#' @keywords internal
+resolve_longitudinal_key <- function(merged, participant_key = NULL) {
+  if (!is.null(participant_key)) {
+    missing_cols <- setdiff(participant_key, names(merged))
+    if (
+      length(missing_cols) == 0 &&
+        anyDuplicated(merged, by = participant_key) == 0L
+    ) {
+      return(participant_key)
+    }
+  }
+  find_unique_key(merged, "part_id")
+}
+
+#' Try merging a single additional file into a main survey table
+#'
+#' @return A list with components: merged (data.table or NULL), detected_key
+#'   (character vector or NULL), file (the file that was merged, or NULL).
+#' @autoglobal
+#' @keywords internal
+try_merge_one_file <- function(
+  file,
+  type,
+  main_survey,
+  contact_data,
+  participant_key = NULL,
+  call = rlang::caller_env()
+) {
+  contact_data[[file]] <- contact_data[[file]][,
+    ..merge_id := seq_len(.N)
+  ]
+  common_id <- intersect(
+    colnames(contact_data[[file]]),
+    colnames(main_survey)
+  )
+  merged <- tryCatch(
+    {
+      merge(
+        main_survey,
+        contact_data[[file]],
+        by = common_id,
+        all.x = TRUE
+      )
+    },
+    error = function(cond) {
+      if (!grepl("cartesian", cond$message, fixed = TRUE)) {
+        cli::cli_abort(
+          "Merge failed for {.file {basename(file)}} on \\
+          {.val {common_id}}: {cond$message}",
+          call = call
+        )
+      }
+      NULL
+    }
+  )
+
+  if (is.null(merged)) {
+    return(list(merged = NULL, detected_key = NULL, file = NULL))
+  }
+
+  has_duplicates <- anyDuplicated(merged[, "..main_id", with = FALSE]) > 0
+  accept_merge <- !has_duplicates
+  detected_key <- NULL
+
+  if (has_duplicates && type == "contact") {
+    return(list(merged = NULL, detected_key = NULL, file = NULL))
+  }
+
+  if (has_duplicates) {
+    unique_key <- resolve_longitudinal_key(merged, participant_key)
+    if (!is.null(unique_key)) {
+      accept_merge <- TRUE
+      merged[, ("..main_id") := seq_len(.N)]
+      detected_key <- unique_key
+    }
+  }
+
+  if (!accept_merge) {
+    return(list(merged = NULL, detected_key = NULL, file = NULL))
+  }
+
+  ## Issue warnings about match quality
+  matched_main <- sum(!is.na(merged[["..merge_id"]]))
+  unmatched_main <- nrow(merged) - matched_main
+  if (unmatched_main > 0) {
+    cli::cli_warn(
+      "Only {matched_main} matching value{?s} in {.val {common_id}} \\
+      column{?s} when pulling {.file {basename(file)}} into \\
+      {.val {type}} survey.",
+      call = call
+    )
+  }
+  unmatched_merge <- nrow(contact_data[[file]]) - matched_main
+  if (unmatched_merge > 0) {
+    cli::cli_warn(
+      "{unmatched_merge} row{?s} could not be matched when pulling \\
+      {.file {basename(file)}} into {.val {type}} survey.",
+      call = call
+    )
+  }
+  merged[, ("..merge_id") := NULL]
+
+  list(merged = merged, detected_key = detected_key, file = file)
+}
+
 ## lastly, merge in any additional files that can be merged
 #' @autoglobal
 try_merge_additional_files <- function(
@@ -122,140 +246,40 @@ try_merge_additional_files <- function(
   participant_key = NULL,
   call = rlang::caller_env()
 ) {
-  # Track the observation key for participants (returned to caller)
   observation_key <- NULL
 
   for (type in main_types) {
-    # Track final detected key for this type (to show one message at end)
     final_detected_key <- NULL
-
-    main_cols <- colnames(main_surveys[[type]])
-    can_merge <- vapply(
-      survey_files,
-      function(x) {
-        any(colnames(contact_data[[x]]) %in% main_cols)
-      },
-      TRUE
+    merge_files <- get_mergeable_files(
+      survey_files, contact_data, colnames(main_surveys[[type]])
     )
-    merge_files <- survey_files[can_merge]
+
     while (length(merge_files) > 0) {
       merged_files <- NULL
       for (file in merge_files) {
-        contact_data[[file]] <- contact_data[[file]][,
-          ..merge_id := seq_len(.N)
-        ]
-        common_id <- intersect(
-          colnames(contact_data[[file]]),
-          colnames(main_surveys[[type]])
+        result <- try_merge_one_file(
+          file, type, main_surveys[[type]], contact_data,
+          participant_key = participant_key, call = call
         )
-        merged <- tryCatch(
-          {
-            merge(
-              main_surveys[[type]],
-              contact_data[[file]],
-              by = common_id,
-              all.x = TRUE
-            )
-          },
-          error = function(cond) {
-            if (!grepl("cartesian", cond$message, fixed = TRUE)) {
-              cli::cli_abort(
-                "Merge failed for {.file {basename(file)}} on \\
-                {.val {common_id}}: {cond$message}",
-                call = call
-              )
-            }
-            NULL
-          }
-        )
-
-        if (is.null(merged)) {
-          next
+        if (!is.null(result$merged)) {
+          main_surveys[[type]] <- result$merged
+          merged_files <- c(merged_files, result$file)
         }
-
-        # Check if merge created duplicates (longitudinal data case)
-        has_duplicates <- anyDuplicated(merged[, "..main_id", with = FALSE]) > 0
-
-        # If duplicates exist, check if there's a valid unique key
-        # (this handles longitudinal surveys where sday files create multiple
-        # rows per participant)
-        accept_merge <- !has_duplicates
-        if (has_duplicates && type == "contact") {
-          # No methodology for longitudinal contacts - reject merge with
-          # duplicates
-          next
-        }
-        if (has_duplicates) {
-          # Only participants reach here (contacts exit early above)
-          # Use user-specified key if valid, else auto-detect
-          if (!is.null(participant_key)) {
-            # Check if all key columns exist in merged data
-            missing_cols <- setdiff(participant_key, names(merged))
-            if (
-              length(missing_cols) == 0 &&
-                anyDuplicated(merged, by = participant_key) == 0L
-            ) {
-              # User's key works
-              unique_key <- participant_key
-            } else {
-              # Key doesn't work or columns missing - auto-detect
-              unique_key <- find_unique_key(merged, "part_id")
-            }
-          } else {
-            unique_key <- find_unique_key(merged, "part_id")
-          }
-
-          if (!is.null(unique_key)) {
-            accept_merge <- TRUE
-            # Update ..main_id to reflect the new unique key
-            merged[, ("..main_id") := seq_len(.N)]
-            final_detected_key <- unique_key
-          }
-        }
-
-        if (accept_merge) {
-          ## we're keeping the merge; now check for any warnings to issue
-          matched_main <- sum(!is.na(merged[["..merge_id"]]))
-          unmatched_main <- nrow(merged) - matched_main
-          if (unmatched_main > 0) {
-            cli::cli_warn(
-              "Only {matched_main} matching value{?s} in {.val {common_id}} \\
-              column{?s} when pulling {.file {basename(file)}} into \\
-              {.val {type}} survey.",
-              call = call
-            )
-          }
-          unmatched_merge <- nrow(contact_data[[file]]) - matched_main
-          if (unmatched_merge > 0) {
-            cli::cli_warn(
-              "{unmatched_merge} row{?s} could not be matched when pulling \\
-              {.file {basename(file)}} into {.val {type}} survey.",
-              call = call
-            )
-          }
-          merged[, ("..merge_id") := NULL]
-          main_surveys[[type]] <- merged
-          merged_files <- c(merged_files, file)
+        if (!is.null(result$detected_key)) {
+          final_detected_key <- result$detected_key
         }
       }
       survey_files <- setdiff(survey_files, merged_files)
-      main_cols <- colnames(main_surveys[[type]])
-      can_merge <- vapply(
-        survey_files,
-        function(x) {
-          any(colnames(contact_data[[x]]) %in% main_cols)
-        },
-        TRUE
-      )
       if (is.null(merged_files)) {
         merge_files <- NULL
       } else {
-        merge_files <- names(can_merge[can_merge])
+        merge_files <- get_mergeable_files(
+          survey_files, contact_data, colnames(main_surveys[[type]])
+        )
       }
     }
 
     # Show one message about detected longitudinal data (if not suppressed)
-    # Show if: we detected a key AND user's key doesn't match
     user_key_matches <- !is.null(participant_key) &&
       setequal(final_detected_key, participant_key)
     if (!is.null(final_detected_key) && !user_key_matches) {
@@ -275,8 +299,6 @@ try_merge_additional_files <- function(
       )
     }
 
-    # Store the observation key for participants (excluding part_id since
-    # that's always the participant identifier after internal renaming)
     if (type == "participant" && !is.null(final_detected_key)) {
       obs_cols <- setdiff(final_detected_key, "part_id")
       if (length(obs_cols) > 0) {
