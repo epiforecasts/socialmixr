@@ -50,11 +50,8 @@ Suggests:
     roxyglobals (>= 1.0.0),
     testthat,
     withr,
-    wpp2017,
-    wpp2024
-Remotes:
-    PPgp/wpp2024
-VignetteBuilder: 
+    wpp2017
+VignetteBuilder:
     knitr
 Encoding: UTF-8
 LazyData: true
