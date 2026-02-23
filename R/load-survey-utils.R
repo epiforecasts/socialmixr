@@ -223,7 +223,8 @@ try_merge_one_file <- function(
       call = call
     )
   }
-  unmatched_merge <- nrow(contact_data[[file]]) - matched_main
+  matched_merge <- uniqueN(merged[["..merge_id"]], na.rm = TRUE)
+  unmatched_merge <- nrow(contact_data[[file]]) - matched_merge
   if (unmatched_merge > 0) {
     cli::cli_warn(
       "{unmatched_merge} row{?s} could not be matched when pulling \\
@@ -251,15 +252,21 @@ try_merge_additional_files <- function(
   for (type in main_types) {
     final_detected_key <- NULL
     merge_files <- get_mergeable_files(
-      survey_files, contact_data, colnames(main_surveys[[type]])
+      survey_files,
+      contact_data,
+      colnames(main_surveys[[type]])
     )
 
     while (length(merge_files) > 0) {
       merged_files <- NULL
       for (file in merge_files) {
         result <- try_merge_one_file(
-          file, type, main_surveys[[type]], contact_data,
-          participant_key = participant_key, call = call
+          file,
+          type,
+          main_surveys[[type]],
+          contact_data,
+          participant_key = participant_key,
+          call = call
         )
         if (!is.null(result$merged)) {
           main_surveys[[type]] <- result$merged
@@ -274,7 +281,9 @@ try_merge_additional_files <- function(
         merge_files <- NULL
       } else {
         merge_files <- get_mergeable_files(
-          survey_files, contact_data, colnames(main_surveys[[type]])
+          survey_files,
+          contact_data,
+          colnames(main_surveys[[type]])
         )
       }
     }
