@@ -1,6 +1,14 @@
 # List all countries and regions for which socialmixr has population data
 
-Uses the World Population Prospects data from the `wpp2017` package
+**\[deprecated\]**
+
+This function is deprecated in favour of passing population data
+directly to
+[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+via the `survey_pop` argument, which removes the need for a country
+list. Additionally, the underlying `wpp2017` data is outdated. For
+countries available in more recent WPP editions, use the `wpp2024`
+package from GitHub.
 
 ## Usage
 
@@ -12,10 +20,20 @@ wpp_countries()
 
 list of countries
 
+## Details
+
+Uses the World Population Prospects data from the `wpp2017` package.
+
 ## Examples
 
 ``` r
-wpp_countries()
+if (requireNamespace("wpp2017", quietly = TRUE)) {
+  wpp_countries()
+}
+#> Warning: `wpp_countries()` was deprecated in socialmixr 0.6.0.
+#> Pass population data directly via the {.arg survey_pop} argument instead.
+#> ℹ The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from
+#>   GitHub for more recent data.
 #>   [1] "Burundi"                          "Comoros"                         
 #>   [3] "Djibouti"                         "Eritrea"                         
 #>   [5] "Ethiopia"                         "Kenya"                           

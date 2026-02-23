@@ -58,8 +58,8 @@
 - [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md) :
   Weigh survey participants
 - [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md)
-  : Get age-specific population data according to the World Population
-  Prospects 2017 edition
+  **\[deprecated\]** : Get age-specific population data according to the
+  World Population Prospects 2017 edition
 - [`wpp_countries()`](https://epiforecasts.io/socialmixr/reference/wpp_countries.md)
-  : List all countries and regions for which socialmixr has population
-  data
+  **\[deprecated\]** : List all countries and regions for which
+  socialmixr has population data

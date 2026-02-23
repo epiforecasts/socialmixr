@@ -38,11 +38,14 @@
   ([\#161](https://github.com/epiforecasts/socialmixr/issues/161)):
 
   ``` r
-  pop <- wpp_age("United Kingdom", 2005)
+  uk_pop <- data.frame(
+    lower.age.limit = c(0, 5, 15),
+    population = c(3500000, 6000000, 50000000)
+  )
   polymod[country == "United Kingdom"] |>
     assign_age_groups(age_limits = c(0, 5, 15)) |>
     compute_matrix() |>
-    symmetrise(survey_pop = pop)
+    symmetrise(survey_pop = uk_pop)
   ```
 
 - [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
@@ -81,6 +84,16 @@
   function converts age group labels back to lower age limits, the
   inverse of
   [`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md).
+
+- [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md)
+  and
+  [`wpp_countries()`](https://epiforecasts.io/socialmixr/reference/wpp_countries.md)
+  are now soft-deprecated. Pass population data directly via the
+  `survey_pop` argument instead. The underlying `wpp2017` data is also
+  outdated; the `wpp2024` package from GitHub provides more recent data.
+  The `wpp2017` package is now a suggested dependency rather than a
+  required import
+  ([\#258](https://github.com/epiforecasts/socialmixr/issues/258)).
 
 - [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md),
   [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md),

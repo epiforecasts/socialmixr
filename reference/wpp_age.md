@@ -1,8 +1,13 @@
 # Get age-specific population data according to the World Population Prospects 2017 edition
 
-This uses data from the `wpp2017` package but combines male and female,
-and converts age groups to lower age limits. If the requested year is
-not present in the historical data, wpp projections are used.
+**\[deprecated\]**
+
+This function is deprecated in favour of passing population data
+directly to
+[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+via the `survey_pop` argument. Additionally, the underlying `wpp2017`
+data is outdated. For more recent population data, use the `wpp2024`
+package from GitHub.
 
 ## Usage
 
@@ -24,10 +29,18 @@ wpp_age(countries, years)
 
 data frame of age-specific population data
 
+## Details
+
+This uses data from the `wpp2017` package but combines male and female,
+and converts age groups to lower age limits. If the requested year is
+not present in the historical data, wpp projections are used.
+
 ## Examples
 
 ``` r
-wpp_age("Italy", c(1990, 2000))
+if (requireNamespace("wpp2017", quietly = TRUE)) {
+  wpp_age("Italy", c(1990, 2000))
+}
 #>    country lower.age.limit year population
 #> 1    Italy               0 1990    2822304
 #> 2    Italy               0 2000    2637136
@@ -71,4 +84,12 @@ wpp_age("Italy", c(1990, 2000))
 #> 40   Italy              95 2000      53950
 #> 41   Italy             100 1990       2231
 #> 42   Italy             100 2000       4848
+
+# For more recent data, use wpp2024 from GitHub:
+# remotes::install_github("PPgp/wpp2024")
+# library(wpp2024)
+# data(popAge1dt)
+# uk_pop <- popAge1dt[name == "United Kingdom" & year == 2020,
+#                     .(lower.age.limit = age, population = pop * 1000)]
+# contact_matrix(polymod, countries = "United Kingdom", survey_pop = uk_pop)
 ```
