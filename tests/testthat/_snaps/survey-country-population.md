@@ -2,6 +2,11 @@
 
     Code
       as.data.frame(survey_country_population(polymod))
+    Condition
+      Warning:
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
+      Pass population data directly via the {.arg survey_pop} argument instead.
+      i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
     Output
          lower.age.limit population
       1                0   13498647
@@ -30,6 +35,11 @@
 
     Code
       as.data.frame(survey_country_population(polymod, countries = "Belgium"))
+    Condition
+      Warning:
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
+      Pass population data directly via the {.arg survey_pop} argument instead.
+      i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
     Output
          lower.age.limit population
       1                0     583492
@@ -59,6 +69,11 @@
     Code
       as.data.frame(survey_country_population(polymod, countries = c("Belgium",
         "Italy")))
+    Condition
+      Warning:
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
+      Pass population data directly via the {.arg survey_pop} argument instead.
+      i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
     Output
          lower.age.limit population
       1                0    3342241
@@ -87,6 +102,11 @@
 
     Code
       as.data.frame(survey_country_population(polymod, countries = "Australia"))
+    Condition
+      Warning:
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
+      Pass population data directly via the {.arg survey_pop} argument instead.
+      i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
     Output
          lower.age.limit population
       1                0    1271578

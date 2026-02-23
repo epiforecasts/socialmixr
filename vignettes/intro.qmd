@@ -19,6 +19,7 @@ date: "`r Sys.Date()`"
 library(knitr)
 library(socialmixr)
 library(ggplot2)
+library(data.table)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -114,6 +115,28 @@ contact_matrix(polymod,
   countries = "United Kingdom", age_limits = c(0, 20),
   return_demography = TRUE
 )$demography
+```
+
+## Using custom population data
+
+For custom or more recent population data, you can pass a data frame directly via the `survey_pop` argument. The data frame should have columns `lower.age.limit` (the lower bound of each age group) and `population` (the number of people in each age group):
+
+```{r message=FALSE, warning=FALSE}
+custom_pop <- data.frame(
+  lower.age.limit = c(0, 18, 60),
+  population = c(12000000, 35000000, 20000000)
+)
+contact_matrix(polymod, countries = "United Kingdom", survey_pop = custom_pop)
+```
+
+For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`):
+
+```{r eval=requireNamespace("wpp2024", quietly = TRUE), message=FALSE, warning=FALSE}
+data("popAge1dt", package = "wpp2024")
+uk_pop <- popAge1dt[name == "United Kingdom" & year == 2020,
+  .(lower.age.limit = age, population = pop * 1000)
+]
+contact_matrix(polymod, countries = "United Kingdom", survey_pop = uk_pop)
 ```
 
 
