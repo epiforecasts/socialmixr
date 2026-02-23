@@ -51,6 +51,10 @@
   data. The `wpp2017` package is now a suggested dependency rather than a
   required import (#258).
 
+* Reduced cyclomatic complexity of `try_merge_additional_files()` by extracting
+  `get_mergeable_files()`, `resolve_longitudinal_key()`, and
+  `try_merge_one_file()` helpers (#289).
+
 * `get_survey()`, `download_survey()`, `list_surveys()`, `get_citation()`, and
   `survey_countries()` now warn unconditionally when called. These functions
   were soft-deprecated in 0.5.0 and users should switch to the
