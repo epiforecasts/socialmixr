@@ -130,7 +130,11 @@ get_mergeable_files <- function(survey_files, contact_data, main_cols) {
 #' Validates a user-provided participant_key or auto-detects one via
 #' find_unique_key().
 #' @noRd
-resolve_longitudinal_key <- function(merged, participant_key = NULL) {
+resolve_longitudinal_key <- function(
+  merged,
+  participant_key = NULL,
+  call = rlang::caller_env()
+) {
   if (!is.null(participant_key)) {
     missing_cols <- setdiff(participant_key, names(merged))
     if (
@@ -142,12 +146,14 @@ resolve_longitudinal_key <- function(merged, participant_key = NULL) {
     if (length(missing_cols) > 0) {
       cli::cli_warn(
         "Provided {.arg participant_key} contains column{?s} not found in \\
-        merged data: {.val {missing_cols}}; auto-detecting a key instead."
+        merged data: {.val {missing_cols}}; auto-detecting a key instead.",
+        call = call
       )
     } else {
       cli::cli_warn(
         "Provided {.arg participant_key} {.val {participant_key}} did not \\
-        uniquely identify rows; auto-detecting a key instead."
+        uniquely identify rows; auto-detecting a key instead.",
+        call = call
       )
     }
   }
@@ -209,7 +215,7 @@ try_merge_one_file <- function(
     if (type == "contact") {
       return(null_result)
     }
-    detected_key <- resolve_longitudinal_key(merged, participant_key)
+    detected_key <- resolve_longitudinal_key(merged, participant_key, call)
     if (is.null(detected_key)) {
       return(null_result)
     }
@@ -380,7 +386,7 @@ try_merge_additional_files <- function(
 
   for (file in survey_files) {
     cli::cli_warn(
-      message = "Could not merge {.file {file}}.",
+      message = "Could not merge {.file {basename(file)}}.",
       call = call
     )
   }
