@@ -113,8 +113,7 @@ join_compatible_files <- function(survey_files, contact_data) {
 }
 
 #' Identify which survey files share columns with a main table
-#' @autoglobal
-#' @keywords internal
+#' @noRd
 get_mergeable_files <- function(survey_files, contact_data, main_cols) {
   can_merge <- vapply(
     survey_files,
@@ -130,8 +129,7 @@ get_mergeable_files <- function(survey_files, contact_data, main_cols) {
 #'
 #' Validates a user-provided participant_key or auto-detects one via
 #' find_unique_key().
-#' @autoglobal
-#' @keywords internal
+#' @noRd
 resolve_longitudinal_key <- function(merged, participant_key = NULL) {
   if (!is.null(participant_key)) {
     missing_cols <- setdiff(participant_key, names(merged))
@@ -147,10 +145,10 @@ resolve_longitudinal_key <- function(merged, participant_key = NULL) {
 
 #' Try merging a single additional file into a main survey table
 #'
-#' @return A list with components: merged (data.table or NULL), detected_key
-#'   (character vector or NULL), file (the file that was merged, or NULL).
+#' @return A list with components: merged (data.table or NULL) and detected_key
+#'   (character vector or NULL).
 #' @autoglobal
-#' @keywords internal
+#' @noRd
 try_merge_one_file <- function(
   file,
   type,
@@ -159,6 +157,8 @@ try_merge_one_file <- function(
   participant_key = NULL,
   call = rlang::caller_env()
 ) {
+  null_result <- list(merged = NULL, detected_key = NULL)
+
   contact_data[[file]] <- contact_data[[file]][,
     ..merge_id := seq_len(.N)
   ]
@@ -188,31 +188,39 @@ try_merge_one_file <- function(
   )
 
   if (is.null(merged)) {
-    return(list(merged = NULL, detected_key = NULL, file = NULL))
+    return(null_result)
   }
 
   has_duplicates <- anyDuplicated(merged[, "..main_id", with = FALSE]) > 0
-  accept_merge <- !has_duplicates
   detected_key <- NULL
 
-  if (has_duplicates && type == "contact") {
-    return(list(merged = NULL, detected_key = NULL, file = NULL))
-  }
-
   if (has_duplicates) {
-    unique_key <- resolve_longitudinal_key(merged, participant_key)
-    if (!is.null(unique_key)) {
-      accept_merge <- TRUE
-      merged[, ("..main_id") := seq_len(.N)]
-      detected_key <- unique_key
+    if (type == "contact") {
+      return(null_result)
     }
+    detected_key <- resolve_longitudinal_key(merged, participant_key)
+    if (is.null(detected_key)) {
+      return(null_result)
+    }
+    merged[, ("..main_id") := seq_len(.N)]
   }
 
-  if (!accept_merge) {
-    return(list(merged = NULL, detected_key = NULL, file = NULL))
-  }
+  warn_merge_quality(merged, contact_data[[file]], common_id, file, type, call)
+  merged[, ("..merge_id") := NULL]
 
-  ## Issue warnings about match quality
+  list(merged = merged, detected_key = detected_key)
+}
+
+#' Warn about unmatched rows after a merge
+#' @noRd
+warn_merge_quality <- function(
+  merged,
+  file_data,
+  common_id,
+  file,
+  type,
+  call
+) {
   matched_main <- sum(!is.na(merged[["..merge_id"]]))
   unmatched_main <- nrow(merged) - matched_main
   if (unmatched_main > 0) {
@@ -224,7 +232,7 @@ try_merge_one_file <- function(
     )
   }
   matched_merge <- uniqueN(merged[["..merge_id"]], na.rm = TRUE)
-  unmatched_merge <- nrow(contact_data[[file]]) - matched_merge
+  unmatched_merge <- nrow(file_data) - matched_merge
   if (unmatched_merge > 0) {
     cli::cli_warn(
       "{unmatched_merge} row{?s} could not be matched when pulling \\
@@ -232,9 +240,87 @@ try_merge_one_file <- function(
       call = call
     )
   }
-  merged[, ("..merge_id") := NULL]
+}
 
-  list(merged = merged, detected_key = detected_key, file = file)
+#' Try merging all compatible files into a single main survey table
+#'
+#' Iteratively merges files that share columns with the main table, repeating
+#' until no further merges are possible.
+#' @return A list with merged (the updated main survey), detected_key, and
+#'   remaining survey_files.
+#' @noRd
+merge_all_files <- function(
+  type,
+  main_survey,
+  survey_files,
+  contact_data,
+  participant_key = NULL,
+  call = rlang::caller_env()
+) {
+  detected_key <- NULL
+  merge_files <- get_mergeable_files(
+    survey_files, contact_data, colnames(main_survey)
+  )
+
+  while (length(merge_files) > 0) {
+    merged_files <- NULL
+    for (file in merge_files) {
+      result <- try_merge_one_file(
+        file,
+        type,
+        main_survey,
+        contact_data,
+        participant_key = participant_key,
+        call = call
+      )
+      if (!is.null(result$merged)) {
+        main_survey <- result$merged
+        merged_files <- c(merged_files, file)
+      }
+      if (!is.null(result$detected_key)) {
+        detected_key <- result$detected_key
+      }
+    }
+    survey_files <- setdiff(survey_files, merged_files)
+    if (is.null(merged_files)) break
+    merge_files <- get_mergeable_files(
+      survey_files, contact_data, colnames(main_survey)
+    )
+  }
+
+  list(
+    merged = main_survey,
+    detected_key = detected_key,
+    survey_files = survey_files
+  )
+}
+
+#' Inform user about detected longitudinal data
+#' @noRd
+inform_longitudinal_key <- function(
+  detected_key,
+  participant_key = NULL,
+  call = rlang::caller_env()
+) {
+  if (is.null(detected_key)) return(invisible(NULL))
+  user_key_matches <- !is.null(participant_key) &&
+    setequal(detected_key, participant_key)
+  if (user_key_matches) return(invisible(NULL))
+
+  key_code <- paste0(
+    "c(",
+    paste0("\"", detected_key, "\"", collapse = ", "),
+    ")"
+  )
+  cli::cli_inform(
+    c(
+      "Detected longitudinal data with unique key: {.val {detected_key}}.",
+      "*" = "Will treat individuals with the same {.val part_id} as unique.",
+      i = "To suppress this message, use: \\
+           {.code load_survey(..., participant_key = {key_code})}"
+    ),
+    call = call
+  )
 }
 
 ## lastly, merge in any additional files that can be merged
@@ -250,81 +336,32 @@ try_merge_additional_files <- function(
   observation_key <- NULL
 
   for (type in main_types) {
-    final_detected_key <- NULL
-    merge_files <- get_mergeable_files(
+    result <- merge_all_files(
+      type,
+      main_surveys[[type]],
       survey_files,
       contact_data,
-      colnames(main_surveys[[type]])
+      participant_key = participant_key,
+      call = call
     )
+    main_surveys[[type]] <- result$merged[, ..main_id := NULL]
+    survey_files <- result$survey_files
 
-    while (length(merge_files) > 0) {
-      merged_files <- NULL
-      for (file in merge_files) {
-        result <- try_merge_one_file(
-          file,
-          type,
-          main_surveys[[type]],
-          contact_data,
-          participant_key = participant_key,
-          call = call
-        )
-        if (!is.null(result$merged)) {
-          main_surveys[[type]] <- result$merged
-          merged_files <- c(merged_files, result$file)
-        }
-        if (!is.null(result$detected_key)) {
-          final_detected_key <- result$detected_key
-        }
-      }
-      survey_files <- setdiff(survey_files, merged_files)
-      if (is.null(merged_files)) {
-        merge_files <- NULL
-      } else {
-        merge_files <- get_mergeable_files(
-          survey_files,
-          contact_data,
-          colnames(main_surveys[[type]])
-        )
-      }
-    }
+    inform_longitudinal_key(result$detected_key, participant_key, call)
 
-    # Show one message about detected longitudinal data (if not suppressed)
-    user_key_matches <- !is.null(participant_key) &&
-      setequal(final_detected_key, participant_key)
-    if (!is.null(final_detected_key) && !user_key_matches) {
-      key_code <- paste0(
-        "c(",
-        paste0("\"", final_detected_key, "\"", collapse = ", "),
-        ")"
-      )
-      cli::cli_inform(
-        c(
-          "Detected longitudinal data with unique key: {.val {final_detected_key}}.",
-          "*" = "Will treat individuals with the same {.val part_id} as unique.",
-          i = "To suppress this message, use: \\
-               {.code load_survey(..., participant_key = {key_code})}"
-        ),
-        call = call
-      )
-    }
-
-    if (type == "participant" && !is.null(final_detected_key)) {
-      obs_cols <- setdiff(final_detected_key, "part_id")
+    if (type == "participant" && !is.null(result$detected_key)) {
+      obs_cols <- setdiff(result$detected_key, "part_id")
       if (length(obs_cols) > 0) {
         observation_key <- obs_cols
       }
     }
-
-    main_surveys[[type]] <- main_surveys[[type]][, ..main_id := NULL]
   }
 
-  if (length(survey_files) > 0) {
-    for (file in survey_files) {
-      cli::cli_warn(
-        message = "Could not merge {.file {file}}.",
-        call = call
-      )
-    }
+  for (file in survey_files) {
+    cli::cli_warn(
+      message = "Could not merge {.file {file}}.",
+      call = call
+    )
   }
 
   list(

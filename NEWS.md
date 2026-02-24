@@ -52,8 +52,11 @@
   required import (#258).
 
 * Reduced cyclomatic complexity of `try_merge_additional_files()` by extracting
-  `get_mergeable_files()`, `resolve_longitudinal_key()`, and
-  `try_merge_one_file()` helpers (#289).
+  helper functions (#289).
+
+* Fixed unmatched-merge warning count when merging files with duplicate keys;
+  previously, the count could be wrong (or negative) due to counting join pairs
+  rather than distinct matched rows (#289).
 
 * `get_survey()`, `download_survey()`, `list_surveys()`, `get_citation()`, and
   `survey_countries()` now warn unconditionally when called. These functions
