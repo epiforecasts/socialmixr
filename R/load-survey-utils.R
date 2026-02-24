@@ -139,10 +139,17 @@ resolve_longitudinal_key <- function(merged, participant_key = NULL) {
     ) {
       return(participant_key)
     }
-    cli::cli_warn(
-      "Provided {.arg participant_key} {.val {participant_key}} did not \\
-      uniquely identify rows; auto-detecting a key instead."
-    )
+    if (length(missing_cols) > 0) {
+      cli::cli_warn(
+        "Provided {.arg participant_key} contains column{?s} not found in \\
+        merged data: {.val {missing_cols}}; auto-detecting a key instead."
+      )
+    } else {
+      cli::cli_warn(
+        "Provided {.arg participant_key} {.val {participant_key}} did not \\
+        uniquely identify rows; auto-detecting a key instead."
+      )
+    }
   }
   find_unique_key(merged, "part_id")
 }
@@ -164,7 +171,7 @@ try_merge_one_file <- function(
   null_result <- list(merged = NULL, detected_key = NULL)
 
   contact_data[[file]] <- contact_data[[file]][,
-    ..merge_id := seq_len(.N)
+    ("..merge_id") := seq_len(.N)
   ]
   common_id <- intersect(
     colnames(contact_data[[file]]),
@@ -358,7 +365,7 @@ try_merge_additional_files <- function(
       participant_key = participant_key,
       call = call
     )
-    main_surveys[[type]] <- result$merged[, ..main_id := NULL]
+    main_surveys[[type]] <- result$merged[, ("..main_id") := NULL]
     survey_files <- result$survey_files
 
     inform_longitudinal_key(result$detected_key, participant_key, call)
