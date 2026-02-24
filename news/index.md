@@ -95,6 +95,15 @@
   required import
   ([\#258](https://github.com/epiforecasts/socialmixr/issues/258)).
 
+- Reduced cyclomatic complexity of `try_merge_additional_files()` by
+  extracting helper functions
+  ([\#289](https://github.com/epiforecasts/socialmixr/issues/289)).
+
+- Fixed unmatched-merge warning count when merging files with duplicate
+  keys; previously, the count could be wrong (or negative) due to
+  counting join pairs rather than distinct matched rows
+  ([\#289](https://github.com/epiforecasts/socialmixr/issues/289)).
+
 - [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md),
   [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md),
   [`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md),
