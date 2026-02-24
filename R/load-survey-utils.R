@@ -120,7 +120,7 @@ get_mergeable_files <- function(survey_files, contact_data, main_cols) {
     function(x) {
       any(colnames(contact_data[[x]]) %in% main_cols)
     },
-    TRUE
+    logical(1)
   )
   names(can_merge[can_merge])
 }
@@ -139,6 +139,10 @@ resolve_longitudinal_key <- function(merged, participant_key = NULL) {
     ) {
       return(participant_key)
     }
+    cli::cli_warn(
+      "Provided {.arg participant_key} {.val {participant_key}} did not \\
+      uniquely identify rows; auto-detecting a key instead."
+    )
   }
   find_unique_key(merged, "part_id")
 }
@@ -259,11 +263,13 @@ merge_all_files <- function(
 ) {
   detected_key <- NULL
   merge_files <- get_mergeable_files(
-    survey_files, contact_data, colnames(main_survey)
+    survey_files,
+    contact_data,
+    colnames(main_survey)
   )
 
   while (length(merge_files) > 0) {
-    merged_files <- NULL
+    merged_files <- character(0)
     for (file in merge_files) {
       result <- try_merge_one_file(
         file,
@@ -282,9 +288,13 @@ merge_all_files <- function(
       }
     }
     survey_files <- setdiff(survey_files, merged_files)
-    if (is.null(merged_files)) break
+    if (length(merged_files) == 0) {
+      break
+    }
     merge_files <- get_mergeable_files(
-      survey_files, contact_data, colnames(main_survey)
+      survey_files,
+      contact_data,
+      colnames(main_survey)
     )
   }
 
@@ -302,14 +312,18 @@ inform_longitudinal_key <- function(
   participant_key = NULL,
   call = rlang::caller_env()
 ) {
-  if (is.null(detected_key)) return(invisible(NULL))
+  if (is.null(detected_key)) {
+    return(invisible(NULL))
+  }
   user_key_matches <- !is.null(participant_key) &&
     setequal(detected_key, participant_key)
-  if (user_key_matches) return(invisible(NULL))
+  if (user_key_matches) {
+    return(invisible(NULL))
+  }
 
   key_code <- paste0(
     "c(",
-    paste0("\"", detected_key, "\"", collapse = ", "),
+    paste0('"', detected_key, '"', collapse = ", "),
     ")"
   )
   cli::cli_inform(
