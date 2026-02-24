@@ -51,6 +51,13 @@
   data. The `wpp2017` package is now a suggested dependency rather than a
   required import (#258).
 
+* Reduced cyclomatic complexity of `try_merge_additional_files()` by extracting
+  helper functions (#289).
+
+* Fixed unmatched-merge warning count when merging files with duplicate keys;
+  previously, the count could be wrong (or negative) due to counting join pairs
+  rather than distinct matched rows (#289).
+
 * `get_survey()`, `download_survey()`, `list_surveys()`, `get_citation()`, and
   `survey_countries()` now warn unconditionally when called. These functions
   were soft-deprecated in 0.5.0 and users should switch to the
