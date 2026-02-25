@@ -6,8 +6,12 @@
 #'   (e.g. "participant" or "contact")
 #' @return `TRUE` if the column (or fallbacks) exist, `FALSE` otherwise
 #' @noRd
-check_age_column <- function(df, age_column, label,
-  call = rlang::caller_env()) {
+check_age_column <- function(
+  df,
+  age_column,
+  label,
+  call = rlang::caller_env()
+) {
   if (age_column %in% colnames(df)) {
     return(TRUE)
   }
