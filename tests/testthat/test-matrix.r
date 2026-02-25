@@ -44,10 +44,10 @@ polymod10$participants$added_weight2 <- 0.3
 
 # to test weights (age and day.of.week)
 part_selection <- (polymod11$participants$part_age %in%
-  (1:2) & # nolint: indentation_linter.
+  (1:2) &
   polymod11$participants$dayofweek %in% 1:6) |
   (polymod11$participants$part_age %in%
-    (3) & # nolint: indentation_linter.
+    (3) &
     polymod11$participants$dayofweek %in% 2:3)
 polymod11$participants <- polymod11$participants[part_selection, ]
 

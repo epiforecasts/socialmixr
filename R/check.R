@@ -7,7 +7,7 @@
 #' @return `TRUE` if the column (or fallbacks) exist, `FALSE` otherwise
 #' @noRd
 check_age_column <- function(df, age_column, label,
-  call = rlang::caller_env()) { # nolint: indentation_linter.
+  call = rlang::caller_env()) {
   if (age_column %in% colnames(df)) {
     return(TRUE)
   }
@@ -96,8 +96,8 @@ check.contact_survey <- function(
   success <- TRUE
   if (
     !(id.column %in%
-      colnames(x$participants) && # nolint: indentation_linter.
-      id.column %in% colnames(x$contacts)) # nolint: indentation_linter.
+      colnames(x$participants) &&
+      id.column %in% colnames(x$contacts))
   ) {
     cli::cli_warn(
       "{.arg id.columns} {.val {id.column}} does not exist in both the

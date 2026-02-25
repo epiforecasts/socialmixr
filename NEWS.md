@@ -1,9 +1,9 @@
 # socialmixr (development version)
 
-* Enabled `cyclocomp_linter`, `line_length_linter`, `object_usage_linter`, and
-  `indentation_linter`. Reduced cyclomatic complexity of
-  `check.contact_survey()`, `[.contact_survey()`, and `find_unique_key()` by
-  extracting helper functions.
+* Enabled `cyclocomp_linter`, `line_length_linter`, and `object_usage_linter`.
+  Disabled `indentation_linter` (air handles indentation). Reduced cyclomatic
+  complexity of `check.contact_survey()`, `[.contact_survey()`, and
+  `find_unique_key()` by extracting helper functions.
 
 * New `[.contact_survey` method allows filtering survey objects with
   expressions, e.g. `polymod[country == "United Kingdom"]` (#161).

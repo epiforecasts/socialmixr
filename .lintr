@@ -5,6 +5,7 @@ linters: linters_with_tags(
     implicit_integer_linter = NULL,
     todo_comment_linter = NULL,
     function_argument_linter = NULL,
+    indentation_linter = NULL, # air handles indentation via style.yaml
     backport_linter("3.5.0")
   )
 
