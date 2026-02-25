@@ -16,7 +16,7 @@
 
 # incorrect structure of data frames is correctly identified
 
-    `id.columns` "part_id" does not exist in both the participants and contacts data frames.
+    `id.column` "part_id" does not exist in both the participants and contacts data frames.
 
 ---
 

@@ -52,8 +52,8 @@ check <- function(x, ...) UseMethod("check")
 #' @param participant.age.column the column in the `participants`
 #'   data frame containing participants' age; if this does not
 #'   exist, at least columns "..._exact", "..._est_min" and
-#'   "..._est_max" must (see the `estimated.participant.age`
-#'   option in [contact_matrix()])
+#'   "..._est_max" must exist (see the
+#'   `estimated.participant.age` option in [contact_matrix()])
 #' @param country.column the column in the `participants` data
 #'   frame containing the country in which the participant was
 #'   queried
@@ -62,8 +62,8 @@ check <- function(x, ...) UseMethod("check")
 #' @param contact.age.column the column in the `contacts` data
 #'   frame containing the age of contacts; if this does not exist,
 #'   at least columns "..._exact", "..._est_min" and
-#'   "..._est_max" must (see the `estimated.contact.age` option
-#'   in [contact_matrix()])
+#'   "..._est_max" must exist (see the
+#'   `estimated.contact.age` option in [contact_matrix()])
 #' @param ... ignored
 #' @return invisibly returns a character vector of the relevant columns
 #' @examples
@@ -104,7 +104,7 @@ check.contact_survey <- function(
       id.column %in% colnames(x$contacts))
   ) {
     cli::cli_warn(
-      "{.arg id.columns} {.val {id.column}} does not exist in both \\
+      "{.arg id.column} {.val {id.column}} does not exist in both \\
       the participants and contacts data frames."
     )
     success <- FALSE

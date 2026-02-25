@@ -24,8 +24,8 @@
 \item{participant.age.column}{the column in the \code{participants}
 data frame containing participants' age; if this does not
 exist, at least columns "..._exact", "..._est_min" and
-"..._est_max" must (see the \code{estimated.participant.age}
-option in \code{\link[=contact_matrix]{contact_matrix()}})}
+"..._est_max" must exist (see the
+\code{estimated.participant.age} option in \code{\link[=contact_matrix]{contact_matrix()}})}
 
 \item{country.column}{the column in the \code{participants} data
 frame containing the country in which the participant was
@@ -37,8 +37,8 @@ containing the year in which the participant was queried}
 \item{contact.age.column}{the column in the \code{contacts} data
 frame containing the age of contacts; if this does not exist,
 at least columns "..._exact", "..._est_min" and
-"..._est_max" must (see the \code{estimated.contact.age} option
-in \code{\link[=contact_matrix]{contact_matrix()}})}
+"..._est_max" must exist (see the
+\code{estimated.contact.age} option in \code{\link[=contact_matrix]{contact_matrix()}})}
 
 \item{...}{ignored}
 }
