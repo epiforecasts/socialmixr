@@ -14,15 +14,12 @@ survey <- function(participants, contacts, reference = NULL) {
     "survey()",
     details = "Use `as_contact_survey()` instead."
   )
-  new_obj <-
-    structure(
-      list(
-        participants = data.table(participants),
-        contacts = data.table(contacts),
-        reference = reference
-      ),
-      class = "contact_survey"
-    )
-
-  return(new_obj)
+  structure(
+    list(
+      participants = data.table(participants),
+      contacts = data.table(contacts),
+      reference = reference
+    ),
+    class = "contact_survey"
+  )
 }

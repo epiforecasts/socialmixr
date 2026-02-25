@@ -12,15 +12,12 @@
 #' @author Sebastian Funk
 #' @keywords internal
 new_contact_survey <- function(participants, contacts, reference = NULL) {
-  new_obj <-
-    structure(
-      list(
-        participants = data.table(participants),
-        contacts = data.table(contacts),
-        reference = reference
-      ),
-      class = "contact_survey"
-    )
-
-  return(new_obj)
+  structure(
+    list(
+      participants = data.table(participants),
+      contacts = data.table(contacts),
+      reference = reference
+    ),
+    class = "contact_survey"
+  )
 }

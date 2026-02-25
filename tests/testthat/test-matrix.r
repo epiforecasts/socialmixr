@@ -44,11 +44,11 @@ polymod10$participants$added_weight2 <- 0.3
 
 # to test weights (age and day.of.week)
 part_selection <- (polymod11$participants$part_age %in%
-                     (1:2) &
-                     polymod11$participants$dayofweek %in% 1:6) |
+  (1:2) & # nolint: indentation_linter.
+  polymod11$participants$dayofweek %in% 1:6) |
   (polymod11$participants$part_age %in%
-     (3) &
-     polymod11$participants$dayofweek %in% 2:3)
+    (3) & # nolint: indentation_linter.
+    polymod11$participants$dayofweek %in% 2:3)
 polymod11$participants <- polymod11$participants[part_selection, ]
 
 empty_pop <- data.frame(lower.age.limit = c(0, 5), population = NA_real_)
@@ -1142,12 +1142,16 @@ test_that("symmetric matrices with large norm weights warn", {
   expect_snapshot_warning(
     cran = FALSE,
     contact_matrix(
-      survey = polymod, age_limits = c(0, 90), symmetric = TRUE
+      survey = polymod,
+      age_limits = c(0, 90),
+      symmetric = TRUE
     )
   )
   expect_warning(
     contact_matrix(
-      survey = polymod, age_limits = c(0, 90), symmetric = TRUE
+      survey = polymod,
+      age_limits = c(0, 90),
+      symmetric = TRUE
     ),
     "artefacts after making the matrix symmetric"
   )

@@ -43,10 +43,10 @@ contact rates (default = 2). Use NA to disable this.}
 \item{main}{the figure title}
 
 \item{xlab}{a title for the x axis (default: "Age group
-(years)")}
+(year)")}
 
 \item{ylab}{a title for the y axis (default: "Contact age
-group (years)")}
+group (year)")}
 
 \item{legend.width}{width of the legend strip in characters.
 Default is 1.}

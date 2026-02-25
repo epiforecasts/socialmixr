@@ -93,8 +93,8 @@ check.contact_survey <- function(
   success <- TRUE
   if (
     !(id.column %in%
-        colnames(x$participants) &&
-        id.column %in% colnames(x$contacts))
+      colnames(x$participants) && # nolint: indentation_linter.
+      id.column %in% colnames(x$contacts)) # nolint: indentation_linter.
   ) {
     cli::cli_warn(
       "{.arg id.columns} {.val {id.column}} does not exist in both the
@@ -103,9 +103,13 @@ check.contact_survey <- function(
     success <- FALSE
   }
 
-  if (!check_age_column(
-    x$participants, participant.age.column, "Participant"
-  )) {
+  if (
+    !check_age_column(
+      x$participants,
+      participant.age.column,
+      "Participant"
+    )
+  ) {
     success <- FALSE
   }
 

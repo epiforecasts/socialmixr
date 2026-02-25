@@ -77,7 +77,7 @@ clean.contact_survey <- function(
     nrow(x$participants) > 0 &&
       participant_age_column %in% colnames(x$participants) &&
       (!is.numeric(x$participants[, get(participant_age_column)]) ||
-         anyNA(x$participants[, get(participant_age_column)]))
+        anyNA(x$participants[, get(participant_age_column)])) # nolint: indentation_linter, line_length_linter.
   ) {
     ## set any entries not containing numbers to NA
     x$participants <- x$participants[,

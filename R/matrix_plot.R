@@ -28,9 +28,9 @@
 #' @param cex.text size of the numeric values in the matrix
 #'   (default: 1)
 #' @param xlab a title for the x axis (default: "Age group
-#'   (years)")
+#'   (year)")
 #' @param ylab a title for the y axis (default: "Contact age
-#'   group (years)")
+#'   group (year)")
 #' @param color.palette the color palette to use (default:
 #'   [heat.colors()]). Other examples are [topo.colors()],
 #'   [terrain.colors()] and [hcl.colors()]. User-defined

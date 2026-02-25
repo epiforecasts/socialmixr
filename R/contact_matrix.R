@@ -66,7 +66,7 @@
 #'   labelled "NA"; if set to "ignore", contacts without age
 #'   information are removed from the analysis (but the
 #'   participants that made them are kept).
-#' @param weights column names(s) of the participant data of the
+#' @param weights column name(s) of the participant data of the
 #'   [survey()] object with user-specified weights (default =
 #'   empty vector).
 #' @param weigh_dayofweek whether to weigh social contacts data
@@ -99,7 +99,9 @@
 #' @param per_capita whether to return a matrix with contact rates
 #'   per capita (default is FALSE and not possible if 'counts=TRUE'
 #'   or 'split=TRUE').
-#' @param survey.pop,age.limits,sample.participants,estimated.participant.age,estimated.contact.age,missing.participant.age,missing.contact.age,weigh.dayofweek,weigh.age,weight.threshold,symmetric.norm.threshold,sample.all.age.groups,sample.participants.max.tries,return.part.weights,return.demography,per.capita `r lifecycle::badge("deprecated")` Use the underscore-separated versions of these arguments instead. # nolint line_length_linter.
+# nolint start: line_length_linter.
+#' @param survey.pop,age.limits,sample.participants,estimated.participant.age,estimated.contact.age,missing.participant.age,missing.contact.age,weigh.dayofweek,weigh.age,weight.threshold,symmetric.norm.threshold,sample.all.age.groups,sample.participants.max.tries,return.part.weights,return.demography,per.capita `r lifecycle::badge("deprecated")` Use the underscore-separated versions of these arguments instead.
+# nolint end
 #' @param ... further arguments to pass to [get_survey()],
 #'   [check()] and [pop_age()] (especially column names).
 #' @return a contact matrix, and the underlying demography of the
