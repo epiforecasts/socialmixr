@@ -109,7 +109,7 @@ test_that("pop_age throws warnings or errors", {
   )
 })
 
-test_that("agegroups_to_limits round-trips with limits_to_agegroups", {
+test_that("agegroups_to_limits round-trips (brackets)", {
   limits <- c(0, 5, 10)
   groups <- limits_to_agegroups(limits, notation = "brackets")
   result <- agegroups_to_limits(groups)

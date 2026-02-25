@@ -6,7 +6,8 @@
 #'   (e.g. "participant" or "contact")
 #' @return `TRUE` if the column (or fallbacks) exist, `FALSE` otherwise
 #' @noRd
-check_age_column <- function(df, age_column, label) {
+check_age_column <- function(df, age_column, label,
+  call = rlang::caller_env()) { # nolint: indentation_linter.
   if (age_column %in% colnames(df)) {
     return(TRUE)
   }
@@ -23,9 +24,11 @@ check_age_column <- function(df, age_column, label) {
   }
 
   cli::cli_warn(
-    "{label} age column {.arg {age_column}} or columns to
-   estimate {tolower(label)} age ({.arg {exact_col}} or {.arg {min_col}}
-   and {.arg {max_col}}) do not exist in the {tolower(label)} data frame."
+    "{label} age column {.arg {age_column}} or columns to \
+    estimate {tolower(label)} age ({.arg {exact_col}} or \
+    {.arg {min_col}} and {.arg {max_col}}) do not exist in \
+    the {tolower(label)} data frame.",
+    call = call
   )
   FALSE
 }
