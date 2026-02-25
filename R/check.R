@@ -28,9 +28,9 @@ check_age_column <- function(
   }
 
   cli::cli_warn(
-    "{label} age column {.arg {age_column}} or columns to \
-    estimate {tolower(label)} age ({.arg {exact_col}} or \
-    {.arg {min_col}} and {.arg {max_col}}) do not exist in \
+    "{label} age column {.arg {age_column}} or columns to \\
+    estimate {tolower(label)} age ({.arg {exact_col}} or \\
+    {.arg {min_col}} and {.arg {max_col}}) do not exist in \\
     the {tolower(label)} data frame.",
     call = call
   )
@@ -104,8 +104,8 @@ check.contact_survey <- function(
       id.column %in% colnames(x$contacts))
   ) {
     cli::cli_warn(
-      "{.arg id.columns} {.val {id.column}} does not exist in both the
-   participants and contacts data frames."
+      "{.arg id.columns} {.val {id.column}} does not exist in both \\
+      the participants and contacts data frames."
     )
     success <- FALSE
   }
