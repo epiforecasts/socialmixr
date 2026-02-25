@@ -270,13 +270,12 @@ try_merge_additional_files <- function(
     user_key_matches <- !is.null(participant_key) &&
       setequal(final_detected_key, participant_key)
     if (!is.null(final_detected_key) && !user_key_matches) {
-      # nolint start: object_usage_linter. Used in cli interpolation.
+      # nolint next: object_usage_linter. Used in cli interpolation.
       key_code <- paste0(
         "c(",
         paste0("\"", final_detected_key, "\"", collapse = ", "),
         ")"
       )
-      # nolint end
       cli::cli_inform(
         c(
           "Detected longitudinal data with unique key: \\
