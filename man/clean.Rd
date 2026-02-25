@@ -15,7 +15,8 @@
 \arguments{
 \item{x}{A \code{\link[=survey]{survey()}} object}
 
-\item{participant_age_column}{the column in \code{x$participants} containing participants' age}
+\item{participant_age_column}{the column in \code{x$participants}
+containing participants' age}
 
 \item{...}{ignored}
 
@@ -30,5 +31,5 @@ Cleans survey data to work with the 'contact_matrix' function
 }
 \examples{
 data(polymod)
-cleaned <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
+cleaned <- clean(polymod) # not really necessary, polymod is clean
 }

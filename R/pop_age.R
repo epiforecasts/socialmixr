@@ -1,16 +1,24 @@
 #' Change age groups in population data
 #'
-#' This changes population data to have age groups with the given age_limits, extrapolating linearly between age groups (if more are requested than available) and summing populations (if fewer are requested than available)
+#' This changes population data to have age groups with the given
+#' age_limits, extrapolating linearly between age groups (if more
+#' are requested than available) and summing populations (if fewer
+#' are requested than available)
 #' @return data frame of age-specific population data
 #' @importFrom data.table data.table setkeyv
-#' @param pop a data frame with columns indicating lower age limits and population sizes (see 'pop_age_column' and 'pop_column')
+#' @param pop a data frame with columns indicating lower age
+#'   limits and population sizes (see 'pop_age_column' and
+#'   'pop_column')
 #' @param age_limits lower age limits of age groups to extract; if NULL
 #'   (default), the population data is returned unchanged
-#' @param pop_age_column column in the 'pop' data frame indicating the lower age group limit
-#' @param pop_column column in the 'pop' data frame indicating the population size
+#' @param pop_age_column column in the 'pop' data frame indicating
+#'   the lower age group limit
+#' @param pop_column column in the 'pop' data frame indicating
+#'   the population size
 #' @param ... ignored
-#' @param age.limits,pop.age.column,pop.column `r lifecycle::badge("deprecated")`
-#'   Use the underscore versions (e.g., `age_limits`) instead.
+#' @param age.limits,pop.age.column,pop.column
+#'   `r lifecycle::badge("deprecated")` Use the underscore
+#'   versions (e.g., `age_limits`) instead.
 #'
 #' @autoglobal
 #' @importFrom utils hasName

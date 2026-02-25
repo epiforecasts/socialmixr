@@ -27,7 +27,8 @@ wpp_countries <- function() {
     "0.6.0",
     "wpp_countries()",
     details = c(
-      "Pass population data directly via the {.arg survey_pop} argument instead.",
+      "Pass population data directly via the \\
+      {.arg survey_pop} argument instead.",
       i = "The underlying {.pkg wpp2017} data is also outdated; \\
            use {.pkg wpp2024} from GitHub for more recent data."
     )

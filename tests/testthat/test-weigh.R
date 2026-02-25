@@ -27,7 +27,7 @@ test_that("weigh() with dayofweek groups produces correct weights", {
   )
 })
 
-test_that("weigh() with dayofweek groups produces positive weights for non-NA rows", {
+test_that("weigh() with dayofweek groups has positive weights", {
   result <- weigh(
     polymod_grouped,
     "dayofweek",

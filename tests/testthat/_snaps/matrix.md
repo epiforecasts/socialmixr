@@ -215,7 +215,7 @@
       ! `<int>` must be an increasing integer vector of lower age limits.
       i We see: 13 and 11
 
-# error is thrown if there are no participants after selecting the country
+# error if no participants after selecting the country
 
     Code
       contact_matrix(survey = polymod, countries = "Romania")
@@ -223,13 +223,13 @@
       Error in `filter_countries()`:
       ! No participants left after selecting countries: "Romania"
 
-# warning is thrown if population needed but no 'year' column present
+# warning if population needed but no 'year' column
 
     `wpp_age()` was deprecated in socialmixr 0.6.0.
     Pass population data directly via the {.arg survey_pop} argument instead.
     i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
 
-# warning is thrown if day of week is asked to be weighed but not present
+# warning if day of week weigh requested but not present
 
     `weigh_dayofweek` is "TRUE", but no `dayofweek` column in the data.
     i Will ignore.
@@ -328,12 +328,12 @@
     Pass population data directly via the {.arg survey_pop} argument instead.
     i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
 
-# warning is thrown if it is assumed that the survey is representative
+# warning if survey is assumed to be representative
 
     No `survey.pop` or `countries` given, and no `country` column found in the data.
     i I don't know which population this is from (assuming the survey is representative).
 
-# User-defined reference populations with open ended age groups are handled correctly
+# user-defined reference populations with open age groups
 
     Code
       contact_matrix(polymod_nocountry, age_limits = c(0, 18, 60), symmetric = TRUE,
@@ -347,7 +347,7 @@
       ! Could not find population data for: "dummy".
       i Pass population data directly via the `survey_pop` argument.
 
-# Symmetric contact matrices with large normalisation weights throw a warning
+# symmetric matrices with large norm weights warn
 
     `wpp_age()` was deprecated in socialmixr 0.6.0.
     Pass population data directly via the {.arg survey_pop} argument instead.

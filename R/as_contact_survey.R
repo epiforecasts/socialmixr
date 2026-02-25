@@ -1,6 +1,7 @@
 #' @title Check contact survey data
 #'
-#' @description Checks that a survey fulfills all the requirements to work with the 'contact_matrix' function
+#' @description Checks that a survey fulfills all the requirements
+#'   to work with the 'contact_matrix' function
 #'
 #' @param x list containing
 #'  - an element named 'participants', a data frame containing participant
@@ -9,12 +10,18 @@
 #'  - (optionally) an element named 'reference, a list containing information
 #'   information needed to reference the survey, in particular it can contain$a
 #'   "title", "bibtype", "author", "doi", "publisher", "note", "year"
-#' @param id_column the column in both the `participants` and `contacts` data frames that links contacts to participants
-#' @param country_column the column in the `participants` data frame containing the country in which the participant was queried; if NULL (default), will use "country" column if present
-#' @param year_column the column in the `participants` data frame containing the year in which the participant was queried; if NULL (default), will use "year" column if present
+#' @param id_column the column in both the `participants` and
+#'   `contacts` data frames that links contacts to participants
+#' @param country_column the column in the `participants` data frame
+#'   containing the country in which the participant was queried; if
+#'   NULL (default), will use "country" column if present
+#' @param year_column the column in the `participants` data frame
+#'   containing the year in which the participant was queried; if
+#'   NULL (default), will use "year" column if present
 #' @param ... additional arguments (currently ignored)
-#' @param id.column,country.column,year.column `r lifecycle::badge("deprecated")`
-#'   Use the underscore versions (e.g., `id_column`) instead.
+#' @param id.column,country.column,year.column
+#'   `r lifecycle::badge("deprecated")` Use the underscore versions
+#'   (e.g., `id_column`) instead.
 #' @importFrom checkmate assert_list assert_names assert_data_frame
 #'   assert_character
 #' @importFrom purrr walk

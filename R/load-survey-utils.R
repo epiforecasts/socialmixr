@@ -1,3 +1,23 @@
+#' Search for a pair of columns that, with a base ID, form a unique key
+#'
+#' @param data a data.table
+#' @param base_id the base identifier column name
+#' @param candidates character vector of candidate column names
+#' @param n_rows the number of rows in `data`
+#' @return a character vector of the key columns, or `NULL` if no pair works
+#' @noRd
+find_pair_key <- function(data, base_id, candidates, n_rows) {
+  for (i in seq_along(candidates)) {
+    for (j in seq_len(i - 1)) {
+      cols <- c(base_id, candidates[j], candidates[i])
+      if (uniqueN(data, by = cols) == n_rows) {
+        return(cols)
+      }
+    }
+  }
+  NULL
+}
+
 #' Find the minimal unique key for a data.table
 #'
 #' Given a data.table and a base identifier column, finds the minimal set of
@@ -35,17 +55,7 @@ find_unique_key <- function(data, base_id = "part_id") {
   }
 
   # Try pairs
-  for (i in seq_along(candidates)) {
-    for (j in seq_len(i - 1)) {
-      cols <- c(base_id, candidates[j], candidates[i])
-      if (uniqueN(data, by = cols) == n_rows) {
-        return(cols)
-      }
-    }
-  }
-
-  # No unique key found
-  NULL
+  find_pair_key(data, base_id, candidates, n_rows)
 }
 
 #' @autoglobal
@@ -114,6 +124,7 @@ join_compatible_files <- function(survey_files, contact_data) {
 
 ## lastly, merge in any additional files that can be merged
 #' @autoglobal
+# nolint start: cyclocomp_linter.
 try_merge_additional_files <- function(
   main_types,
   main_surveys,
@@ -259,15 +270,17 @@ try_merge_additional_files <- function(
     user_key_matches <- !is.null(participant_key) &&
       setequal(final_detected_key, participant_key)
     if (!is.null(final_detected_key) && !user_key_matches) {
-      key_code <- paste0(
+      key_code <- paste0( # nolint: object_usage_linter, line_length_linter. Used in cli interpolation.
         "c(",
         paste0("\"", final_detected_key, "\"", collapse = ", "),
         ")"
       )
       cli::cli_inform(
         c(
-          "Detected longitudinal data with unique key: {.val {final_detected_key}}.",
-          "*" = "Will treat individuals with the same {.val part_id} as unique.",
+          "Detected longitudinal data with unique key: \\
+          {.val {final_detected_key}}.",
+          "*" = "Will treat individuals with the same \\
+          {.val part_id} as unique.",
           i = "To suppress this message, use: \\
                {.code load_survey(..., participant_key = {key_code})}"
         ),
@@ -301,6 +314,7 @@ try_merge_additional_files <- function(
     observation_key = observation_key
   )
 }
+# nolint end
 
 ## join files that can be joined
 #' @autoglobal

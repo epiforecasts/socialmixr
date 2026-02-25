@@ -26,22 +26,28 @@ information needed to reference the survey, in particular it can contain$a
 "title", "bibtype", "author", "doi", "publisher", "note", "year"
 }}
 
-\item{id_column}{the column in both the \code{participants} and \code{contacts} data frames that links contacts to participants}
+\item{id_column}{the column in both the \code{participants} and
+\code{contacts} data frames that links contacts to participants}
 
-\item{country_column}{the column in the \code{participants} data frame containing the country in which the participant was queried; if NULL (default), will use "country" column if present}
+\item{country_column}{the column in the \code{participants} data frame
+containing the country in which the participant was queried; if
+NULL (default), will use "country" column if present}
 
-\item{year_column}{the column in the \code{participants} data frame containing the year in which the participant was queried; if NULL (default), will use "year" column if present}
+\item{year_column}{the column in the \code{participants} data frame
+containing the year in which the participant was queried; if
+NULL (default), will use "year" column if present}
 
 \item{...}{additional arguments (currently ignored)}
 
-\item{id.column, country.column, year.column}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
-Use the underscore versions (e.g., \code{id_column}) instead.}
+\item{id.column, country.column, year.column}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use the underscore versions
+(e.g., \code{id_column}) instead.}
 }
 \value{
 invisibly returns a character vector of the relevant columns
 }
 \description{
-Checks that a survey fulfills all the requirements to work with the 'contact_matrix' function
+Checks that a survey fulfills all the requirements
+to work with the 'contact_matrix' function
 }
 \examples{
 data(polymod)

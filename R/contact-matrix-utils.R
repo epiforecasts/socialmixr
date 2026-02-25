@@ -252,7 +252,8 @@ filter_countries <- function(participants, countries) {
 #' @param data A data.table containing age data
 #' @param prefix Column name prefix: "part_age" for participants, "cnt_age" for
 #'   contacts
-#' @returns The data with the age column set from exact ages or initialised to NA
+#' @returns The data with the age column set from exact ages or
+#'   initialised to NA
 #' @autoglobal
 #' @keywords internal
 add_age <- function(data, prefix) {
@@ -448,7 +449,7 @@ add_upper_age_limits <- function(
 #' @autoglobal
 survey_pop_from_data <- function(survey_pop, part_age_group_present) {
   survey_pop <- data.table(survey_pop)
-  # make sure the maximum survey_pop age exceeds the participant age group breaks
+  # make sure max survey_pop age exceeds participant age group breaks
   if (max(survey_pop$lower.age.limit) < max(part_age_group_present)) {
     survey_pop <- rbind(
       survey_pop,
@@ -571,7 +572,7 @@ survey_pop_year <- function(
     survey_year <- survey_pop_info$survey_year
   } else {
     part_age_group_present <- get_age_group_lower_limits(age_limits)
-    # if survey_pop is a data frame with columns 'lower.age.limit' and 'population'
+    # survey_pop is a data frame with 'lower.age.limit' and 'population'
     survey_pop <- survey_pop_from_data(survey_pop, part_age_group_present)
 
     # add dummy survey_year
@@ -803,7 +804,7 @@ impute_age_by_sample <- function(contacts) {
       ## some contacts in the age group have an age, sample from these
       contacts <- sample_present_age(contacts, this_age_group)
     } else if (nrow(contacts[!is.na(cnt_age), ]) > 0) {
-      ## no contacts in the age group have an age, sample uniformly between limits
+      ## no contacts in the age group have an age, sample uniformly
       contacts <- sample_uniform_age(contacts, this_age_group)
     }
   }

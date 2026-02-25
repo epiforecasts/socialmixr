@@ -135,7 +135,7 @@ check_na_in_weighted_matrix <- function(
 ) {
   if (na_in_weighted_matrix(weighted_matrix) && split) {
     ## construct a warning in case there are NAs
-    warning_suggestion <- build_na_warning(weighted_matrix)
+    warning_suggestion <- build_na_warning(weighted_matrix) # nolint: object_usage_linter, line_length_linter. Used in cli interpolation.
     cli::cli_warn(
       message = c(
         "{.code split = TRUE} does not work with missing data; will not

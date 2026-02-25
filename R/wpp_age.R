@@ -1,4 +1,5 @@
-#' Get age-specific population data according to the World Population Prospects 2017 edition
+#' Get age-specific population data according to the World
+#' Population Prospects 2017 edition
 #'
 #' @description
 #' `r lifecycle::badge("deprecated")`
@@ -10,8 +11,9 @@
 #'
 #' @details
 #' This uses data from the `wpp2017` package but combines male and female,
-#' and converts age groups to lower age limits. If the requested year is not present
-#' in the historical data, wpp projections are used.
+#' and converts age groups to lower age limits. If the requested
+#' year is not present in the historical data, WPP projections
+#' are used.
 #'
 #' @return data frame of age-specific population data
 #' @importFrom data.table dcast melt fread
@@ -37,7 +39,8 @@ wpp_age <- function(countries, years) {
     "0.6.0",
     "wpp_age()",
     details = c(
-      "Pass population data directly via the {.arg survey_pop} argument instead.",
+      "Pass population data directly via the \\
+      {.arg survey_pop} argument instead.",
       i = "The underlying {.pkg wpp2017} data is also outdated; \\
            use {.pkg wpp2024} from GitHub for more recent data."
     )
@@ -57,7 +60,7 @@ wpp_age <- function(countries, years) {
   popM <- fread(system.file("data", "popM.txt", package = "wpp2017"))
   popF <- fread(system.file("data", "popF.txt", package = "wpp2017"))
 
-  # wpp2017 is limited to 2015, so add wpp projections is e.g. 2020 data is requested
+  # wpp2017 is limited to 2015, so add wpp projections for later years
   years_included <- max(as.numeric(names(popM)[-(1:3)]))
   if (!missing(years) && any(years > years_included)) {
     popMprojMed <- fread(system.file(
