@@ -33,7 +33,7 @@ data frame of age-specific population data
 
 This uses data from the `wpp2017` package but combines male and female,
 and converts age groups to lower age limits. If the requested year is
-not present in the historical data, wpp projections are used.
+not present in the historical data, WPP projections are used.
 
 ## Examples
 

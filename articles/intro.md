@@ -30,7 +30,10 @@ data(polymod)
 An example use would be
 
 ``` r
-contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 1, 5, 15))
+contact_matrix(
+  polymod, countries = "United Kingdom",
+  age_limits = c(0, 1, 5, 15)
+)
 #> $matrix
 #>          contact.age.group
 #> age.group      [0,1)     [1,5)   [5,15)      15+
@@ -153,10 +156,10 @@ mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
 #>          contact.age.group
 #> age.group      [0,1)     [1,5)   [5,15)      15+
-#>    [0,1)  0.24027778 1.0957516 1.330147 5.616585
-#>    [1,5)  0.11494871 1.9838991 1.433369 5.538474
-#>    [5,15) 0.02200778 0.4741601 8.141401 6.076262
-#>    15+    0.03361315 0.3771077 1.276099 9.605647
+#>    [0,1)  0.38169935 0.7729225 1.222521 6.082484
+#>    [1,5)  0.16261996 2.2103260 1.588351 5.241703
+#>    [5,15) 0.02487285 0.5261229 7.801127 6.419540
+#>    15+    0.03219569 0.3543938 1.342900 9.498979
 ```
 
 ## Demography
@@ -3925,7 +3928,10 @@ calling the
 function.
 
 ``` r
-contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 1, 5, 15), symmetric = TRUE)
+contact_matrix(
+  polymod, countries = "United Kingdom",
+  age_limits = c(0, 1, 5, 15), symmetric = TRUE
+)
 #> Warning: Not all age groups represented in population data (5-year age band).
 #> ℹ Linearly estimating age group sizes from the 5-year bands.
 #> Warning in normalise_weighted_matrix(survey_pop = survey_pop, weighted_matrix = weighted.matrix, : Large differences in the size of the sub-populations with the current age
@@ -3981,7 +3987,11 @@ will be fully symmetric:
 $$c\prime_{ij} = \frac{m_{ij}N_{i} + m_{ji}N_{j}}{2N_{i}N_{j}} = c\prime_{ji}$$
 
 ``` r
-contact_matrix(survey = polymod, countries = "Germany", age_limits = c(0, 60), symmetric = TRUE, per_capita = TRUE)
+contact_matrix(
+  survey = polymod, countries = "Germany",
+  age_limits = c(0, 60), symmetric = TRUE,
+  per_capita = TRUE
+)
 #> $matrix
 #>          contact.age.group
 #> age.group   [0,60)       60+
@@ -4034,7 +4044,10 @@ as elements `mean.contacts` ($c$), `normalisation` ($q$), `contacts`
 resulting list.
 
 ``` r
-contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 1, 5, 15), split = TRUE)
+contact_matrix(
+  polymod, countries = "United Kingdom",
+  age_limits = c(0, 1, 5, 15), split = TRUE
+)
 #> Warning: Not all age groups represented in population data (5-year age band).
 #> ℹ Linearly estimating age group sizes from the 5-year bands.
 #> $mean.contacts
@@ -4085,7 +4098,10 @@ in ‘column’ will be considered for the generated contact matrix:
 
 ``` r
 # contact matrix for school-related contacts
-contact_matrix(polymod, age_limits = c(0, 20, 60), filter = list(cnt_school = 1))$matrix
+contact_matrix(
+  polymod, age_limits = c(0, 20, 60),
+  filter = list(cnt_school = 1)
+)$matrix
 #>          contact.age.group
 #> age.group     [0,20)    [20,60)        60+
 #>   [0,20)  5.17103805 1.09641670 0.03583303
@@ -4093,7 +4109,10 @@ contact_matrix(polymod, age_limits = c(0, 20, 60), filter = list(cnt_school = 1)
 #>   60+     0.08980827 0.07366297 0.03531786
 
 # contact matrix for work-related contacts involving physical contact
-contact_matrix(polymod, age_limits = c(0, 20, 60), filter = list(cnt_work = 1, phys_contact = 1))$matrix
+contact_matrix(
+  polymod, age_limits = c(0, 20, 60),
+  filter = list(cnt_work = 1, phys_contact = 1)
+)$matrix
 #>          contact.age.group
 #> age.group     [0,20)    [20,60)         60+
 #>   [0,20)  0.04285187 0.06353897 0.009235316
@@ -4101,7 +4120,13 @@ contact_matrix(polymod, age_limits = c(0, 20, 60), filter = list(cnt_work = 1, p
 #>   60+     0.04238143 0.29465187 0.062563068
 
 # contact matrix for daily contacts at home with males
-contact_matrix(polymod, age_limits = c(0, 20, 60), filter = list(cnt_home = 1, cnt_gender = "M", duration_multi = 5))$matrix
+contact_matrix(
+  polymod, age_limits = c(0, 20, 60),
+  filter = list(
+    cnt_home = 1, cnt_gender = "M",
+    duration_multi = 5
+  )
+)$matrix
 #>          contact.age.group
 #> age.group     [0,20)   [20,60)        60+
 #>   [0,20)  0.39268563 0.5858884 0.03103066
@@ -4206,8 +4231,12 @@ provide the names of the columns of the participant data you want to use
 to weight the reported contacts via the `weights` argument.
 
 ``` r
-# e.g. use household size as (dummy) weight to provide more importance to participant data from large households
-contact_matrix(survey = polymod, age_limits = c(0, 18, 60), weights = "hh_size")
+# e.g. use household size as (dummy) weight to provide
+# more importance to participant data from large households
+contact_matrix(
+  survey = polymod, age_limits = c(0, 18, 60),
+  weights = "hh_size"
+)
 #> $matrix
 #>          contact.age.group
 #> age.group    [0,18)   [18,60)       60+
@@ -4472,7 +4501,11 @@ The contact matrices can be plotted by using the
 function of the `ggplot2` package.
 
 ``` r
-df <- reshape2::melt(mr, varnames = c("age.group", "age.group.contact"), value.name = "contacts")
+df <- reshape2::melt(
+  mr,
+  varnames = c("age.group", "age.group.contact"),
+  value.name = "contacts"
+)
 ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) +
   theme(legend.position = "bottom") +
   geom_tile()

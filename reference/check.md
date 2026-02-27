@@ -34,7 +34,7 @@ check(
 
   the column in the `participants` data frame containing participants'
   age; if this does not exist, at least columns "...\_exact",
-  "...\_est_min" and "...\_est_max" must (see the
+  "...\_est_min" and "...\_est_max" must exist (see the
   `estimated.participant.age` option in
   [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md))
 
@@ -52,7 +52,7 @@ check(
 
   the column in the `contacts` data frame containing the age of
   contacts; if this does not exist, at least columns "...\_exact",
-  "...\_est_min" and "...\_est_max" must (see the
+  "...\_est_min" and "...\_est_max" must exist (see the
   `estimated.contact.age` option in
   [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md))
 

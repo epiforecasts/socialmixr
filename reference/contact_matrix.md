@@ -146,7 +146,7 @@ contact_matrix(
 
 - weights:
 
-  column names(s) of the participant data of the
+  column name(s) of the participant data of the
   [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md)
   object with user-specified weights (default = empty vector).
 

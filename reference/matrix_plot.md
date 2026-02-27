@@ -59,11 +59,11 @@ matrix_plot(
 
 - xlab:
 
-  a title for the x axis (default: "Age group (years)")
+  a title for the x axis (default: "Age group (year)")
 
 - ylab:
 
-  a title for the y axis (default: "Contact age group (years)")
+  a title for the y axis (default: "Contact age group (year)")
 
 - legend.width:
 
@@ -115,7 +115,11 @@ Lander Willem
 ``` r
 if (FALSE) { # \dontrun{
 data(polymod)
-mij <- contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 18, 65))$matrix
+mij <- contact_matrix(
+  polymod,
+  countries = "United Kingdom",
+  age_limits = c(0, 18, 65)
+)$matrix
 matrix_plot(mij)
 } # }
 ```

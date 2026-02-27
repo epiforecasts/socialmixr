@@ -23,7 +23,7 @@ new_contact_survey(participants, contacts, reference = NULL)
 - reference:
 
   a `list` containing information needed to reference the survey, in
-  particular it can contain\$a "title", "bibtype", "author", "doi",
+  particular it can contain a "title", "bibtype", "author", "doi",
   "publisher", "note", "year"
 
 ## Value

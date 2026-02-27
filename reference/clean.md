@@ -41,5 +41,5 @@ a cleaned survey in the correct format
 
 ``` r
 data(polymod)
-cleaned <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
+cleaned <- clean(polymod) # not really necessary, polymod is clean
 ```
