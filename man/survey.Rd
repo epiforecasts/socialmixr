@@ -11,7 +11,9 @@ survey(participants, contacts, reference = NULL)
 
 \item{contacts}{a \code{data.frame} containing information on contacts}
 
-\item{reference}{a \code{list} containing information needed to reference the survey, in particular it can contain$a "title", "bibtype", "author", "doi", "publisher", "note", "year"}
+\item{reference}{a \code{list} containing information needed to
+reference the survey, in particular it can contain a "title",
+"bibtype", "author", "doi", "publisher", "note", "year"}
 }
 \value{
 a new survey object

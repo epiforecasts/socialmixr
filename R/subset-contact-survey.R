@@ -30,6 +30,66 @@ copy_survey <- function(survey) {
   result
 }
 
+#' Resolve which table a filter expression targets
+#'
+#' Examines the variables referenced in a filter expression and determines
+#' whether they belong to the participants table, the contacts table, or
+#' neither. Errors if columns span both tables ambiguously.
+#'
+#' @param ref_vars character vector of variable names from the expression
+#' @param participants a data.table of participants
+#' @param contacts a data.table of contacts
+#' @return `"participant"`, `"contact"`, or `"none"`
+#' @noRd
+resolve_filter_target <- function(ref_vars, participants, contacts) {
+  part_cols <- intersect(ref_vars, colnames(participants))
+  cont_cols <- intersect(ref_vars, colnames(contacts))
+
+  ## Columns in both tables: allow if they are only key columns (part_id),
+  ## otherwise error.
+  shared <- intersect(part_cols, cont_cols)
+  if (length(shared) > 0) {
+    non_key <- setdiff(shared, "part_id")
+    if (length(non_key) > 0) {
+      cli::cli_abort(
+        "Expression references columns from both participants \\
+         ({.val {part_cols}}) and contacts ({.val {cont_cols}}). \\
+         Filter one table at a time, e.g. \\
+         {.code survey[part_col == x][cnt_col == y]}."
+      )
+    }
+    ## Shared key columns only — treat as participant-side
+    cont_cols <- setdiff(cont_cols, shared)
+  }
+
+  found_in_part <- length(part_cols) > 0
+  found_in_cont <- length(cont_cols) > 0
+
+  if (found_in_part && found_in_cont) {
+    cli::cli_abort(
+      "Expression references columns from both participants \\
+       ({.val {part_cols}}) and contacts ({.val {cont_cols}}). \\
+       Filter one table at a time, e.g. \\
+       {.code survey[part_col == x][cnt_col == y]}."
+    )
+  }
+
+  if (found_in_part) {
+    return("participant")
+  }
+  if (found_in_cont) {
+    return("contact")
+  }
+
+  unknown <- setdiff(ref_vars, c(colnames(participants), colnames(contacts)))
+  if (length(unknown) > 0) {
+    cli::cli_warn(
+      "Column{?s} {.val {unknown}} not found in participants or contacts."
+    )
+  }
+  "none"
+}
+
 #' Subset a contact survey
 #'
 #' @description
@@ -70,52 +130,15 @@ copy_survey <- function(survey) {
     )
   }
 
-  part_cols <- intersect(ref_vars, colnames(participants))
-  cont_cols <- intersect(ref_vars, colnames(contacts))
+  target <- resolve_filter_target(ref_vars, participants, contacts)
 
-  ## Columns in both tables: allow if they are only key columns (part_id),
-
-  ## otherwise error.
-  shared <- intersect(part_cols, cont_cols)
-  if (length(shared) > 0) {
-    non_key <- setdiff(shared, "part_id")
-    if (length(non_key) > 0) {
-      cli::cli_abort(
-        "Expression references columns from both participants \\
-         ({.val {part_cols}}) and contacts ({.val {cont_cols}}). \\
-         Filter one table at a time, e.g. \\
-         {.code survey[part_col == x][cnt_col == y]}."
-      )
-    }
-    ## Shared key columns only — treat as participant-side
-    cont_cols <- setdiff(cont_cols, shared)
-  }
-
-  found_in_part <- length(part_cols) > 0
-  found_in_cont <- length(cont_cols) > 0
-
-  if (found_in_part && found_in_cont) {
-    cli::cli_abort(
-      "Expression references columns from both participants \\
-       ({.val {part_cols}}) and contacts ({.val {cont_cols}}). \\
-       Filter one table at a time, e.g. \\
-       {.code survey[part_col == x][cnt_col == y]}."
-    )
-  }
-
-  if (!found_in_part && !found_in_cont) {
-    unknown <- setdiff(ref_vars, c(colnames(participants), colnames(contacts)))
-    if (length(unknown) > 0) {
-      cli::cli_warn(
-        "Column{?s} {.val {unknown}} not found in participants or contacts."
-      )
-    }
+  if (target == "none") {
     return(assemble_survey(x, participants, contacts))
   }
 
   env <- parent.frame()
 
-  if (found_in_part) {
+  if (target == "participant") {
     rows <- eval(expr, participants, env)
     participants <- participants[rows]
     contacts <- contacts[part_id %in% participants$part_id]

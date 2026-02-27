@@ -2,7 +2,8 @@
 % Please edit documentation in R/matrix_plot.R
 \name{matrix_plot}
 \alias{matrix_plot}
-\title{Draws an image plot of a contact matrix with a legend strip and the numeric values in the cells.}
+\title{Draws an image plot of a contact matrix with a legend strip
+and the numeric values in the cells.}
 \usage{
 matrix_plot(
   mij,
@@ -23,46 +24,69 @@ matrix_plot(
 )
 }
 \arguments{
-\item{mij}{a contact matrix containing contact rates between participants of age i (rows) with contacts of age j (columns). This is the default matrix format of \code{\link[=contact_matrix]{contact_matrix()}}.}
+\item{mij}{a contact matrix containing contact rates between
+participants of age i (rows) with contacts of age j
+(columns). This is the default matrix format of
+\code{\link[=contact_matrix]{contact_matrix()}}.}
 
-\item{min.legend}{the color scale minimum (default = 0). Set to NA to use the minimum value of \code{mij}.}
+\item{min.legend}{the color scale minimum (default = 0). Set
+to NA to use the minimum value of \code{mij}.}
 
-\item{max.legend}{the color scale maximum (default = NA). Set to NA to use the maximum value of \code{mij}.}
+\item{max.legend}{the color scale maximum (default = NA). Set
+to NA to use the maximum value of \code{mij}.}
 
-\item{num.digits}{the number of digits when rounding the contact rates (default = 2). Use NA to disable this.}
+\item{num.digits}{the number of digits when rounding the
+contact rates (default = 2). Use NA to disable this.}
 
 \item{num.colors}{the number of color breaks (default = 50)}
 
 \item{main}{the figure title}
 
-\item{xlab}{a title for the x axis (default: "Age group (years)")}
+\item{xlab}{a title for the x axis (default: "Age group
+(year)")}
 
-\item{ylab}{a title for the y axis (default: "Contact age group (years)")}
+\item{ylab}{a title for the y axis (default: "Contact age
+group (year)")}
 
-\item{legend.width}{width of the legend strip in characters. Default is 1.}
+\item{legend.width}{width of the legend strip in characters.
+Default is 1.}
 
-\item{legend.mar}{width in characters of legend margin. Default is 5.1.}
+\item{legend.mar}{width in characters of legend margin.
+Default is 5.1.}
 
-\item{legend.shrink}{amount to shrink the size of legend relative to the full height or width of the plot. Default is 0.9.}
+\item{legend.shrink}{amount to shrink the size of legend
+relative to the full height or width of the plot. Default
+is 0.9.}
 
 \item{cex.lab}{size of the x and y labels (default: 1.2)}
 
 \item{cex.axis}{size of the axis labels (default: 0.8)}
 
-\item{cex.text}{size of the numeric values in the matrix (default: 1)}
+\item{cex.text}{size of the numeric values in the matrix
+(default: 1)}
 
-\item{color.palette}{the color palette to use (default: \code{\link[=heat.colors]{heat.colors()}}). Other examples are \code{\link[=topo.colors]{topo.colors()}}, \code{\link[=terrain.colors]{terrain.colors()}} and \code{\link[=hcl.colors]{hcl.colors()}}. User-defined functions are also possible if they take the number of colors to be in the palette as function argument.}
+\item{color.palette}{the color palette to use (default:
+\code{\link[=heat.colors]{heat.colors()}}). Other examples are \code{\link[=topo.colors]{topo.colors()}},
+\code{\link[=terrain.colors]{terrain.colors()}} and \code{\link[=hcl.colors]{hcl.colors()}}. User-defined
+functions are also possible if they take the number of
+colors to be in the palette as function argument.}
 }
 \description{
-This function combines the R image.plot function with numeric contact rates in the matrix cells.
+This function combines the R image.plot function with numeric
+contact rates in the matrix cells.
 }
 \details{
-This is a function using basic R graphics to visualise a social contact matrix.
+This is a function using basic R graphics to
+visualise a social contact matrix.
 }
 \examples{
 \dontrun{
 data(polymod)
-mij <- contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 18, 65))$matrix
+mij <- contact_matrix(
+  polymod,
+  countries = "United Kingdom",
+  age_limits = c(0, 18, 65)
+)$matrix
 matrix_plot(mij)
 }
 }

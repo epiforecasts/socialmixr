@@ -11,13 +11,18 @@ new_contact_survey(participants, contacts, reference = NULL)
 
 \item{contacts}{a \code{data.frame} containing information on contacts}
 
-\item{reference}{a \code{list} containing information needed to reference the survey, in particular it can contain$a "title", "bibtype", "author", "doi", "publisher", "note", "year"}
+\item{reference}{a \code{list} containing information needed to
+reference the survey, in particular it can contain a "title",
+"bibtype", "author", "doi", "publisher", "note", "year"}
 }
 \value{
 a new survey object
 }
 \description{
-Deprecated. A \code{survey} object contains the results of a contact survey. In particular, it contains two data frames called \code{participants} and \code{contacts} that are linked by a column specified as \code{id.column}
+Deprecated. A \code{survey} object contains the results
+of a contact survey. In particular, it contains two data
+frames called \code{participants} and \code{contacts} that are linked
+by a column specified as \code{id.column}
 }
 \author{
 Sebastian Funk

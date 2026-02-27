@@ -1,4 +1,4 @@
-test_that("convert_factor_to_integer preserves numeric values from factor levels", {
+test_that("convert_factor_to_integer preserves numeric values", {
   dt <- data.table::data.table(
     age = factor(c(3, 4, 6, 3))
   )

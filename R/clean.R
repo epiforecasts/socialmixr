@@ -37,7 +37,8 @@ normalise_country_names <- function(countries) {
 #' @description Cleans survey data to work with the 'contact_matrix' function
 #'
 #' @param x A [survey()] object
-#' @param participant_age_column the column in `x$participants` containing participants' age
+#' @param participant_age_column the column in `x$participants`
+#'   containing participants' age
 #' @param ... ignored
 #' @param participant.age.column `r lifecycle::badge("deprecated")`
 #'   Use `participant_age_column` instead.
@@ -47,7 +48,7 @@ normalise_country_names <- function(countries) {
 #' @return a cleaned survey in the correct format
 #' @examples
 #' data(polymod)
-#' cleaned <- clean(polymod) # not really necessary as the 'polymod' data set has already been cleaned
+#' cleaned <- clean(polymod) # not really necessary, polymod is clean
 #' @autoglobal
 #' @export
 clean.contact_survey <- function(

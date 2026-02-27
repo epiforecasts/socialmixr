@@ -1,3 +1,23 @@
+#' Search for a pair of columns that, with a base ID, form a unique key
+#'
+#' @param data a data.table
+#' @param base_id the base identifier column name
+#' @param candidates character vector of candidate column names
+#' @param n_rows the number of rows in `data`
+#' @return a character vector of the key columns, or `NULL` if no pair works
+#' @noRd
+find_pair_key <- function(data, base_id, candidates, n_rows) {
+  for (i in seq_along(candidates)) {
+    for (j in seq_len(i - 1)) {
+      cols <- c(base_id, candidates[j], candidates[i])
+      if (uniqueN(data, by = cols) == n_rows) {
+        return(cols)
+      }
+    }
+  }
+  NULL
+}
+
 #' Find the minimal unique key for a data.table
 #'
 #' Given a data.table and a base identifier column, finds the minimal set of
@@ -35,17 +55,7 @@ find_unique_key <- function(data, base_id = "part_id") {
   }
 
   # Try pairs
-  for (i in seq_along(candidates)) {
-    for (j in seq_len(i - 1)) {
-      cols <- c(base_id, candidates[j], candidates[i])
-      if (uniqueN(data, by = cols) == n_rows) {
-        return(cols)
-      }
-    }
-  }
-
-  # No unique key found
-  NULL
+  find_pair_key(data, base_id, candidates, n_rows)
 }
 
 #' @autoglobal
@@ -334,6 +344,7 @@ inform_longitudinal_key <- function(
     return(invisible(NULL))
   }
 
+  # nolint next: object_usage_linter. Used in cli interpolation.
   key_code <- paste0(
     "c(",
     paste0('"', detected_key, '"', collapse = ", "),

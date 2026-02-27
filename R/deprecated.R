@@ -2,7 +2,8 @@
 # These functions have been deprecated in favour of the contactsurveys package.
 # They will be removed in a future version of socialmixr.
 
-#' Get a survey, either from its Zenodo repository, a set of files, or a survey variable
+#' Get a survey, either from its Zenodo repository, a set of
+#' files, or a survey variable
 #'
 #' @description
 #'
@@ -114,6 +115,7 @@ get_survey <- function(survey, clear_cache = FALSE, ...) {
 #' @return a vector of filenames that can be used with [load_survey]
 #' @seealso load_survey
 #' @export
+# nolint start: cyclocomp_linter.
 download_survey <- function(survey, dir = NULL, sleep = 1) {
   lifecycle::deprecate_warn(
     when = "0.5.0",
@@ -224,7 +226,7 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
         temp <- file.path(dir, zenodo_links[i, ]$file_name)
         cli::cli_inform("Downloading {.url {zenodo_url}}")
         Sys.sleep(sleep)
-        dl <- curl_download(zenodo_url, temp)
+        curl_download(zenodo_url, temp)
         temp
       },
       ""
@@ -233,6 +235,7 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
 
   files
 }
+# nolint end
 
 #' List all surveys available for download
 #'

@@ -13,7 +13,8 @@ add_age(data, prefix)
 contacts}
 }
 \value{
-The data with the age column set from exact ages or initialised to NA
+The data with the age column set from exact ages or
+initialised to NA
 }
 \description{
 Generic function to add an age column from an exact age column. Works for

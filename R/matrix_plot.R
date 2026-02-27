@@ -1,30 +1,54 @@
-#' Draws an image plot of a contact matrix with a legend strip and the numeric values in the cells.
+#' Draws an image plot of a contact matrix with a legend strip
+#' and the numeric values in the cells.
 #'
-#' This function combines the R image.plot function with numeric contact rates in the matrix cells.
+#' This function combines the R image.plot function with numeric
+#' contact rates in the matrix cells.
 #'
-#' @param mij a contact matrix containing contact rates between participants of age i (rows) with contacts of age j (columns). This is the default matrix format of [contact_matrix()].
-#' @param min.legend the color scale minimum (default = 0). Set to NA to use the minimum value of `mij`.
-#' @param max.legend the color scale maximum (default = NA). Set to NA to use the maximum value of `mij`.
-#' @param num.digits the number of digits when rounding the contact rates (default = 2). Use NA to disable this.
+#' @param mij a contact matrix containing contact rates between
+#'   participants of age i (rows) with contacts of age j
+#'   (columns). This is the default matrix format of
+#'   [contact_matrix()].
+#' @param min.legend the color scale minimum (default = 0). Set
+#'   to NA to use the minimum value of `mij`.
+#' @param max.legend the color scale maximum (default = NA). Set
+#'   to NA to use the maximum value of `mij`.
+#' @param num.digits the number of digits when rounding the
+#'   contact rates (default = 2). Use NA to disable this.
 #' @param num.colors the number of color breaks (default = 50)
 #' @param main the figure title
-#' @param legend.width width of the legend strip in characters. Default is 1.
-#' @param legend.mar width in characters of legend margin. Default is 5.1.
-#' @param legend.shrink amount to shrink the size of legend relative to the full height or width of the plot. Default is 0.9.
+#' @param legend.width width of the legend strip in characters.
+#'   Default is 1.
+#' @param legend.mar width in characters of legend margin.
+#'   Default is 5.1.
+#' @param legend.shrink amount to shrink the size of legend
+#'   relative to the full height or width of the plot. Default
+#'   is 0.9.
 #' @param cex.lab size of the x and y labels (default: 1.2)
 #' @param cex.axis size of the axis labels (default: 0.8)
-#' @param cex.text size of the numeric values in the matrix (default: 1)
-#' @param xlab a title for the x axis (default: "Age group (years)")
-#' @param ylab a title for the y axis (default: "Contact age group (years)")
-#' @param color.palette the color palette to use (default: [heat.colors()]). Other examples are [topo.colors()], [terrain.colors()] and [hcl.colors()]. User-defined functions are also possible if they take the number of colors to be in the palette as function argument.
+#' @param cex.text size of the numeric values in the matrix
+#'   (default: 1)
+#' @param xlab a title for the x axis (default: "Age group
+#'   (year)")
+#' @param ylab a title for the y axis (default: "Contact age
+#'   group (year)")
+#' @param color.palette the color palette to use (default:
+#'   [heat.colors()]). Other examples are [topo.colors()],
+#'   [terrain.colors()] and [hcl.colors()]. User-defined
+#'   functions are also possible if they take the number of
+#'   colors to be in the palette as function argument.
 #' @importFrom grDevices heat.colors
 #' @importFrom graphics axis text image par
-#' @details This is a function using basic R graphics to visualise a social contact matrix.
+#' @details This is a function using basic R graphics to
+#'   visualise a social contact matrix.
 #' @export
 #' @examples
 #' \dontrun{
 #' data(polymod)
-#' mij <- contact_matrix(polymod, countries = "United Kingdom", age_limits = c(0, 18, 65))$matrix
+#' mij <- contact_matrix(
+#'   polymod,
+#'   countries = "United Kingdom",
+#'   age_limits = c(0, 18, 65)
+#' )$matrix
 #' matrix_plot(mij)
 #' }
 #' @author Lander Willem

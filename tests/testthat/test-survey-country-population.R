@@ -6,7 +6,10 @@ test_that("survey_country_population() works", {
     as.data.frame(survey_country_population(polymod, countries = "Belgium"))
   )
   expect_snapshot(
-    as.data.frame(survey_country_population(polymod, countries = c("Belgium", "Italy")))
+    as.data.frame(survey_country_population(
+      polymod,
+      countries = c("Belgium", "Italy")
+    ))
   )
   expect_snapshot(
     as.data.frame(survey_country_population(polymod, countries = "Australia"))

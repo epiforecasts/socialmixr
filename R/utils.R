@@ -1,7 +1,8 @@
 #' Flexible country code conversion
 #'
-#' Automatically detects the country coding scheme and converts to country names.
-#' If all input strings are 2 characters, assumes ISO2C format; otherwise assumes country names.
+#' Automatically detects the country coding scheme and converts
+#' to country names. If all input strings are 2 characters,
+#' assumes ISO2C format; otherwise assumes country names.
 #'
 #' @param countries Character vector of country identifiers
 #' @return Character vector of country names

@@ -135,6 +135,7 @@ check_na_in_weighted_matrix <- function(
 ) {
   if (na_in_weighted_matrix(weighted_matrix) && split) {
     ## construct a warning in case there are NAs
+    # nolint next: object_usage_linter. Used in cli interpolation.
     warning_suggestion <- build_na_warning(weighted_matrix)
     cli::cli_warn(
       message = c(

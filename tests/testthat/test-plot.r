@@ -23,13 +23,13 @@ test_that("contact matrix can be plotted with different color palette", {
   dev.off()
 })
 
-test_that("contact matrix can be plotted with ad-hoc min and max values for the legend", {
+test_that("contact matrix can be plotted with ad-hoc legend", {
   pdf(file = NULL)
   expect_no_error(matrix_plot(dta$matrix, min.legend = 4, max.legend = 40))
   dev.off()
 })
 
-test_that("contact matrix can be plotted with (ad-hoc) min and max values for the legend", {
+test_that("contact matrix plotted with ad-hoc legend values", {
   pdf(file = NULL)
   expect_no_error(matrix_plot(dta$matrix, min.legend = 4, max.legend = 40))
   dev.off()

@@ -70,7 +70,7 @@ assign_age_groups <- function(
   survey$participants <- add_part_age(survey$participants)
   survey$contacts <- add_contact_age(survey$contacts)
 
-  ## Impute participant ages from ranges ----------------------------------------
+  ## Impute participant ages from ranges ------------------------------------
   survey$participants <- impute_participant_ages(
     participants = survey$participants,
     estimate = estimated_participant_age
@@ -87,7 +87,7 @@ assign_age_groups <- function(
     )
   )
 
-  ## Impute contact ages from ranges --------------------------------------------
+  ## Impute contact ages from ranges ------------------------------------------
   survey$contacts <- impute_contact_ages(
     contacts = survey$contacts,
     estimate = estimated_contact_age
@@ -96,14 +96,14 @@ assign_age_groups <- function(
   # define age limits if not given
   age_limits <- age_limits %||% get_age_limits(survey)
 
-  ## Process participant ages: handle missing data ------------------------------
+  ## Process participant ages: handle missing data ----------------------------
   survey$participants <- drop_invalid_ages(
     participants = survey$participants,
     missing_action = missing_participant_age,
     age_limits = age_limits
   )
 
-  ## Process contact ages: handle missing data ----------------------------------
+  ## Process contact ages: handle missing data --------------------------------
   # remove contact ages below the age limit, before dealing with missing ages
   survey$contacts <- drop_ages_below_age_limit(
     data = survey$contacts,
@@ -127,7 +127,7 @@ assign_age_groups <- function(
     age_limits = age_limits
   )
 
-  ## assign contact age groups based on participant age groups ------------------
+  ## assign contact age groups based on participant age groups ----------------
   max_age <- max_participant_age(survey$participants)
   survey$contacts <- add_contact_age_groups(
     contacts = survey$contacts,

@@ -16,25 +16,32 @@ pop_age(
 )
 }
 \arguments{
-\item{pop}{a data frame with columns indicating lower age limits and population sizes (see 'pop_age_column' and 'pop_column')}
+\item{pop}{a data frame with columns indicating lower age
+limits and population sizes (see 'pop_age_column' and
+'pop_column')}
 
 \item{age_limits}{lower age limits of age groups to extract; if NULL
 (default), the population data is returned unchanged}
 
-\item{pop_age_column}{column in the 'pop' data frame indicating the lower age group limit}
+\item{pop_age_column}{column in the 'pop' data frame indicating
+the lower age group limit}
 
-\item{pop_column}{column in the 'pop' data frame indicating the population size}
+\item{pop_column}{column in the 'pop' data frame indicating
+the population size}
 
 \item{...}{ignored}
 
-\item{age.limits, pop.age.column, pop.column}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
-Use the underscore versions (e.g., \code{age_limits}) instead.}
+\item{age.limits, pop.age.column, pop.column}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use the underscore
+versions (e.g., \code{age_limits}) instead.}
 }
 \value{
 data frame of age-specific population data
 }
 \description{
-This changes population data to have age groups with the given age_limits, extrapolating linearly between age groups (if more are requested than available) and summing populations (if fewer are requested than available)
+This changes population data to have age groups with the given
+age_limits, extrapolating linearly between age groups (if more
+are requested than available) and summing populations (if fewer
+are requested than available)
 }
 \examples{
 ages_it_2015 <- wpp_age("Italy", 2015)

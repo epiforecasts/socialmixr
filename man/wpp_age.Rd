@@ -2,7 +2,8 @@
 % Please edit documentation in R/wpp_age.R
 \name{wpp_age}
 \alias{wpp_age}
-\title{Get age-specific population data according to the World Population Prospects 2017 edition}
+\title{Get age-specific population data according to the World
+Population Prospects 2017 edition}
 \usage{
 wpp_age(countries, years)
 }
@@ -24,8 +25,9 @@ use the \code{wpp2024} package from GitHub.
 }
 \details{
 This uses data from the \code{wpp2017} package but combines male and female,
-and converts age groups to lower age limits. If the requested year is not present
-in the historical data, wpp projections are used.
+and converts age groups to lower age limits. If the requested
+year is not present in the historical data, WPP projections
+are used.
 }
 \examples{
 if (requireNamespace("wpp2017", quietly = TRUE)) {
