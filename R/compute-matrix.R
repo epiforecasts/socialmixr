@@ -84,5 +84,8 @@ compute_matrix <- function(
 
   part_pop <- n_participants_per_age_group(survey$participants)
 
-  list(matrix = weighted_matrix, participants = part_pop[])
+  new_contact_matrix(
+    matrix = weighted_matrix,
+    participants = part_pop[]
+  )
 }

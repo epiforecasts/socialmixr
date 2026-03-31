@@ -606,9 +606,9 @@ test_that("all age groups included even if no participants", {
 
   # All 4 age groups should be present in participants
   expect_identical(nrow(cm$participants), 4L)
-  expect_true("100+" %in% cm$participants$age.group)
-  # The 100+ group should have 0 participants
-  expect_identical(cm$participants[age.group == "100+", participants], 0L)
+  expect_true("[100,Inf)" %in% cm$participants$age.group)
+  # The [100,Inf) group should have 0 participants
+  expect_identical(cm$participants[age.group == "[100,Inf)", participants], 0L)
 })
 
 test_that("Demography age groups are subset of participant age groups", {
