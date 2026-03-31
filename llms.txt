@@ -67,7 +67,8 @@ specification. Contributions of any kind are welcome!
 [IsaacStopard](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3AIsaacStopard),
 [avallecam](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Aavallecam),
 [maishaoshao](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Amaishaoshao),
-[FrancescoBonacina](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3AFrancescoBonacina)
+[FrancescoBonacina](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3AFrancescoBonacina),
+[lucy-gf](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+author%3Alucy-gf)
 
 ### Issue Contributors
 
