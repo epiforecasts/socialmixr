@@ -73,7 +73,10 @@ impute_ages <- function(
   prefix,
   estimate = c("mean", "sample", "missing")
 ) {
-  estimate <- rlang::arg_match(estimate)
+  use_distribution <- is.data.frame(estimate)
+  if (!use_distribution) {
+    estimate <- rlang::arg_match(estimate)
+  }
 
   # Build column names from prefix
   age_col <- prefix
@@ -82,11 +85,11 @@ impute_ages <- function(
   max_col <- paste0(prefix, "_est_max")
 
   age_cols_in_data <- has_names(data, c(min_col, max_col))
-  if (!age_cols_in_data || estimate == "missing") {
+  if (!age_cols_in_data || identical(estimate, "missing")) {
     return(data)
   }
 
-  if (estimate == "mean") {
+  if (identical(estimate, "mean")) {
     # Impute using mean of min/max range
     data[
       is.na(get(exact_col)) &
@@ -95,7 +98,7 @@ impute_ages <- function(
       (age_col) := as.integer(rowMeans(.SD)),
       .SDcols = c(min_col, max_col)
     ]
-  } else if (estimate == "sample") {
+  } else if (identical(estimate, "sample")) {
     # Impute by sampling uniformly from range
     data[
       is.na(get(age_col)) &
@@ -104,9 +107,58 @@ impute_ages <- function(
         get(min_col) <= get(max_col),
       (age_col) := as.integer(runif(.N, get(min_col), get(max_col)))
     ]
+  } else if (use_distribution) {
+    # Impute by sampling from a supplied age distribution within [min, max]
+    rows_to_impute <- data[,
+      which(
+        is.na(get(age_col)) &
+          !is.na(get(min_col)) &
+          !is.na(get(max_col)) &
+          get(min_col) <= get(max_col)
+      )
+    ]
+    if (length(rows_to_impute) > 0) {
+      data[rows_to_impute,
+        (age_col) := sample_from_age_distribution(
+          get(min_col), get(max_col), estimate
+        )
+      ]
+    }
   }
 
   data
+}
+
+#' Sample ages from a distribution within [min, max] bands
+#' @param mins integer vector of lower bounds
+#' @param maxs integer vector of upper bounds
+#' @param distribution data.frame with `age` and `proportion` columns
+#' @returns integer vector of sampled ages
+#' @keywords internal
+sample_from_age_distribution <- function(mins, maxs, distribution) {
+  n <- length(mins)
+  result <- integer(n)
+  fell_back <- FALSE
+  for (i in seq_len(n)) {
+    lo <- mins[i]
+    hi <- maxs[i]
+    sub_dist <- distribution[distribution$age >= lo & distribution$age <= hi, ]
+    if (nrow(sub_dist) == 0 || sum(sub_dist$proportion) == 0) {
+      fell_back <- TRUE
+      result[i] <- as.integer(runif(1, lo, hi))
+    } else if (nrow(sub_dist) == 1) {
+      result[i] <- sub_dist$age
+    } else {
+      result[i] <- sample(sub_dist$age, size = 1, prob = sub_dist$proportion)
+    }
+  }
+  if (fell_back) {
+    cli::cli_warn(
+      "Age distribution has no coverage for some age bands; \\
+       falling back to uniform sampling for those contacts."
+    )
+  }
+  result
 }
 
 #' Impute participant ages

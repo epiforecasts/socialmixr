@@ -1,5 +1,12 @@
 # socialmixr (development version)
 
+* New `contact_age_distribution()` function extracts the empirical age
+  distribution of contacts from a survey. This can be passed to
+  `assign_age_groups(estimated_contact_age = ...)` to impute ages from ranges
+  using the reference distribution rather than uniform sampling. This is useful
+  for surveys where many contacts have broad age bands and uniform sampling
+  would flatten age-assortativity.
+
 * Enabled `cyclocomp_linter`, `line_length_linter`, and `object_usage_linter`.
   Disabled `indentation_linter` (air handles indentation). Reduced cyclomatic
   complexity of `check.contact_survey()`, `[.contact_survey()`, and
