@@ -21,6 +21,7 @@ contact_age_distribution <- function(survey) {
   check_if_contact_survey(survey)
   contacts <- data.table::copy(survey$contacts)
 
+  # Use exact ages only to avoid including previously imputed values
   age_col <- if ("cnt_age_exact" %in% colnames(contacts)) {
     "cnt_age_exact"
   } else if ("cnt_age" %in% colnames(contacts)) {
