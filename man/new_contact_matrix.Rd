@@ -9,7 +9,7 @@ new_contact_matrix(matrix, participants, ...)
 \arguments{
 \item{matrix}{a numeric matrix with age group dimnames}
 
-\item{participants}{a data.table with columns \code{age.group}, \code{participants},
+\item{participants}{a data.frame with columns \code{age.group}, \code{participants},
 \code{proportion}}
 
 \item{...}{additional named elements (e.g. \code{mean.contacts}, \code{normalisation},

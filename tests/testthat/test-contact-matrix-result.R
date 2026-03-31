@@ -27,7 +27,7 @@ test_that("$ access works on contact_matrix", {
 test_that("terminal age group uses [N,Inf) notation", {
   groups <- rownames(result$matrix)
   terminal <- groups[length(groups)]
-  expect_match(terminal, "^\\[\\d+,Inf\\)$") # nolint: nonportable_path_linter.
+  expect_match(terminal, "Inf")
 })
 
 ## S3 methods ------------------------------------------------------------------

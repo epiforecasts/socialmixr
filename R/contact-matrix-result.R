@@ -1,7 +1,7 @@
 #' Create a contact_matrix object
 #'
 #' @param matrix a numeric matrix with age group dimnames
-#' @param participants a data.table with columns `age.group`, `participants`,
+#' @param participants a data.frame with columns `age.group`, `participants`,
 #'   `proportion`
 #' @param ... additional named elements (e.g. `mean.contacts`, `normalisation`,
 #'   `contacts` from [split_matrix()])

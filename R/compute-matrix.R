@@ -84,10 +84,8 @@ compute_matrix <- function(
 
   part_pop <- n_participants_per_age_group(survey$participants)
 
-  # nolint start: object_usage_linter.
   new_contact_matrix(
     matrix = weighted_matrix,
     participants = part_pop[]
   )
-  # nolint end
 }
