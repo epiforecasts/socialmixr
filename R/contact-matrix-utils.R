@@ -118,9 +118,12 @@ impute_ages <- function(
       )
     ]
     if (length(rows_to_impute) > 0) {
-      data[rows_to_impute,
+      data[
+        rows_to_impute,
         (age_col) := sample_from_age_distribution(
-          get(min_col), get(max_col), estimate
+          get(min_col),
+          get(max_col),
+          estimate
         )
       ]
     }
