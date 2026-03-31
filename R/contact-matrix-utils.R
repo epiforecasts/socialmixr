@@ -365,11 +365,13 @@ apply_data_filter <- function(
   survey
 }
 
-# converts from [0,1) [1,5) [5,15) [15,80) to [0,1) [1,5) [5,15) 15+
+# converts from [0,1) [1,5) [5,15) [15,80) to [0,1) [1,5) [5,15) [15,Inf)
 #' @autoglobal
 final_age_group_label <- function(age_groups) {
+  # nolint start: nonportable_path_linter.
   age_groups[length(age_groups)] <-
-    sub("\\[([0-9]+),.*$", "\\1+", age_groups[length(age_groups)])
+    sub("\\[([0-9]+),.*$", "[\\1,Inf)", age_groups[length(age_groups)])
+  # nolint end
   age_groups
 }
 

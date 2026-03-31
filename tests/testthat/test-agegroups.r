@@ -7,7 +7,7 @@ test_that("age groups can be created and manipulated", {
   age_groups <-
     expect_identical(
       as.character(unique(limits_to_agegroups(groups, notation = "brackets"))),
-      c("[0,5)", "[5,10)", "10+")
+      c("[0,5)", "[5,10)", "[10,Inf)")
     )
   expect_identical(
     as.character(unique(limits_to_agegroups(groups, notation = "dashes"))),

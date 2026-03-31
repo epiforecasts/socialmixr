@@ -1,5 +1,14 @@
 # socialmixr (development version)
 
+* Pipeline functions (`compute_matrix()`, `symmetrise()`, `split_matrix()`,
+  `per_capita()`) now return a `contact_matrix` S3 class with `print()`,
+  `plot()`, and `as.matrix()` methods. The class inherits from `list`, so
+  existing code using `$matrix` or `$participants` continues to work.
+
+* Terminal age group labels now use `[N,Inf)` notation instead of `N+` when
+  bracket notation is used (e.g. `[0,5)`, `[5,15)`, `[15,Inf)`). This aligns
+  with the contactmatrix package conventions.
+
 * Enabled `cyclocomp_linter`, `line_length_linter`, and `object_usage_linter`.
   Disabled `indentation_linter` (air handles indentation). Reduced cyclomatic
   complexity of `check.contact_survey()`, `[.contact_survey()`, and

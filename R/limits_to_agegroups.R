@@ -47,7 +47,12 @@ limits_to_agegroups <- function(
   } else {
     NULL
   }
-  agegroups <- c(agegroups, paste0(limits[length(limits)], "+"))
+  terminal <- if (notation == "brackets") {
+    sprintf("[%s,Inf)", limits[length(limits)])
+  } else {
+    paste0(limits[length(limits)], "+")
+  }
+  agegroups <- c(agegroups, terminal)
   agegroups <- factor(agegroups, levels = agegroups, ordered = TRUE)
   names(agegroups) <- limits
   unname(agegroups[as.character(x)])
