@@ -48,18 +48,15 @@ polymod |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
   compute_matrix() |>
   per_capita(survey_pop = pop)
-#> $matrix
-#>          contact.age.group
-#> age.group        [0,5)       [5,15)          15+
-#>    [0,5)  5.547112e-07 1.938376e-07 1.117610e-07
-#>    [5,15) 1.532896e-07 1.075909e-06 1.257024e-07
-#>    15+    1.130535e-07 1.747666e-07 1.940255e-07
 #> 
-#> $participants
-#>    age.group participants proportion
-#>       <char>        <int>      <num>
-#> 1:     [0,5)           95 0.09396637
-#> 2:    [5,15)          204 0.20178042
-#> 3:       15+          712 0.70425321
+#> ── Contact matrix (3 age groups) ──
 #> 
+#> Ages: "[0,5)", "[5,15)", and "[15,Inf)"
+#> Participants: 1011
+#> 
+#>           contact.age.group
+#> age.group         [0,5)       [5,15)     [15,Inf)
+#>   [0,5)    5.547112e-07 1.938376e-07 1.117610e-07
+#>   [5,15)   1.532896e-07 1.075909e-06 1.257024e-07
+#>   [15,Inf) 1.130535e-07 1.747666e-07 1.940255e-07
 ```

@@ -388,11 +388,11 @@ polymod_custom
 #>    4:        NA         NA   Italy       4              3        3     [0,5)
 #>    5:        NA         15 Germany       5              4        4     [0,5)
 #>   ---                                                                       
-#> 7194:        NA         26 Germany       3             15       15       15+
-#> 7195:        NA         NA Germany       3             15       15       15+
-#> 7196:        NA         25 Germany       4             15       15       15+
-#> 7197:        NA         17 Germany       3             15       15       15+
-#> 7198:        NA         32 Germany       4             15       15       15+
+#> 7194:        NA         26 Germany       3             15       15  [15,Inf)
+#> 7195:        NA         NA Germany       3             15       15  [15,Inf)
+#> 7196:        NA         25 Germany       4             15       15  [15,Inf)
+#> 7197:        NA         17 Germany       3             15       15  [15,Inf)
+#> 7198:        NA         32 Germany       4             15       15  [15,Inf)
 #>       upper.age.limit
 #>                 <num>
 #>    1:               5
@@ -436,17 +436,17 @@ polymod_custom
 #> 97904:        0        0          0             0           1              0
 #>        frequency_multi phys_contact duration_multi cnt_age contact.age.group
 #>                  <int>        <int>          <int>   <int>            <fctr>
-#>     1:               1            1              4      42               15+
+#>     1:               1            1              4      42          [15,Inf)
 #>     2:               1            1              5       9            [5,10)
-#>     3:               3            1              4      42               15+
+#>     3:               3            1              4      42          [15,Inf)
 #>     4:               1            1              5       8            [5,10)
-#>     5:               2            1              3      29               15+
+#>     5:               2            1              3      29          [15,Inf)
 #>    ---                                                                      
 #> 97900:               1            1              5      11           [10,15)
 #> 97901:               1            1              5       3             [0,5)
-#> 97902:               1            1              5      43               15+
-#> 97903:               4            1              3      33               15+
-#> 97904:               3            1              4      15               15+
+#> 97902:               1            1              5      43          [15,Inf)
+#> 97903:               4            1              3      33          [15,Inf)
+#> 97904:               3            1              4      15          [15,Inf)
 #> 
 #> $reference
 #> $reference$title

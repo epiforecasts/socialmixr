@@ -93,20 +93,17 @@ before issuing a warning (default 2)</p></dd>
 <span class="r-in"><span>  <span class="fu"><a href="assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">symmetrise</span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="va">pop</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $matrix</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          contact.age.group</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> age.group     [0,5)   [5,15)      15+</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    [0,5)  1.9157895 1.281846 5.558271</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    [5,15) 0.5994315 7.946078 7.428739</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    15+    0.3882175 1.109550 9.594101</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $participants</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    age.group participants proportion</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;char&gt;        &lt;int&gt;      &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:     [0,5)           95 0.09396637</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:    [5,15)          204 0.20178042</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:       15+          712 0.70425321</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Contact matrix (3 age groups)</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Ages: <span style="color: #0000BB;">"[0,5)"</span>, <span style="color: #0000BB;">"[5,15)"</span>, and <span style="color: #0000BB;">"[15,Inf)"</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Participants: 1011</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           contact.age.group</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> age.group      [0,5)   [5,15) [15,Inf)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    1.9157895 1.281846 5.558271</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   0.5994315 7.946078 7.428739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 0.3882175 1.109550 9.594101</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -29,11 +29,13 @@
 <url><loc>https://epiforecasts.io/socialmixr/reference/impute_contact_ages.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/impute_participant_ages.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/index.html</loc></url>
+<url><loc>https://epiforecasts.io/socialmixr/reference/is_contact_matrix.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/is_doi.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/list_surveys.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/load_survey.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/matrix_plot.html</loc></url>
+<url><loc>https://epiforecasts.io/socialmixr/reference/new_contact_matrix.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/new_contact_survey.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/normalise_country_names.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/normalise_weights.html</loc></url>

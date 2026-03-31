@@ -4,12 +4,9 @@
 
 ### Before committing
 
-1.  Run
-    [`devtools::test()`](https://devtools.r-lib.org/reference/test.html)
-    to ensure all tests pass
-2.  Run
-    [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
-    to regenerate documentation from roxygen comments
+1.  Run `devtools::test()` to ensure all tests pass
+2.  Run `devtools::document()` to regenerate documentation from roxygen
+    comments
 3.  Run `lintr::lint_package()` to check for style issues (fix any in
     files you modified)
 4.  Add a news entry to NEWS.md (can be edited for unreleased changes)

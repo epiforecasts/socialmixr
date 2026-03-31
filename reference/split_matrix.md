@@ -47,27 +47,16 @@ polymod |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
   compute_matrix() |>
   split_matrix(survey_pop = pop)
-#> $matrix
-#>          contact.age.group
-#> age.group     [0,5)   [5,15)       15+
-#>    [0,5)  3.7686417 1.316910 0.7592908
-#>    [5,15) 0.6290397 4.415104 0.5158328
-#>    15+    0.6044752 0.934443 1.0374170
 #> 
-#> $participants
-#>    age.group participants proportion
-#>       <char>        <int>      <num>
-#> 1:     [0,5)           95 0.09396637
-#> 2:    [5,15)          204 0.20178042
-#> 3:       15+          712 0.70425321
+#> ── Contact matrix (3 age groups) ──
 #> 
-#> $mean.contacts
-#> [1] 11.55617
+#> Ages: "[0,5)", "[5,15)", and "[15,Inf)"
+#> Participants: 1011
+#> Mean contacts: 11.56
 #> 
-#> $normalisation
-#> [1] 1.038907
-#> 
-#> $contacts
-#> [1] 0.7391178 1.2236755 0.9391545
-#> 
+#>           contact.age.group
+#> age.group      [0,5)   [5,15)  [15,Inf)
+#>   [0,5)    3.7686417 1.316910 0.7592908
+#>   [5,15)   0.6290397 4.415104 0.5158328
+#>   [15,Inf) 0.6044752 0.934443 1.0374170
 ```

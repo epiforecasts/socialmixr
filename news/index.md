@@ -2,6 +2,27 @@
 
 ## socialmixr (development version)
 
+- Pipeline functions
+  ([`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md),
+  [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md),
+  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md))
+  now return a `contact_matrix` S3 class with
+  [`print()`](https://rdrr.io/r/base/print.html),
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html), and
+  [`as.matrix()`](https://rdrr.io/r/base/matrix.html) methods. The class
+  inherits from `list`, so existing code using `$matrix` or
+  `$participants` continues to work.
+
+- **Breaking change**: Terminal age group labels now use `[N,Inf)`
+  notation instead of `N+` when bracket notation is used (e.g. `[0,5)`,
+  `[5,15)`, `[15,Inf)`). This affects matrix dimnames and the
+  `age.group` column in `$participants`. Code that matches on strings
+  like `"15+"` will need updating to `"[15,Inf)"`. This aligns with the
+  contactmatrix package conventions and gives consistent, parseable
+  interval notation throughout. Dash notation (e.g. `"15+"`) is
+  unchanged.
+
 - Enabled `cyclocomp_linter`, `line_length_linter`, and
   `object_usage_linter`. Disabled `indentation_linter` (air handles
   indentation). Reduced cyclomatic complexity of
