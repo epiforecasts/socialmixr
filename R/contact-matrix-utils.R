@@ -73,8 +73,7 @@ impute_ages <- function(
   prefix,
   estimate = c("mean", "sample", "missing")
 ) {
-  use_distribution <- is.data.frame(estimate)
-  if (!use_distribution) {
+  if (!is.data.frame(estimate)) {
     estimate <- rlang::arg_match(estimate)
   }
 
@@ -107,7 +106,7 @@ impute_ages <- function(
         get(min_col) <= get(max_col),
       (age_col) := as.integer(runif(.N, get(min_col), get(max_col)))
     ]
-  } else if (use_distribution) {
+  } else if (is.data.frame(estimate)) {
     # Impute by sampling from a supplied age distribution within [min, max]
     rows_to_impute <- data[,
       which(
