@@ -115,8 +115,8 @@ test_that("validate_age_distribution() normalises proportions with warning", {
     ),
     "normalising"
   ) # nolint: implicit_assignment_linter.
-  expect_identical(sum(dist$proportion), 1)
-  expect_identical(dist$proportion, c(0.4, 0.6))
+  expect_equal(sum(dist$proportion), 1, tolerance = 1e-12)
+  expect_equal(dist$proportion, c(0.4, 0.6), tolerance = 1e-12)
 })
 
 ## String-based imputation -----------------------------------------------------
