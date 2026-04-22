@@ -67,7 +67,7 @@ jobs:
         run: Rscript inst/dev/check_all_surveys.r
 
       - name: Upload survey files as artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()  # Upload even if checks failed
         with:
           name: survey-files
@@ -76,7 +76,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Upload check results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: check-results
@@ -98,7 +98,7 @@ jobs:
 
       - name: Create or update issue for failures
         if: always() && steps.check_failures.outputs.HAS_FAILURES == 'true' && github.event_name == 'schedule'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs');

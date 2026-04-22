@@ -420,11 +420,12 @@ apply_data_filter <- function(
   survey
 }
 
-# converts from [0,1) [1,5) [5,15) [15,80) to [0,1) [1,5) [5,15) 15+
+# converts from [0,1) [1,5) [5,15) [15,80) to [0,1) [1,5) [5,15) [15,Inf)
 #' @autoglobal
 final_age_group_label <- function(age_groups) {
-  age_groups[length(age_groups)] <-
-    sub("\\[([0-9]+),.*$", "\\1+", age_groups[length(age_groups)])
+  last <- age_groups[length(age_groups)]
+  lower <- sub("\\[([0-9]+),.*$", "\\1", last)
+  age_groups[length(age_groups)] <- paste0("[", lower, ",Inf)")
   age_groups
 }
 
