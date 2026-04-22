@@ -148,7 +148,8 @@ sample_from_age_distribution <- function(mins, maxs, distribution) {
     sub_dist <- distribution[distribution$age >= lo & distribution$age <= hi, ]
     if (nrow(sub_dist) == 0 || sum(sub_dist$proportion) == 0) {
       fell_back <- TRUE
-      result[i] <- as.integer(runif(1, lo, hi))
+      # Upper bound inclusive: runif() excludes its upper bound, so use hi + 1
+      result[i] <- as.integer(runif(1, lo, hi + 1))
     } else if (nrow(sub_dist) == 1) {
       result[i] <- sub_dist$age
     } else {
