@@ -51,7 +51,7 @@ assign_age_groups <- function(
   check_age_limits_increasing(age_limits)
   estimated_participant_age <- rlang::arg_match(estimated_participant_age)
   if (is.data.frame(estimated_contact_age)) {
-    validate_age_distribution(estimated_contact_age)
+    estimated_contact_age <- validate_age_distribution(estimated_contact_age)
   } else {
     estimated_contact_age <- rlang::arg_match(estimated_contact_age)
   }
