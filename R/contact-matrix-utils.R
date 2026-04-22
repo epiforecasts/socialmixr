@@ -132,7 +132,7 @@ impute_ages <- function(
   data
 }
 
-#' Sample ages from a distribution within [min, max] bands
+#' Sample ages from a distribution within `[min, max]` bands
 #' @param mins integer vector of lower bounds
 #' @param maxs integer vector of upper bounds
 #' @param distribution data.frame with `age` and `proportion` columns

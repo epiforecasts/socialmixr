@@ -2,7 +2,7 @@
 % Please edit documentation in R/contact-matrix-utils.R
 \name{sample_from_age_distribution}
 \alias{sample_from_age_distribution}
-\title{Sample ages from a distribution within \link{min, max} bands}
+\title{Sample ages from a distribution within \verb{[min, max]} bands}
 \usage{
 sample_from_age_distribution(mins, maxs, distribution)
 }
@@ -17,6 +17,6 @@ sample_from_age_distribution(mins, maxs, distribution)
 integer vector of sampled ages
 }
 \description{
-Sample ages from a distribution within \link{min, max} bands
+Sample ages from a distribution within \verb{[min, max]} bands
 }
 \keyword{internal}
