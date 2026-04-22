@@ -30,11 +30,16 @@ contact_age_distribution <- function(survey) {
     cli::cli_abort("No contact age column found in survey.")
   }
 
-  ages <- contacts[[age_col]]
-  ages <- as.integer(ages[!is.na(ages)])
+  # Convert factor levels to their numeric values (not factor codes)
+  contacts <- convert_factor_to_integer(contacts, age_col)
+  ages <- suppressWarnings(as.integer(contacts[[age_col]]))
+  ages <- ages[!is.na(ages)]
 
   if (length(ages) == 0) {
     cli::cli_abort("No non-missing contact ages found in survey.")
+  }
+  if (any(ages < 0)) {
+    cli::cli_abort("Contact ages must be non-negative.")
   }
 
   counts <- data.table::data.table(age = ages)[, .N, by = age]
