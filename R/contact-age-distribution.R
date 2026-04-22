@@ -70,11 +70,20 @@ validate_age_distribution <- function(x) {
       "Columns {.val age} and {.val proportion} must be numeric."
     )
   }
-  if (any(x$proportion < 0, na.rm = TRUE)) {
+  if (any(!is.finite(x$age)) || any(!is.finite(x$proportion))) {
+    cli::cli_abort(
+      "Columns {.val age} and {.val proportion} must not contain missing or \\
+       non-finite values."
+    )
+  }
+  if (any(x$age < 0) || any(x$age %% 1 != 0)) {
+    cli::cli_abort("Column {.val age} must contain non-negative integer ages.")
+  }
+  if (any(x$proportion < 0)) {
     cli::cli_abort("Column {.val proportion} must not contain negative values.")
   }
   # Normalise proportions to sum to 1 if they don't already
-  total <- sum(x$proportion, na.rm = TRUE)
+  total <- sum(x$proportion)
   if (total <= 0) {
     cli::cli_abort("Column {.val proportion} must have a positive sum.")
   }
