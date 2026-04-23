@@ -38,6 +38,9 @@ contact_age_distribution <- function(survey) {
   if (length(ages) == 0) {
     cli::cli_abort("No non-missing contact ages found in survey.")
   }
+  if (!all(is.finite(ages))) {
+    cli::cli_abort("Contact ages must be finite.")
+  }
   if (any(ages < 0)) {
     cli::cli_abort("Contact ages must be non-negative.")
   }
