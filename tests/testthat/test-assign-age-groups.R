@@ -58,6 +58,14 @@ test_that("contact_age_distribution() returns a valid distribution", {
   expect_true(all(dist$proportion >= 0))
 })
 
+test_that("contact_age_distribution() rejects fractional ages", {
+  bad <- polymod
+  bad$contacts <- data.table::copy(bad$contacts)
+  bad$contacts[, cnt_age_exact := as.numeric(cnt_age_exact)]
+  bad$contacts[1, cnt_age_exact := 3.5]
+  expect_error(contact_age_distribution(bad), "whole numbers")
+})
+
 ## Distribution-based imputation -----------------------------------------------
 
 test_that("assign_age_groups() accepts a distribution for contact age", {

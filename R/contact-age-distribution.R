@@ -32,7 +32,7 @@ contact_age_distribution <- function(survey) {
 
   # Convert factor levels to their numeric values (not factor codes)
   contacts <- convert_factor_to_integer(contacts, age_col)
-  ages <- suppressWarnings(as.integer(contacts[[age_col]]))
+  ages <- suppressWarnings(as.numeric(contacts[[age_col]]))
   ages <- ages[!is.na(ages)]
 
   if (length(ages) == 0) {
@@ -41,6 +41,10 @@ contact_age_distribution <- function(survey) {
   if (any(ages < 0)) {
     cli::cli_abort("Contact ages must be non-negative.")
   }
+  if (any(ages %% 1 != 0)) {
+    cli::cli_abort("Contact ages must be whole numbers.")
+  }
+  ages <- as.integer(ages)
 
   counts <- data.table::data.table(age = ages)[, .N, by = age]
   counts[, proportion := N / sum(N)]
