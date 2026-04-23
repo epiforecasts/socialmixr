@@ -167,7 +167,7 @@ polymod[country == "United Kingdom"] |>
   symmetrise(survey_pop = uk_pop)
 ```
 
-`survey_country_population()` looks up country-specific population data from the `wpp2017` data shipped with socialmixr:
+`survey_country_population()` looks up country-specific population data from the [`wpp2017`](https://cran.r-project.org/package=wpp2017) package, which is an optional (Suggests) dependency of socialmixr; install it separately to use this function. Passing population data directly (as above) is preferred where possible:
 
 ```{r}
 uk_pop_default <- survey_country_population(

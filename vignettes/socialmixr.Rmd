@@ -147,7 +147,7 @@ If the survey has a `country` column, `survey_country_population()` looks up cou
 survey_country_population(polymod, countries = "United Kingdom")
 ```
 
-This uses the older `wpp2017` data that ships with `socialmixr` and is kept for backwards compatibility. Use more recent population data where possible.
+This uses the older [`wpp2017`](https://cran.r-project.org/package=wpp2017) package, an optional (Suggests) dependency that needs to be installed separately. It is kept for backwards compatibility; use more recent population data (as shown above) where possible.
 
 # Symmetric contact matrices
 
