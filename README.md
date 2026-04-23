@@ -48,9 +48,6 @@ Post-processing functions `symmetrise()`, `split_matrix()` and
 `per_capita()` can be piped after `compute_matrix()` to enforce
 symmetry, decompose the matrix, or convert to per-capita contact rates.
 
-For simple cases the convenience wrapper `contact_matrix()` bundles the
-pipeline into a single call.
-
 # Documentation
 
 For more on how to use the socialmixr package, see the [introduction

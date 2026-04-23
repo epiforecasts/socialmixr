@@ -31,7 +31,7 @@ data.table::setDTthreads(1)
 
 # The pipeline workflow
 
-The recommended way to compute a contact matrix is a small, composable pipeline:
+Contact matrices are computed through a small pipeline of composable functions:
 
 1. `survey[expr]` -- filter participants or contacts.
 2. `assign_age_groups()` -- impute missing ages and assign age groups.
@@ -39,7 +39,7 @@ The recommended way to compute a contact matrix is a small, composable pipeline:
 4. `compute_matrix()` -- compute the mean contact matrix.
 5. `symmetrise()`, `split_matrix()`, `per_capita()` -- optional post-processing.
 
-Each step is a separate function. Users who want a single call can use the `contact_matrix()` wrapper described at the end.
+Each step is a separate function.
 
 The POLYMOD data are included with the package and can be loaded using
 
@@ -56,6 +56,20 @@ polymod[country == "United Kingdom"] |>
 ```
 
 This generates a contact matrix from the UK part of the POLYMOD study, with age groups 0-1, 1-5, 5-15 and 15+ years. It contains the mean number of contacts that each member of an age group (row) has reported with members of the same or another age group (column).
+
+## Assigning age groups
+
+`assign_age_groups()` prepares the survey for matrix computation. It imputes participant and contact ages from any available ranges, drops or keeps rows with missing ages (configurable via `missing_participant_age` and `missing_contact_age`), and adds `age.group` and `contact.age.group` columns using the `age_limits` you supply:
+
+```{r}
+uk_grouped <- polymod[country == "United Kingdom"] |>
+  assign_age_groups(age_limits = c(0, 1, 5, 15))
+
+head(uk_grouped$participants[, c("part_id", "part_age", "age.group")])
+head(uk_grouped$contacts[, c("part_id", "cnt_age", "contact.age.group")])
+```
+
+The resulting survey object can be inspected, subset, or passed through any number of `weigh()` calls before `compute_matrix()`.
 
 # Surveys
 
@@ -119,8 +133,6 @@ mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
 ```
 
-`contact_matrix()` also exposes a `sample_participants = TRUE` argument that encapsulates this bootstrap resampling.
-
 # Demography
 
 Obtaining symmetric contact matrices, splitting out their components (see below) and population-based participant weights require information about the underlying demographic composition of the survey population. This is represented as a `data.frame` with columns `lower.age.limit` (the lower end of each age group) and `population` (the number of people in that age group).
@@ -153,7 +165,7 @@ polymod[country == "United Kingdom"] |>
   symmetrise(survey_pop = uk_pop)
 ```
 
-As a convenience, `survey_country_population()` looks up country-specific population data from the `wpp2017` data shipped with socialmixr:
+`survey_country_population()` looks up country-specific population data from the `wpp2017` data shipped with socialmixr:
 
 ```{r}
 uk_pop_default <- survey_country_population(
@@ -592,19 +604,6 @@ The contact matrices can also be plotted with the `matrix_plot()` function as a 
 matrix_plot(mr)
 matrix_plot(mr, color.palette = gray.colors)
 ```
-
-# Convenience wrapper: `contact_matrix()`
-
-For simple cases, the wrapper `contact_matrix()` bundles the pipeline into a single call with named arguments:
-
-```{r}
-contact_matrix(
-  polymod, countries = "United Kingdom",
-  age_limits = c(0, 1, 5, 15), symmetric = TRUE
-)
-```
-
-It also exposes a `sample_participants = TRUE` argument for bootstrap resampling. For finer control (chained weights, custom post-processing, alternative population data sources), the pipeline functions are the recommended interface.
 
 # References
 

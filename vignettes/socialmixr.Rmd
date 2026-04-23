@@ -54,9 +54,19 @@ polymod[country == "United Kingdom"] |>
 
 This produces a contact matrix with age groups 0-1, 1-5, 5-15 and 15+ years. It contains the mean number of contacts that each member of an age group (row) has reported with members of the same or another age group (column).
 
-If no `age_limits` are supplied to `assign_age_groups()`, age groups are inferred from participant and contact ages.
+## Assigning age groups
 
-For users who just need the matrix in a single call, the convenience wrapper `contact_matrix()` is still available; see the "Convenience wrapper" section below.
+`assign_age_groups()` prepares the survey for matrix computation. It imputes participant and contact ages from any available ranges, drops or keeps rows with missing ages (configurable via `missing_participant_age` and `missing_contact_age`), and adds `age.group` and `contact.age.group` columns using the `age_limits` you supply:
+
+```{r}
+uk_grouped <- polymod[country == "United Kingdom"] |>
+  assign_age_groups(age_limits = c(0, 1, 5, 15))
+
+head(uk_grouped$participants[, c("part_id", "part_age", "age.group")])
+head(uk_grouped$contacts[, c("part_id", "cnt_age", "contact.age.group")])
+```
+
+The resulting survey object can be inspected, subset, or passed through any number of `weigh()` calls before `compute_matrix()`. If no `age_limits` are supplied, age groups are inferred from participant and contact ages.
 
 # Surveys
 
@@ -119,13 +129,13 @@ custom_pop <- data.frame(
 )
 ```
 
-As a convenience when processing a survey with a `country` column, `survey_country_population()` looks up country- and year-specific population data:
+If the survey has a `country` column, `survey_country_population()` looks up country- and year-specific population data:
 
 ```{r}
 survey_country_population(polymod, countries = "United Kingdom")
 ```
 
-This uses the older `wpp2017` data that ships with `socialmixr` and is kept for backwards compatibility. For new work we recommend supplying more recent population data explicitly.
+This uses the older `wpp2017` data that ships with `socialmixr` and is kept for backwards compatibility. Use more recent population data where possible.
 
 # Symmetric contact matrices
 
@@ -554,28 +564,6 @@ The contact matrices can also be plotted with the `matrix_plot()` function as a 
 matrix_plot(mr)
 matrix_plot(mr, color.palette = gray.colors)
 ```
-
-# Convenience wrapper: `contact_matrix()`
-
-For simple cases, the wrapper `contact_matrix()` bundles the pipeline into a single call with named arguments:
-
-```{r}
-contact_matrix(
-  polymod, countries = "United Kingdom",
-  age_limits = c(0, 1, 5, 15), symmetric = TRUE
-)
-```
-
-This is equivalent to the pipeline
-
-```{r eval=FALSE}
-polymod[country == "United Kingdom"] |>
-  assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
-  compute_matrix() |>
-  symmetrise(survey_pop = survey_country_population(polymod, "United Kingdom"))
-```
-
-`contact_matrix()` also exposes a `sample_participants = TRUE` argument for bootstrap resampling, which may be a convenient way to obtain uncertainty intervals in a single call. For any step requiring finer control (chained weights, custom post-processing, alternative population data sources) the pipeline functions are the recommended interface.
 
 # References
 
