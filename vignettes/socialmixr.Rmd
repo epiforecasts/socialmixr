@@ -98,7 +98,10 @@ bootstrap <- function(survey) {
     list(sampled_ids), on = "part_id"
   ]
   survey$contacts <- survey$contacts[
-    list(sampled_ids), on = "part_id", allow.cartesian = TRUE
+    list(sampled_ids),
+    on = "part_id",
+    nomatch = NULL,
+    allow.cartesian = TRUE
   ]
   survey
 }
