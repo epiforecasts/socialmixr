@@ -18,10 +18,35 @@ package
 remotes::install_github("epiforecasts/socialmixr")
 ```
 
+# Usage
+
+Contact matrices are computed through a small pipeline of composable
+functions: subsetting the survey, assigning age groups, optionally
+weighing participants, and computing the matrix. A minimal example using
+the included POLYMOD data:
+
+``` r
+library(socialmixr)
+data(polymod)
+
+polymod[country == "United Kingdom"] |>
+  assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
+  compute_matrix()
+```
+
+Post-processing functions
+[`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+[`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
+and
+[`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md)
+can be piped after
+[`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
+to enforce symmetry, decompose the matrix, or convert to per-capita
+contact rates.
+
 # Documentation
 
-For information on how to use the socialmixr package, see the
-[introduction
+For more on how to use the socialmixr package, see the [introduction
 vignette](https://epiforecasts.io/socialmixr/articles/socialmixr.html).
 
 ## Contributors

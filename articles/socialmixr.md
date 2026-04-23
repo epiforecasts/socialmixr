@@ -24,47 +24,92 @@ library(ggplot2)
 data(polymod)
 ```
 
-## Usage
+## The pipeline workflow
 
-At the heart of the `socialmixr` package is the
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-function. This extracts a contact matrix from survey data. You can use
-the `R` help to find out about usage of the
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-function, including a list of examples:
+`socialmixr` provides a small set of composable functions that each
+perform one step in turning a survey into a contact matrix:
+
+1.  `survey[expr]` – filter participants or contacts with an expression.
+2.  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
+    – impute missing ages and assign participants and contacts to age
+    groups.
+3.  [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md) –
+    optionally attach participant weights (day of week, age,
+    user-defined).
+4.  [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
+    – compute the mean contact matrix.
+5.  [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+    [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md),
+    [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md)
+    – optional post-processing.
+
+A minimal example extracting a matrix for the UK part of POLYMOD:
 
 ``` r
-?contact_matrix
-```
-
-An example use would be
-
-``` r
-contact_matrix(
-  polymod, countries = "United Kingdom",
-  age_limits = c(0, 1, 5, 15)
-)
-#> $matrix
+polymod[country == "United Kingdom"] |>
+  assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
+  compute_matrix()
+#> 
+#> ── Contact matrix (4 age groups) ──
+#> 
+#> Ages: "[0,1)", "[1,5)", "[5,15)", and "[15,Inf)"
+#> Participants: 1011
+#> 
 #>           contact.age.group
 #> age.group       [0,1)     [1,5)   [5,15) [15,Inf)
 #>   [0,1)    0.40000000 0.8000000 1.266667 5.933333
 #>   [1,5)    0.11250000 1.9375000 1.462500 5.450000
 #>   [5,15)   0.02450980 0.5049020 7.946078 6.215686
 #>   [15,Inf) 0.03230337 0.3581461 1.290730 9.594101
-#> 
-#> $participants
-#>    age.group participants proportion
-#>       <char>        <int>      <num>
-#> 1:     [0,1)           15 0.01483680
-#> 2:     [1,5)           80 0.07912957
-#> 3:    [5,15)          204 0.20178042
-#> 4:  [15,Inf)          712 0.70425321
 ```
 
-This generates a contact matrix from the UK part of the POLYMOD study,
-with age groups 0-1, 1-5, 5-15 and 15+ years. It contains the mean
-number of contacts that each member of an age group (row) has reported
-with members of the same or another age group (column).
+This produces a contact matrix with age groups 0-1, 1-5, 5-15 and 15+
+years. It contains the mean number of contacts that each member of an
+age group (row) has reported with members of the same or another age
+group (column).
+
+### Assigning age groups
+
+[`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
+prepares the survey for matrix computation. It imputes participant and
+contact ages from any available ranges, drops or keeps rows with missing
+ages (configurable via `missing_participant_age` and
+`missing_contact_age`), and adds `age.group` and `contact.age.group`
+columns using the `age_limits` you supply:
+
+``` r
+uk_grouped <- polymod[country == "United Kingdom"] |>
+  assign_age_groups(age_limits = c(0, 1, 5, 15))
+
+head(uk_grouped$participants[, c("part_id", "part_age", "age.group")])
+#>    part_id part_age age.group
+#>      <int>    <int>    <fctr>
+#> 1:    4536        0     [0,1)
+#> 2:    4538        0     [0,1)
+#> 3:    4540        0     [0,1)
+#> 4:    4541        0     [0,1)
+#> 5:    4542        0     [0,1)
+#> 6:    4546        0     [0,1)
+head(uk_grouped$contacts[, c("part_id", "cnt_age", "contact.age.group")])
+#>    part_id cnt_age contact.age.group
+#>      <int>   <int>            <fctr>
+#> 1:    4517       4             [1,5)
+#> 2:    4517      40          [15,Inf)
+#> 3:    4517      31          [15,Inf)
+#> 4:    4517      52          [15,Inf)
+#> 5:    4517      29          [15,Inf)
+#> 6:    4517      59          [15,Inf)
+```
+
+The resulting survey object can be inspected, subset, or passed through
+any number of
+[`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md) calls
+before
+[`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md).
+If no `age_limits` are supplied, age groups are inferred from
+participant and contact ages.
+
+## Surveys
 
 Some surveys contain data from multiple countries. The POLYMOD survey,
 for example, contains data from:
@@ -76,79 +121,327 @@ unique(polymod$participants$country)
 #> 8 Levels: Belgium Finland Germany Italy Luxembourg Netherlands ... United Kingdom
 ```
 
-If one wishes to get a contact matrix for one or more specific
-countries, a `countries` argument can be passed to
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md).
-If this is not done, the different surveys contained in a dataset are
-combined as if they were one single sample (i.e., not applying any
-population-weighting by country or other correction).
+Use the subset method `[` on a survey to restrict to one or more
+countries or any other column in the participant or contact data:
+
+``` r
+polymod[country %in% c("United Kingdom", "Germany")]
+#> $participants
+#> Key: <hh_id>
+#>            hh_id part_id part_gender part_occupation part_occupation_detail
+#>           <char>   <int>      <char>           <int>                  <int>
+#>    1: Mo08HH1000    1000           F               1                      8
+#>    2: Mo08HH1001    1001           M               1                      8
+#>    3: Mo08HH1002    1002           F               1                      6
+#>    4: Mo08HH1003    1003           F               1                      7
+#>    5: Mo08HH1004    1004           F               1                      8
+#>   ---                                                                      
+#> 2349:  Mo08HH995     995           M               4                      8
+#> 2350:  Mo08HH996     996           F               3                      6
+#> 2351:  Mo08HH997     997           F               5                     NA
+#> 2352:  Mo08HH998     998           M               4                      7
+#> 2353:  Mo08HH999     999           M               1                      7
+#>       part_education part_education_length participant_school_year
+#>                <int>                 <int>                   <int>
+#>    1:              2                    12                      NA
+#>    2:              2                    12                      NA
+#>    3:              6                    18                      NA
+#>    4:              2                    12                      NA
+#>    5:              1                    10                      NA
+#>   ---                                                             
+#> 2349:              2                    12                      NA
+#> 2350:              2                    12                      NA
+#> 2351:              1                    10                      NA
+#> 2352:              2                    12                      NA
+#> 2353:              2                    12                      NA
+#>       participant_nationality child_care child_care_detail child_relationship
+#>                        <char>     <char>             <int>              <int>
+#>    1:                                  Y                NA                 NA
+#>    2:                                  Y                NA                  2
+#>    3:                                  Y                NA                  1
+#>    4:                                  Y                NA                  1
+#>    5:                                  Y                NA                  2
+#>   ---                                                                        
+#> 2349:                                  Y                NA                  1
+#> 2350:                                  Y                NA                  1
+#> 2351:                                  Y                NA                  1
+#> 2352:                                  Y                NA                  1
+#> 2353:                                  Y                NA                  2
+#>       child_nationality problems diary_how diary_missed_unsp diary_missed_skin
+#>                  <char>   <char>     <int>             <int>             <int>
+#>    1:                                    1                NA                NA
+#>    2:                                   NA                NA                NA
+#>    3:                                   NA                NA                NA
+#>    4:                                   NA                NA                NA
+#>    5:                                   NA                NA                NA
+#>   ---                                                                         
+#> 2349:                                   NA                NA                NA
+#> 2350:                                    1                NA                NA
+#> 2351:                                    1                NA                NA
+#> 2352:                                    1                NA                NA
+#> 2353:                                    1                NA                NA
+#>       diary_missed_noskin  sday_id  type   day month  year dayofweek hh_age_1
+#>                     <int>    <int> <int> <int> <int> <int>     <int>    <int>
+#>    1:                  NA 20060612     3    12     6  2006         1        7
+#>    2:                  NA 20060522     3    22     5  2006         1        7
+#>    3:                  NA 20060522     3    22     5  2006         1        7
+#>    4:                  NA 20060520     3    20     5  2006         6        7
+#>    5:                  NA 20060526     3    26     5  2006         5       29
+#>   ---                                                                        
+#> 2349:                  NA 20060618     3    18     6  2006         0        8
+#> 2350:                  NA 20060117     3    17     1  2006         2        7
+#> 2351:                  NA 20060618     3    18     6  2006         0        7
+#> 2352:                  NA 20060706     3     6     7  2006         4        7
+#> 2353:                  NA 20060612     3    12     6  2006         1        1
+#>       hh_age_2 hh_age_3 hh_age_4 hh_age_5 hh_age_6 hh_age_7 hh_age_8 hh_age_9
+#>          <int>    <int>    <int>    <int>    <int>    <int>    <int>    <int>
+#>    1:       32       NA       NA       NA       NA       NA       NA       NA
+#>    2:       14       37       41       NA       NA       NA       NA       NA
+#>    3:       11       33       37       NA       NA       NA       NA       NA
+#>    4:       31       34       NA       NA       NA       NA       NA       NA
+#>    5:       NA       NA       NA       NA       NA       NA       NA       NA
+#>   ---                                                                        
+#> 2349:       14       15       44       NA       NA       NA       NA       NA
+#> 2350:       16       40       NA       NA       NA       NA       NA       NA
+#> 2351:       11       15       40       44       NA       NA       NA       NA
+#> 2352:       22       48       50       NA       NA       NA       NA       NA
+#> 2353:        7       25       29       NA       NA       NA       NA       NA
+#>       hh_age_10 hh_age_11 hh_age_12 hh_age_13 hh_age_14 hh_age_15 hh_age_16
+#>           <int>     <int>     <int>     <int>     <int>     <int>    <lgcl>
+#>    1:        NA        NA        NA        NA        NA        NA        NA
+#>    2:        NA        NA        NA        NA        NA        NA        NA
+#>    3:        NA        NA        NA        NA        NA        NA        NA
+#>    4:        NA        NA        NA        NA        NA        NA        NA
+#>    5:        NA        NA        NA        NA        NA        NA        NA
+#>   ---                                                                      
+#> 2349:        NA        NA        NA        NA        NA        NA        NA
+#> 2350:        NA        NA        NA        NA        NA        NA        NA
+#> 2351:        NA        NA        NA        NA        NA        NA        NA
+#> 2352:        NA        NA        NA        NA        NA        NA        NA
+#> 2353:        NA        NA        NA        NA        NA        NA        NA
+#>       hh_age_17 hh_age_18 hh_age_19 hh_age_20 class_size country hh_size
+#>          <lgcl>    <lgcl>    <lgcl>    <lgcl>      <int>  <fctr>   <int>
+#>    1:        NA        NA        NA        NA         22 Germany       2
+#>    2:        NA        NA        NA        NA         22 Germany       4
+#>    3:        NA        NA        NA        NA         18 Germany       4
+#>    4:        NA        NA        NA        NA         20 Germany       3
+#>    5:        NA        NA        NA        NA         10 Germany       1
+#>   ---                                                                   
+#> 2349:        NA        NA        NA        NA         15 Germany       4
+#> 2350:        NA        NA        NA        NA          9 Germany       3
+#> 2351:        NA        NA        NA        NA         28 Germany       5
+#> 2352:        NA        NA        NA        NA         21 Germany       4
+#> 2353:        NA        NA        NA        NA         30 Germany       4
+#>       part_age_exact
+#>                <int>
+#>    1:              7
+#>    2:              7
+#>    3:              7
+#>    4:              7
+#>    5:              7
+#>   ---               
+#> 2349:              7
+#> 2350:              7
+#> 2351:              7
+#> 2352:              7
+#> 2353:              7
+#> 
+#> $contacts
+#>        cont_id part_id cnt_age_exact cnt_age_est_min cnt_age_est_max cnt_gender
+#>          <int>   <int>         <int>           <int>           <int>     <char>
+#>     1:   16785     846            43              NA              NA          M
+#>     2:   16786     846            70              NA              NA          F
+#>     3:   16787     846            68              NA              NA          M
+#>     4:   16788     846            11              NA              NA          F
+#>     5:   16789     846            13              NA              NA          F
+#>    ---                                                                         
+#> 22531:   77894    5522            NA              10              20          F
+#> 22532:   77895    5522            35              NA              NA          F
+#> 22533:   77896    5522            50              NA              NA          M
+#> 22534:   77897    5522            NA              30              40          M
+#> 22535:   77898    5522            NA              40              50          M
+#>        cnt_home cnt_work cnt_school cnt_transport cnt_leisure cnt_otherplace
+#>           <int>    <int>      <int>         <int>       <int>          <int>
+#>     1:        1        0          0             0           1              1
+#>     2:        1        0          0             0           1              0
+#>     3:        1        0          0             0           1              0
+#>     4:        0        0          0             0           1              0
+#>     5:        1        0          0             0           1              0
+#>    ---                                                                      
+#> 22531:        1        0          0             0           0              0
+#> 22532:        1        0          0             0           0              0
+#> 22533:        0        1          0             0           0              0
+#> 22534:        0        1          0             0           0              0
+#> 22535:        0        1          0             0           0              0
+#>        frequency_multi phys_contact duration_multi
+#>                  <int>        <int>          <int>
+#>     1:               1            1              5
+#>     2:               1            1              3
+#>     3:               1            1              3
+#>     4:               2            1              4
+#>     5:               1            1              4
+#>    ---                                            
+#> 22531:               1            2              1
+#> 22532:               1            1              5
+#> 22533:               2            1              3
+#> 22534:               2            2              3
+#> 22535:               1            1              4
+#> 
+#> $reference
+#> $reference$title
+#> [1] "POLYMOD social contact data"
+#> 
+#> $reference$bibtype
+#> [1] "Misc"
+#> 
+#> $reference$author
+#>  [1] "Joël Mossong"               "Niel Hens"                 
+#>  [3] "Mark Jit"                   "Philippe Beutels"          
+#>  [5] "Kari Auranen"               "Rafael Mikolajczyk"        
+#>  [7] "Marco Massari"              "Stefania Salmaso"          
+#>  [9] "Gianpaolo Scalia Tomba"     "Jacco Wallinga"            
+#> [11] "Janneke Heijne"             "Malgorzata Sadkowska-Todys"
+#> [13] "Magdalena Rosinska"         "W. John Edmunds"           
+#> 
+#> $reference$year
+#> [1] 2017
+#> 
+#> $reference$note
+#> [1] "Version 1.1"
+#> 
+#> $reference$doi
+#> [1] "10.5281/zenodo.1157934"
+#> 
+#> 
+#> attr(,"class")
+#> [1] "contact_survey"
+```
+
+When participants are filtered, contacts are automatically pruned to
+matching participants. If this subsetting is not done, the different
+sub-surveys contained in a dataset are combined as if they were a single
+sample (i.e., not applying any population-weighting by country or other
+correction).
 
 ## Bootstrapping
 
-To get an idea of uncertainty of the contact matrices, a bootstrap can
-be used using the `sample_participants` argument of
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md).
-If this argument is set to TRUE, participants are sampled (with
-replacement, to get the same number of participants of the original
-study) every time the
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-function is called, and thus a different matrix returned every time.
-From these matrices, derived quantities can be obtained, for example the
-mean:
+To get an idea of the uncertainty in the contact matrices, participants
+can be resampled with replacement. A short helper replicates participant
+(and matching contact) rows for each occurrence of a resampled ID, so
+that duplicates are preserved:
 
 ``` r
-m <- replicate(
-  n = 5,
-  contact_matrix(
-    polymod,
-    countries = "United Kingdom", age_limits = c(0, 1, 5, 15),
-    sample_participants = TRUE
+bootstrap <- function(survey) {
+  sampled_ids <- sample(
+    unique(survey$participants$part_id),
+    replace = TRUE
   )
+  survey$participants <- survey$participants[
+    list(sampled_ids), on = "part_id"
+  ]
+  survey$contacts <- survey$contacts[
+    list(sampled_ids),
+    on = "part_id",
+    nomatch = NULL,
+    allow.cartesian = TRUE
+  ]
+  survey
+}
+
+uk <- polymod[country == "United Kingdom"] |>
+  assign_age_groups(age_limits = c(0, 1, 5, 15))
+
+m <- suppressWarnings(
+  replicate(n = 5, uk |> bootstrap() |> compute_matrix())
 )
 mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
 #>           contact.age.group
-#> age.group       [0,1)     [1,5)   [5,15) [15,Inf)
-#>   [0,1)    0.37833333 0.9333333 1.125000 5.988333
-#>   [1,5)    0.12339843 2.0356420 1.495745 5.413850
-#>   [5,15)   0.02636051 0.4872067 7.978738 6.294043
-#>   [15,Inf) 0.03875607 0.3657082 1.381436 9.651792
+#> age.group       [0,1)     [1,5)    [5,15) [15,Inf)
+#>   [0,1)    0.86707602 1.2341520  1.873860 10.49181
+#>   [1,5)    0.25116125 3.6745839  2.798376 10.05348
+#>   [5,15)   0.05037865 0.9228788 16.525251 12.29984
+#>   [15,Inf) 0.06248427 0.6102873  2.696695 18.29206
 ```
+
+From these matrices, derived quantities can be obtained, for example the
+mean across samples as shown above.
 
 ## Demography
 
 Obtaining symmetric contact matrices, splitting out their components
-(see below) and age-specific participant weights require information
+(see below) and population-based participant weights require information
 about the underlying demographic composition of the survey population.
-This can be passed to
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-as the `survey_pop` argument, a `data.frame` with two columns,
-`lower.age.limit` (denoting the lower end of the age groups) and
-`population` (denoting the number of people in each age group). If no
-`survey_pop` is not given,
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-will try to obtain the age structure of the population (as per the
-`countries` argument) from the [World Population
-Prospects](https://population.un.org/wpp/) of the United Nations, using
-estimates from the year that closest matches the year in which the
-contact survey was conducted.
+This is represented as a `data.frame` with columns `lower.age.limit`
+(the lower end of each age group) and `population` (the number of people
+in that age group).
 
-If demographic information is used, this is returned by
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-as the `demography` field in the results list. It is possible to enforce
-or prevent the function to return demography data by using the
-`return_demography` option.
+For recent UN World Population Prospects data, the `wpp2024` package is
+available from GitHub (`remotes::install_github("PPgp/wpp2024")`):
 
 ``` r
-contact_matrix(polymod,
-  countries = "United Kingdom", age_limits = c(0, 20),
-  return_demography = TRUE
-)$demography
-#>    age.group population proportion  year
-#>       <char>      <num>      <num> <int>
-#> 1:    [0,20)   14799290  0.2454816  2005
-#> 2:  [20,Inf)   45487461  0.7545184  2005
+data("popAge1dt", package = "wpp2024")
+uk_pop <- popAge1dt[name == "United Kingdom" & year == 2020,
+  .(lower.age.limit = age, population = pop * 1000)
+]
+head(uk_pop)
+#>    lower.age.limit population
+#>              <int>      <num>
+#> 1:               0     703192
+#> 2:               1     732072
+#> 3:               2     762303
+#> 4:               3     787284
+#> 5:               4     812300
+#> 6:               5     814132
 ```
+
+Any comparable data frame will work, e.g. constructed by hand:
+
+``` r
+custom_pop <- data.frame(
+  lower.age.limit = c(0, 18, 60),
+  population = c(12000000, 35000000, 20000000)
+)
+```
+
+If the survey has a `country` column,
+[`survey_country_population()`](https://epiforecasts.io/socialmixr/reference/survey_country_population.md)
+looks up country- and year-specific population data:
+
+``` r
+survey_country_population(polymod, countries = "United Kingdom")
+#>     lower.age.limit population
+#>               <int>      <num>
+#>  1:               0    3453670
+#>  2:               5    3558887
+#>  3:              10    3826567
+#>  4:              15    3960166
+#>  5:              20    3906577
+#>  6:              25    3755132
+#>  7:              30    4169859
+#>  8:              35    4694734
+#>  9:              40    4655093
+#> 10:              45    3989175
+#> 11:              50    3615150
+#> 12:              55    3902231
+#> 13:              60    3126452
+#> 14:              65    2710063
+#> 15:              70    2352113
+#> 16:              75    1964744
+#> 17:              80    1480606
+#> 18:              85     757996
+#> 19:              90     324245
+#> 20:              95      74738
+#> 21:             100       8553
+#>     lower.age.limit population
+#>               <int>      <num>
+```
+
+This uses the older
+[`wpp2017`](https://cran.r-project.org/package=wpp2017) package, an
+optional (Suggests) dependency that needs to be installed separately. It
+is kept for backwards compatibility; use more recent population data (as
+shown above) where possible.
 
 ## Symmetric contact matrices
 
@@ -167,46 +460,23 @@ to obtain a symmetric contact matrix that fulfills it, one can use
 
 $$m\prime_{ij} = \frac{1}{2N_{i}}\left( m_{ij}N_{i} + m_{ji}N_{j} \right)$$
 
-To get this version of the contact matrix, use `symmetric = TRUE` when
-calling the
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-function.
+To get this version of the contact matrix, pipe the matrix through
+[`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+passing the population data:
 
 ``` r
-contact_matrix(
-  polymod, countries = "United Kingdom",
-  age_limits = c(0, 1, 5, 15), symmetric = TRUE
-)
-#> Warning: Not all age groups represented in population data (5-year age band).
-#> ℹ Linearly estimating age group sizes from the 5-year bands.
-#> Warning in normalise_weighted_matrix(survey_pop = survey_pop, weighted_matrix = weighted.matrix, : Large differences in the size of the sub-populations with the current age
-#> breaks are likely to result in artefacts after making the matrix symmetric.
-#> ! Please reconsider the age breaks to obtain more equally sized
-#>   sub-populations.
-#> ℹ Normalization factors: [0.3 and 2.9]
-#> $matrix
+uk_pop <- survey_country_population(polymod, countries = "United Kingdom")
+
+polymod[country == "United Kingdom"] |>
+  assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
+  compute_matrix() |>
+  symmetrise(survey_pop = uk_pop)
 #>           contact.age.group
 #> age.group       [0,1)     [1,5)   [5,15) [15,Inf)
 #>   [0,1)    0.40000000 0.6250000 0.764365 4.122919
 #>   [1,5)    0.15625000 1.9375000 1.406063 5.929829
 #>   [5,15)   0.07148821 0.5260153 7.946078 7.428739
 #>   [15,Inf) 0.05759306 0.3313352 1.109550 9.594101
-#> 
-#> $demography
-#>    age.group population proportion  year
-#>       <char>      <num>      <num> <int>
-#> 1:     [0,1)     690734 0.01145748  2005
-#> 2:     [1,5)    2762936 0.04582990  2005
-#> 3:    [5,15)    7385454 0.12250542  2005
-#> 4:  [15,Inf)   49447627 0.82020720  2005
-#> 
-#> $participants
-#>    age.group participants proportion
-#>       <char>        <int>      <num>
-#> 1:     [0,1)           15 0.01483680
-#> 2:     [1,5)           80 0.07912957
-#> 3:    [5,15)          204 0.20178042
-#> 4:  [15,Inf)          712 0.70425321
 ```
 
 ## Contact rates per capita
@@ -221,162 +491,115 @@ are calculated as follows:
 
 $$c_{ij} = \frac{m_{ij}}{N_{j}}$$
 
-To get the per capita contact matrix, use `per_capita = TRUE` when
-calling the
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-function. Please note that if the option `symmetric = TRUE` is
-specified, the contact matrix $m_{ij}$ can show asymmetry if the
-sub-population sizes are different, but the contact matrix per capita
-will be fully symmetric:
+Pipe the matrix through
+[`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md)
+to convert to per-capita rates. If combined with
+[`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+the contact matrix $m_{ij}$ can show asymmetry if the sub-population
+sizes are different, but the contact matrix per capita will be fully
+symmetric:
 
 $$c\prime_{ij} = \frac{m_{ij}N_{i} + m_{ji}N_{j}}{2N_{i}N_{j}} = c\prime_{ji}$$
 
 ``` r
-contact_matrix(
-  survey = polymod, countries = "Germany",
-  age_limits = c(0, 60), symmetric = TRUE,
-  per_capita = TRUE
-)
-#> $matrix
-#>           contact.age.group
-#> age.group    [0,60)  [60,Inf)
-#>   [0,60)   7.743879 0.8967442
-#>   [60,Inf) 2.711694 2.1267606
-#> 
-#> $matrix.per.capita
+de_pop <- survey_country_population(polymod, countries = "Germany")
+
+polymod[country == "Germany"] |>
+  assign_age_groups(age_limits = c(0, 60)) |>
+  compute_matrix() |>
+  symmetrise(survey_pop = de_pop) |>
+  per_capita(survey_pop = de_pop)
 #>           contact.age.group
 #> age.group        [0,60)     [60,Inf)
 #>   [0,60)   1.261735e-07 4.418248e-08
 #>   [60,Inf) 4.418248e-08 1.047852e-07
-#> 
-#> $demography
-#>    age.group population proportion  year
-#>       <char>      <num>      <num> <int>
-#> 1:    [0,60)   61374868  0.7514869  2005
-#> 2:  [60,Inf)   20296375  0.2485131  2005
-#> 
-#> $participants
-#>    age.group participants proportion
-#>       <char>        <int>      <num>
-#> 1:    [0,60)         1062  0.8329412
-#> 2:  [60,Inf)          213  0.1670588
 ```
 
 ## Splitting contact matrices
 
-The
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-contains a simple model for the elements of the contact matrix, by which
-it is split into a *global* component, as well as three components
-representing *contacts*, *assortativity* and *demography*. In other
-words, the elements $m_{ij}$ of the contact matrix are modeled as
+[`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
+decomposes the contact matrix into a *global* component as well as
+components representing *contacts*, *assortativity* and *demography*.
+The elements $m_{ij}$ of the contact matrix are modelled as
 
 $$m_{ij} = cqd_{i}a_{ij}n_{j}$$
 
 where $c$ is the mean number of contacts across the whole population,
 $cqd_{i}$ is the number of contacts that a member of group $i$ makes
-across age groups, $n_{j}$ is the proportion of the surveyed population
-in age group $j$. The constant $q$ is set so that $cq$ is equal to the
-value of the largest eigenvalue of $m_{ij}$; if used in an infectious
-disease model and assumed that every contact leads to infection, $cq$
-can be replaced by the basic reproduction number $R_{0}$.
+across age groups, and $n_{j}$ is the proportion of the surveyed
+population in age group $j$. The constant $q$ is set so that $cq$ is
+equal to the value of the largest eigenvalue of $m_{ij}$; if used in an
+infectious disease model and assumed that every contact leads to
+infection, $cq$ can be replaced by the basic reproduction number
+$R_{0}$.
 
-To model the contact matrix in this way with the
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-function, set `split = TRUE`. The components of the matrix are returned
-as elements `mean.contacts` ($c$), `normalisation` ($q$), `contacts`
-($d_{i}$), `matrix` ($a_{ij}$) and `demography` ($n_{j}$) of the
-resulting list.
+[`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
+returns the assortativity matrix $a_{ij}$ in `$matrix`, with additional
+components `$mean.contacts` ($c$), `$normalisation` ($q$) and
+`$contacts` ($d_{i}$).
 
 ``` r
-contact_matrix(
-  polymod, countries = "United Kingdom",
-  age_limits = c(0, 1, 5, 15), split = TRUE
-)
+polymod[country == "United Kingdom"] |>
+  assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
+  compute_matrix() |>
+  split_matrix(survey_pop = uk_pop)
 #> Warning: Not all age groups represented in population data (5-year age band).
 #> ℹ Linearly estimating age group sizes from the 5-year bands.
-#> $mean.contacts
-#> [1] 11.55481
 #> 
-#> $normalisation
-#> [1] 1.039163
+#> ── Contact matrix (4 age groups) ──
 #> 
-#> $contacts
-#> [1] 0.6995727 0.7464190 1.2235173 0.9390331
+#> Ages: "[0,1)", "[1,5)", "[5,15)", and "[15,Inf)"
+#> Participants: 1011
+#> Mean contacts: 11.55
 #> 
-#> $matrix
 #>           contact.age.group
 #> age.group      [0,1)     [1,5)   [5,15)  [15,Inf)
 #>   [0,1)    4.1561551 2.0780776 1.230914 0.8611839
 #>   [1,5)    1.0955555 4.7169752 1.332022 0.7413849
 #>   [5,15)   0.1456110 0.7498969 4.415104 0.5158328
 #>   [15,Inf) 0.2500527 0.6930808 0.934443 1.0374170
-#> 
-#> $demography
-#>    age.group population proportion  year
-#>       <char>      <num>      <num> <int>
-#> 1:     [0,1)     690734 0.01145748  2005
-#> 2:     [1,5)    2762936 0.04582990  2005
-#> 3:    [5,15)    7385454 0.12250542  2005
-#> 4:  [15,Inf)   49447627 0.82020720  2005
-#> 
-#> $participants
-#>    age.group participants proportion
-#>       <char>        <int>      <num>
-#> 1:     [0,1)           15 0.01483680
-#> 2:     [1,5)           80 0.07912957
-#> 3:    [5,15)          204 0.20178042
-#> 4:  [15,Inf)          712 0.70425321
 ```
 
 ## Filtering
 
-The `filter` argument to
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-can be used to select particular participants or contacts. For example,
-in the `polymod` dataset, the indicators `cnt_home`, `cnt_work`,
-`cnt_school`, `cnt_transport`, `cnt_leisure` and `cnt_otherplace` take
-value 0 or 1 depending on where a contact occurred. Any filter can be
-applied to the data, if given as a list of the form
-(column=filter_value). As such, only contacts that have ‘filter_value’
-in ‘column’ will be considered for the generated contact matrix:
+The `[` method can be used to select particular participants or
+contacts. For example, in the `polymod` dataset, the indicators
+`cnt_home`, `cnt_work`, `cnt_school`, `cnt_transport`, `cnt_leisure` and
+`cnt_otherplace` take value 0 or 1 depending on where a contact
+occurred. The filter is evaluated against whichever table contains the
+referenced columns (participants, contacts, or both). Multiple filters
+can be chained:
 
 ``` r
 # contact matrix for school-related contacts
-contact_matrix(
-  polymod, age_limits = c(0, 20, 60),
-  filter = list(cnt_school = 1)
-)$matrix
+polymod[cnt_school == 1] |>
+  assign_age_groups(age_limits = c(0, 20, 60)) |>
+  compute_matrix()
 #>           contact.age.group
 #> age.group      [0,20)    [20,60)   [60,Inf)
-#>   [0,20)   5.17103805 1.09641670 0.03583303
-#>   [20,60)  0.45714286 0.47542857 0.01457143
-#>   [60,Inf) 0.08980827 0.07366297 0.03531786
+#>   [0,20)   5.15826279 1.09311741 0.03570114
+#>   [20,60)  0.45610034 0.47434436 0.01453820
+#>   [60,Inf) 0.08917836 0.07314629 0.03507014
 
 # contact matrix for work-related contacts involving physical contact
-contact_matrix(
-  polymod, age_limits = c(0, 20, 60),
-  filter = list(cnt_work = 1, phys_contact = 1)
-)$matrix
+polymod[cnt_work == 1][phys_contact == 1] |>
+  assign_age_groups(age_limits = c(0, 20, 60)) |>
+  compute_matrix()
 #>           contact.age.group
 #> age.group      [0,20)    [20,60)    [60,Inf)
-#>   [0,20)   0.04285187 0.06353897 0.009235316
-#>   [20,60)  0.16057143 1.27000000 0.146285714
-#>   [60,Inf) 0.04238143 0.29465187 0.062563068
+#>   [0,20)   0.04266274 0.06325855 0.009194557
+#>   [20,60)  0.16020525 1.26966933 0.145952109
+#>   [60,Inf) 0.04212638 0.29287864 0.062186560
 
 # contact matrix for daily contacts at home with males
-contact_matrix(
-  polymod, age_limits = c(0, 20, 60),
-  filter = list(
-    cnt_home = 1, cnt_gender = "M",
-    duration_multi = 5
-  )
-)$matrix
+polymod[cnt_home == 1][cnt_gender == "M"][duration_multi == 5] |>
+  assign_age_groups(age_limits = c(0, 20, 60)) |>
+  compute_matrix()
 #>           contact.age.group
 #> age.group      [0,20)   [20,60)   [60,Inf)
-#>   [0,20)   0.39268563 0.5858884 0.03103066
-#>   [20,60)  0.25971429 0.3948571 0.04885714
-#>   [60,Inf) 0.05751766 0.1160444 0.23915237
+#>   [0,20)   0.39242369 0.5855094 0.03089371
+#>   [20,60)  0.25919589 0.3940690 0.04875962
+#>   [60,Inf) 0.05717151 0.1153460 0.23871615
 ```
 
 ## Participant weights
@@ -386,17 +609,14 @@ contact_matrix(
 Participant weights are commonly used to align sample and population
 characteristics in terms of temporal aspects and the age distribution.
 For example, the day of the week has been reported as a driving factor
-for social contact behavior, hence to obtain a weekly average, the
+for social contact behaviour, hence to obtain a weekly average, the
 survey data should represent the weekly 2/5 distribution of weekend/week
 days. To align the survey data to this distribution, one can obtain
 participant weights in the form of:
 $$w_{\text{day.of.week}} = \frac{5/7}{N_{\text{weekday}}/N}{\mspace{6mu}\text{OR}\mspace{6mu}}\frac{2/7}{N_{\text{weekend}}/N}$$
 with sample size $N$, and $N_{weekday}$ and $N_{weekend}$ the number of
 participants that were surveyed during weekdays and weekend days,
-respectively. It is possible to remove the constant values
-(e.g. $w = 5/N_{weekday}$), which results in the same standardized
-weights. However, we opt to use the relative proportions to calculate
-weights to enable truncation with a generic threshold (see below).
+respectively.
 
 Another driver of social contact patterns is age. To improve the
 representativeness of survey data, age-specific weights can be
@@ -405,96 +625,59 @@ the population size, $P_{a}$ the population fraction of age $a$, $N$ the
 survey sample size and $N_{a}$ the survey fraction of age $a$. The
 combination of age-specific and temporal weights for participant $i$ of
 age $a$ can be constructed as:
-$$w_{i} = w_{\text{age}}*w_{\text{day.of.week}}$$ Finally, the weights
-can to be standardized as follows:
-$${\widetilde{w}}_{i} = \frac{w_{i}}{\sum\limits_{}^{}w_{}}*N$$
+$$w_{i} = w_{\text{age}}*w_{\text{day.of.week}}$$
 
 If the social contact analysis is based on stratification by splitting
 the population into non-overlapping groups, it requires the weights to
-be standardized so that the weighted totals within mutually exclusive
+be standardised so that the weighted totals within mutually exclusive
 cells equal the known population totals ([Kolenikov
 2016](#ref-kolenikov_post-stratification_2016)). The post-stratification
-cells need to be mutually exclusive and cover the whole population. The
-post-stratified (PS) weight for participant $i$ of is:
-$${\widetilde{w}}_{i}^{PS} = \frac{w_{i}}{\sum\limits_{\text{j}}^{\text{group g}}w_{j}}*N_{g}$$
+cells need to be mutually exclusive and cover the whole population.
+[`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
+applies this post-stratification normalisation within age groups.
 
-Temporal weights are activated in
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-by `weigh_dayofweek = TRUE` and age-specific weights by
-`weigh_age = TRUE`. The post-stratification weights are calculated by
-default. It is possible to obtain the participant weights via the option
-`return_part_weights = TRUE`.
+[`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md) is
+composable: each call multiplies new weights into the participants’
+`weight` column. In POLYMOD, the `dayofweek` column uses 0 for Sunday
+and 6 for Saturday, so weekdays are 1-5 and weekend days are 0 and 6:
 
 ``` r
-contact_matrix(
-  survey = polymod, age_limits = c(0, 18, 60), weigh_dayofweek = TRUE,
-  weigh_age = TRUE, return_part_weights = TRUE
-)
-#> $matrix
+polymod[country == "United Kingdom"] |>
+  assign_age_groups(age_limits = c(0, 18, 60)) |>
+  weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6))) |>
+  weigh("part_age", target = uk_pop) |>
+  compute_matrix()
 #>           contact.age.group
-#> age.group    [0,18)   [18,60)  [60,Inf)
-#>   [0,18)   8.451586  5.835062 0.7210888
-#>   [18,60)  2.039170 10.283562 1.2413689
-#>   [60,Inf) 0.777533  4.347863 2.4972876
-#> 
-#> $demography
-#>    age.group population proportion  year
-#>       <char>      <num>      <num> <int>
-#> 1:    [0,18)   52955807  0.1948624  2005
-#> 2:   [18,60)  157719526  0.5803634  2005
-#> 3:  [60,Inf)   61084635  0.2247742  2005
-#> 
-#> $participants
-#>    age.group participants proportion
-#>       <char>        <int>      <num>
-#> 1:    [0,18)         2462  0.3420395
-#> 2:   [18,60)         3745  0.5202834
-#> 3:  [60,Inf)          991  0.1376771
-#> 
-#> $participants.weights
-#>      age.group participant.age is.weekday    weight participants   proportion
-#>         <fctr>           <int>     <lgcl>     <num>        <int>        <num>
-#>   1:    [0,18)               0      FALSE 1.5277357           24 0.0033342595
-#>   2:    [0,18)               0       TRUE 1.2860967           66 0.0091692137
-#>   3:    [0,18)               0         NA 1.3245116            3 0.0004167824
-#>   4:    [0,18)               1      FALSE 1.1839952           32 0.0044456794
-#>   5:    [0,18)               1       TRUE 0.9967249           88 0.0122256182
-#>  ---                                                                         
-#> 225:  [60,Inf)              83       TRUE 5.5512825            4 0.0005557099
-#> 226:  [60,Inf)              84      FALSE 8.7923845            1 0.0001389275
-#> 227:  [60,Inf)              84       TRUE 7.4017099            2 0.0002778550
-#> 228:  [60,Inf)              85       TRUE 3.1116575            3 0.0004167824
-#> 229:  [60,Inf)              90       TRUE 4.6707906            1 0.0001389275
+#> age.group    [0,18)  [18,60)  [60,Inf)
+#>   [0,18)   7.637824 5.372202 0.4878625
+#>   [18,60)  2.279212 7.924999 1.0941688
+#>   [60,Inf) 1.187088 5.303965 2.2302108
 ```
+
+The first
+[`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md) call
+assigns weekday participants a total weight of 5 and weekend
+participants a total weight of 2 (the weekly 5/2 split). The second call
+post-stratifies against the population structure in `uk_pop` (passed as
+a data frame).
 
 ### User-defined participant weights
 
-The
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-allows to specify and use your own participant weights. Therefore,
-provide the names of the columns of the participant data you want to use
-to weight the reported contacts via the `weights` argument.
+[`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md) with
+no `target` multiplies an existing participant column directly into the
+weight. For instance, to give more importance to participants from large
+households:
 
 ``` r
-# e.g. use household size as (dummy) weight to provide
-# more importance to participant data from large households
-contact_matrix(
-  survey = polymod, age_limits = c(0, 18, 60),
-  weights = "hh_size"
-)
-#> $matrix
+polymod |>
+  assign_age_groups(age_limits = c(0, 18, 60)) |>
+  weigh("hh_size") |>
+  compute_matrix()
 #>           contact.age.group
 #> age.group     [0,18)   [18,60)  [60,Inf)
 #>   [0,18)   8.9599558  5.907367 0.7338418
 #>   [18,60)  2.4650353 10.960550 1.2399199
 #>   [60,Inf) 0.9909593  5.659468 2.7081868
-#> 
-#> $participants
-#>    age.group participants proportion
-#>       <char>        <int>      <num>
-#> 1:    [0,18)         2462  0.3420395
-#> 2:   [18,60)         3745  0.5202834
-#> 3:  [60,Inf)          991  0.1376771
 ```
 
 ### Weight threshold
@@ -503,54 +686,23 @@ If the survey population differs extensively from the demography, some
 participants can end up with relatively high weights and as such, an
 excessive contribution to the population average. This warrants the
 limitation of single participant influences by a truncation of the
-weights. To enable this in
-[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md),
-you need to provide a numeric `weight_threshold`. This truncation is
-applied on the standardized weights, followed by another standardization
-to make sure that the sum of the weights still equals the sample size.
-The latter can lead to final weights of which some little exceed the
-given threshold value.
+weights.
+[`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
+accepts a numeric `weight_threshold` which caps the standardised weights
+and re-normalises so that the weight sum equals the group size. Weights
+close to the threshold may slightly exceed it after re-normalisation.
 
 ``` r
-contact_matrix(
-  survey = polymod, age_limits = c(0, 18, 60), weigh_dayofweek = TRUE,
-  weigh_age = TRUE, return_part_weights = TRUE, weight_threshold = 3
-)
-#> $matrix
+polymod[country == "United Kingdom"] |>
+  assign_age_groups(age_limits = c(0, 18, 60)) |>
+  weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6))) |>
+  weigh("part_age", target = uk_pop) |>
+  compute_matrix(weight_threshold = 3)
 #>           contact.age.group
-#> age.group     [0,18)   [18,60)  [60,Inf)
-#>   [0,18)   8.4515863  5.835062 0.7210888
-#>   [18,60)  2.0391698 10.283562 1.2413689
-#>   [60,Inf) 0.7718688  4.405534 2.5376740
-#> 
-#> $demography
-#>    age.group population proportion  year
-#>       <char>      <num>      <num> <int>
-#> 1:    [0,18)   52955807  0.1948624  2005
-#> 2:   [18,60)  157719526  0.5803634  2005
-#> 3:  [60,Inf)   61084635  0.2247742  2005
-#> 
-#> $participants
-#>    age.group participants proportion
-#>       <char>        <int>      <num>
-#> 1:    [0,18)         2462  0.3420395
-#> 2:   [18,60)         3745  0.5202834
-#> 3:  [60,Inf)          991  0.1376771
-#> 
-#> $participants.weights
-#>      age.group participant.age is.weekday    weight participants   proportion
-#>         <fctr>           <int>     <lgcl>     <num>        <int>        <num>
-#>   1:    [0,18)               0      FALSE 1.5277357           24 0.0033342595
-#>   2:    [0,18)               0       TRUE 1.2860967           66 0.0091692137
-#>   3:    [0,18)               0         NA 1.3245116            3 0.0004167824
-#>   4:    [0,18)               1      FALSE 1.1839952           32 0.0044456794
-#>   5:    [0,18)               1       TRUE 0.9967249           88 0.0122256182
-#>  ---                                                                         
-#> 225:  [60,Inf)              83       TRUE 3.1097465            4 0.0005557099
-#> 226:  [60,Inf)              84      FALSE 3.1097465            1 0.0001389275
-#> 227:  [60,Inf)              84       TRUE 3.1097465            2 0.0002778550
-#> 228:  [60,Inf)              85       TRUE 3.1097465            3 0.0004167824
-#> 229:  [60,Inf)              90       TRUE 3.1097465            1 0.0001389275
+#> age.group    [0,18)  [18,60)  [60,Inf)
+#>   [0,18)   7.637824 5.372202 0.4878625
+#>   [18,60)  2.282014 7.932570 1.0774717
+#>   [60,Inf) 1.110740 5.275613 2.2700262
 ```
 
 ### Numerical example
@@ -611,7 +763,7 @@ and age-specific unweighted averages on the number of contacts:
 
 The following table contains the participants weights based on the
 survey day with and without the population and sample size constants
-($w$ and $w\prime$, respectively). Note that the standardized weights
+($w$ and $w\prime$, respectively). Note that the standardised weights
 $\widetilde{w}$ and $\widetilde{w\prime}$ are the same:
 
 | age | day.of.week | age.group | m_i |    w | w_tilde |  w_dot | w_dot_tilde |
@@ -625,7 +777,7 @@ $\widetilde{w}$ and $\widetilde{w\prime}$ are the same:
 
 Note the different scale of $w$ and $w\prime$, and the more
 straightforward interpretation of the numerical value of $w$ in terms of
-relative differences to apply truncation. Using the standardized
+relative differences to apply truncation. Using the standardised
 weights, we are able to calculate the weighted number of contacts:
 
 | age | day.of.week | age.group | m_i |    w | w_tilde | m_i \* w_tilde |
@@ -640,7 +792,7 @@ weights, we are able to calculate the weighted number of contacts:
     #> weighted average number of contacts: 9.2
 
 If the population-based weights are directly used in age-specific
-groups, the contact behavior of the 3 year-old participant, which
+groups, the contact behaviour of the 3 year-old participant, which
 participated during week day, is inflated due to the
 under-representation of week days in the survey sample. In addition, the
 number of contacts for 1 year-old participants is decreased because of
@@ -648,7 +800,7 @@ the over-representation of weekend days in the survey. Using the
 population-weights within the two aggregated age groups, we obtain a
 more intuitive weighting for age group A, but it is still skewed for
 individuals in age group B. As such, this weighted average for age group
-B has no meaning in terms of social contact behavior:
+B has no meaning in terms of social contact behaviour:
 
 [TABLE]
 
@@ -689,7 +841,7 @@ on the population and age-group level:
     #> weighted average number of contacts: 8.85
 
 If the age-specific weights are directly used within the age groups, the
-contact behavior for age group B is inflated to unrealistic levels and
+contact behaviour for age group B is inflated to unrealistic levels and
 the number of contacts for age group A is artificially low:
 
 [TABLE]
@@ -756,26 +908,26 @@ ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) +
   geom_tile()
 ```
 
-![](socialmixr_files/figure-html/unnamed-chunk-31-1.png)
+![](socialmixr_files/figure-html/unnamed-chunk-34-1.png)
 
 ### Using R base
 
 The contact matrices can also be plotted with the
 [`matrix_plot()`](https://epiforecasts.io/socialmixr/reference/matrix_plot.md)
-function as a grid of colored rectangles with the numeric values in the
-cells. Heat colors are used by default, though this can be changed.
+function as a grid of coloured rectangles with the numeric values in the
+cells. Heat colours are used by default, though this can be changed.
 
 ``` r
 matrix_plot(mr)
 ```
 
-![](socialmixr_files/figure-html/unnamed-chunk-32-1.png)
+![](socialmixr_files/figure-html/unnamed-chunk-35-1.png)
 
 ``` r
 matrix_plot(mr, color.palette = gray.colors)
 ```
 
-![](socialmixr_files/figure-html/unnamed-chunk-32-2.png)
+![](socialmixr_files/figure-html/unnamed-chunk-35-2.png)
 
 ## References
 

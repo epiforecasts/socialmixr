@@ -2,6 +2,16 @@
 
 ## socialmixr (development version)
 
+- The introduction vignette and README now use the pipeline (`[`,
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md),
+  [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md),
+  [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md),
+  [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md),
+  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md))
+  throughout
+  ([\#288](https://github.com/epiforecasts/socialmixr/issues/288)).
+
 - Pipeline functions
   ([`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md),
   [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
