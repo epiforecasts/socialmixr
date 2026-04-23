@@ -7,6 +7,10 @@
   for surveys where many contacts have broad age bands and uniform sampling
   would flatten age-assortativity.
 
+* The introduction vignette and README now use the pipeline
+  (`[`, `assign_age_groups()`, `weigh()`, `compute_matrix()`, `symmetrise()`,
+  `split_matrix()`, `per_capita()`) throughout (#288).
+
 * Pipeline functions (`compute_matrix()`, `symmetrise()`, `split_matrix()`,
   `per_capita()`) now return a `contact_matrix` S3 class with `print()`,
   `plot()`, and `as.matrix()` methods. The class inherits from `list`, so
