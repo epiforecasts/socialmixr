@@ -98,13 +98,14 @@ impute_ages <- function(
       .SDcols = c(min_col, max_col)
     ]
   } else if (identical(estimate, "sample")) {
-    # Impute by sampling uniformly from range
+    # Impute by sampling uniformly from range; runif() excludes its upper
+    # bound, so use max + 1 to make the integer draw inclusive of max.
     data[
       is.na(get(age_col)) &
         !is.na(get(min_col)) &
         !is.na(get(max_col)) &
         get(min_col) <= get(max_col),
-      (age_col) := as.integer(runif(.N, get(min_col), get(max_col)))
+      (age_col) := as.integer(runif(.N, get(min_col), get(max_col) + 1L))
     ]
   } else if (is.data.frame(estimate)) {
     # Impute by sampling from a supplied age distribution within [min, max]
