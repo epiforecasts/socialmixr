@@ -86,19 +86,28 @@ When participants are filtered, contacts are automatically pruned to matching pa
 
 # Bootstrapping
 
-To get an idea of the uncertainty in the contact matrices, participants can be resampled with replacement. The easiest way to iterate the pipeline over bootstrap samples is to resample participant IDs and filter the survey before computing the matrix:
+To get an idea of the uncertainty in the contact matrices, participants can be resampled with replacement. A short helper replicates participant (and matching contact) rows for each occurrence of a resampled ID, so that duplicates are preserved:
 
 ```{r}
-uk <- polymod[country == "United Kingdom"]
-uk <- assign_age_groups(uk, age_limits = c(0, 1, 5, 15))
+bootstrap <- function(survey) {
+  sampled_ids <- sample(
+    unique(survey$participants$part_id),
+    replace = TRUE
+  )
+  survey$participants <- survey$participants[
+    list(sampled_ids), on = "part_id"
+  ]
+  survey$contacts <- survey$contacts[
+    list(sampled_ids), on = "part_id", allow.cartesian = TRUE
+  ]
+  survey
+}
 
-ids <- unique(uk$participants$part_id)
-m <- replicate(
-  n = 5,
-  {
-    sampled_ids <- sample(ids, replace = TRUE)
-    compute_matrix(uk[part_id %in% sampled_ids])
-  }
+uk <- polymod[country == "United Kingdom"] |>
+  assign_age_groups(age_limits = c(0, 1, 5, 15))
+
+m <- suppressWarnings(
+  replicate(n = 5, uk |> bootstrap() |> compute_matrix())
 )
 mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
