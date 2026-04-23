@@ -1,5 +1,10 @@
 # socialmixr (development version)
 
+* The introduction vignette and README now present the pipeline
+  (`[`, `assign_age_groups()`, `weigh()`, `compute_matrix()`, `symmetrise()`,
+  `split_matrix()`, `per_capita()`) as the primary workflow, with
+  `contact_matrix()` documented as a convenience wrapper (#288).
+
 * Pipeline functions (`compute_matrix()`, `symmetrise()`, `split_matrix()`,
   `per_capita()`) now return a `contact_matrix` S3 class with `print()`,
   `plot()`, and `as.matrix()` methods. The class inherits from `list`, so
