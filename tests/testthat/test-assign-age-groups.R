@@ -109,12 +109,9 @@ test_that("validate_age_distribution() errors on bad input", {
 })
 
 test_that("validate_age_distribution() normalises proportions with warning", {
-  expect_warning(
-    dist <- validate_age_distribution(
-      data.frame(age = c(1, 2), proportion = c(2, 3))
-    ),
-    "normalising"
-  ) # nolint: implicit_assignment_linter.
+  x <- data.frame(age = c(1, 2), proportion = c(2, 3))
+  expect_warning(validate_age_distribution(x), "normalising")
+  dist <- suppressWarnings(validate_age_distribution(x))
   expect_equal(sum(dist$proportion), 1, tolerance = 1e-12)
   expect_equal(dist$proportion, c(0.4, 0.6), tolerance = 1e-12)
 })

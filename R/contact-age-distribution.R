@@ -70,7 +70,7 @@ validate_age_distribution <- function(x) {
       "Columns {.val age} and {.val proportion} must be numeric."
     )
   }
-  if (any(!is.finite(x$age)) || any(!is.finite(x$proportion))) {
+  if (!all(is.finite(x$age)) || !all(is.finite(x$proportion))) {
     cli::cli_abort(
       "Columns {.val age} and {.val proportion} must not contain missing or \\
        non-finite values."
