@@ -1,19 +1,18 @@
 # socialmixr 0.6.0
 
-This release introduces a composable pipeline for contact matrix computation
-(`[`, `assign_age_groups()`, `weigh()`, `compute_matrix()`, `symmetrise()`,
-`split_matrix()`, `per_capita()`) and a `contact_matrix` S3 class. The
-introduction vignette and README now use the pipeline throughout.
+This release adds a pipeline of composable functions for building contact
+matrices (`[`, `assign_age_groups()`, `weigh()`, `compute_matrix()`,
+`symmetrise()`, `split_matrix()`, `per_capita()`) and a `contact_matrix` S3
+class. The vignette and README are rewritten around the pipeline (#288).
 
 ## Breaking changes
 
 * Terminal age group labels now use `[N,Inf)` notation instead of `N+` when
-  bracket notation is used (e.g. `[0,5)`, `[5,15)`, `[15,Inf)`). This affects
-  matrix dimnames and the `age.group` column in `$participants`. Code that
-  matches on strings like `"15+"` will need updating to `"[15,Inf)"`. This
-  aligns with the contactmatrix package conventions and gives consistent,
-  parseable interval notation throughout. Dash notation (e.g. `"15+"`) is
-  unchanged.
+  bracket notation is used (e.g. `[0,5)`, `[5,15)`, `[15,Inf)`). This matches
+  the contactmatrix package and gives parseable interval notation across all
+  age groups. It affects matrix dimnames and the `age.group` column in
+  `$participants`; code that matches on strings like `"15+"` will need
+  updating to `"[15,Inf)"`. Dash notation (e.g. `"15+"`) is unchanged.
 
 ## New features
 
@@ -25,8 +24,8 @@ introduction vignette and README now use the pipeline throughout.
   population post-stratification (#161).
 
 * New `compute_matrix()` function computes a contact matrix from a prepared
-  survey, completing the pipeline workflow alongside `assign_age_groups()`
-  and `weigh()` (#161).
+  survey. It is the final step of the pipeline after `assign_age_groups()`
+  and (optionally) `weigh()` (#161).
 
 * New post-processing functions `symmetrise()`, `split_matrix()`, and
   `per_capita()` operate on `compute_matrix()` output. `symmetrise()` enforces
@@ -51,11 +50,11 @@ introduction vignette and README now use the pipeline throughout.
   using `$matrix` or `$participants` continues to work.
 
 * New `contact_age_distribution()` function extracts the empirical age
-  distribution of contacts from a survey. This can be passed to
-  `assign_age_groups(estimated_contact_age = ...)` to impute ages from ranges
-  using the reference distribution rather than uniform sampling, which is
-  useful for surveys where many contacts have broad age bands and uniform
-  sampling would flatten age-assortativity.
+  distribution of contacts from a survey. Pass it to
+  `assign_age_groups(estimated_contact_age = ...)` to impute ages from
+  ranges by sampling from the reference distribution instead of uniformly.
+  This matters for surveys where many contacts have broad age bands, since
+  uniform sampling would flatten age-assortativity.
 
 * New `agegroups_to_limits()` function converts age group labels back to lower
   age limits, the inverse of `limits_to_agegroups()`.
@@ -88,16 +87,15 @@ introduction vignette and README now use the pipeline throughout.
 
 ## Internal
 
-* `contact_matrix()` now uses `assign_age_groups()` internally, reducing code
-  duplication and demonstrating the modular workflow (#227).
+* `contact_matrix()` now uses `assign_age_groups()` internally, removing
+  duplicated code (#227).
 
 * `contact_matrix()` now uses `weigh()` internally for all weighting
-  (day-of-week, age, and user-defined), reducing code duplication. Internal
-  helpers `warn_multiple_observations()` and `normalise_weights()` are
-  extracted for sharing with `compute_matrix()` (#131).
+  (day-of-week, age, and user-defined). The helpers
+  `warn_multiple_observations()` and `normalise_weights()` were extracted
+  so `compute_matrix()` can share them (#131).
 
-* The introduction vignette and README now use the pipeline throughout
-  (#288).
+* The vignette and README are rewritten around the pipeline (#288).
 
 * Enabled `cyclocomp_linter`, `line_length_linter`, and `object_usage_linter`.
   Disabled `indentation_linter` (air handles indentation). Reduced cyclomatic
