@@ -7,6 +7,9 @@ class. The vignette and README are rewritten around the pipeline (#288).
 
 ## Breaking changes
 
+* Minimum R version bumped to 4.1.0 (from 3.5.0). Examples in the pipeline
+  functions use the native `|>` pipe, introduced in 4.1.0.
+
 * Terminal age group labels now use `[N,Inf)` notation instead of `N+` when
   bracket notation is used (e.g. `[0,5)`, `[5,15)`, `[15,Inf)`). This matches
   the contactmatrix package and gives parseable interval notation across all
