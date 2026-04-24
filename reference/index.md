@@ -14,6 +14,8 @@
   : Clean contact survey data
 - [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
   : Compute contact matrix from prepared survey data
+- [`contact_age_distribution()`](https://epiforecasts.io/socialmixr/reference/contact_age_distribution.md)
+  : Extract the empirical age distribution of contacts from a survey
 - [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
   : Generate a contact matrix from diary survey data
 - [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md)
