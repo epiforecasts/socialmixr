@@ -1,4 +1,4 @@
-# socialmixr (development version)
+# socialmixr 0.6.0
 
 This release introduces a composable pipeline for contact matrix computation
 (`[`, `assign_age_groups()`, `weigh()`, `compute_matrix()`, `symmetrise()`,
