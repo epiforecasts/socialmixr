@@ -32,10 +32,10 @@ polymod8$contacts$cnt_age_est_max <- NA_real_
 polymod8$contacts[polymod$contacts$part_id == 10, "cnt_age_exact"] <- 10
 polymod8$contacts[polymod$contacts$part_id == 20, "cnt_age_exact"] <- 20
 polymod9$participants$part_age_est_min <- 1
-polymod9$participants$part_age_est_max <- 15
+polymod9$participants$part_age_est_max <- 14
 polymod9$participants$part_age_exact <- NULL
 polymod9$participants$part_age_est_min <- 1
-polymod9$participants$part_age_est_max <- 15
+polymod9$participants$part_age_est_max <- 14
 nn <- nrow(polymod9$participants)
 polymod9$participants$part_age_exact <- ifelse(runif(nn) > 0.7, 20, NA)
 polymod10$participants$added_weight <-

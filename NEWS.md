@@ -1,5 +1,12 @@
 # socialmixr (development version)
 
+* New `contact_age_distribution()` function extracts the empirical age
+  distribution of contacts from a survey. This can be passed to
+  `assign_age_groups(estimated_contact_age = ...)` to impute ages from ranges
+  using the reference distribution rather than uniform sampling. This is useful
+  for surveys where many contacts have broad age bands and uniform sampling
+  would flatten age-assortativity.
+
 * The introduction vignette and README now use the pipeline
   (`[`, `assign_age_groups()`, `weigh()`, `compute_matrix()`, `symmetrise()`,
   `split_matrix()`, `per_capita()`) throughout (#288).

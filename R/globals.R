@@ -8,6 +8,9 @@ utils::globalVariables(c(
   "..low", # <clean.contact_survey>
   "weight", # <compute_matrix>
   "sampled.weight", # <compute_matrix>
+  "age", # <contact_age_distribution>
+  "proportion", # <contact_age_distribution>
+  "N", # <contact_age_distribution>
   "cnt_age", # <drop_ages_below_age_limit>
   "cnt_age", # <drop_missing_contact_ages>
   "part_age_exact", # <max_participant_age>

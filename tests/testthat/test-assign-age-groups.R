@@ -46,6 +46,94 @@ test_that("assign_age_groups() appropriately changes age.group factor", {
   )
 })
 
+## contact_age_distribution() -------------------------------------------------
+
+test_that("contact_age_distribution() returns a valid distribution", {
+  dist <- contact_age_distribution(polymod)
+  expect_s3_class(dist, "data.frame")
+  expect_true(all(c("age", "proportion") %in% names(dist)))
+  expect_type(dist$age, "integer")
+  expect_type(dist$proportion, "double")
+  expect_equal(sum(dist$proportion), 1, tolerance = 1e-10)
+  expect_true(all(dist$proportion >= 0))
+})
+
+test_that("contact_age_distribution() rejects fractional ages", {
+  bad <- polymod
+  bad$contacts <- data.table::copy(bad$contacts)
+  bad$contacts[, cnt_age_exact := as.numeric(cnt_age_exact)]
+  bad$contacts[1, cnt_age_exact := 3.5]
+  expect_error(contact_age_distribution(bad), "whole numbers")
+})
+
+test_that("contact_age_distribution() rejects non-finite ages", {
+  bad <- polymod
+  bad$contacts <- data.table::copy(bad$contacts)
+  bad$contacts[, cnt_age_exact := as.numeric(cnt_age_exact)]
+  bad$contacts[1, cnt_age_exact := Inf]
+  expect_error(contact_age_distribution(bad), "finite")
+})
+
+## Distribution-based imputation -----------------------------------------------
+
+test_that("assign_age_groups() accepts a distribution for contact age", {
+  dist <- contact_age_distribution(polymod)
+  result <- assign_age_groups(
+    polymod,
+    estimated_contact_age = dist,
+    age_limits = c(0, 5, 15)
+  )
+  expect_true("age.group" %in% names(result$participants))
+  expect_true("contact.age.group" %in% names(result$contacts))
+})
+
+test_that("distribution-based imputation reduces missing contact ages", {
+  dist <- contact_age_distribution(polymod)
+  no_impute <- assign_age_groups(
+    polymod,
+    estimated_contact_age = "missing"
+  )
+  with_dist <- assign_age_groups(
+    polymod,
+    estimated_contact_age = dist
+  )
+  expect_lte(
+    sum(is.na(with_dist$contacts$cnt_age)),
+    sum(is.na(no_impute$contacts$cnt_age))
+  )
+})
+
+test_that("validate_age_distribution() errors on bad input", {
+  expect_error(
+    validate_age_distribution(data.frame(x = 1)),
+    "age"
+  )
+  expect_error(
+    validate_age_distribution(
+      data.frame(age = "a", proportion = 0.5, stringsAsFactors = FALSE)
+    ),
+    "numeric"
+  )
+  expect_error(
+    validate_age_distribution(data.frame(age = 1, proportion = -0.5)),
+    "negative"
+  )
+  expect_error(
+    validate_age_distribution(data.frame(age = 1, proportion = 0)),
+    "positive sum"
+  )
+})
+
+test_that("validate_age_distribution() normalises proportions with warning", {
+  x <- data.frame(age = c(1, 2), proportion = c(2, 3))
+  expect_warning(validate_age_distribution(x), "normalising")
+  dist <- suppressWarnings(validate_age_distribution(x))
+  expect_equal(sum(dist$proportion), 1, tolerance = 1e-12)
+  expect_equal(dist$proportion, c(0.4, 0.6), tolerance = 1e-12)
+})
+
+## String-based imputation -----------------------------------------------------
+
 test_that("assign_age_groups() imputes ages from ranges", {
   polymod_no_impute <- assign_age_groups(
     polymod,
