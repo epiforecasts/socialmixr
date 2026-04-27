@@ -1,54 +1,33 @@
 # Changelog
 
-## socialmixr (development version)
+## socialmixr 0.6.0
 
-- New
-  [`contact_age_distribution()`](https://epiforecasts.io/socialmixr/reference/contact_age_distribution.md)
-  function extracts the empirical age distribution of contacts from a
-  survey. This can be passed to
-  `assign_age_groups(estimated_contact_age = ...)` to impute ages from
-  ranges using the reference distribution rather than uniform sampling.
-  This is useful for surveys where many contacts have broad age bands
-  and uniform sampling would flatten age-assortativity.
+This release adds a pipeline of composable functions for building
+contact matrices (`[`,
+[`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md),
+[`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md),
+[`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md),
+[`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+[`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md),
+[`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md))
+and a `contact_matrix` S3 class. The vignette and README are rewritten
+around the pipeline
+([\#288](https://github.com/epiforecasts/socialmixr/issues/288)).
 
-- The introduction vignette and README now use the pipeline (`[`,
-  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md),
-  [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md),
-  [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md),
-  [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
-  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md),
-  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md))
-  throughout
-  ([\#288](https://github.com/epiforecasts/socialmixr/issues/288)).
+### Breaking changes
 
-- Pipeline functions
-  ([`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md),
-  [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
-  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md),
-  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md))
-  now return a `contact_matrix` S3 class with
-  [`print()`](https://rdrr.io/r/base/print.html),
-  [`plot()`](https://rdrr.io/r/graphics/plot.default.html), and
-  [`as.matrix()`](https://rdrr.io/r/base/matrix.html) methods. The class
-  inherits from `list`, so existing code using `$matrix` or
-  `$participants` continues to work.
+- Minimum R version bumped to 4.1.0 (from 3.5.0). Examples in the
+  pipeline functions use the native `|>` pipe, introduced in 4.1.0.
 
-- **Breaking change**: Terminal age group labels now use `[N,Inf)`
-  notation instead of `N+` when bracket notation is used (e.g. `[0,5)`,
-  `[5,15)`, `[15,Inf)`). This affects matrix dimnames and the
-  `age.group` column in `$participants`. Code that matches on strings
-  like `"15+"` will need updating to `"[15,Inf)"`. This aligns with the
-  contactmatrix package conventions and gives consistent, parseable
-  interval notation throughout. Dash notation (e.g. `"15+"`) is
-  unchanged.
+- Terminal age group labels now use `[N,Inf)` notation instead of `N+`
+  when bracket notation is used (e.g. `[0,5)`, `[5,15)`, `[15,Inf)`).
+  This matches the contactmatrix package and gives parseable interval
+  notation across all age groups. It affects matrix dimnames and the
+  `age.group` column in `$participants`; code that matches on strings
+  like `"15+"` will need updating to `"[15,Inf)"`. Dash notation
+  (e.g. `"15+"`) is unchanged.
 
-- Enabled `cyclocomp_linter`, `line_length_linter`, and
-  `object_usage_linter`. Disabled `indentation_linter` (air handles
-  indentation). Reduced cyclomatic complexity of
-  [`check.contact_survey()`](https://epiforecasts.io/socialmixr/reference/check.md),
-  `[.contact_survey()`, and
-  [`find_unique_key()`](https://epiforecasts.io/socialmixr/reference/find_unique_key.md)
-  by extracting helper functions.
+### New features
 
 - New `[.contact_survey` method allows filtering survey objects with
   expressions, e.g. `polymod[country == "United Kingdom"]`
@@ -62,10 +41,11 @@
 
 - New
   [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
-  function computes a contact matrix from a prepared survey, completing
-  the pipeline workflow alongside
+  function computes a contact matrix from a prepared survey. It is the
+  final step of the pipeline after
   [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
-  and [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  and (optionally)
+  [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
   ([\#161](https://github.com/epiforecasts/socialmixr/issues/161)).
 
 - New post-processing functions
@@ -96,12 +76,32 @@
     symmetrise(survey_pop = uk_pop)
   ```
 
-- [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-  now uses
-  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
-  internally, reducing code duplication and demonstrating the modular
-  workflow
-  ([\#227](https://github.com/epiforecasts/socialmixr/issues/227)).
+- Pipeline functions
+  ([`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md),
+  [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md),
+  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md))
+  return a `contact_matrix` S3 class with
+  [`print()`](https://rdrr.io/r/base/print.html),
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html), and
+  [`as.matrix()`](https://rdrr.io/r/base/matrix.html) methods. The class
+  inherits from `list`, so existing code using `$matrix` or
+  `$participants` continues to work.
+
+- New
+  [`contact_age_distribution()`](https://epiforecasts.io/socialmixr/reference/contact_age_distribution.md)
+  function extracts the empirical age distribution of contacts from a
+  survey. Pass it to `assign_age_groups(estimated_contact_age = ...)` to
+  impute ages from ranges by sampling from the reference distribution
+  instead of uniformly. This matters for surveys where many contacts
+  have broad age bands, since uniform sampling would flatten
+  age-assortativity.
+
+- New
+  [`agegroups_to_limits()`](https://epiforecasts.io/socialmixr/reference/agegroups_to_limits.md)
+  function converts age group labels back to lower age limits, the
+  inverse of
+  [`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md).
 
 - [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
   gains a `weight_threshold` parameter to cap extreme weights before
@@ -110,28 +110,19 @@
   option
   ([\#131](https://github.com/epiforecasts/socialmixr/issues/131)).
 
-- [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-  now uses
-  [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
-  internally for all weighting (day-of-week, age, and user-defined),
-  reducing code duplication. Internal helpers
-  [`warn_multiple_observations()`](https://epiforecasts.io/socialmixr/reference/warn_multiple_observations.md)
-  and
-  [`normalise_weights()`](https://epiforecasts.io/socialmixr/reference/normalise_weights.md)
-  are extracted for sharing with
-  [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
-  ([\#131](https://github.com/epiforecasts/socialmixr/issues/131)).
+### Bug fixes
 
 - Fixed bug where participants with NA `dayofweek` were incorrectly
   weighted as weekend days. They now receive an average weight across
   all days
   ([\#131](https://github.com/epiforecasts/socialmixr/issues/131)).
 
-- New
-  [`agegroups_to_limits()`](https://epiforecasts.io/socialmixr/reference/agegroups_to_limits.md)
-  function converts age group labels back to lower age limits, the
-  inverse of
-  [`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md).
+- Fixed unmatched-merge warning count when merging files with duplicate
+  keys; previously, the count could be wrong (or negative) due to
+  counting join pairs rather than distinct matched rows
+  ([\#289](https://github.com/epiforecasts/socialmixr/issues/289)).
+
+### Deprecations
 
 - [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md)
   and
@@ -142,15 +133,6 @@
   The `wpp2017` package is now a suggested dependency rather than a
   required import
   ([\#258](https://github.com/epiforecasts/socialmixr/issues/258)).
-
-- Reduced cyclomatic complexity of `try_merge_additional_files()` by
-  extracting helper functions
-  ([\#289](https://github.com/epiforecasts/socialmixr/issues/289)).
-
-- Fixed unmatched-merge warning count when merging files with duplicate
-  keys; previously, the count could be wrong (or negative) due to
-  counting join pairs rather than distinct matched rows
-  ([\#289](https://github.com/epiforecasts/socialmixr/issues/289)).
 
 - [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md),
   [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md),
@@ -163,6 +145,39 @@
   [contactsurveys](https://cran.r-project.org/package=contactsurveys)
   package
   ([\#269](https://github.com/epiforecasts/socialmixr/issues/269)).
+
+### Internal
+
+- [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  now uses
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
+  internally, removing duplicated code
+  ([\#227](https://github.com/epiforecasts/socialmixr/issues/227)).
+
+- [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  now uses
+  [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  internally for all weighting (day-of-week, age, and user-defined). The
+  helpers
+  [`warn_multiple_observations()`](https://epiforecasts.io/socialmixr/reference/warn_multiple_observations.md)
+  and
+  [`normalise_weights()`](https://epiforecasts.io/socialmixr/reference/normalise_weights.md)
+  were extracted so
+  [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
+  can share them
+  ([\#131](https://github.com/epiforecasts/socialmixr/issues/131)).
+
+- The vignette and README are rewritten around the pipeline
+  ([\#288](https://github.com/epiforecasts/socialmixr/issues/288)).
+
+- Enabled `cyclocomp_linter`, `line_length_linter`, and
+  `object_usage_linter`. Disabled `indentation_linter` (air handles
+  indentation). Reduced cyclomatic complexity of
+  [`check.contact_survey()`](https://epiforecasts.io/socialmixr/reference/check.md),
+  `[.contact_survey()`,
+  [`find_unique_key()`](https://epiforecasts.io/socialmixr/reference/find_unique_key.md),
+  and `try_merge_additional_files()` by extracting helper functions
+  ([\#289](https://github.com/epiforecasts/socialmixr/issues/289)).
 
 ## socialmixr 0.5.1
 

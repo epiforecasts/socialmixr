@@ -165,7 +165,7 @@ get_citation(polymod)
 #> Mossong J, Hens N, Jit M, Beutels P, Auranen K, Mikolajczyk R, Massari
 #> M, Salmaso S, Tomba GS, Wallinga J, Heijne J, Sadkowska-Todys M,
 #> Rosinska M, Edmunds WJ (2017). "POLYMOD social contact data."
-#> doi:10.5281/zenodo.1157934 <https://doi.org/10.5281/zenodo.1157934>,
+#> doi:10.5281/zenodo.1157934 <https://doi.org/10.5281/zenodo.1157934>.
 #> Version 1.1.
 ```
 
@@ -204,10 +204,10 @@ mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
 #>           contact.age.group
 #> age.group       [0,1)     [1,5)    [5,15) [15,Inf)
-#>   [0,1)    1.54424242 1.5309091  2.836970 13.74182
-#>   [1,5)    0.30317207 4.6877702  2.564121 10.99372
-#>   [5,15)   0.07182669 1.0484153 15.536686 12.13529
-#>   [15,Inf) 0.05961406 0.6973398  2.576165 18.93654
+#>   [0,1)    0.29811966 1.8413675  2.519658 10.67547
+#>   [1,5)    0.19834154 4.2123592  3.341740 10.10003
+#>   [5,15)   0.04590587 0.9077375 16.780686 12.80115
+#>   [15,Inf) 0.06085092 0.7662912  2.859090 18.85493
 ```
 
 ## Demography
