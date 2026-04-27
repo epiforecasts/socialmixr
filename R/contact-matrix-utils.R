@@ -564,18 +564,6 @@ survey_pop_from_countries <- function(
       countries = countries,
       participants = participants
     )
-    lifecycle::deprecate_warn(
-      when = "0.6.0",
-      what = "contact_matrix(survey_pop = 'must be supplied')",
-      details = paste(
-        "Population data is currently looked up via the soft-deprecated",
-        "wpp_age() function. Pass survey_pop explicitly (e.g. from",
-        "survey_country_population() or the wpp2024 package) to silence this",
-        "warning. wpp2017 will move from Imports to Suggests in a future",
-        "release."
-      ),
-      user_env = call
-    )
     ## get population data for countries from 'wpp' package
     country_pop <- data.table(wpp_age(survey_countries))
 
