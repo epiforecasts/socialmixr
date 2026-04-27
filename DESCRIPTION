@@ -35,6 +35,7 @@ Imports:
     memoise,
     purrr,
     oai,
+    wpp2017,
     xml2,
     cli,
     rlang,
@@ -49,8 +50,7 @@ Suggests:
     rmarkdown,
     roxyglobals (>= 1.0.0),
     testthat,
-    withr,
-    wpp2017
+    withr
 VignetteBuilder:
     knitr
 Encoding: UTF-8

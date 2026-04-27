@@ -194,9 +194,8 @@
 
 # warning is thrown if missing data exist
 
-    `wpp_age()` was deprecated in socialmixr 0.6.0.
-    Pass population data directly via the {.arg survey_pop} argument instead.
-    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
+    The `survey_pop` argument of `contact_matrix()` must be supplied as of socialmixr 0.6.0.
+    i Population data is currently looked up via the soft-deprecated wpp_age() function. Pass survey_pop explicitly (e.g. from survey_country_population() or the wpp2024 package) to silence this warning. wpp2017 will move from Imports to Suggests in a future release.
 
 # error is thrown if an unknown argument is passed
 
@@ -225,9 +224,8 @@
 
 # warning if population needed but no 'year' column
 
-    `wpp_age()` was deprecated in socialmixr 0.6.0.
-    Pass population data directly via the {.arg survey_pop} argument instead.
-    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
+    The `survey_pop` argument of `contact_matrix()` must be supplied as of socialmixr 0.6.0.
+    i Population data is currently looked up via the soft-deprecated wpp_age() function. Pass survey_pop explicitly (e.g. from survey_country_population() or the wpp2024 package) to silence this warning. wpp2017 will move from Imports to Suggests in a future release.
 
 # warning if day of week weigh requested but not present
 
@@ -239,6 +237,9 @@
     Code
       contact_matrix(survey = polymod5, symmetric = TRUE)
     Condition
+      Warning:
+      The `survey_pop` argument of `contact_matrix()` must be supplied as of socialmixr 0.6.0.
+      i Population data is currently looked up via the soft-deprecated wpp_age() function. Pass survey_pop explicitly (e.g. from survey_country_population() or the wpp2024 package) to silence this warning. wpp2017 will move from Imports to Suggests in a future release.
       Warning:
       `wpp_age()` was deprecated in socialmixr 0.6.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
@@ -264,27 +265,23 @@
 
 # good suggestions are made
 
-    `wpp_age()` was deprecated in socialmixr 0.6.0.
-    Pass population data directly via the {.arg survey_pop} argument instead.
-    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
+    The `survey_pop` argument of `contact_matrix()` must be supplied as of socialmixr 0.6.0.
+    i Population data is currently looked up via the soft-deprecated wpp_age() function. Pass survey_pop explicitly (e.g. from survey_country_population() or the wpp2024 package) to silence this warning. wpp2017 will move from Imports to Suggests in a future release.
 
 ---
 
-    `wpp_age()` was deprecated in socialmixr 0.6.0.
-    Pass population data directly via the {.arg survey_pop} argument instead.
-    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
+    The `survey_pop` argument of `contact_matrix()` must be supplied as of socialmixr 0.6.0.
+    i Population data is currently looked up via the soft-deprecated wpp_age() function. Pass survey_pop explicitly (e.g. from survey_country_population() or the wpp2024 package) to silence this warning. wpp2017 will move from Imports to Suggests in a future release.
 
 ---
 
-    `wpp_age()` was deprecated in socialmixr 0.6.0.
-    Pass population data directly via the {.arg survey_pop} argument instead.
-    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
+    The `survey_pop` argument of `contact_matrix()` must be supplied as of socialmixr 0.6.0.
+    i Population data is currently looked up via the soft-deprecated wpp_age() function. Pass survey_pop explicitly (e.g. from survey_country_population() or the wpp2024 package) to silence this warning. wpp2017 will move from Imports to Suggests in a future release.
 
 # nonsensical operations are warned about
 
-    `wpp_age()` was deprecated in socialmixr 0.6.0.
-    Pass population data directly via the {.arg survey_pop} argument instead.
-    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
+    The `survey_pop` argument of `contact_matrix()` must be supplied as of socialmixr 0.6.0.
+    i Population data is currently looked up via the soft-deprecated wpp_age() function. Pass survey_pop explicitly (e.g. from survey_country_population() or the wpp2024 package) to silence this warning. wpp2017 will move from Imports to Suggests in a future release.
 
 ---
 
@@ -292,6 +289,9 @@
       contact_matrix(survey = polymod, counts = TRUE, symmetric = TRUE, age_limits = c(
         0, 5))
     Condition
+      Warning:
+      The `survey_pop` argument of `contact_matrix()` must be supplied as of socialmixr 0.6.0.
+      i Population data is currently looked up via the soft-deprecated wpp_age() function. Pass survey_pop explicitly (e.g. from survey_country_population() or the wpp2024 package) to silence this warning. wpp2017 will move from Imports to Suggests in a future release.
       Warning:
       `wpp_age()` was deprecated in socialmixr 0.6.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
@@ -324,9 +324,8 @@
 
 ---
 
-    `wpp_age()` was deprecated in socialmixr 0.6.0.
-    Pass population data directly via the {.arg survey_pop} argument instead.
-    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
+    The `survey_pop` argument of `contact_matrix()` must be supplied as of socialmixr 0.6.0.
+    i Population data is currently looked up via the soft-deprecated wpp_age() function. Pass survey_pop explicitly (e.g. from survey_country_population() or the wpp2024 package) to silence this warning. wpp2017 will move from Imports to Suggests in a future release.
 
 # warning if survey is assumed to be representative
 
@@ -340,6 +339,9 @@
       survey_pop = "dummy")
     Condition
       Warning:
+      The `survey_pop` argument of `contact_matrix()` must be supplied as of socialmixr 0.6.0.
+      i Population data is currently looked up via the soft-deprecated wpp_age() function. Pass survey_pop explicitly (e.g. from survey_country_population() or the wpp2024 package) to silence this warning. wpp2017 will move from Imports to Suggests in a future release.
+      Warning:
       `wpp_age()` was deprecated in socialmixr 0.6.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
       i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
@@ -349,7 +351,6 @@
 
 # symmetric matrices with large norm weights warn
 
-    `wpp_age()` was deprecated in socialmixr 0.6.0.
-    Pass population data directly via the {.arg survey_pop} argument instead.
-    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
+    The `survey_pop` argument of `contact_matrix()` must be supplied as of socialmixr 0.6.0.
+    i Population data is currently looked up via the soft-deprecated wpp_age() function. Pass survey_pop explicitly (e.g. from survey_country_population() or the wpp2024 package) to silence this warning. wpp2017 will move from Imports to Suggests in a future release.
 

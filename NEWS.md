@@ -79,8 +79,10 @@ class. The vignette and README are rewritten around the pipeline (#288).
 * `wpp_age()` and `wpp_countries()` are now soft-deprecated. Pass population
   data directly via the `survey_pop` argument instead. The underlying
   `wpp2017` data is also outdated; the `wpp2024` package from GitHub provides
-  more recent data. The `wpp2017` package is now a suggested dependency
-  rather than a required import (#258).
+  more recent data (#258). `contact_matrix(countries = ...)` now warns when
+  it falls back on `wpp_age()` to look up population data — pass `survey_pop`
+  directly to silence the warning. `wpp2017` will move from `Imports` to
+  `Suggests` in a future release.
 
 * `get_survey()`, `download_survey()`, `list_surveys()`, `get_citation()`, and
   `survey_countries()` now warn unconditionally when called. These functions
