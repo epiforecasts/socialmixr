@@ -23,9 +23,7 @@
 #' @param years years, will return all if not given
 #' @autoglobal
 #' @examples
-#' if (requireNamespace("wpp2017", quietly = TRUE)) {
-#'   wpp_age("Italy", c(1990, 2000))
-#' }
+#' wpp_age("Italy", c(1990, 2000))
 #'
 #' # For more recent data, use wpp2024 from GitHub:
 #' # remotes::install_github("PPgp/wpp2024")
