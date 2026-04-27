@@ -1,33 +1,23 @@
-# socialmixr (development version)
+# socialmixr 0.6.0
 
-* New `contact_age_distribution()` function extracts the empirical age
-  distribution of contacts from a survey. This can be passed to
-  `assign_age_groups(estimated_contact_age = ...)` to impute ages from ranges
-  using the reference distribution rather than uniform sampling. This is useful
-  for surveys where many contacts have broad age bands and uniform sampling
-  would flatten age-assortativity.
+This release adds a pipeline of composable functions for building contact
+matrices (`[`, `assign_age_groups()`, `weigh()`, `compute_matrix()`,
+`symmetrise()`, `split_matrix()`, `per_capita()`) and a `contact_matrix` S3
+class. The vignette and README are rewritten around the pipeline (#288).
 
-* The introduction vignette and README now use the pipeline
-  (`[`, `assign_age_groups()`, `weigh()`, `compute_matrix()`, `symmetrise()`,
-  `split_matrix()`, `per_capita()`) throughout (#288).
+## Breaking changes
 
-* Pipeline functions (`compute_matrix()`, `symmetrise()`, `split_matrix()`,
-  `per_capita()`) now return a `contact_matrix` S3 class with `print()`,
-  `plot()`, and `as.matrix()` methods. The class inherits from `list`, so
-  existing code using `$matrix` or `$participants` continues to work.
+* Minimum R version bumped to 4.1.0 (from 3.5.0). Examples in the pipeline
+  functions use the native `|>` pipe, introduced in 4.1.0.
 
-* **Breaking change**: Terminal age group labels now use `[N,Inf)` notation
-  instead of `N+` when bracket notation is used (e.g. `[0,5)`, `[5,15)`,
-  `[15,Inf)`). This affects matrix dimnames and the `age.group` column in
-  `$participants`. Code that matches on strings like `"15+"` will need updating
-  to `"[15,Inf)"`. This aligns with the contactmatrix package conventions and
-  gives consistent, parseable interval notation throughout. Dash notation
-  (e.g. `"15+"`) is unchanged.
+* Terminal age group labels now use `[N,Inf)` notation instead of `N+` when
+  bracket notation is used (e.g. `[0,5)`, `[5,15)`, `[15,Inf)`). This matches
+  the contactmatrix package and gives parseable interval notation across all
+  age groups. It affects matrix dimnames and the `age.group` column in
+  `$participants`; code that matches on strings like `"15+"` will need
+  updating to `"[15,Inf)"`. Dash notation (e.g. `"15+"`) is unchanged.
 
-* Enabled `cyclocomp_linter`, `line_length_linter`, and `object_usage_linter`.
-  Disabled `indentation_linter` (air handles indentation). Reduced cyclomatic
-  complexity of `check.contact_survey()`, `[.contact_survey()`, and
-  `find_unique_key()` by extracting helper functions.
+## New features
 
 * New `[.contact_survey` method allows filtering survey objects with
   expressions, e.g. `polymod[country == "United Kingdom"]` (#161).
@@ -37,8 +27,8 @@
   population post-stratification (#161).
 
 * New `compute_matrix()` function computes a contact matrix from a prepared
-  survey, completing the pipeline workflow alongside `assign_age_groups()` and
-  `weigh()` (#161).
+  survey. It is the final step of the pipeline after `assign_age_groups()`
+  and (optionally) `weigh()` (#161).
 
 * New post-processing functions `symmetrise()`, `split_matrix()`, and
   `per_capita()` operate on `compute_matrix()` output. `symmetrise()` enforces
@@ -57,41 +47,64 @@
       symmetrise(survey_pop = uk_pop)
     ```
 
-* `contact_matrix()` now uses `assign_age_groups()` internally, reducing code
-  duplication and demonstrating the modular workflow (#227).
+* Pipeline functions (`compute_matrix()`, `symmetrise()`, `split_matrix()`,
+  `per_capita()`) return a `contact_matrix` S3 class with `print()`, `plot()`,
+  and `as.matrix()` methods. The class inherits from `list`, so existing code
+  using `$matrix` or `$participants` continues to work.
 
-* `compute_matrix()` gains a `weight_threshold` parameter to cap extreme weights
-  before normalisation, matching the `contact_matrix()` option (#131).
-
-* `contact_matrix()` now uses `weigh()` internally for all weighting
-  (day-of-week, age, and user-defined), reducing code duplication. Internal
-  helpers `warn_multiple_observations()` and `normalise_weights()` are
-  extracted for sharing with `compute_matrix()` (#131).
-
-* Fixed bug where participants with NA `dayofweek` were incorrectly weighted
-  as weekend days. They now receive an average weight across all days (#131).
+* New `contact_age_distribution()` function extracts the empirical age
+  distribution of contacts from a survey. Pass it to
+  `assign_age_groups(estimated_contact_age = ...)` to impute ages from
+  ranges by sampling from the reference distribution instead of uniformly.
+  This matters for surveys where many contacts have broad age bands, since
+  uniform sampling would flatten age-assortativity.
 
 * New `agegroups_to_limits()` function converts age group labels back to lower
   age limits, the inverse of `limits_to_agegroups()`.
 
-* `wpp_age()` and `wpp_countries()` are now soft-deprecated. Pass population
-  data directly via the `survey_pop` argument instead. The underlying `wpp2017`
-  data is also outdated; the `wpp2024` package from GitHub provides more recent
-  data. The `wpp2017` package is now a suggested dependency rather than a
-  required import (#258).
+* `compute_matrix()` gains a `weight_threshold` parameter to cap extreme
+  weights before normalisation, matching the `contact_matrix()` option (#131).
 
-* Reduced cyclomatic complexity of `try_merge_additional_files()` by extracting
-  helper functions (#289).
+## Bug fixes
+
+* Fixed bug where participants with NA `dayofweek` were incorrectly weighted
+  as weekend days. They now receive an average weight across all days (#131).
 
 * Fixed unmatched-merge warning count when merging files with duplicate keys;
-  previously, the count could be wrong (or negative) due to counting join pairs
-  rather than distinct matched rows (#289).
+  previously, the count could be wrong (or negative) due to counting join
+  pairs rather than distinct matched rows (#289).
+
+## Deprecations
+
+* `wpp_age()` and `wpp_countries()` are now soft-deprecated. Pass population
+  data directly via the `survey_pop` argument instead. The underlying
+  `wpp2017` data is also outdated; the `wpp2024` package from GitHub provides
+  more recent data. The `wpp2017` package is now a suggested dependency
+  rather than a required import (#258).
 
 * `get_survey()`, `download_survey()`, `list_surveys()`, `get_citation()`, and
   `survey_countries()` now warn unconditionally when called. These functions
   were soft-deprecated in 0.5.0 and users should switch to the
   [contactsurveys](https://cran.r-project.org/package=contactsurveys) package
   (#269).
+
+## Internal
+
+* `contact_matrix()` now uses `assign_age_groups()` internally, removing
+  duplicated code (#227).
+
+* `contact_matrix()` now uses `weigh()` internally for all weighting
+  (day-of-week, age, and user-defined). The helpers
+  `warn_multiple_observations()` and `normalise_weights()` were extracted
+  so `compute_matrix()` can share them (#131).
+
+* The vignette and README are rewritten around the pipeline (#288).
+
+* Enabled `cyclocomp_linter`, `line_length_linter`, and `object_usage_linter`.
+  Disabled `indentation_linter` (air handles indentation). Reduced cyclomatic
+  complexity of `check.contact_survey()`, `[.contact_survey()`,
+  `find_unique_key()`, and `try_merge_additional_files()` by extracting
+  helper functions (#289).
 
 # socialmixr 0.5.1
 
