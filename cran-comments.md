@@ -1,15 +1,10 @@
 # Resubmission
 
 This is a resubmission of `socialmixr` 0.6.0. The previous submission
-failed the auto-check on `finalsize` and `multigroup.vaccine` because
-their tests and vignettes call `socialmixr::contact_matrix(countries = ...)`
-without supplying `survey_pop`, which fell through to `wpp_age()` after
-`wpp2017` had been moved from Imports to Suggests.
-
-In this submission `wpp2017` has been kept in Imports and a deprecation
-warning has been added to the implicit lookup path; the move to Suggests
-is deferred to a future release once downstream packages have had time
-to adjust.
+caused failures in two reverse dependencies; this version keeps the
+relevant dependency in place and instead deprecates the affected code
+path so downstream packages can migrate before it is removed. All four
+reverse dependencies now check cleanly (see below).
 
 # Test environments
 
