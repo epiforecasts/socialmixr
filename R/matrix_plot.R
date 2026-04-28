@@ -127,8 +127,10 @@ matrix_plot <- function(
   )
   legend_plot_region[2] <- legend_plot_region[1] + dp
 
-  # store old graphical parameters, and initiate the ones for the main plot
+  # store old graphical parameters, and ensure they are restored on exit
+  # (including on error) so the function leaves no side effects on par().
   old.par <- par(no.readonly = TRUE)
+  on.exit(par(old.par), add = TRUE)
   par(plt = main_plot_region)
 
   # add image plot
@@ -192,7 +194,4 @@ matrix_plot <- function(
     breaks = breaks
   )
   axis(side = 4, mgp = c(3, 1, 0), las = 2)
-
-  # restore original graphical parameters
-  par(plt = old.par$plt, err = old.par$err)
 }

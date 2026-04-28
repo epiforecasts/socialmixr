@@ -74,6 +74,11 @@ class. The vignette and README are rewritten around the pipeline (#288).
   previously, the count could be wrong (or negative) due to counting join
   pairs rather than distinct matched rows (#289).
 
+* `matrix_plot()` now restores all graphical parameters (`par()`) on exit,
+  including when the function errors mid-plot. Previously the legend
+  parameters (`new`, `pty`) and the error handler (`err`) were left
+  modified in the user's session (#307).
+
 ## Deprecations
 
 * `wpp_age()` and `wpp_countries()` are now soft-deprecated. Pass population
