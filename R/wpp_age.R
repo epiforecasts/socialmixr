@@ -18,13 +18,12 @@
 #' @return data frame of age-specific population data
 #' @importFrom data.table dcast melt fread
 #' @importFrom countrycode countrycode
+#' @import wpp2017
 #' @param countries countries, will return all if not given
 #' @param years years, will return all if not given
 #' @autoglobal
 #' @examples
-#' if (requireNamespace("wpp2017", quietly = TRUE)) {
-#'   wpp_age("Italy", c(1990, 2000))
-#' }
+#' wpp_age("Italy", c(1990, 2000))
 #'
 #' # For more recent data, use wpp2024 from GitHub:
 #' # remotes::install_github("PPgp/wpp2024")
@@ -45,17 +44,6 @@ wpp_age <- function(countries, years) {
            use {.pkg wpp2024} from GitHub for more recent data."
     )
   )
-
-  if (!requireNamespace("wpp2017", quietly = TRUE)) {
-    cli::cli_abort(
-      c(
-        "The {.pkg wpp2017} package is required but not installed.",
-        i = "Install it with: {.code install.packages(\"wpp2017\")}, \\
-             or use more recent data from {.pkg wpp2024} (GitHub only) \\
-             and pass it directly via the {.arg survey_pop} argument."
-      )
-    )
-  }
 
   popM <- fread(system.file("data", "popM.txt", package = "wpp2017"))
   popF <- fread(system.file("data", "popF.txt", package = "wpp2017"))

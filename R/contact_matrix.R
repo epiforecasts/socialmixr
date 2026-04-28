@@ -347,6 +347,31 @@ contact_matrix <- function(
   )
 
   if (need_survey_pop) {
+    ## warn if population data will be looked up automatically -----------------
+    has_country_info <- !is.null(countries) ||
+      "country" %in% colnames(survey$participants)
+    if ((is.null(survey_pop) || is.character(survey_pop)) && has_country_info) {
+      lifecycle::deprecate_warn(
+        when = "0.6.0",
+        what = I("Automatic country population lookup in `contact_matrix()`"),
+        details = c(
+          paste(
+            "When `countries` is given (or a `country` column is present)",
+            "without `survey_pop`, contact_matrix() currently calls the",
+            "soft-deprecated `wpp_age()` to look up population data. This",
+            "automatic lookup will be removed in a future release: callers",
+            "will then have to supply `survey_pop` whenever `symmetric`,",
+            "`split`, `per_capita`, `weigh_age`, or `return_demography` is",
+            "TRUE."
+          ),
+          i = paste(
+            "Pass `survey_pop` explicitly to silence this warning, e.g.",
+            "`survey_pop = survey_country_population(survey, countries)` or a",
+            "data frame from the wpp2024 package."
+          )
+        )
+      )
+    }
     ## check if survey population is not given or is a country vector
     survey_pop_info <- survey_pop_year(
       survey_pop = survey_pop,
