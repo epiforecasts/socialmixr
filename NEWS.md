@@ -74,6 +74,11 @@ class. The vignette and README are rewritten around the pipeline (#288).
   previously, the count could be wrong (or negative) due to counting join
   pairs rather than distinct matched rows (#289).
 
+* Fixed `estimated_*_age = "sample"` imputation truncating away the upper
+  bound of a participant or contact's reported age range. Previously
+  `runif()` excluded the upper bound and the subsequent `as.integer()`
+  truncation meant a range of, say, 0-17 could never impute to 17 (#303).
+
 ## Deprecations
 
 * `wpp_age()` and `wpp_countries()` are now soft-deprecated. Pass population

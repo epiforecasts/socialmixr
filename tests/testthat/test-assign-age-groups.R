@@ -158,3 +158,26 @@ test_that("assign_age_groups() imputes ages from ranges", {
     sum(is.na(polymod_no_impute$participants$part_age))
   )
 })
+
+test_that("'sample' age imputation can hit the upper bound (#303)", {
+  # Regression test: previously runif(n, min, max) followed by as.integer()
+  # truncated to [min, max - 1], so the maximum could never be drawn.
+  fake <- data.table::data.table(
+    part_id = seq_len(2000),
+    part_age = NA_integer_,
+    part_age_exact = NA_integer_,
+    part_age_est_min = 17L,
+    part_age_est_max = 18L
+  )
+
+  set.seed(1)
+  imputed <- socialmixr:::impute_ages(
+    fake,
+    prefix = "part_age",
+    estimate = "sample"
+  )
+
+  expect_true(18L %in% imputed$part_age)
+  expect_true(17L %in% imputed$part_age)
+  expect_true(all(imputed$part_age %in% c(17L, 18L)))
+})
