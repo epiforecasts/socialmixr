@@ -122,6 +122,14 @@ around the pipeline
   counting join pairs rather than distinct matched rows
   ([\#289](https://github.com/epiforecasts/socialmixr/issues/289)).
 
+- [`matrix_plot()`](https://epiforecasts.io/socialmixr/reference/matrix_plot.md)
+  now restores all graphical parameters
+  ([`par()`](https://rdrr.io/r/graphics/par.html)) on exit, including
+  when the function errors mid-plot. Previously the legend parameters
+  (`new`, `pty`) and the error handler (`err`) were left modified in the
+  user’s session
+  ([\#307](https://github.com/epiforecasts/socialmixr/issues/307)).
+
 ### Deprecations
 
 - [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md)
