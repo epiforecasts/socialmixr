@@ -356,9 +356,9 @@ contact_matrix <- function(
         details = paste(
           "Pass `survey_pop` explicitly when `symmetric`, `split`,",
           "`per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g.",
-          "`survey_pop = survey_country_population(survey, countries)` or a",
-          "data frame from the wpp2024 package. The implicit lookup will",
-          "error in a future release."
+          "as a data frame with columns `lower.age.limit` and `population`",
+          "constructed from the wpp2024 package or another source. The",
+          "implicit lookup will error in a future release."
         )
       )
     }

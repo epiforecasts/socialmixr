@@ -4,6 +4,10 @@
       as.data.frame(survey_country_population(polymod))
     Condition
       Warning:
+      `survey_country_population()` was deprecated in socialmixr 0.7.0.
+      Pass a data frame with columns {.code lower.age.limit} and {.code population} to {.fn contact_matrix} via {.arg survey_pop} instead.
+      i The underlying {.pkg wpp2017} data is outdated; consider the {.pkg wpp2024} package from GitHub for more recent data.
+      Warning:
       `wpp_age()` was deprecated in socialmixr 0.7.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
       i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
@@ -36,6 +40,10 @@
     Code
       as.data.frame(survey_country_population(polymod, countries = "Belgium"))
     Condition
+      Warning:
+      `survey_country_population()` was deprecated in socialmixr 0.7.0.
+      Pass a data frame with columns {.code lower.age.limit} and {.code population} to {.fn contact_matrix} via {.arg survey_pop} instead.
+      i The underlying {.pkg wpp2017} data is outdated; consider the {.pkg wpp2024} package from GitHub for more recent data.
       Warning:
       `wpp_age()` was deprecated in socialmixr 0.7.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
@@ -71,6 +79,10 @@
         "Italy")))
     Condition
       Warning:
+      `survey_country_population()` was deprecated in socialmixr 0.7.0.
+      Pass a data frame with columns {.code lower.age.limit} and {.code population} to {.fn contact_matrix} via {.arg survey_pop} instead.
+      i The underlying {.pkg wpp2017} data is outdated; consider the {.pkg wpp2024} package from GitHub for more recent data.
+      Warning:
       `wpp_age()` was deprecated in socialmixr 0.7.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
       i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
@@ -104,6 +116,10 @@
       as.data.frame(survey_country_population(polymod, countries = "Australia"))
     Condition
       Warning:
+      `survey_country_population()` was deprecated in socialmixr 0.7.0.
+      Pass a data frame with columns {.code lower.age.limit} and {.code population} to {.fn contact_matrix} via {.arg survey_pop} instead.
+      i The underlying {.pkg wpp2017} data is outdated; consider the {.pkg wpp2024} package from GitHub for more recent data.
+      Warning:
       `wpp_age()` was deprecated in socialmixr 0.7.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
       i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
@@ -136,6 +152,10 @@
     Code
       survey_country_population(polymod_copy)
     Condition
+      Warning:
+      `survey_country_population()` was deprecated in socialmixr 0.7.0.
+      Pass a data frame with columns {.code lower.age.limit} and {.code population} to {.fn contact_matrix} via {.arg survey_pop} instead.
+      i The underlying {.pkg wpp2017} data is outdated; consider the {.pkg wpp2024} package from GitHub for more recent data.
       Error in `survey_country_population()`:
       ! Country name must be provided in `survey` or `countries`
       i `survey`: `survey$participants$country` is: "NULL"
