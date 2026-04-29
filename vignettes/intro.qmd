@@ -82,10 +82,10 @@ This way, the `peru` data set can be loaded in the future without the need for a
 peru_survey <- readRDS("peru.rds")
 ```
 
-Some surveys may contain data from multiple countries. To check this, use the `survey_countries` function
+Some surveys may contain data from multiple countries. To check this, look at the `country` column of the participant data:
 
 ```{r}
-survey_countries(polymod)
+unique(polymod$participants$country)
 ```
 
 Use the subset method `[` to restrict to one or more countries:
@@ -97,10 +97,10 @@ polymod[country %in% c("United Kingdom", "Germany")]
 If this is not done, the different sub-surveys contained in a dataset are combined as a single sample (without country-specific weighting).
 
 
-A reference for any given survey can be obtained using `get_citation()`, e.g.
+A reference for any given survey is in its `reference` field, e.g.
 
 ```{r}
-get_citation(polymod)
+polymod$reference
 ```
 
 # Bootstrapping
