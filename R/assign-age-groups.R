@@ -59,11 +59,10 @@ assign_age_groups <- function(
   missing_contact_age <- rlang::arg_match(missing_contact_age)
 
   if (missing_contact_age == "sample") {
-    lifecycle::deprecate_warn(
-      "0.5.0",
+    lifecycle::deprecate_stop(
+      "0.7.0",
       "assign_age_groups(missing_contact_age = 'sample')",
       details = paste(
-        "Sampling missing contact ages will be removed in a future version.",
         "Use 'remove' to exclude contacts with missing ages, 'keep' to retain",
         "them as a separate age group, or 'ignore' to drop only those contacts."
       )

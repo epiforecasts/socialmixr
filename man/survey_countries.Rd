@@ -25,8 +25,10 @@ list of countries
 exploring the country column yourself.
 }
 \examples{
+\dontrun{
 data(polymod)
 survey_countries(polymod)
+}
 ## --> we now recommend
 \dontrun{
 doi_peru <- "10.5281/zenodo.1095664" # nolint

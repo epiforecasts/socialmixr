@@ -288,11 +288,10 @@ contact_matrix <- function(
   missing_contact_age <- match.arg(missing_contact_age)
 
   if (missing_contact_age == "sample") {
-    lifecycle::deprecate_warn(
-      "0.5.0",
+    lifecycle::deprecate_stop(
+      "0.7.0",
       "contact_matrix(missing_contact_age = 'sample')",
       details = paste(
-        "Sampling missing contact ages will be removed in a future version.",
         "Use 'remove' to exclude contacts with missing ages, 'keep' to retain",
         "them as a separate age group, or 'ignore' to drop only those contacts."
       )
@@ -354,21 +353,12 @@ contact_matrix <- function(
       lifecycle::deprecate_warn(
         when = "0.6.0",
         what = I("Automatic country population lookup in `contact_matrix()`"),
-        details = c(
-          paste(
-            "When `countries` is given (or a `country` column is present)",
-            "without `survey_pop`, contact_matrix() currently calls the",
-            "soft-deprecated `wpp_age()` to look up population data. This",
-            "automatic lookup will be removed in a future release: callers",
-            "will then have to supply `survey_pop` whenever `symmetric`,",
-            "`split`, `per_capita`, `weigh_age`, or `return_demography` is",
-            "TRUE."
-          ),
-          i = paste(
-            "Pass `survey_pop` explicitly to silence this warning, e.g.",
-            "`survey_pop = survey_country_population(survey, countries)` or a",
-            "data frame from the wpp2024 package."
-          )
+        details = paste(
+          "Pass `survey_pop` explicitly when `symmetric`, `split`,",
+          "`per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g.",
+          "`survey_pop = survey_country_population(survey, countries)` or a",
+          "data frame from the wpp2024 package. The implicit lookup will",
+          "error in a future release."
         )
       )
     }

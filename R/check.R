@@ -68,7 +68,7 @@ check <- function(x, ...) UseMethod("check")
 #' @return invisibly returns a character vector of the relevant columns
 #' @examples
 #' data(polymod)
-#' check(polymod)
+#' try(check(polymod))
 #' @export
 check.contact_survey <- function(
   x,
@@ -79,8 +79,8 @@ check.contact_survey <- function(
   contact.age.column = "cnt_age",
   ...
 ) {
-  lifecycle::deprecate_warn(
-    "1.0.0",
+  lifecycle::deprecate_stop(
+    "0.7.0",
     "check()",
     details = paste(
       "Use `as_contact_survey()` instead to construct a `<contact_survey>`",

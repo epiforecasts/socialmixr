@@ -25,11 +25,8 @@
 # explicitly specified missing columns still error
 
     Code
-      as_contact_survey(no_country_survey, country.column = "country")
+      as_contact_survey(no_country_survey, country_column = "country")
     Condition
-      Warning:
-      The `country.column` argument of `as_contact_survey()` is deprecated as of socialmixr 0.5.0.
-      i Please use the `country_column` argument instead.
       Error in `map()`:
       i In index: 1.
       Caused by error in `.f()`:
@@ -38,11 +35,8 @@
 ---
 
     Code
-      as_contact_survey(no_year_survey, year.column = "year")
+      as_contact_survey(no_year_survey, year_column = "year")
     Condition
-      Warning:
-      The `year.column` argument of `as_contact_survey()` is deprecated as of socialmixr 0.5.0.
-      i Please use the `year_column` argument instead.
       Error in `map()`:
       i In index: 2.
       Caused by error in `.f()`:

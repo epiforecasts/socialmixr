@@ -4,7 +4,7 @@
 \alias{deprecate_arg}
 \title{Handle deprecated argument}
 \usage{
-deprecate_arg(old_arg, new_arg, old_name, new_name, fn_name, version = "0.5.0")
+deprecate_arg(old_arg, new_arg, old_name, new_name, fn_name, version = "0.7.0")
 }
 \arguments{
 \item{old_arg}{the deprecated argument value}

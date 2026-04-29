@@ -1,12 +1,11 @@
 test_that("list of countries is not empty", {
-  expect_gt(length(wpp_countries()), 0)
-  withr::local_options(lifecycle_verbosity = "quiet")
-  expect_gt(length(survey_countries(polymod)), 0)
+  expect_gt(length(suppressWarnings(wpp_countries())), 0)
 })
 
-test_that("survey_countries() sends deprecation warning", {
-  lifecycle::expect_deprecated(
-    survey_countries(polymod)
+test_that("survey_countries() is defunct", {
+  expect_error(
+    survey_countries(polymod),
+    class = "lifecycle_error_deprecated"
   )
 })
 

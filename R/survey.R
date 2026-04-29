@@ -9,17 +9,9 @@
 #' @author Sebastian Funk
 #' @export
 survey <- function(participants, contacts, reference = NULL) {
-  lifecycle::deprecate_warn(
-    "1.0.0",
+  lifecycle::deprecate_stop(
+    "0.7.0",
     "survey()",
     details = "Use `as_contact_survey()` instead."
-  )
-  structure(
-    list(
-      participants = data.table(participants),
-      contacts = data.table(contacts),
-      reference = reference
-    ),
-    class = "contact_survey"
   )
 }

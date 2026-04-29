@@ -66,11 +66,11 @@ test_that("explicitly specified missing columns still error", {
   expect_snapshot(
     error = TRUE,
     cran = FALSE,
-    as_contact_survey(no_country_survey, country.column = "country")
+    as_contact_survey(no_country_survey, country_column = "country")
   )
   expect_snapshot(
     error = TRUE,
     cran = FALSE,
-    as_contact_survey(no_year_survey, year.column = "year")
+    as_contact_survey(no_year_survey, year_column = "year")
   )
 })
