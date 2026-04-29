@@ -30,7 +30,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/epiforecasts/socialmixr/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/epiforecasts/socialmixr/blob/v0.6.0/DESCRIPTION)
 
 Funk S, Willem L, Gruson H, Tierney N (2026). *socialmixr: Social Mixing
 Matrices for Infectious Disease Modelling*. R package version 0.6.0,
