@@ -1,3 +1,5 @@
+# socialmixr (development version)
+
 # socialmixr 0.6.0
 
 This release adds a pipeline of composable functions for building contact
