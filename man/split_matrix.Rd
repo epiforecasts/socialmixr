@@ -28,7 +28,10 @@ age-specific contact rates (\code{contacts}), and an assortativity matrix
 }
 \examples{
 data(polymod)
-pop <- wpp_age("United Kingdom", 2005)
+pop <- data.frame(
+  lower.age.limit = c(0, 5, 15),
+  population = c(3500000, 6000000, 50000000)
+)
 polymod |>
   (\(s) s[country == "United Kingdom"])() |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>

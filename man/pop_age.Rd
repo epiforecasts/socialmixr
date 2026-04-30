@@ -44,12 +44,16 @@ are requested than available) and summing populations (if fewer
 are requested than available)
 }
 \examples{
-ages_it_2015 <- wpp_age("Italy", 2015)
+# 5-year age bands for a population of 60 million
+it_pop <- data.frame(
+  lower.age.limit = seq(0, 80, by = 5),
+  population = c(rep(2.5e6, 4), rep(3.5e6, 4), rep(5e6, 6), 5e6, 7e6, 4e6)
+)
 
 # Modify the age data.frame to get age groups of 10 years instead of 5
-pop_age(ages_it_2015, age_limits = seq(0, 100, by = 10))
+pop_age(it_pop, age_limits = seq(0, 100, by = 10))
 
 # The function will also automatically interpolate if necessary
-pop_age(ages_it_2015, age_limits = c(0, 18, 40, 65))
+pop_age(it_pop, age_limits = c(0, 18, 40, 65))
 
 }
