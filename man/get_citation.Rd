@@ -13,12 +13,9 @@ get_citation(x)
 citation as bibentry
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
 
-\code{get_citation()} has been deprecated in favour of
-\code{contactsurveys::get_citation()}.
-
-Gets a full citation for a \code{\link[=survey]{survey()}}.
+\code{get_citation()} is defunct. Use \code{contactsurveys::get_citation()} instead.
 }
 \examples{
 # we recommend using the contactsurveys package for get_citation()

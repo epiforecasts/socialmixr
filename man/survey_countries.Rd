@@ -17,12 +17,11 @@ survey_countries(survey, country.column = "country", ...)
 list of countries
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
 }
 \details{
-\code{survey_countries()} has been deprecated in favour of using
-\code{contactsurveys::download_survey()}, and \code{\link[=load_survey]{load_survey()}}, and then
-exploring the country column yourself.
+\code{survey_countries()} is defunct. Use \code{contactsurveys::download_survey()}
+and \code{\link[=load_survey]{load_survey()}} and then explore the country column yourself.
 }
 \examples{
 \dontrun{

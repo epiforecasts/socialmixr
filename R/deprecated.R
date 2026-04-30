@@ -7,10 +7,10 @@
 #'
 #' @description
 #'
-#' `r lifecycle::badge("deprecated")`
+#' `r lifecycle::badge("defunct")`
 #'
-#' `get_survey()` has been deprecated in favour of using
-#'   `contactsurveys::download_survey()` and then [load_survey()].
+#' `get_survey()` is defunct. Use `contactsurveys::download_survey()` and then
+#'   [load_survey()] instead.
 #'
 #' Downloads survey data, or extracts them from files, and returns a clean data
 #' set. If a survey URL is accessed multiple times, the data will be cached
@@ -83,10 +83,10 @@ get_survey <- function(survey, clear_cache = FALSE, ...) {
 #' Download a survey from its Zenodo repository
 #'
 #' @description
-#' `r lifecycle::badge("deprecated")`
+#' `r lifecycle::badge("defunct")`
 #'
-#' `download_survey()` has been deprecated in favour of
-#'   `contactsurveys::download_survey()`.
+#' `download_survey()` is defunct. Use `contactsurveys::download_survey()`
+#'   instead.
 #'
 #' `download_survey()` downloads survey data from Zenodo.
 #'
@@ -240,10 +240,9 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
 #' List all surveys available for download
 #'
 #' @description
-#' `r lifecycle::badge("deprecated")`
+#' `r lifecycle::badge("defunct")`
 #'
-#' `list_surveys()` has been deprecated in favour of
-#'   `contactsurveys::list_surveys()`.
+#' `list_surveys()` is defunct. Use `contactsurveys::list_surveys()` instead.
 #'
 #' @return character vector of surveys
 #' @inheritParams get_survey
@@ -326,11 +325,10 @@ list_surveys <- function(clear_cache = FALSE) {
 
 #' List all countries contained in a survey
 #'
-#' `r lifecycle::badge("deprecated")`
+#' `r lifecycle::badge("defunct")`
 #'
-#' `survey_countries()` has been deprecated in favour of using
-#'   `contactsurveys::download_survey()`, and [load_survey()], and then
-#'   exploring the country column yourself.
+#' `survey_countries()` is defunct. Use `contactsurveys::download_survey()`
+#'   and [load_survey()] and then explore the country column yourself.
 #'
 #' @param country.column column in the survey indicating the country
 #' @param ... further arguments for [get_survey()]
@@ -371,12 +369,9 @@ survey_countries <- function(survey, country.column = "country", ...) {
 #' @title Citation for a survey
 #'
 #' @description
-#' `r lifecycle::badge("deprecated")`
+#' `r lifecycle::badge("defunct")`
 #'
-#' `get_citation()` has been deprecated in favour of
-#'   `contactsurveys::get_citation()`.
-#'
-#' Gets a full citation for a [survey()].
+#' `get_citation()` is defunct. Use `contactsurveys::get_citation()` instead.
 #'
 #' @param x a character vector of surveys to cite
 #' @return citation as bibentry
