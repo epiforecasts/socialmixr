@@ -38,11 +38,11 @@ without age information are removed; if set to "keep", participants with
 missing age are kept and treated as a separate age group}
 
 \item{missing_contact_age}{if set to "remove" (default), participants that
-have contacts without age information are removed; if set to "sample",
-contacts without age information are sampled from all the contacts of
-participants of the same age group; if set to "keep", contacts with missing
-age are kept and treated as a separate age group; if set to "ignore",
-contact with missing age are ignored in the contact analysis}
+have contacts without age information are removed; if set to "keep",
+contacts with missing age are kept and treated as a separate age group;
+if set to "ignore", contacts with missing age are ignored in the contact
+analysis. The "sample" option is defunct (errors); pass an age
+distribution to \code{estimated_contact_age} to impute ranges instead.}
 }
 \value{
 The survey object with processed age data.
