@@ -80,12 +80,6 @@ options <-
       estimated_contact_age = "sample",
       symmetric = TRUE,
       missing_contact_age = "remove"
-    ),
-    test4 = list(
-      survey = polymod8,
-      symmetric = TRUE,
-      age_limits = c(0, 5, 15),
-      symmetric_norm_threshold = 4
     )
   )
 

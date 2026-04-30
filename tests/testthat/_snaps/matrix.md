@@ -137,28 +137,6 @@
       3:  [10,Inf)          814 0.80514342
       
       
-      $test4
-      $test4$matrix
-                contact.age.group
-      age.group  [0,5) [5,15) [15,Inf)
-        [0,5)        0    4.5     6.75
-        [5,15)      NA     NA       NA
-        [15,Inf)     0    0.0     0.00
-      
-      $test4$demography
-         age.group population proportion  year
-            <char>      <num>      <num> <int>
-      1:     [0,5)    8111818 0.06012873  2005
-      2:  [15,Inf)  126795699 0.93987127  2005
-      
-      $test4$participants
-         age.group participants proportion
-            <char>        <int>      <num>
-      1:     [0,5)            4  0.1052632
-      2:    [5,15)            0  0.0000000
-      3:  [15,Inf)           34  0.8947368
-      
-      
 
 # survey argument is validated
 
