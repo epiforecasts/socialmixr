@@ -1235,10 +1235,11 @@ test_that("deprecated dotted argument names are now defunct", {
     class = "lifecycle_error_deprecated"
   )
 
-  # pop_age()
-  ages_it <- suppressWarnings(wpp_age("Italy", 2015))
+  # pop_age() — the deprecate_stop fires before pop is consulted, so
+  # any data.frame with the right columns is fine here.
+  fake_pop <- data.frame(lower.age.limit = c(0, 5), population = c(1e6, 5e6))
   expect_error(
-    pop_age(ages_it, age.limits = c(0, 18, 65)),
+    pop_age(fake_pop, age.limits = c(0, 18, 65)),
     class = "lifecycle_error_deprecated"
   )
 

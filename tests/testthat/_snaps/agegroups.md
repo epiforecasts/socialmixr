@@ -11,9 +11,8 @@
       Error in `pop_age()`:
       ! Expecting `pop` to be a data.frame with columns `lower.age.limit` and `population`.
 
----
+# wpp_age warns when historical year is unavailable
 
-    `wpp_age()` was deprecated in socialmixr 0.6.0.
-    Pass population data directly via the {.arg survey_pop} argument instead.
-    i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
+    Don't have population data available for year: 2011
+    i Will return nearest year: 2010
 

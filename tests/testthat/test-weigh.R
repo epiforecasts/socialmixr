@@ -42,7 +42,8 @@ test_that("weigh() with dayofweek groups has positive weights", {
 })
 
 test_that("weigh() with population df matches weight_by_age()", {
-  uk_pop <- wpp_age("United Kingdom", 2005)
+  skip_if_not_installed("wpp2017")
+  uk_pop <- suppressWarnings(wpp_age("United Kingdom", 2005))
 
   result <- weigh(polymod_grouped, "age.group", target = uk_pop)
 
