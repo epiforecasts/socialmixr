@@ -117,13 +117,12 @@ appear in the contact matrix in a row labelled "NA".}
 
 \item{missing_contact_age}{if set to "remove" (default),
 participants that have contacts without age information are
-removed; if set to "sample", contacts without age information
-are sampled from all the contacts of participants of the same
-age group; if set to "keep", contacts with missing age are
+removed; if set to "keep", contacts with missing age are
 kept and will appear in the contact matrix in a column
 labelled "NA"; if set to "ignore", contacts without age
 information are removed from the analysis (but the
-participants that made them are kept).}
+participants that made them are kept). The "sample" option is
+defunct (errors).}
 
 \item{weights}{column name(s) of the participant data of the
 \code{\link[=survey]{survey()}} object with user-specified weights (default =
