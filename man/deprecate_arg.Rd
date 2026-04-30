@@ -4,7 +4,7 @@
 \alias{deprecate_arg}
 \title{Handle deprecated argument}
 \usage{
-deprecate_arg(old_arg, new_arg, old_name, new_name, fn_name, version = "0.7.0")
+deprecate_arg(old_arg, new_arg, old_name, new_name, fn_name, version = "0.5.0")
 }
 \arguments{
 \item{old_arg}{the deprecated argument value}
@@ -20,7 +20,8 @@ deprecate_arg(old_arg, new_arg, old_name, new_name, fn_name, version = "0.7.0")
 \item{version}{the version when deprecated}
 }
 \value{
-the value to use (new_arg if provided, otherwise old_arg)
+\code{new_arg}. Aborts via \code{\link[lifecycle:deprecate_soft]{lifecycle::deprecate_stop()}} if \code{old_arg}
+is supplied.
 }
 \description{
 Handle deprecated argument
