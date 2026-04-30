@@ -41,7 +41,7 @@
 #' @export
 get_survey <- function(survey, clear_cache = FALSE, ...) {
   lifecycle::deprecate_stop(
-    when = "0.7.0",
+    when = "0.5.0",
     what = "get_survey()",
     with = "contactsurveys::download_survey()",
     details = "We recommend using contactsurveys::download_survey() to \\
@@ -118,7 +118,7 @@ get_survey <- function(survey, clear_cache = FALSE, ...) {
 # nolint start: cyclocomp_linter.
 download_survey <- function(survey, dir = NULL, sleep = 1) {
   lifecycle::deprecate_stop(
-    when = "0.7.0",
+    when = "0.5.0",
     what = "download_survey()",
     with = "contactsurveys::download_survey()"
   )
@@ -255,7 +255,7 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
 #' @export
 list_surveys <- function(clear_cache = FALSE) {
   lifecycle::deprecate_stop(
-    when = "0.7.0",
+    when = "0.5.0",
     what = "list_surveys()",
     with = "contactsurveys::list_surveys()"
   )
@@ -354,7 +354,7 @@ list_surveys <- function(clear_cache = FALSE) {
 #' @export
 survey_countries <- function(survey, country.column = "country", ...) {
   lifecycle::deprecate_stop(
-    when = "0.7.0",
+    when = "0.5.0",
     what = "survey_countries()",
     with = "contactsurveys::download_survey()",
     details = "We recommend using contactsurveys::download_survey() to \\
@@ -393,7 +393,7 @@ survey_countries <- function(survey, country.column = "country", ...) {
 #' @export
 get_citation <- function(x) {
   lifecycle::deprecate_stop(
-    when = "0.7.0",
+    when = "0.5.0",
     what = "get_citation()",
     with = "contactsurveys::get_citation()"
   )

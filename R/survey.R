@@ -10,7 +10,7 @@
 #' @export
 survey <- function(participants, contacts, reference = NULL) {
   lifecycle::deprecate_stop(
-    "0.7.0",
+    "0.5.0",
     "survey()",
     details = "Use `as_contact_survey()` instead."
   )

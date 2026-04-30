@@ -8,7 +8,7 @@
       Pass a data frame with columns {.code lower.age.limit} and {.code population} to {.fn contact_matrix} via {.arg survey_pop} instead.
       i The underlying {.pkg wpp2017} data is outdated; consider the {.pkg wpp2024} package from GitHub for more recent data.
       Warning:
-      `wpp_age()` was deprecated in socialmixr 0.7.0.
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
       i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
     Output
@@ -45,7 +45,7 @@
       Pass a data frame with columns {.code lower.age.limit} and {.code population} to {.fn contact_matrix} via {.arg survey_pop} instead.
       i The underlying {.pkg wpp2017} data is outdated; consider the {.pkg wpp2024} package from GitHub for more recent data.
       Warning:
-      `wpp_age()` was deprecated in socialmixr 0.7.0.
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
       i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
     Output
@@ -83,7 +83,7 @@
       Pass a data frame with columns {.code lower.age.limit} and {.code population} to {.fn contact_matrix} via {.arg survey_pop} instead.
       i The underlying {.pkg wpp2017} data is outdated; consider the {.pkg wpp2024} package from GitHub for more recent data.
       Warning:
-      `wpp_age()` was deprecated in socialmixr 0.7.0.
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
       i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
     Output
@@ -120,7 +120,7 @@
       Pass a data frame with columns {.code lower.age.limit} and {.code population} to {.fn contact_matrix} via {.arg survey_pop} instead.
       i The underlying {.pkg wpp2017} data is outdated; consider the {.pkg wpp2024} package from GitHub for more recent data.
       Warning:
-      `wpp_age()` was deprecated in socialmixr 0.7.0.
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
       i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
     Output

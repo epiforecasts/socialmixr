@@ -24,7 +24,7 @@
 #' @export
 wpp_countries <- function() {
   lifecycle::deprecate_warn(
-    "0.7.0",
+    "0.6.0",
     "wpp_countries()",
     details = c(
       "Pass population data directly via the \\

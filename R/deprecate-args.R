@@ -15,7 +15,7 @@ deprecate_arg <- function(
   old_name,
   new_name,
   fn_name,
-  version = "0.7.0"
+  version = "0.5.0"
 ) {
   if (lifecycle::is_present(old_arg)) {
     lifecycle::deprecate_stop(

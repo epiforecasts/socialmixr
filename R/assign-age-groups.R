@@ -60,7 +60,7 @@ assign_age_groups <- function(
 
   if (missing_contact_age == "sample") {
     lifecycle::deprecate_stop(
-      "0.7.0",
+      "0.5.0",
       "assign_age_groups(missing_contact_age = 'sample')",
       details = paste(
         "Use 'remove' to exclude contacts with missing ages, 'keep' to retain",

@@ -80,7 +80,7 @@ check.contact_survey <- function(
   ...
 ) {
   lifecycle::deprecate_stop(
-    "0.7.0",
+    "0.5.0",
     "check()",
     details = paste(
       "Use `as_contact_survey()` instead to construct a `<contact_survey>`",

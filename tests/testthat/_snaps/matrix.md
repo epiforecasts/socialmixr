@@ -218,7 +218,7 @@
       Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
       i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
       Warning:
-      `wpp_age()` was deprecated in socialmixr 0.7.0.
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
       i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
       Error in `survey_pop_from_countries()`:
@@ -255,7 +255,7 @@
       Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
       i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
       Warning:
-      `wpp_age()` was deprecated in socialmixr 0.7.0.
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
       i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
       Warning in `contact_matrix()`:
@@ -301,7 +301,7 @@
       survey_pop = "dummy")
     Condition
       Warning:
-      `wpp_age()` was deprecated in socialmixr 0.7.0.
+      `wpp_age()` was deprecated in socialmixr 0.6.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
       i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
       Error in `survey_pop_from_countries()`:
