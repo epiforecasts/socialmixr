@@ -16,13 +16,13 @@ temporary directory}
 (passed on to \code{\link[base]{Sys.sleep}})}
 }
 \value{
-a vector of filenames that can be used with \link{load_survey}
+Always errors.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
 
-\code{download_survey()} has been deprecated in favour of
-\code{contactsurveys::download_survey()}.
+\code{download_survey()} is defunct. Use \code{contactsurveys::download_survey()}
+instead.
 
 \code{download_survey()} downloads survey data from Zenodo.
 }

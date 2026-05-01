@@ -2,7 +2,7 @@
 % Please edit documentation in R/survey.R
 \name{survey}
 \alias{survey}
-\title{Contact survey}
+\title{Contact survey (defunct)}
 \usage{
 survey(participants, contacts, reference = NULL)
 }
@@ -16,10 +16,15 @@ reference the survey, in particular it can contain a "title",
 "bibtype", "author", "doi", "publisher", "note", "year"}
 }
 \value{
-a new survey object
+Always errors.
 }
 \description{
-Deprecated. Use \code{as_survey} instead.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
+
+\code{survey()} is defunct. Use \code{\link[=as_contact_survey]{as_contact_survey()}} instead.
+}
+\seealso{
+\code{\link[=as_contact_survey]{as_contact_survey()}}
 }
 \author{
 Sebastian Funk

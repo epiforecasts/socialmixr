@@ -82,10 +82,10 @@ This way, the `peru` data set can be loaded in the future without the need for a
 peru_survey <- readRDS("peru.rds")
 ```
 
-Some surveys may contain data from multiple countries. To check this, use the `survey_countries` function
+Some surveys may contain data from multiple countries. To check this, look at the `country` column of the participant data:
 
 ```{r}
-survey_countries(polymod)
+unique(polymod$participants$country)
 ```
 
 Use the subset method `[` to restrict to one or more countries:
@@ -97,10 +97,10 @@ polymod[country %in% c("United Kingdom", "Germany")]
 If this is not done, the different sub-surveys contained in a dataset are combined as a single sample (without country-specific weighting).
 
 
-A reference for any given survey can be obtained using `get_citation()`, e.g.
+A reference for any given survey is in its `reference` field, e.g.
 
 ```{r}
-get_citation(polymod)
+polymod$reference
 ```
 
 # Bootstrapping
@@ -167,13 +167,13 @@ polymod[country == "United Kingdom"] |>
   symmetrise(survey_pop = uk_pop)
 ```
 
-`survey_country_population()` looks up country-specific population data from the [`wpp2017`](https://cran.r-project.org/package=wpp2017) package, which is an optional (Suggests) dependency of socialmixr; install it separately to use this function. Passing population data directly (as above) is preferred where possible:
+For the rest of this section we use a small constructed `uk_pop` for the United Kingdom, sufficient to illustrate the post-processing functions:
 
 ```{r}
-uk_pop_default <- survey_country_population(
-  polymod, countries = "United Kingdom"
+uk_pop <- data.frame(
+  lower.age.limit = c(0, 1, 5, 15),
+  population = c(750000, 3200000, 7500000, 56000000)
 )
-head(uk_pop_default)
 ```
 
 
@@ -190,8 +190,6 @@ $$m'_{ij} = \frac{1}{2N_i} (m_{ij} N_i + m_{ji} N_j)$$
 To get this version of the contact matrix, pipe the matrix through `symmetrise()`, passing the population data:
 
 ```{r}
-uk_pop <- survey_country_population(polymod, countries = "United Kingdom")
-
 polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
   compute_matrix() |>
@@ -210,7 +208,10 @@ $$c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}$$
 
 
 ```{r message=FALSE, warning=FALSE}
-de_pop <- survey_country_population(polymod, countries = "Germany")
+de_pop <- data.frame(
+  lower.age.limit = c(0, 60),
+  population = c(67000000, 16000000)
+)
 
 polymod[country == "Germany"] |>
   assign_age_groups(age_limits = c(0, 60)) |>

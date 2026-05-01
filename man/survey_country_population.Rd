@@ -20,12 +20,16 @@ country information is available from either the survey or countries
 argument.
 }
 \description{
-Looks up the country and year inside a survey, or a provided
-"countries" value, and determines the corresponding demographics in the world
-population prospects data using \code{\link[=wpp_age]{wpp_age()}}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+This function is deprecated alongside \code{\link[=wpp_age]{wpp_age()}}, which it wraps. The
+underlying \code{wpp2017} data is outdated. Construct a \code{data.frame} with
+columns \code{lower.age.limit} and \code{population} from a current source (e.g.
+the \code{wpp2024} package from GitHub) and pass it to \code{\link[=contact_matrix]{contact_matrix()}}
+via the \code{survey_pop} argument instead.
 }
 \examples{
-survey_country_population(polymod)
-survey_country_population(polymod, countries = "Belgium")
-survey_country_population(polymod, countries = c("Belgium", "Italy"))
+if (requireNamespace("wpp2017", quietly = TRUE)) {
+  survey_country_population(polymod, countries = "Belgium")
+}
 }

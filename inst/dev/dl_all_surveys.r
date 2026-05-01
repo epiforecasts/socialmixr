@@ -1,11 +1,10 @@
-library(socialmixr)
 library(here)
 library(cli)
 
 cli_h1("Starting survey download...")
 
 ## list all surveys
-survey_list <- list_surveys()
+survey_list <- contactsurveys::list_surveys()
 cli_h1("Found {nrow(survey_list)} surveys to download")
 
 dir.create(here("surveys"), showWarnings = FALSE)
@@ -15,7 +14,7 @@ dir.create(here("surveys"), showWarnings = FALSE)
 survey_files <- purrr::map(survey_list$url, function(x) {
   tryCatch(
     {
-      f <- download_survey(x, here("surveys"))
+      f <- contactsurveys::download_survey(x, here("surveys"))
       Sys.sleep(2) # Be nice to the server
       f
     },

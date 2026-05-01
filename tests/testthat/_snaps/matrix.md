@@ -137,29 +137,6 @@
       3:  [10,Inf)          814 0.80514342
       
       
-      $test4
-      $test4$matrix
-                contact.age.group
-      age.group      [0,5)   [5,15)  [15,Inf)
-        [0,5)    0.0000000 2.019697  3.087121
-        [5,15)   0.9217259 7.579330 27.392285
-        [15,Inf) 0.1822259 3.542984  7.130996
-      
-      $test4$demography
-         age.group population proportion  year
-            <char>      <num>      <num> <int>
-      1:     [0,5)   13498647 0.04967121  2005
-      2:    [5,15)   29578398 0.10884016  2005
-      3:  [15,Inf)  228682923 0.84148863  2005
-      
-      $test4$participants
-         age.group participants proportion
-            <char>        <int>      <num>
-      1:     [0,5)          660 0.09134948
-      2:    [5,15)         1374 0.19017301
-      3:  [15,Inf)         5191 0.71847751
-      
-      
 
 # survey argument is validated
 
@@ -195,8 +172,7 @@
 # warning is thrown if missing data exist
 
     Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    When `countries` is given (or a `country` column is present) without `survey_pop`, contact_matrix() currently calls the soft-deprecated `wpp_age()` to look up population data. This automatic lookup will be removed in a future release: callers will then have to supply `survey_pop` whenever `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE.
-    i Pass `survey_pop` explicitly to silence this warning, e.g. `survey_pop = survey_country_population(survey, countries)` or a data frame from the wpp2024 package.
+    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
 
 # error is thrown if an unknown argument is passed
 
@@ -226,8 +202,7 @@
 # warning if population needed but no 'year' column
 
     Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    When `countries` is given (or a `country` column is present) without `survey_pop`, contact_matrix() currently calls the soft-deprecated `wpp_age()` to look up population data. This automatic lookup will be removed in a future release: callers will then have to supply `survey_pop` whenever `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE.
-    i Pass `survey_pop` explicitly to silence this warning, e.g. `survey_pop = survey_country_population(survey, countries)` or a data frame from the wpp2024 package.
+    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
 
 # warning if day of week weigh requested but not present
 
@@ -241,8 +216,7 @@
     Condition
       Warning:
       Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-      When `countries` is given (or a `country` column is present) without `survey_pop`, contact_matrix() currently calls the soft-deprecated `wpp_age()` to look up population data. This automatic lookup will be removed in a future release: callers will then have to supply `survey_pop` whenever `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE.
-      i Pass `survey_pop` explicitly to silence this warning, e.g. `survey_pop = survey_country_population(survey, countries)` or a data frame from the wpp2024 package.
+      i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
       Warning:
       `wpp_age()` was deprecated in socialmixr 0.6.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
@@ -251,44 +225,25 @@
       ! Could not find population data for: "Zamonia".
       i Pass population data directly via the `survey_pop` argument.
 
-# warning is thrown if contact survey has no age information
-
-    Contact age column `cnt_age` or columns to estimate contact age (`cnt_age_exact` or `cnt_age_est_min` and `cnt_age_est_max`) do not exist in the contact data frame.
-
-# warning is thrown if participant data has no country
-
-    Country column `country` does not exist in the participant data frame.
-
-# check result is reported back
-
-    Code
-      check(x = polymod2)
-    Message
-      > Check OK.
-
 # good suggestions are made
 
     Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    When `countries` is given (or a `country` column is present) without `survey_pop`, contact_matrix() currently calls the soft-deprecated `wpp_age()` to look up population data. This automatic lookup will be removed in a future release: callers will then have to supply `survey_pop` whenever `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE.
-    i Pass `survey_pop` explicitly to silence this warning, e.g. `survey_pop = survey_country_population(survey, countries)` or a data frame from the wpp2024 package.
+    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
 
 ---
 
     Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    When `countries` is given (or a `country` column is present) without `survey_pop`, contact_matrix() currently calls the soft-deprecated `wpp_age()` to look up population data. This automatic lookup will be removed in a future release: callers will then have to supply `survey_pop` whenever `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE.
-    i Pass `survey_pop` explicitly to silence this warning, e.g. `survey_pop = survey_country_population(survey, countries)` or a data frame from the wpp2024 package.
+    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
 
 ---
 
     Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    When `countries` is given (or a `country` column is present) without `survey_pop`, contact_matrix() currently calls the soft-deprecated `wpp_age()` to look up population data. This automatic lookup will be removed in a future release: callers will then have to supply `survey_pop` whenever `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE.
-    i Pass `survey_pop` explicitly to silence this warning, e.g. `survey_pop = survey_country_population(survey, countries)` or a data frame from the wpp2024 package.
+    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
 
 # nonsensical operations are warned about
 
     Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    When `countries` is given (or a `country` column is present) without `survey_pop`, contact_matrix() currently calls the soft-deprecated `wpp_age()` to look up population data. This automatic lookup will be removed in a future release: callers will then have to supply `survey_pop` whenever `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE.
-    i Pass `survey_pop` explicitly to silence this warning, e.g. `survey_pop = survey_country_population(survey, countries)` or a data frame from the wpp2024 package.
+    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
 
 ---
 
@@ -298,8 +253,7 @@
     Condition
       Warning:
       Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-      When `countries` is given (or a `country` column is present) without `survey_pop`, contact_matrix() currently calls the soft-deprecated `wpp_age()` to look up population data. This automatic lookup will be removed in a future release: callers will then have to supply `survey_pop` whenever `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE.
-      i Pass `survey_pop` explicitly to silence this warning, e.g. `survey_pop = survey_country_population(survey, countries)` or a data frame from the wpp2024 package.
+      i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
       Warning:
       `wpp_age()` was deprecated in socialmixr 0.6.0.
       Pass population data directly via the {.arg survey_pop} argument instead.
@@ -333,8 +287,7 @@
 ---
 
     Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    When `countries` is given (or a `country` column is present) without `survey_pop`, contact_matrix() currently calls the soft-deprecated `wpp_age()` to look up population data. This automatic lookup will be removed in a future release: callers will then have to supply `survey_pop` whenever `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE.
-    i Pass `survey_pop` explicitly to silence this warning, e.g. `survey_pop = survey_country_population(survey, countries)` or a data frame from the wpp2024 package.
+    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
 
 # warning if survey is assumed to be representative
 
@@ -358,6 +311,5 @@
 # symmetric matrices with large norm weights warn
 
     Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    When `countries` is given (or a `country` column is present) without `survey_pop`, contact_matrix() currently calls the soft-deprecated `wpp_age()` to look up population data. This automatic lookup will be removed in a future release: callers will then have to supply `survey_pop` whenever `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE.
-    i Pass `survey_pop` explicitly to silence this warning, e.g. `survey_pop = survey_country_population(survey, countries)` or a data frame from the wpp2024 package.
+    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
 

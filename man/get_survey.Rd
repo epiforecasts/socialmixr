@@ -18,13 +18,13 @@ downloads.}
 \item{...}{currently unused}
 }
 \value{
-a survey in the correct format
+Always errors.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
 
-\code{get_survey()} has been deprecated in favour of using
-\code{contactsurveys::download_survey()} and then \code{\link[=load_survey]{load_survey()}}.
+\code{get_survey()} is defunct. Use \code{contactsurveys::download_survey()} and then
+\code{\link[=load_survey]{load_survey()}} instead.
 
 Downloads survey data, or extracts them from files, and returns a clean data
 set. If a survey URL is accessed multiple times, the data will be cached
