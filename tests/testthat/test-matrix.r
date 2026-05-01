@@ -955,6 +955,7 @@ test_that("participants with missing contact age are handled", {
       age_limits = 0,
       missing_contact_age = "sample"
     ),
+    regexp = "0\\.5\\.0",
     class = "lifecycle_error_deprecated"
   )
 })
@@ -1149,6 +1150,7 @@ test_that("contacts below age limits excluded regardless of setting", {
       age_limits = c(10, 50),
       missing_contact_age = "sample"
     ),
+    regexp = "0\\.5\\.0",
     class = "lifecycle_error_deprecated"
   )
   expect_identical(
