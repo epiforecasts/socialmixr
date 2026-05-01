@@ -26,8 +26,11 @@
 #'   have contacts without age information are removed; if set to "keep",
 #'   contacts with missing age are kept and treated as a separate age group;
 #'   if set to "ignore", contacts with missing age are ignored in the contact
-#'   analysis. The "sample" option is defunct (errors); pass an age
-#'   distribution to `estimated_contact_age` to impute ranges instead.
+#'   analysis. The "sample" option is defunct (errors). For contacts that
+#'   have only an age range (rather than a truly missing age),
+#'   `estimated_contact_age` controls how the range is resolved into a single
+#'   age; it is not a substitute for `missing_contact_age` when the age is
+#'   entirely missing.
 #' @returns
 #' The survey object with processed age data.
 #'
