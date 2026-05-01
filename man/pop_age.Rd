@@ -44,7 +44,7 @@ are requested than available) and summing populations (if fewer
 are requested than available)
 }
 \examples{
-# 5-year age bands for a population of 60 million
+# 5-year age bands for a population of 70 million
 it_pop <- data.frame(
   lower.age.limit = seq(0, 80, by = 5),
   population = c(rep(2.5e6, 4), rep(3.5e6, 4), rep(5e6, 6), 5e6, 7e6, 4e6)
