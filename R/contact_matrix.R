@@ -7,13 +7,14 @@
 #'   (default), will use all countries in the survey; these can be
 #'   given as country names or 2-letter (ISO Alpha-2) country
 #'   codes.
-#' @param survey_pop survey population -- either a data frame with
-#'   columns 'lower.age.limit' and 'population', or a character
-#'   vector giving the name(s) of a country or countries from the
-#'   list that can be obtained via `wpp_countries`; if NULL
-#'   (default), will use the country populations from the chosen
-#'   countries, or all countries in the survey if `countries` is
-#'   NULL.
+#' @param survey_pop survey population -- a data frame with columns
+#'   `lower.age.limit` and `population`. Passing `NULL` (the default)
+#'   or a character vector of country names triggers the
+#'   `r lifecycle::badge("deprecated")` implicit lookup via [wpp_age()]
+#'   when `symmetric`, `split`, `per_capita`, `weigh_age`, or
+#'   `return_demography` is `TRUE`; supply an explicit data frame
+#'   (e.g. constructed from the `wpp2024` package or another source)
+#'   instead.
 #' @param age_limits lower limits of the age groups over which to
 #'   construct the matrix. If NULL (default), age limits are
 #'   inferred from participant and contact ages.

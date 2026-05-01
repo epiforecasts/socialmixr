@@ -55,13 +55,14 @@ contact_matrix(
 given as country names or 2-letter (ISO Alpha-2) country
 codes.}
 
-\item{survey_pop}{survey population -- either a data frame with
-columns 'lower.age.limit' and 'population', or a character
-vector giving the name(s) of a country or countries from the
-list that can be obtained via \code{wpp_countries}; if NULL
-(default), will use the country populations from the chosen
-countries, or all countries in the survey if \code{countries} is
-NULL.}
+\item{survey_pop}{survey population -- a data frame with columns
+\code{lower.age.limit} and \code{population}. Passing \code{NULL} (the default)
+or a character vector of country names triggers the
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} implicit lookup via \code{\link[=wpp_age]{wpp_age()}}
+when \code{symmetric}, \code{split}, \code{per_capita}, \code{weigh_age}, or
+\code{return_demography} is \code{TRUE}; supply an explicit data frame
+(e.g. constructed from the \code{wpp2024} package or another source)
+instead.}
 
 \item{age_limits}{lower limits of the age groups over which to
 construct the matrix. If NULL (default), age limits are
