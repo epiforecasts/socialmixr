@@ -1229,6 +1229,7 @@ test_that("deprecated dotted argument names are now defunct", {
   # contact_matrix()
   expect_error(
     contact_matrix(polymod, age.limits = c(0, 18)),
+    regexp = "0\\.5\\.0",
     class = "lifecycle_error_deprecated"
   )
   expect_error(
