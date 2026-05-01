@@ -270,6 +270,7 @@ test_that("warning is thrown if country has no survey population", {
 test_that("check() is defunct", {
   expect_error(
     check(x = polymod2),
+    regexp = "0\\.5\\.0",
     class = "lifecycle_error_deprecated"
   )
 })
