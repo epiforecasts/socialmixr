@@ -18,7 +18,7 @@ downloads.}
 \item{...}{currently unused}
 }
 \value{
-a survey in the correct format
+Always errors.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}

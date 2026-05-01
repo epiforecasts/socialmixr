@@ -16,7 +16,7 @@ temporary directory}
 (passed on to \code{\link[base]{Sys.sleep}})}
 }
 \value{
-a vector of filenames that can be used with \link{load_survey}
+Always errors.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}

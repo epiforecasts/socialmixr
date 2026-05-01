@@ -14,7 +14,7 @@ survey_countries(survey, country.column = "country", ...)
 \item{...}{further arguments for \code{\link[=get_survey]{get_survey()}}}
 }
 \value{
-list of countries
+Always errors.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}

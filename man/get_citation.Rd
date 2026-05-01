@@ -10,7 +10,7 @@ get_citation(x)
 \item{x}{a character vector of surveys to cite}
 }
 \value{
-citation as bibentry
+Always errors.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}

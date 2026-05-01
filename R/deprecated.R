@@ -37,7 +37,7 @@
 #' peru_survey <- contactsurveys::download_survey(peru_doi)
 #' peru_data <- load_survey(peru_survey)
 #' }
-#' @return a survey in the correct format
+#' @return Always errors.
 #' @export
 get_survey <- function(survey, clear_cache = FALSE, ...) {
   lifecycle::deprecate_stop(
@@ -112,7 +112,7 @@ get_survey <- function(survey, clear_cache = FALSE, ...) {
 #'   "https://doi.org/10.5281/zenodo.1095664"
 #' )
 #' }
-#' @return a vector of filenames that can be used with [load_survey]
+#' @return Always errors.
 #' @seealso load_survey
 #' @export
 # nolint start: cyclocomp_linter.
@@ -244,7 +244,7 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
 #'
 #' `list_surveys()` is defunct. Use `contactsurveys::list_surveys()` instead.
 #'
-#' @return character vector of surveys
+#' @return Always errors.
 #' @inheritParams get_survey
 #' @examples
 #' # we recommend using the contactsurveys package now for listing surveys.
@@ -332,7 +332,7 @@ list_surveys <- function(clear_cache = FALSE) {
 #'
 #' @param country.column column in the survey indicating the country
 #' @param ... further arguments for [get_survey()]
-#' @return list of countries
+#' @return Always errors.
 #' @inheritParams get_survey
 #' @examples
 #' \dontrun{
@@ -374,7 +374,7 @@ survey_countries <- function(survey, country.column = "country", ...) {
 #' `get_citation()` is defunct. Use `contactsurveys::get_citation()` instead.
 #'
 #' @param x a character vector of surveys to cite
-#' @return citation as bibentry
+#' @return Always errors.
 #' @importFrom utils bibentry
 #' @importFrom rlang %||%
 #' @examples

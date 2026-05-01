@@ -13,7 +13,7 @@ this function to access the same survey will not result in repeated
 downloads.}
 }
 \value{
-character vector of surveys
+Always errors.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
