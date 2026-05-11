@@ -223,10 +223,11 @@ test_that("clean() works with custom participant_age_column", {
   expect_identical(cleaned$participants$age_est_max, c(30, 50))
 })
 
-# Test 10: Deprecated argument warning
-test_that("clean() deprecated argument produces warning", {
-  lifecycle::expect_deprecated(
-    clean(polymod, participant.age.column = "part_age")
+# Test 10: Deprecated argument is now defunct
+test_that("clean() defunct argument errors", {
+  expect_error(
+    clean(polymod, participant.age.column = "part_age"),
+    class = "lifecycle_error_deprecated"
   )
 })
 

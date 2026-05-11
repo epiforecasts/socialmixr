@@ -51,5 +51,5 @@ to work with the 'contact_matrix' function
 }
 \examples{
 data(polymod)
-check(polymod)
+try(check(polymod))
 }

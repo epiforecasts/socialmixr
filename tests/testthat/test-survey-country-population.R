@@ -1,3 +1,8 @@
+withr::local_options(
+  lifecycle_verbosity = "warning",
+  .local_envir = teardown_env()
+)
+
 test_that("survey_country_population() works", {
   expect_snapshot(
     as.data.frame(survey_country_population(polymod))
@@ -24,4 +29,8 @@ test_that("survey_country_population() errors appropriately", {
     error = TRUE,
     survey_country_population(polymod_copy)
   )
+})
+
+test_that("survey_country_population() is deprecated", {
+  lifecycle::expect_deprecated(survey_country_population(polymod))
 })
