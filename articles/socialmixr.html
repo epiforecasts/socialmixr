@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">socialmixr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,9 +61,9 @@
                         <h4 data-toc-skip class="author">Sebastian
 Funk</h4>
             
-            <h4 data-toc-skip class="date">2026-04-29</h4>
+            <h4 data-toc-skip class="date">2026-05-11</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/v0.6.0/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
       <div class="d-none name"><code>socialmixr.Rmd</code></div>
     </div>
 
@@ -454,40 +454,14 @@ This is represented as a <code>data.frame</code> with columns
 <span>  lower.age.limit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span>,</span>
 <span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12000000</span>, <span class="fl">35000000</span>, <span class="fl">20000000</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>If the survey has a <code>country</code> column,
-<code><a href="../reference/survey_country_population.html">survey_country_population()</a></code> looks up country- and
-year-specific population data:</p>
+<p>For the rest of this vignette we use a small constructed
+<code>uk_pop</code> for the United Kingdom, sufficient to illustrate the
+post-processing functions:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/survey_country_population.html">survey_country_population</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;     lower.age.limit population</span></span>
-<span><span class="co">#&gt;               &lt;int&gt;      &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1:               0    3453670</span></span>
-<span><span class="co">#&gt;  2:               5    3558887</span></span>
-<span><span class="co">#&gt;  3:              10    3826567</span></span>
-<span><span class="co">#&gt;  4:              15    3960166</span></span>
-<span><span class="co">#&gt;  5:              20    3906577</span></span>
-<span><span class="co">#&gt;  6:              25    3755132</span></span>
-<span><span class="co">#&gt;  7:              30    4169859</span></span>
-<span><span class="co">#&gt;  8:              35    4694734</span></span>
-<span><span class="co">#&gt;  9:              40    4655093</span></span>
-<span><span class="co">#&gt; 10:              45    3989175</span></span>
-<span><span class="co">#&gt; 11:              50    3615150</span></span>
-<span><span class="co">#&gt; 12:              55    3902231</span></span>
-<span><span class="co">#&gt; 13:              60    3126452</span></span>
-<span><span class="co">#&gt; 14:              65    2710063</span></span>
-<span><span class="co">#&gt; 15:              70    2352113</span></span>
-<span><span class="co">#&gt; 16:              75    1964744</span></span>
-<span><span class="co">#&gt; 17:              80    1480606</span></span>
-<span><span class="co">#&gt; 18:              85     757996</span></span>
-<span><span class="co">#&gt; 19:              90     324245</span></span>
-<span><span class="co">#&gt; 20:              95      74738</span></span>
-<span><span class="co">#&gt; 21:             100       8553</span></span>
-<span><span class="co">#&gt;     lower.age.limit population</span></span>
-<span><span class="co">#&gt;               &lt;int&gt;      &lt;num&gt;</span></span></code></pre></div>
-<p>This uses the older <a href="https://cran.r-project.org/package=wpp2017" class="external-link"><code>wpp2017</code></a>
-package, an optional (Suggests) dependency that needs to be installed
-separately. It is kept for backwards compatibility; use more recent
-population data (as shown above) where possible.</p>
+<code class="sourceCode R"><span><span class="va">uk_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  lower.age.limit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>,</span>
+<span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">750000</span>, <span class="fl">3200000</span>, <span class="fl">7500000</span>, <span class="fl">56000000</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="symmetric-contact-matrices">Symmetric contact matrices<a class="anchor" aria-label="anchor" href="#symmetric-contact-matrices"></a>
@@ -509,22 +483,20 @@ then</p>
 <p>Because of variation in the sample from which the contact matrix is
 obtained, this relationship is usually not fulfilled exactly. In order
 to obtain a symmetric contact matrix that fulfills it, one can use</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><msub><mi>′</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><msub><mi>N</mi><mi>i</mi></msub></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>N</mi><mi>i</mi></msub><mo>+</mo><msub><mi>m</mi><mrow><mi>j</mi><mi>i</mi></mrow></msub><msub><mi>N</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">m'_{ij} = \frac{1}{2N_i} (m_{ij} N_i + m_{ji} N_j)</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow><mo>′</mo></msubsup><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><msub><mi>N</mi><mi>i</mi></msub></mrow></mfrac><mo stretchy="false" form="prefix">(</mo><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>N</mi><mi>i</mi></msub><mo>+</mo><msub><mi>m</mi><mrow><mi>j</mi><mi>i</mi></mrow></msub><msub><mi>N</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">m'_{ij} = \frac{1}{2N_i} (m_{ij} N_i + m_{ji} N_j)</annotation></semantics></math></p>
 <p>To get this version of the contact matrix, pipe the matrix through
 <code><a href="../reference/symmetrise.html">symmetrise()</a></code>, passing the population data:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">uk_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/survey_country_population.html">survey_country_population</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"United Kingdom"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="va">uk_pop</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
-<span><span class="co">#&gt; age.group       [0,1)     [1,5)   [5,15) [15,Inf)</span></span>
-<span><span class="co">#&gt;   [0,1)    0.40000000 0.6250000 0.764365 4.122919</span></span>
-<span><span class="co">#&gt;   [1,5)    0.15625000 1.9375000 1.406063 5.929829</span></span>
-<span><span class="co">#&gt;   [5,15)   0.07148821 0.5260153 7.946078 7.428739</span></span>
-<span><span class="co">#&gt;   [15,Inf) 0.05759306 0.3313352 1.109550 9.594101</span></span></code></pre></div>
+<span><span class="co">#&gt; age.group       [0,1)     [1,5)    [5,15) [15,Inf)</span></span>
+<span><span class="co">#&gt;   [0,1)    0.40000000 0.6400000 0.7558824 4.172659</span></span>
+<span><span class="co">#&gt;   [1,5)    0.15000000 1.9375000 1.3229320 5.858778</span></span>
+<span><span class="co">#&gt;   [5,15)   0.07558824 0.5644510 7.9460784 7.926570</span></span>
+<span><span class="co">#&gt;   [15,Inf) 0.05588383 0.3347873 1.0615942 9.594101</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="contact-rates-per-capita">Contact rates per capita<a class="anchor" aria-label="anchor" href="#contact-rates-per-capita"></a>
@@ -544,16 +516,19 @@ individual of age
 will be in contact with one infectious individual of age
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>.
 The contact rates per capita are calculated as follows:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mfrac displaystyle="false"><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>N</mi><mi>j</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">c_{ij} =  \tfrac{m_{ij}}{N_{j}}</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mstyle displaystyle="false"><mfrac><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>N</mi><mi>j</mi></msub></mfrac></mstyle></mrow><annotation encoding="application/x-tex">c_{ij} =  \tfrac{m_{ij}}{N_{j}}</annotation></semantics></math></p>
 <p>Pipe the matrix through <code><a href="../reference/per_capita.html">per_capita()</a></code> to convert to
 per-capita rates. If combined with <code><a href="../reference/symmetrise.html">symmetrise()</a></code>, the
 contact matrix
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">m_{ij}</annotation></semantics></math>
 can show asymmetry if the sub-population sizes are different, but the
 contact matrix per capita will be fully symmetric:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><msub><mi>′</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mfrac><mrow><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>N</mi><mi>i</mi></msub><mo>+</mo><msub><mi>m</mi><mrow><mi>j</mi><mi>i</mi></mrow></msub><msub><mi>N</mi><mi>j</mi></msub></mrow><mrow><mn>2</mn><msub><mi>N</mi><mi>i</mi></msub><msub><mi>N</mi><mi>j</mi></msub></mrow></mfrac><mo>=</mo><mi>c</mi><msub><mi>′</mi><mrow><mi>j</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow><mo>′</mo></msubsup><mo>=</mo><mfrac><mrow><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>N</mi><mi>i</mi></msub><mo>+</mo><msub><mi>m</mi><mrow><mi>j</mi><mi>i</mi></mrow></msub><msub><mi>N</mi><mi>j</mi></msub></mrow><mrow><mn>2</mn><msub><mi>N</mi><mi>i</mi></msub><msub><mi>N</mi><mi>j</mi></msub></mrow></mfrac><mo>=</mo><msubsup><mi>c</mi><mrow><mi>j</mi><mi>i</mi></mrow><mo>′</mo></msubsup></mrow><annotation encoding="application/x-tex">c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}</annotation></semantics></math></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">de_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/survey_country_population.html">survey_country_population</a></span><span class="op">(</span><span class="va">polymod</span>, countries <span class="op">=</span> <span class="st">"Germany"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">de_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  lower.age.limit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">60</span><span class="op">)</span>,</span>
+<span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">67000000</span>, <span class="fl">16000000</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"Germany"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -562,8 +537,8 @@ contact matrix per capita will be fully symmetric:</p>
 <span>  <span class="fu"><a href="../reference/per_capita.html">per_capita</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="va">de_pop</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group        [0,60)     [60,Inf)</span></span>
-<span><span class="co">#&gt;   [0,60)   1.261735e-07 4.418248e-08</span></span>
-<span><span class="co">#&gt;   [60,Inf) 4.418248e-08 1.047852e-07</span></span></code></pre></div>
+<span><span class="co">#&gt;   [0,60)   1.155803e-07 4.674434e-08</span></span>
+<span><span class="co">#&gt;   [60,Inf) 4.674434e-08 1.329225e-07</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="splitting-contact-matrices">Splitting contact matrices<a class="anchor" aria-label="anchor" href="#splitting-contact-matrices"></a>
@@ -610,21 +585,19 @@ and <code>$contacts</code>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/split_matrix.html">split_matrix</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="va">uk_pop</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Not all age groups represented in population data (5-year age band).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Linearly estimating age group sizes from the 5-year bands.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Contact matrix (4 age groups)</span> ──</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Ages: <span style="color: #0000BB;">"[0,1)"</span>, <span style="color: #0000BB;">"[1,5)"</span>, <span style="color: #0000BB;">"[5,15)"</span>, and <span style="color: #0000BB;">"[15,Inf)"</span></span></span>
 <span><span class="co">#&gt; Participants: 1011</span></span>
-<span><span class="co">#&gt; Mean contacts: 11.55</span></span>
+<span><span class="co">#&gt; Mean contacts: 11.51</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group      [0,1)     [1,5)   [5,15)  [15,Inf)</span></span>
-<span><span class="co">#&gt;   [0,1)    4.1561551 2.0780776 1.230914 0.8611839</span></span>
-<span><span class="co">#&gt;   [1,5)    1.0955555 4.7169752 1.332022 0.7413849</span></span>
-<span><span class="co">#&gt;   [5,15)   0.1456110 0.7498969 4.415104 0.5158328</span></span>
-<span><span class="co">#&gt;   [15,Inf) 0.2500527 0.6930808 0.934443 1.0374170</span></span></code></pre></div>
+<span><span class="co">#&gt;   [0,1)    4.2825397 2.0074405 1.356138 0.8507724</span></span>
+<span><span class="co">#&gt;   [1,5)    1.1288703 4.5566379 1.467531 0.7324218</span></span>
+<span><span class="co">#&gt;   [5,15)   0.1500389 0.7244067 4.864262 0.5095965</span></span>
+<span><span class="co">#&gt;   [15,Inf) 0.2576565 0.6695219 1.029506 1.0248749</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="filtering">Filtering<a class="anchor" aria-label="anchor" href="#filtering"></a>
@@ -681,7 +654,7 @@ for social contact behaviour, hence to obtain a weekly average, the
 survey data should represent the weekly 2/5 distribution of weekend/week
 days. To align the survey data to this distribution, one can obtain
 participant weights in the form of:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mtext mathvariant="normal">day.of.week</mtext></msub><mo>=</mo><mfrac displaystyle="false"><mrow><mn>5</mn><mi>/</mi><mn>7</mn></mrow><mrow><msub><mi>N</mi><mtext mathvariant="normal">weekday</mtext></msub><mi>/</mi><mi>N</mi></mrow></mfrac><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> OR </mtext><mspace width="0.333em"></mspace></mrow><mfrac displaystyle="false"><mrow><mn>2</mn><mi>/</mi><mn>7</mn></mrow><mrow><msub><mi>N</mi><mtext mathvariant="normal">weekend</mtext></msub><mi>/</mi><mi>N</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">w_{\textrm{day.of.week}} = \tfrac{5/7}{N_{\textrm{weekday}}/N} \text{  OR   } \tfrac{2/7}{N_{\textrm{weekend}}/N}</annotation></semantics></math>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mtext mathvariant="normal">day.of.week</mtext></msub><mo>=</mo><mstyle displaystyle="false"><mfrac><mrow><mn>5</mn><mi>/</mi><mn>7</mn></mrow><mrow><msub><mi>N</mi><mtext mathvariant="normal">weekday</mtext></msub><mi>/</mi><mi>N</mi></mrow></mfrac></mstyle><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> OR </mtext><mspace width="0.333em"></mspace></mrow><mstyle displaystyle="false"><mfrac><mrow><mn>2</mn><mi>/</mi><mn>7</mn></mrow><mrow><msub><mi>N</mi><mtext mathvariant="normal">weekend</mtext></msub><mi>/</mi><mi>N</mi></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">w_{\textrm{day.of.week}} = \tfrac{5/7}{N_{\textrm{weekday}}/N} \text{  OR   } \tfrac{2/7}{N_{\textrm{weekend}}/N}</annotation></semantics></math>
 with sample size
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>,
 and
@@ -693,7 +666,7 @@ weekend days, respectively.</p>
 <p>Another driver of social contact patterns is age. To improve the
 representativeness of survey data, age-specific weights can be
 calculated as:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mrow><mi>a</mi><mi>g</mi><mi>e</mi></mrow></msub><mo>=</mo><mfrac displaystyle="false"><mrow><msub><mi>P</mi><mi>a</mi></msub><mspace width="0.222em"></mspace><mi>/</mi><mspace width="0.222em"></mspace><mi>P</mi></mrow><mrow><msub><mi>N</mi><mi>a</mi></msub><mspace width="0.222em"></mspace><mi>/</mi><mspace width="0.222em"></mspace><mi>N</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">w_{age} = \tfrac{P_{a}\ /\ P}{N_{a}\ /\ N}</annotation></semantics></math>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mrow><mi>a</mi><mi>g</mi><mi>e</mi></mrow></msub><mo>=</mo><mstyle displaystyle="false"><mfrac><mrow><msub><mi>P</mi><mi>a</mi></msub><mspace width="0.222em"></mspace><mi>/</mi><mspace width="0.222em"></mspace><mi>P</mi></mrow><mrow><msub><mi>N</mi><mi>a</mi></msub><mspace width="0.222em"></mspace><mi>/</mi><mspace width="0.222em"></mspace><mi>N</mi></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">w_{age} = \tfrac{P_{a}\ /\ P}{N_{a}\ /\ N}</annotation></semantics></math>
 with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>
 the population size,
@@ -730,9 +703,9 @@ weekdays are 1-5 and weekend days are 0 and 6:</p>
 <span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group    [0,18)  [18,60)  [60,Inf)</span></span>
-<span><span class="co">#&gt;   [0,18)   7.637824 5.372202 0.4878625</span></span>
-<span><span class="co">#&gt;   [18,60)  2.279212 7.924999 1.0941688</span></span>
-<span><span class="co">#&gt;   [60,Inf) 1.187088 5.303965 2.2302108</span></span></code></pre></div>
+<span><span class="co">#&gt;   [0,18)   11.72388 5.092404 0.2908445</span></span>
+<span><span class="co">#&gt;   [18,60)        NA       NA        NA</span></span>
+<span><span class="co">#&gt;   [60,Inf)       NA       NA        NA</span></span></code></pre></div>
 <p>The first <code><a href="../reference/weigh.html">weigh()</a></code> call assigns weekday participants a
 total weight of 5 and weekend participants a total weight of 2 (the
 weekly 5/2 split). The second call post-stratifies against the
@@ -775,10 +748,10 @@ re-normalisation.</p>
 <span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"part_age"</span>, target <span class="op">=</span> <span class="va">uk_pop</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span>weight_threshold <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
-<span><span class="co">#&gt; age.group    [0,18)  [18,60)  [60,Inf)</span></span>
-<span><span class="co">#&gt;   [0,18)   7.637824 5.372202 0.4878625</span></span>
-<span><span class="co">#&gt;   [18,60)  2.282014 7.932570 1.0774717</span></span>
-<span><span class="co">#&gt;   [60,Inf) 1.110740 5.275613 2.2700262</span></span></code></pre></div>
+<span><span class="co">#&gt; age.group   [0,18)  [18,60)  [60,Inf)</span></span>
+<span><span class="co">#&gt;   [0,18)   10.2339 5.102618 0.3610971</span></span>
+<span><span class="co">#&gt;   [18,60)       NA       NA        NA</span></span>
+<span><span class="co">#&gt;   [60,Inf)      NA       NA        NA</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="numerical-example">Numerical example<a class="anchor" aria-label="anchor" href="#numerical-example"></a>
@@ -895,11 +868,11 @@ contacts:</p>
 survey day with and without the population and sample size constants
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mi>′</mi></mrow><annotation encoding="application/x-tex">w'</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>w</mi><mo>′</mo></msup><annotation encoding="application/x-tex">w'</annotation></semantics></math>,
 respectively). Note that the standardised weights
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>w</mi><mo accent="true">̃</mo></mover><annotation encoding="application/x-tex">\tilde{w}</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mrow><mi>w</mi><mi>′</mi></mrow><mo accent="true">̃</mo></mover><annotation encoding="application/x-tex">\tilde{w'}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><msup><mi>w</mi><mo>′</mo></msup><mo accent="true">̃</mo></mover><annotation encoding="application/x-tex">\tilde{w'}</annotation></semantics></math>
 are the same:</p>
 <table class="table">
 <thead><tr class="header">
@@ -978,7 +951,7 @@ are the same:</p>
 <p>Note the different scale of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mi>′</mi></mrow><annotation encoding="application/x-tex">w'</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>w</mi><mo>′</mo></msup><annotation encoding="application/x-tex">w'</annotation></semantics></math>,
 and the more straightforward interpretation of the numerical value of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>
 in terms of relative differences to apply truncation. Using the
@@ -1511,22 +1484,20 @@ though this can be changed.</p>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-hens_estimating_2009" class="csl-entry">
-Hens, Niel, Girma Minalu Ayele, Nele Goeyvaerts, Marc Aerts, Joel
-Mossong, John W. Edmunds, and Philippe Beutels. 2009. <span>“Estimating
-the Impact of School Closure on Social Mixing Behaviour and the
-Transmission of Close Contact Infections in Eight European
-Countries.”</span> <em><span>BMC</span> Infectious Diseases</em> 9 (1):
-1–12. <a href="https://doi.org/10.1186/1471-2334-9-187" class="external-link">https://doi.org/10.1186/1471-2334-9-187</a>.
+Hens, Niel, Girma Minalu Ayele, Nele Goeyvaerts, et al. 2009.
+<span>“Estimating the Impact of School Closure on Social Mixing
+Behaviour and the Transmission of Close Contact Infections in Eight
+European Countries.”</span> <em><span>BMC</span> Infectious
+Diseases</em> 9 (1): 1–12. <a href="https://doi.org/10.1186/1471-2334-9-187" class="external-link">https://doi.org/10.1186/1471-2334-9-187</a>.
 </div>
 <div id="ref-kolenikov_post-stratification_2016" class="csl-entry">
 Kolenikov, Stas. 2016. <span>“Post-Stratification or Non-Response
 Adjustment?”</span> <em>Survey Practice</em> 9 (3): 2809. <a href="https://doi.org/10.29115/SP-2016-0014" class="external-link">https://doi.org/10.29115/SP-2016-0014</a>.
 </div>
 <div id="ref-mossong_social_2008" class="csl-entry">
-Mossong, Joël, Niel Hens, Mark Jit, Philippe Beutels, Kari Auranen,
-Rafael Mikolajczyk, Marco Massari, et al. 2008. <span>“Social Contacts
+Mossong, Joël, Niel Hens, Mark Jit, et al. 2008. <span>“Social Contacts
 and Mixing Patterns Relevant to the Spread of Infectious
 Diseases.”</span> <em><span>PLOS</span> Medicine</em> 5 (3): e74. <a href="https://doi.org/10.1371/journal.pmed.0050074" class="external-link">https://doi.org/10.1371/journal.pmed.0050074</a>.
 </div>

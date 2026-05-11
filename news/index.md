@@ -1,6 +1,51 @@
 # Changelog
 
+## socialmixr (development version)
+
+- Advance deprecation cycle
+  ([\#312](https://github.com/epiforecasts/socialmixr/issues/312)).
+  [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md),
+  [`wpp_countries()`](https://epiforecasts.io/socialmixr/reference/wpp_countries.md),
+  and
+  [`survey_country_population()`](https://epiforecasts.io/socialmixr/reference/survey_country_population.md)
+  are deprecated (warn) — all three are thin layers over `wpp2017`,
+  which is on its way out. Construct a `data.frame` with columns
+  `lower.age.limit` and `population` from a current source (e.g. the
+  `wpp2024` package from GitHub) and pass it to
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  via `survey_pop` instead. The implicit population lookup in
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  (when `survey_pop` is not given but `symmetric`, `split`,
+  `per_capita`, `weigh_age`, or `return_demography` is set) keeps the
+  warning introduced in 0.6.0 with a sharper “will error in a future
+  release” message. The `wpp2017` package moves from `Imports` to
+  `Suggests`. The following are now defunct (`deprecate_stop`):
+  [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md),
+  [`check()`](https://epiforecasts.io/socialmixr/reference/check.md),
+  [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md),
+  [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md),
+  [`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md),
+  [`survey_countries()`](https://epiforecasts.io/socialmixr/reference/survey_countries.md),
+  [`get_citation()`](https://epiforecasts.io/socialmixr/reference/get_citation.md),
+  the dotted argument names (`age.limits`, `survey.pop`,
+  `country.column`, etc.) on
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md),
+  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md),
+  [`clean()`](https://epiforecasts.io/socialmixr/reference/clean.md),
+  and
+  [`as_contact_survey()`](https://epiforecasts.io/socialmixr/reference/as_contact_survey.md),
+  and the `missing_contact_age = "sample"` option on
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
+  and
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md).
+  Bogus `"1.0.0"` versions on the
+  [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md)
+  and [`check()`](https://epiforecasts.io/socialmixr/reference/check.md)
+  deprecation messages have been corrected.
+
 ## socialmixr 0.6.0
+
+CRAN release: 2026-04-29
 
 This release adds a pipeline of composable functions for building
 contact matrices (`[`,
@@ -66,6 +111,7 @@ around the pipeline
   ([\#161](https://github.com/epiforecasts/socialmixr/issues/161)):
 
   ``` r
+
   uk_pop <- data.frame(
     lower.age.limit = c(0, 5, 15),
     population = c(3500000, 6000000, 50000000)

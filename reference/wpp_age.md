@@ -38,7 +38,9 @@ not present in the historical data, WPP projections are used.
 ## Examples
 
 ``` r
-wpp_age("Italy", c(1990, 2000))
+if (requireNamespace("wpp2017", quietly = TRUE)) {
+  wpp_age("Italy", c(1990, 2000))
+}
 #>    country lower.age.limit year population
 #> 1    Italy               0 1990    2822304
 #> 2    Italy               0 2000    2637136

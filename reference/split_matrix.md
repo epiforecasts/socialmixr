@@ -41,7 +41,10 @@ elements `$mean.contacts`, `$normalisation`, and `$contacts`
 
 ``` r
 data(polymod)
-pop <- wpp_age("United Kingdom", 2005)
+pop <- data.frame(
+  lower.age.limit = c(0, 5, 15),
+  population = c(3500000, 6000000, 50000000)
+)
 polymod |>
   (\(s) s[country == "United Kingdom"])() |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
@@ -52,11 +55,11 @@ polymod |>
 #> 
 #> Ages: "[0,5)", "[5,15)", and "[15,Inf)"
 #> Participants: 1011
-#> Mean contacts: 11.56
+#> Mean contacts: 11.48
 #> 
 #>           contact.age.group
 #> age.group      [0,5)   [5,15)  [15,Inf)
-#>   [0,5)    3.7686417 1.316910 0.7592908
-#>   [5,15)   0.6290397 4.415104 0.5158328
-#>   [15,Inf) 0.6044752 0.934443 1.0374170
+#>   [0,5)    3.6702254 1.599842 0.7411032
+#>   [5,15)   0.6126126 5.363669 0.5034768
+#>   [15,Inf) 0.5886896 1.135204 1.0125673
 ```

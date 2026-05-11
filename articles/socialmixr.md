@@ -19,6 +19,7 @@ Zenodo, use the
 package.
 
 ``` r
+
 library(socialmixr)
 library(ggplot2)
 data(polymod)
@@ -46,6 +47,7 @@ perform one step in turning a survey into a contact matrix:
 A minimal example extracting a matrix for the UK part of POLYMOD:
 
 ``` r
+
 polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
   compute_matrix()
@@ -78,6 +80,7 @@ ages (configurable via `missing_participant_age` and
 columns using the `age_limits` you supply:
 
 ``` r
+
 uk_grouped <- polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 1, 5, 15))
 
@@ -115,6 +118,7 @@ Some surveys contain data from multiple countries. The POLYMOD survey,
 for example, contains data from:
 
 ``` r
+
 unique(polymod$participants$country)
 #> [1] Italy          Germany        Luxembourg     Netherlands    Poland        
 #> [6] United Kingdom Finland        Belgium       
@@ -125,6 +129,7 @@ Use the subset method `[` on a survey to restrict to one or more
 countries or any other column in the participant or contact data:
 
 ``` r
+
 polymod[country %in% c("United Kingdom", "Germany")]
 #> $participants
 #> Key: <hh_id>
@@ -331,6 +336,7 @@ can be resampled with replacement. A short helper replicates participant
 that duplicates are preserved:
 
 ``` r
+
 bootstrap <- function(survey) {
   sampled_ids <- sample(
     unique(survey$participants$part_id),
@@ -380,6 +386,7 @@ For recent UN World Population Prospects data, the `wpp2024` package is
 available from GitHub (`remotes::install_github("PPgp/wpp2024")`):
 
 ``` r
+
 data("popAge1dt", package = "wpp2024")
 uk_pop <- popAge1dt[name == "United Kingdom" & year == 2020,
   .(lower.age.limit = age, population = pop * 1000)
@@ -398,111 +405,96 @@ head(uk_pop)
 Any comparable data frame will work, e.g. constructed by hand:
 
 ``` r
+
 custom_pop <- data.frame(
   lower.age.limit = c(0, 18, 60),
   population = c(12000000, 35000000, 20000000)
 )
 ```
 
-If the survey has a `country` column,
-[`survey_country_population()`](https://epiforecasts.io/socialmixr/reference/survey_country_population.md)
-looks up country- and year-specific population data:
+For the rest of this vignette we use a small constructed `uk_pop` for
+the United Kingdom, sufficient to illustrate the post-processing
+functions:
 
 ``` r
-survey_country_population(polymod, countries = "United Kingdom")
-#>     lower.age.limit population
-#>               <int>      <num>
-#>  1:               0    3453670
-#>  2:               5    3558887
-#>  3:              10    3826567
-#>  4:              15    3960166
-#>  5:              20    3906577
-#>  6:              25    3755132
-#>  7:              30    4169859
-#>  8:              35    4694734
-#>  9:              40    4655093
-#> 10:              45    3989175
-#> 11:              50    3615150
-#> 12:              55    3902231
-#> 13:              60    3126452
-#> 14:              65    2710063
-#> 15:              70    2352113
-#> 16:              75    1964744
-#> 17:              80    1480606
-#> 18:              85     757996
-#> 19:              90     324245
-#> 20:              95      74738
-#> 21:             100       8553
-#>     lower.age.limit population
-#>               <int>      <num>
-```
 
-This uses the older
-[`wpp2017`](https://cran.r-project.org/package=wpp2017) package, an
-optional (Suggests) dependency that needs to be installed separately. It
-is kept for backwards compatibility; use more recent population data (as
-shown above) where possible.
+uk_pop <- data.frame(
+  lower.age.limit = c(0, 1, 5, 15),
+  population = c(750000, 3200000, 7500000, 56000000)
+)
+```
 
 ## Symmetric contact matrices
 
 Conceivably, contact matrices should be symmetric: the total number of
 contacts made by members of one age group with those of another should
-be the same as vice versa. Mathematically, if $m_{ij}$ is the mean
-number of contacts made by members of age group $i$ with members of age
-group $j$, and the total number of people in age group $i$ is $N_{i}$,
-then
+be the same as vice versa. Mathematically, if $`m_{ij}`$ is the mean
+number of contacts made by members of age group $`i`$ with members of
+age group $`j`$, and the total number of people in age group $`i`$ is
+$`N_i`$, then
 
-$$m_{ij}N_{i} = m_{ji}N_{j}$$
+``` math
+m_{ij} N_i = m_{ji}N_j
+```
 
 Because of variation in the sample from which the contact matrix is
 obtained, this relationship is usually not fulfilled exactly. In order
 to obtain a symmetric contact matrix that fulfills it, one can use
 
-$$m\prime_{ij} = \frac{1}{2N_{i}}\left( m_{ij}N_{i} + m_{ji}N_{j} \right)$$
+``` math
+m'_{ij} = \frac{1}{2N_i} (m_{ij} N_i + m_{ji} N_j)
+```
 
 To get this version of the contact matrix, pipe the matrix through
 [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
 passing the population data:
 
 ``` r
-uk_pop <- survey_country_population(polymod, countries = "United Kingdom")
 
 polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
   compute_matrix() |>
   symmetrise(survey_pop = uk_pop)
 #>           contact.age.group
-#> age.group       [0,1)     [1,5)   [5,15) [15,Inf)
-#>   [0,1)    0.40000000 0.6250000 0.764365 4.122919
-#>   [1,5)    0.15625000 1.9375000 1.406063 5.929829
-#>   [5,15)   0.07148821 0.5260153 7.946078 7.428739
-#>   [15,Inf) 0.05759306 0.3313352 1.109550 9.594101
+#> age.group       [0,1)     [1,5)    [5,15) [15,Inf)
+#>   [0,1)    0.40000000 0.6400000 0.7558824 4.172659
+#>   [1,5)    0.15000000 1.9375000 1.3229320 5.858778
+#>   [5,15)   0.07558824 0.5644510 7.9460784 7.926570
+#>   [15,Inf) 0.05588383 0.3347873 1.0615942 9.594101
 ```
 
 ## Contact rates per capita
 
-The contact matrix per capita $c_{ij}$ contains the social contact rates
-of one individual of age $i$ with one individual of age $j$, given the
-population details. For example, $c_{ij}$ is used in infectious disease
-modelling to calculate the force of infection, which is based on the
-likelihood that one susceptible individual of age $i$ will be in contact
-with one infectious individual of age $j$. The contact rates per capita
-are calculated as follows:
+The contact matrix per capita $`c_{ij}`$ contains the social contact
+rates of one individual of age $`i`$ with one individual of age $`j`$,
+given the population details. For example, $`c_{ij}`$ is used in
+infectious disease modelling to calculate the force of infection, which
+is based on the likelihood that one susceptible individual of age $`i`$
+will be in contact with one infectious individual of age $`j`$. The
+contact rates per capita are calculated as follows:
 
-$$c_{ij} = \frac{m_{ij}}{N_{j}}$$
+``` math
+c_{ij} =  \tfrac{m_{ij}}{N_{j}}
+```
 
 Pipe the matrix through
 [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md)
 to convert to per-capita rates. If combined with
 [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
-the contact matrix $m_{ij}$ can show asymmetry if the sub-population
+the contact matrix $`m_{ij}`$ can show asymmetry if the sub-population
 sizes are different, but the contact matrix per capita will be fully
 symmetric:
 
-$$c\prime_{ij} = \frac{m_{ij}N_{i} + m_{ji}N_{j}}{2N_{i}N_{j}} = c\prime_{ji}$$
+``` math
+c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}
+```
 
 ``` r
-de_pop <- survey_country_population(polymod, countries = "Germany")
+
+de_pop <- data.frame(
+  lower.age.limit = c(0, 60),
+  population = c(67000000, 16000000)
+)
 
 polymod[country == "Germany"] |>
   assign_age_groups(age_limits = c(0, 60)) |>
@@ -511,8 +503,8 @@ polymod[country == "Germany"] |>
   per_capita(survey_pop = de_pop)
 #>           contact.age.group
 #> age.group        [0,60)     [60,Inf)
-#>   [0,60)   1.261735e-07 4.418248e-08
-#>   [60,Inf) 4.418248e-08 1.047852e-07
+#>   [0,60)   1.155803e-07 4.674434e-08
+#>   [60,Inf) 4.674434e-08 1.329225e-07
 ```
 
 ## Splitting contact matrices
@@ -520,44 +512,45 @@ polymod[country == "Germany"] |>
 [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
 decomposes the contact matrix into a *global* component as well as
 components representing *contacts*, *assortativity* and *demography*.
-The elements $m_{ij}$ of the contact matrix are modelled as
+The elements $`m_{ij}`$ of the contact matrix are modelled as
 
-$$m_{ij} = cqd_{i}a_{ij}n_{j}$$
+``` math
+ m_{ij} = c q d_i a_{ij} n_j 
+```
 
-where $c$ is the mean number of contacts across the whole population,
-$cqd_{i}$ is the number of contacts that a member of group $i$ makes
-across age groups, and $n_{j}$ is the proportion of the surveyed
-population in age group $j$. The constant $q$ is set so that $cq$ is
-equal to the value of the largest eigenvalue of $m_{ij}$; if used in an
-infectious disease model and assumed that every contact leads to
-infection, $cq$ can be replaced by the basic reproduction number
-$R_{0}$.
+where $`c`$ is the mean number of contacts across the whole population,
+$`c q d_i`$ is the number of contacts that a member of group $`i`$ makes
+across age groups, and $`n_j`$ is the proportion of the surveyed
+population in age group $`j`$. The constant $`q`$ is set so that $`c q`$
+is equal to the value of the largest eigenvalue of $`m_{ij}`$; if used
+in an infectious disease model and assumed that every contact leads to
+infection, $`c q`$ can be replaced by the basic reproduction number
+$`R_0`$.
 
 [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
-returns the assortativity matrix $a_{ij}$ in `$matrix`, with additional
-components `$mean.contacts` ($c$), `$normalisation` ($q$) and
-`$contacts` ($d_{i}$).
+returns the assortativity matrix $`a_{ij}`$ in `$matrix`, with
+additional components `$mean.contacts` ($`c`$), `$normalisation` ($`q`$)
+and `$contacts` ($`d_i`$).
 
 ``` r
+
 polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
   compute_matrix() |>
   split_matrix(survey_pop = uk_pop)
-#> Warning: Not all age groups represented in population data (5-year age band).
-#> ℹ Linearly estimating age group sizes from the 5-year bands.
 #> 
 #> ── Contact matrix (4 age groups) ──
 #> 
 #> Ages: "[0,1)", "[1,5)", "[5,15)", and "[15,Inf)"
 #> Participants: 1011
-#> Mean contacts: 11.55
+#> Mean contacts: 11.51
 #> 
 #>           contact.age.group
 #> age.group      [0,1)     [1,5)   [5,15)  [15,Inf)
-#>   [0,1)    4.1561551 2.0780776 1.230914 0.8611839
-#>   [1,5)    1.0955555 4.7169752 1.332022 0.7413849
-#>   [5,15)   0.1456110 0.7498969 4.415104 0.5158328
-#>   [15,Inf) 0.2500527 0.6930808 0.934443 1.0374170
+#>   [0,1)    4.2825397 2.0074405 1.356138 0.8507724
+#>   [1,5)    1.1288703 4.5566379 1.467531 0.7324218
+#>   [5,15)   0.1500389 0.7244067 4.864262 0.5095965
+#>   [15,Inf) 0.2576565 0.6695219 1.029506 1.0248749
 ```
 
 ## Filtering
@@ -571,6 +564,7 @@ referenced columns (participants, contacts, or both). Multiple filters
 can be chained:
 
 ``` r
+
 # contact matrix for school-related contacts
 polymod[cnt_school == 1] |>
   assign_age_groups(age_limits = c(0, 20, 60)) |>
@@ -613,19 +607,26 @@ for social contact behaviour, hence to obtain a weekly average, the
 survey data should represent the weekly 2/5 distribution of weekend/week
 days. To align the survey data to this distribution, one can obtain
 participant weights in the form of:
-$$w_{\text{day.of.week}} = \frac{5/7}{N_{\text{weekday}}/N}{\mspace{6mu}\text{OR}\mspace{6mu}}\frac{2/7}{N_{\text{weekend}}/N}$$
-with sample size $N$, and $N_{weekday}$ and $N_{weekend}$ the number of
-participants that were surveyed during weekdays and weekend days,
-respectively.
+``` math
+w_{\textrm{day.of.week}} = \tfrac{5/7}{N_{\textrm{weekday}}/N} \text{  OR   } \tfrac{2/7}{N_{\textrm{weekend}}/N}
+```
+with sample size $`N`$, and $`N_{weekday}`$ and $`N_{weekend}`$ the
+number of participants that were surveyed during weekdays and weekend
+days, respectively.
 
 Another driver of social contact patterns is age. To improve the
 representativeness of survey data, age-specific weights can be
-calculated as: $$w_{age} = \frac{P_{a}\ /\ P}{N_{a}\ /\ N}$$ with $P$
-the population size, $P_{a}$ the population fraction of age $a$, $N$ the
-survey sample size and $N_{a}$ the survey fraction of age $a$. The
-combination of age-specific and temporal weights for participant $i$ of
-age $a$ can be constructed as:
-$$w_{i} = w_{\text{age}}*w_{\text{day.of.week}}$$
+calculated as:
+``` math
+w_{age} = \tfrac{P_{a}\ /\ P}{N_{a}\ /\ N}
+```
+with $`P`$ the population size, $`P_a`$ the population fraction of age
+$`a`$, $`N`$ the survey sample size and $`N_a`$ the survey fraction of
+age $`a`$. The combination of age-specific and temporal weights for
+participant $`i`$ of age $`a`$ can be constructed as:
+``` math
+w_{i} = w_{\textrm{age}} * w_{\textrm{day.of.week}} 
+```
 
 If the social contact analysis is based on stratification by splitting
 the population into non-overlapping groups, it requires the weights to
@@ -642,6 +643,7 @@ composable: each call multiplies new weights into the participants’
 and 6 for Saturday, so weekdays are 1-5 and weekend days are 0 and 6:
 
 ``` r
+
 polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 18, 60)) |>
   weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6))) |>
@@ -649,9 +651,9 @@ polymod[country == "United Kingdom"] |>
   compute_matrix()
 #>           contact.age.group
 #> age.group    [0,18)  [18,60)  [60,Inf)
-#>   [0,18)   7.637824 5.372202 0.4878625
-#>   [18,60)  2.279212 7.924999 1.0941688
-#>   [60,Inf) 1.187088 5.303965 2.2302108
+#>   [0,18)   11.72388 5.092404 0.2908445
+#>   [18,60)        NA       NA        NA
+#>   [60,Inf)       NA       NA        NA
 ```
 
 The first
@@ -669,6 +671,7 @@ weight. For instance, to give more importance to participants from large
 households:
 
 ``` r
+
 polymod |>
   assign_age_groups(age_limits = c(0, 18, 60)) |>
   weigh("hh_size") |>
@@ -693,16 +696,17 @@ and re-normalises so that the weight sum equals the group size. Weights
 close to the threshold may slightly exceed it after re-normalisation.
 
 ``` r
+
 polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 18, 60)) |>
   weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6))) |>
   weigh("part_age", target = uk_pop) |>
   compute_matrix(weight_threshold = 3)
 #>           contact.age.group
-#> age.group    [0,18)  [18,60)  [60,Inf)
-#>   [0,18)   7.637824 5.372202 0.4878625
-#>   [18,60)  2.282014 7.932570 1.0774717
-#>   [60,Inf) 1.110740 5.275613 2.2700262
+#> age.group   [0,18)  [18,60)  [60,Inf)
+#>   [0,18)   10.2339 5.102618 0.3610971
+#>   [18,60)       NA       NA        NA
+#>   [60,Inf)      NA       NA        NA
 ```
 
 ### Numerical example
@@ -720,7 +724,8 @@ age. The ages are not equally represented in the sample, though we
 assume they are equally present in the reference population. We will
 calculate the weighted average number of contacts by age and by age
 group, using {1,2} and {3} years of age. The following table shows the
-reported number of contacts per participant $i$, represented by $m_{i}$:
+reported number of contacts per participant $`i`$, represented by
+$`m_i`$:
 
 | age | day.of.week | age.group | m_i |
 |----:|:------------|:----------|----:|
@@ -735,6 +740,7 @@ The summary statistics for the sample (N) and reference population (P)
 are as follows
 
 ``` r
+
 N <- 6
 N_age <- c(2, 3, 1)
 N_age.group <- c(5, 1)
@@ -763,8 +769,8 @@ and age-specific unweighted averages on the number of contacts:
 
 The following table contains the participants weights based on the
 survey day with and without the population and sample size constants
-($w$ and $w\prime$, respectively). Note that the standardised weights
-$\widetilde{w}$ and $\widetilde{w\prime}$ are the same:
+($`w`$ and $`w'`$, respectively). Note that the standardised weights
+$`\tilde{w}`$ and $`\tilde{w'}`$ are the same:
 
 | age | day.of.week | age.group | m_i |    w | w_tilde |  w_dot | w_dot_tilde |
 |----:|:------------|:----------|----:|-----:|--------:|-------:|------------:|
@@ -775,9 +781,9 @@ $\widetilde{w}$ and $\widetilde{w\prime}$ are the same:
 |   2 | week        | A         |   8 | 1.43 |    1.43 | 714.29 |        1.43 |
 |   3 | week        | B         |  15 | 1.43 |    1.43 | 714.29 |        1.43 |
 
-Note the different scale of $w$ and $w\prime$, and the more
-straightforward interpretation of the numerical value of $w$ in terms of
-relative differences to apply truncation. Using the standardised
+Note the different scale of $`w`$ and $`w'`$, and the more
+straightforward interpretation of the numerical value of $`w`$ in terms
+of relative differences to apply truncation. Using the standardised
 weights, we are able to calculate the weighted number of contacts:
 
 | age | day.of.week | age.group | m_i |    w | w_tilde | m_i \* w_tilde |
@@ -884,8 +890,8 @@ contacts, we end up with:
 
 The single participant of 3 years of age has a very large influence on
 the weighted population average. As such, we propose to truncate the
-relative age-specific weights $w$ at 3. As such, the weighted population
-average equals:
+relative age-specific weights $`w`$ at 3. As such, the weighted
+population average equals:
 
     #> weighted average number of contacts after truncation: 10.28
 
@@ -898,6 +904,7 @@ The contact matrices can be plotted by using the
 function of the `ggplot2` package.
 
 ``` r
+
 df <- reshape2::melt(
   mr,
   varnames = c("age.group", "age.group.contact"),
@@ -918,12 +925,14 @@ function as a grid of coloured rectangles with the numeric values in the
 cells. Heat colours are used by default, though this can be changed.
 
 ``` r
+
 matrix_plot(mr)
 ```
 
 ![](socialmixr_files/figure-html/unnamed-chunk-35-1.png)
 
 ``` r
+
 matrix_plot(mr, color.palette = gray.colors)
 ```
 
@@ -931,18 +940,16 @@ matrix_plot(mr, color.palette = gray.colors)
 
 ## References
 
-Hens, Niel, Girma Minalu Ayele, Nele Goeyvaerts, Marc Aerts, Joel
-Mossong, John W. Edmunds, and Philippe Beutels. 2009. “Estimating the
-Impact of School Closure on Social Mixing Behaviour and the Transmission
-of Close Contact Infections in Eight European Countries.” *BMC
-Infectious Diseases* 9 (1): 1–12.
+Hens, Niel, Girma Minalu Ayele, Nele Goeyvaerts, et al. 2009.
+“Estimating the Impact of School Closure on Social Mixing Behaviour and
+the Transmission of Close Contact Infections in Eight European
+Countries.” *BMC Infectious Diseases* 9 (1): 1–12.
 <https://doi.org/10.1186/1471-2334-9-187>.
 
 Kolenikov, Stas. 2016. “Post-Stratification or Non-Response Adjustment?”
 *Survey Practice* 9 (3): 2809. <https://doi.org/10.29115/SP-2016-0014>.
 
-Mossong, Joël, Niel Hens, Mark Jit, Philippe Beutels, Kari Auranen,
-Rafael Mikolajczyk, Marco Massari, et al. 2008. “Social Contacts and
+Mossong, Joël, Niel Hens, Mark Jit, et al. 2008. “Social Contacts and
 Mixing Patterns Relevant to the Spread of Infectious Diseases.” *PLOS
 Medicine* 5 (3): e74. <https://doi.org/10.1371/journal.pmed.0050074>.
 

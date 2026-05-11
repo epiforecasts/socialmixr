@@ -56,30 +56,32 @@ data frame of age-specific population data
 ## Examples
 
 ``` r
-ages_it_2015 <- wpp_age("Italy", 2015)
+# 5-year age bands for a population of 70 million
+it_pop <- data.frame(
+  lower.age.limit = seq(0, 80, by = 5),
+  population = c(rep(2.5e6, 4), rep(3.5e6, 4), rep(5e6, 6), 5e6, 7e6, 4e6)
+)
 
 # Modify the age data.frame to get age groups of 10 years instead of 5
-pop_age(ages_it_2015, age_limits = seq(0, 100, by = 10))
-#>    lower.age.limit population
-#> 1                0    5364003
-#> 2               10    5592457
-#> 3               20    5961399
-#> 4               30    7291448
-#> 5               40    9506109
-#> 6               50    8773851
-#> 7               60    7351345
-#> 8               70    5689656
-#> 9               80    3300856
-#> 10              90     655885
-#> 11             100      17203
+pop_age(it_pop, age_limits = seq(0, 100, by = 10))
+#>   lower.age.limit population
+#> 1               0    5.0e+06
+#> 2              10    5.0e+06
+#> 3              20    7.0e+06
+#> 4              30    7.0e+06
+#> 5              40    1.0e+07
+#> 6              50    1.0e+07
+#> 7              60    1.0e+07
+#> 8              70    1.2e+07
+#> 9              80    4.0e+06
 
 # The function will also automatically interpolate if necessary
-pop_age(ages_it_2015, age_limits = c(0, 18, 40, 65))
+pop_age(it_pop, age_limits = c(0, 18, 40, 65))
 #> Warning: Not all age groups represented in population data (5-year age band).
 #> ℹ Linearly estimating age group sizes from the 5-year bands.
 #>   lower.age.limit population
-#> 1               0    9841066
-#> 2              18   14368241
-#> 3              40   21988054
-#> 4              65   13306851
+#> 1               0    9.0e+06
+#> 2              18    1.5e+07
+#> 3              40    2.5e+07
+#> 4              65    2.1e+07
 ```

@@ -64,12 +64,13 @@ contact_matrix(
 
 - survey_pop:
 
-  survey population – either a data frame with columns 'lower.age.limit'
-  and 'population', or a character vector giving the name(s) of a
-  country or countries from the list that can be obtained via
-  `wpp_countries`; if NULL (default), will use the country populations
-  from the chosen countries, or all countries in the survey if
-  `countries` is NULL.
+  survey population – a data frame with columns `lower.age.limit` and
+  `population`. Passing `NULL` (the default) or a character vector of
+  country names triggers the **\[deprecated\]** implicit lookup via
+  [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md)
+  when `symmetric`, `split`, `per_capita`, `weigh_age`, or
+  `return_demography` is `TRUE`; supply an explicit data frame (e.g.
+  constructed from the `wpp2024` package or another source) instead.
 
 - age_limits:
 
@@ -137,12 +138,11 @@ contact_matrix(
 - missing_contact_age:
 
   if set to "remove" (default), participants that have contacts without
-  age information are removed; if set to "sample", contacts without age
-  information are sampled from all the contacts of participants of the
-  same age group; if set to "keep", contacts with missing age are kept
-  and will appear in the contact matrix in a column labelled "NA"; if
-  set to "ignore", contacts without age information are removed from the
-  analysis (but the participants that made them are kept).
+  age information are removed; if set to "keep", contacts with missing
+  age are kept and will appear in the contact matrix in a column
+  labelled "NA"; if set to "ignore", contacts without age information
+  are removed from the analysis (but the participants that made them are
+  kept). The "sample" option is defunct (errors).
 
 - weights:
 

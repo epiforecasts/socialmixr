@@ -19,18 +19,18 @@
 - [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
   : Generate a contact matrix from diary survey data
 - [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md)
-  **\[deprecated\]** : Download a survey from its Zenodo repository
+  **\[defunct\]** : Download a survey from its Zenodo repository
 - [`get_citation()`](https://epiforecasts.io/socialmixr/reference/get_citation.md)
-  **\[deprecated\]** : Citation for a survey
+  **\[defunct\]** : Citation for a survey
 - [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md)
-  **\[deprecated\]** : Get a survey, either from its Zenodo repository,
-  a set of files, or a survey variable
+  **\[defunct\]** : Get a survey, either from its Zenodo repository, a
+  set of files, or a survey variable
 - [`is_doi()`](https://epiforecasts.io/socialmixr/reference/is_doi.md) :
   Checks if a character string is a DOI
 - [`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md)
   : Convert lower age limits to age groups.
 - [`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md)
-  **\[deprecated\]** : List all surveys available for download
+  **\[defunct\]** : List all surveys available for download
 - [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
   : Load a survey from local files
 - [`matrix_plot()`](https://epiforecasts.io/socialmixr/reference/matrix_plot.md)
@@ -49,12 +49,12 @@
   assortativity
 - [`` `[`( ``*`<contact_survey>`*`)`](https://epiforecasts.io/socialmixr/reference/sub-.contact_survey.md)
   : Subset a contact survey
-- [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md) :
-  Contact survey
+- [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md)
+  **\[defunct\]** : Contact survey (defunct)
 - [`survey_countries()`](https://epiforecasts.io/socialmixr/reference/survey_countries.md)
-  **\[deprecated\]** : List all countries contained in a survey
+  **\[defunct\]** : List all countries contained in a survey
 - [`survey_country_population()`](https://epiforecasts.io/socialmixr/reference/survey_country_population.md)
-  : Get survey country population data
+  **\[deprecated\]** : Get survey country population data
 - [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md)
   : Symmetrise a contact matrix
 - [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md) :

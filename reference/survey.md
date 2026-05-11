@@ -1,6 +1,10 @@
-# Contact survey
+# Contact survey (defunct)
 
-Deprecated. Use `as_survey` instead.
+**\[defunct\]**
+
+`survey()` is defunct. Use
+[`as_contact_survey()`](https://epiforecasts.io/socialmixr/reference/as_contact_survey.md)
+instead.
 
 ## Usage
 
@@ -26,7 +30,11 @@ survey(participants, contacts, reference = NULL)
 
 ## Value
 
-a new survey object
+Always errors.
+
+## See also
+
+[`as_contact_survey()`](https://epiforecasts.io/socialmixr/reference/as_contact_survey.md)
 
 ## Author
 

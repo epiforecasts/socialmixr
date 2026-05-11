@@ -68,6 +68,8 @@ invisibly returns a character vector of the relevant columns
 
 ``` r
 data(polymod)
-check(polymod)
-#> → Check OK.
+try(check(polymod))
+#> Error : `check()` was deprecated in socialmixr 0.5.0 and is now defunct.
+#> ℹ Use `as_contact_survey()` instead to construct a `<contact_survey>` object.
+#>   This will perform necessary checks.
 ```

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">socialmixr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +34,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Handle deprecated argument</h1>
-      <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/v0.6.0/R/deprecate-args.R" class="external-link"><code>R/deprecate-args.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/R/deprecate-args.R" class="external-link"><code>R/deprecate-args.R</code></a></small>
       <div class="d-none name"><code>deprecate_arg.Rd</code></div>
     </div>
 
@@ -77,7 +77,8 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>the value to use (new_arg if provided, otherwise old_arg)</p>
+    <p><code>new_arg</code>. Aborts via <code><a href="https://lifecycle.r-lib.org/reference/deprecate_soft.html" class="external-link">lifecycle::deprecate_stop()</a></code> if <code>old_arg</code>
+is supplied.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

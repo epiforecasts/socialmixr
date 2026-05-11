@@ -13,7 +13,7 @@ weighted by population size."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">socialmixr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,7 @@ weighted by population size."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Symmetrise a contact matrix</h1>
-      <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/v0.6.0/R/postprocess-matrix.R" class="external-link"><code>R/postprocess-matrix.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/R/postprocess-matrix.R" class="external-link"><code>R/postprocess-matrix.R</code></a></small>
       <div class="d-none name"><code>symmetrise.Rd</code></div>
     </div>
 
@@ -87,7 +87,10 @@ before issuing a warning (default 2)</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="wpp_age.html">wpp_age</a></span><span class="op">(</span><span class="st">"United Kingdom"</span>, <span class="fl">2005</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  lower.age.limit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3500000</span>, <span class="fl">6000000</span>, <span class="fl">50000000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">polymod</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="op">(</span>\<span class="op">(</span><span class="va">s</span><span class="op">)</span> <span class="va">s</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span><span class="op">)</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
@@ -101,9 +104,9 @@ before issuing a warning (default 2)</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           contact.age.group</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> age.group      [0,5)   [5,15) [15,Inf)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    1.9157895 1.281846 5.558271</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   0.5994315 7.946078 7.428739</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 0.3882175 1.109550 9.594101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    1.9157895 1.169571 5.552082</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   0.6822497 7.946078 8.485886</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 0.3886458 1.018306 9.594101</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

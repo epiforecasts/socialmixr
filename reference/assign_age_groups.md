@@ -55,11 +55,13 @@ assign_age_groups(
 - missing_contact_age:
 
   if set to "remove" (default), participants that have contacts without
-  age information are removed; if set to "sample", contacts without age
-  information are sampled from all the contacts of participants of the
-  same age group; if set to "keep", contacts with missing age are kept
-  and treated as a separate age group; if set to "ignore", contact with
-  missing age are ignored in the contact analysis
+  age information are removed; if set to "keep", contacts with missing
+  age are kept and treated as a separate age group; if set to "ignore",
+  contacts with missing age are ignored in the contact analysis. The
+  "sample" option is defunct (errors). For contacts that have only an
+  age range (rather than a truly missing age), `estimated_contact_age`
+  controls how the range is resolved into a single age; it is not a
+  substitute for `missing_contact_age` when the age is entirely missing.
 
 ## Value
 

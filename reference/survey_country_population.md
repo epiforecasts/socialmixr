@@ -1,9 +1,14 @@
 # Get survey country population data
 
-Looks up the country and year inside a survey, or a provided "countries"
-value, and determines the corresponding demographics in the world
-population prospects data using
-[`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md).
+**\[deprecated\]**
+
+This function is deprecated alongside
+[`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md),
+which it wraps. The underlying `wpp2017` data is outdated. Construct a
+`data.frame` with columns `lower.age.limit` and `population` from a
+current source (e.g. the `wpp2024` package from GitHub) and pass it to
+[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+via the `survey_pop` argument instead.
 
 ## Usage
 
@@ -32,33 +37,21 @@ information is available from either the survey or countries argument.
 ## Examples
 
 ``` r
-survey_country_population(polymod)
-#>     lower.age.limit population
-#>               <int>      <num>
-#>  1:               0   13498647
-#>  2:               5   14193543
-#>  3:              10   15384855
-#>  4:              15   16464604
-#>  5:              20   17158735
-#>  6:              25   17416147
-#>  7:              30   18726407
-#>  8:              35   21118833
-#>  9:              40   21529102
-#> 10:              45   19927357
-#> 11:              50   18134701
-#> 12:              55   17122402
-#> 13:              60   14454988
-#> 14:              65   14280416
-#> 15:              70   11565417
-#> 16:              75    9469420
-#> 17:              80    6736784
-#> 18:              85    2832127
-#> 19:              90    1417066
-#> 20:              95     300205
-#> 21:             100      28212
-#>     lower.age.limit population
-#>               <int>      <num>
-survey_country_population(polymod, countries = "Belgium")
+if (requireNamespace("wpp2017", quietly = TRUE)) {
+  survey_country_population(polymod, countries = "Belgium")
+}
+#> Warning: `survey_country_population()` was deprecated in socialmixr 0.7.0.
+#> Pass a data frame with columns {.code lower.age.limit} and {.code population}
+#> to {.fn contact_matrix} via {.arg survey_pop} instead.
+#> ℹ The underlying {.pkg wpp2017} data is outdated; consider the {.pkg wpp2024}
+#>   package from GitHub for more recent data.
+#> Warning: `wpp_age()` was deprecated in socialmixr 0.6.0.
+#> Pass population data directly via the {.arg survey_pop} argument instead.
+#> ℹ The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from
+#>   GitHub for more recent data.
+#> ℹ The deprecated feature was likely used in the socialmixr package.
+#>   Please report the issue at
+#>   <https://github.com/epiforecasts/socialmixr/issues>.
 #>     lower.age.limit population
 #>               <int>      <num>
 #>  1:               0     583492
@@ -82,32 +75,6 @@ survey_country_population(polymod, countries = "Belgium")
 #> 19:              90      52117
 #> 20:              95      11126
 #> 21:             100       1087
-#>     lower.age.limit population
-#>               <int>      <num>
-survey_country_population(polymod, countries = c("Belgium", "Italy"))
-#>     lower.age.limit population
-#>               <int>      <num>
-#>  1:               0    3342241
-#>  2:               5    3305938
-#>  3:              10    3447403
-#>  4:              15    3544397
-#>  5:              20    3818506
-#>  6:              25    4449760
-#>  7:              30    5258993
-#>  8:              35    5570182
-#>  9:              40    5525281
-#> 10:              45    4915874
-#> 11:              50    4537519
-#> 12:              55    4551877
-#> 13:              60    3770551
-#> 14:              65    3819156
-#> 15:              70    3329171
-#> 16:              75    2771930
-#> 17:              80    2031237
-#> 18:              85     818477
-#> 19:              90     445093
-#> 20:              95      93168
-#> 21:             100       8612
 #>     lower.age.limit population
 #>               <int>      <num>
 ```

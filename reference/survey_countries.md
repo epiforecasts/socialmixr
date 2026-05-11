@@ -1,6 +1,6 @@
 # List all countries contained in a survey
 
-**\[deprecated\]**
+**\[defunct\]**
 
 ## Usage
 
@@ -27,28 +27,23 @@ survey_countries(survey, country.column = "country", ...)
 
 ## Value
 
-list of countries
+Always errors.
 
 ## Details
 
-`survey_countries()` has been deprecated in favour of using
-[`contactsurveys::download_survey()`](http://epiforecasts.io/contactsurveys/reference/download_survey.md),
+`survey_countries()` is defunct. Use
+[`contactsurveys::download_survey()`](http://epiforecasts.io/contactsurveys/reference/download_survey.md)
 and
-[`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md),
-and then exploring the country column yourself.
+[`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
+and then explore the country column yourself.
 
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 data(polymod)
 survey_countries(polymod)
-#> Warning: `survey_countries()` was deprecated in socialmixr 0.5.0.
-#> ℹ Please use `contactsurveys::download_survey()` instead.
-#> ℹ We recommend using contactsurveys::download_survey() to download your
-#>   surveys, and then you can load them with socialmixr::load_survey() and
-#>   explore which countries are in the data.
-#> [1] "Italy"          "Germany"        "Luxembourg"     "Netherlands"   
-#> [5] "Poland"         "United Kingdom" "Finland"        "Belgium"       
+} # }
 ## --> we now recommend
 if (FALSE) { # \dontrun{
 doi_peru <- "10.5281/zenodo.1095664" # nolint

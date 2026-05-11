@@ -1,11 +1,12 @@
 # Get a survey, either from its Zenodo repository, a set of files, or a survey variable
 
-**\[deprecated\]**
+**\[defunct\]**
 
-`get_survey()` has been deprecated in favour of using
+`get_survey()` is defunct. Use
 [`contactsurveys::download_survey()`](http://epiforecasts.io/contactsurveys/reference/download_survey.md)
 and then
-[`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md).
+[`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
+instead.
 
 Downloads survey data, or extracts them from files, and returns a clean
 data set. If a survey URL is accessed multiple times, the data will be
@@ -48,7 +49,7 @@ get_survey(survey, clear_cache = FALSE, ...)
 
 ## Value
 
-a survey in the correct format
+Always errors.
 
 ## Examples
 

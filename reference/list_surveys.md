@@ -1,9 +1,10 @@
 # List all surveys available for download
 
-**\[deprecated\]**
+**\[defunct\]**
 
-`list_surveys()` has been deprecated in favour of
-[`contactsurveys::list_surveys()`](http://epiforecasts.io/contactsurveys/reference/list_surveys.md).
+`list_surveys()` is defunct. Use
+[`contactsurveys::list_surveys()`](http://epiforecasts.io/contactsurveys/reference/list_surveys.md)
+instead.
 
 ## Usage
 
@@ -22,7 +23,7 @@ list_surveys(clear_cache = FALSE)
 
 ## Value
 
-character vector of surveys
+Always errors.
 
 ## Examples
 

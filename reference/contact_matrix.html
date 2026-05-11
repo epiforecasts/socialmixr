@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">socialmixr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +34,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Generate a contact matrix from diary survey data</h1>
-      <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/v0.6.0/R/contact_matrix.R" class="external-link"><code>R/contact_matrix.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/R/contact_matrix.R" class="external-link"><code>R/contact_matrix.R</code></a></small>
       <div class="d-none name"><code>contact_matrix.Rd</code></div>
     </div>
 
@@ -104,13 +104,14 @@ codes.</p></dd>
 
 
 <dt id="arg-survey-pop">survey_pop<a class="anchor" aria-label="anchor" href="#arg-survey-pop"></a></dt>
-<dd><p>survey population – either a data frame with
-columns 'lower.age.limit' and 'population', or a character
-vector giving the name(s) of a country or countries from the
-list that can be obtained via <code>wpp_countries</code>; if NULL
-(default), will use the country populations from the chosen
-countries, or all countries in the survey if <code>countries</code> is
-NULL.</p></dd>
+<dd><p>survey population – a data frame with columns
+<code>lower.age.limit</code> and <code>population</code>. Passing <code>NULL</code> (the default)
+or a character vector of country names triggers the
+<a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> implicit lookup via <code><a href="wpp_age.html">wpp_age()</a></code>
+when <code>symmetric</code>, <code>split</code>, <code>per_capita</code>, <code>weigh_age</code>, or
+<code>return_demography</code> is <code>TRUE</code>; supply an explicit data frame
+(e.g. constructed from the <code>wpp2024</code> package or another source)
+instead.</p></dd>
 
 
 <dt id="arg-age-limits">age_limits<a class="anchor" aria-label="anchor" href="#arg-age-limits"></a></dt>
@@ -186,13 +187,12 @@ appear in the contact matrix in a row labelled "NA".</p></dd>
 <dt id="arg-missing-contact-age">missing_contact_age<a class="anchor" aria-label="anchor" href="#arg-missing-contact-age"></a></dt>
 <dd><p>if set to "remove" (default),
 participants that have contacts without age information are
-removed; if set to "sample", contacts without age information
-are sampled from all the contacts of participants of the same
-age group; if set to "keep", contacts with missing age are
+removed; if set to "keep", contacts with missing age are
 kept and will appear in the contact matrix in a column
 labelled "NA"; if set to "ignore", contacts without age
 information are removed from the analysis (but the
-participants that made them are kept).</p></dd>
+participants that made them are kept). The "sample" option is
+defunct (errors).</p></dd>
 
 
 <dt id="arg-weights">weights<a class="anchor" aria-label="anchor" href="#arg-weights"></a></dt>

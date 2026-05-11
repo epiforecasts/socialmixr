@@ -8,6 +8,7 @@ package to derive social mixing matrices from survey data.
 The package can be installed using
 
 ``` r
+
 install.packages("socialmixr")
 ```
 
@@ -15,6 +16,7 @@ The current development version can be installed using the `remotes`
 package
 
 ``` r
+
 remotes::install_github("epiforecasts/socialmixr")
 ```
 
@@ -26,6 +28,7 @@ weighing participants, and computing the matrix. A minimal example using
 the included POLYMOD data:
 
 ``` r
+
 library(socialmixr)
 data(polymod)
 

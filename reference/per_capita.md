@@ -38,11 +38,10 @@ per_capita(x, survey_pop, ...)
 
 ``` r
 data(polymod)
-pop <- wpp_age("United Kingdom", 2005)
-#> Warning: `wpp_age()` was deprecated in socialmixr 0.6.0.
-#> Pass population data directly via the {.arg survey_pop} argument instead.
-#> ℹ The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from
-#>   GitHub for more recent data.
+pop <- data.frame(
+  lower.age.limit = c(0, 5, 15),
+  population = c(3500000, 6000000, 50000000)
+)
 polymod |>
   (\(s) s[country == "United Kingdom"])() |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
@@ -56,7 +55,7 @@ polymod |>
 #> 
 #>           contact.age.group
 #> age.group         [0,5)       [5,15)     [15,Inf)
-#>   [0,5)    5.547112e-07 1.938376e-07 1.117610e-07
-#>   [5,15)   1.532896e-07 1.075909e-06 1.257024e-07
-#>   [15,Inf) 1.130535e-07 1.747666e-07 1.940255e-07
+#>   [0,5)    5.473684e-07 2.385965e-07 1.105263e-07
+#>   [5,15)   1.512605e-07 1.324346e-06 1.243137e-07
+#>   [15,Inf) 1.115570e-07 2.151217e-07 1.918820e-07
 ```
