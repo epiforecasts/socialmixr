@@ -290,7 +290,8 @@ For arbitrary discrete joins, `weigh()` itself takes a two-column data frame who
 ```{r eval=FALSE}
 country_target <- data.frame(
   country = c("United Kingdom", "Germany", "Italy"),
-  p = c(0.3, 0.4, 0.3)
+  p = c(0.3, 0.4, 0.3),
+  stringsAsFactors = FALSE
 )
 polymod |>
   assign_age_groups(age_limits = c(0, 18, 60)) |>
