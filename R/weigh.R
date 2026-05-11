@@ -140,21 +140,26 @@ weigh <- function(survey, by, target = NULL, groups = NULL, ...) {
     participants[, weight := 1]
   }
 
-  kind <- classify_target(target, by, groups)
-  participants <- switch(
-    kind,
-    direct = weigh_direct(participants, by),
-    join = weigh_join_warn_groups(participants, by, target, groups),
-    population = weigh_population_deprecated(participants, target, ...),
-    named = weigh_named_warn_groups(participants, by, target, groups),
-    grouped = weigh_grouped(participants, by, target, groups),
-    cli::cli_abort(
-      "Cannot interpret {.arg target}. It must be {.code NULL} (direct \\
-       numeric weighting), a data frame with a column matching {.arg by}, \\
-       a named numeric vector, or an unnamed numeric vector with \\
-       {.arg groups}."
-    )
-  )
+  participants <- if (is.null(target)) {
+    if (!is.null(groups)) {
+      cli_abort_unknown_target()
+    }
+    weigh_direct(participants, by)
+  } else if (is.data.frame(target)) {
+    if (by %in% colnames(target)) {
+      weigh_join_warn_groups(participants, by, target, groups)
+    } else {
+      weigh_population_deprecated(participants, target, ...)
+    }
+  } else if (!is.numeric(target)) {
+    cli_abort_unknown_target()
+  } else if (!is.null(names(target))) {
+    weigh_named_warn_groups(participants, by, target, groups)
+  } else if (!is.null(groups)) {
+    weigh_grouped(participants, by, target, groups)
+  } else {
+    cli_abort_unknown_target()
+  }
 
   survey$participants <- participants
   survey
@@ -213,29 +218,14 @@ weigh_by_age <- function(survey, pop, ...) {
   survey
 }
 
-classify_target <- function(target, by, groups) {
-  if (is.null(target)) {
-    if (is.null(groups)) {
-      return("direct")
-    }
-    return("unknown")
-  }
-  if (is.data.frame(target)) {
-    if (by %in% colnames(target)) {
-      return("join")
-    }
-    return("population")
-  }
-  if (!is.numeric(target)) {
-    return("unknown")
-  }
-  if (!is.null(names(target))) {
-    return("named")
-  }
-  if (!is.null(groups)) {
-    return("grouped")
-  }
-  "unknown"
+cli_abort_unknown_target <- function() {
+  cli::cli_abort(
+    "Cannot interpret {.arg target}. It must be {.code NULL} (direct \\
+     numeric weighting), a data frame with a column matching {.arg by}, \\
+     a named numeric vector, or an unnamed numeric vector with \\
+     {.arg groups}.",
+    call = rlang::caller_env()
+  )
 }
 
 weigh_join_warn_groups <- function(participants, by, target, groups) {
