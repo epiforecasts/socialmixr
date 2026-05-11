@@ -224,10 +224,10 @@ mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
 #>           contact.age.group
 #> age.group       [0,1)     [1,5)    [5,15)  [15,Inf)
-#>   [0,1)    0.29470085 1.1606838  2.953504  8.615043
-#>   [1,5)    0.13206436 3.7159656  2.628838 11.334171
-#>   [5,15)   0.04805830 0.7577509 16.362650 11.733569
-#>   [15,Inf) 0.06019965 0.5871647  2.773384 19.188292
+#>   [0,1)    0.53215035 1.6925175  2.340647  9.893304
+#>   [1,5)    0.26633433 3.7805425  2.154390 10.810434
+#>   [5,15)   0.02604082 1.1632021 17.151424 12.765926
+#>   [15,Inf) 0.05595742 0.8467467  2.693283 19.773390
 ```
 
 ## Demography
@@ -518,15 +518,15 @@ applies this post-stratification normalisation within age groups.
 
 [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md) is
 composable: each call multiplies new weights into the participants’
-`weight` column. In POLYMOD, the `dayofweek` column uses 0 for Sunday
-and 6 for Saturday, so weekdays are 1-5 and weekend days are 0 and 6:
+`weight` column. Common recipes are wrapped as `weigh_by_*()`
+convenience functions:
 
 ``` r
 
 polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 18, 60)) |>
-  weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6))) |>
-  weigh("part_age", target = uk_pop) |>
+  weigh_by_dayofweek() |>
+  weigh_by_age(uk_pop) |>
   compute_matrix()
 #>           contact.age.group
 #> age.group    [0,18)  [18,60)  [60,Inf)
@@ -535,11 +535,32 @@ polymod[country == "United Kingdom"] |>
 #>   [60,Inf)       NA       NA        NA
 ```
 
-The first
-[`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md) call
+[`weigh_by_dayofweek()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
 assigns weekday participants a total weight of 5 and weekend
-participants a total weight of 2 (the weekly 5/2 split). The second call
-post-stratifies against the population structure in `uk_pop`.
+participants a total weight of 2 (the weekly 5/2 split).
+[`weigh_by_age()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+post-stratifies against a target population: it interpolates `uk_pop` to
+single-year ages with
+[`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+and multiplies in the ratio of target to observed age share.
+
+For arbitrary discrete joins,
+[`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+itself takes a two-column data frame whose key column matches `by` —
+e.g. pooling participants across countries by a target share:
+
+``` r
+
+country_target <- data.frame(
+  country = c("United Kingdom", "Germany", "Italy"),
+  p = c(0.3, 0.4, 0.3),
+  stringsAsFactors = FALSE
+)
+polymod |>
+  assign_age_groups(age_limits = c(0, 18, 60)) |>
+  weigh("country", target = country_target) |>
+  compute_matrix()
+```
 
 ### User-defined participant weights
 
@@ -577,8 +598,8 @@ close to the threshold may slightly exceed it after re-normalisation.
 
 polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 18, 60)) |>
-  weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6))) |>
-  weigh("part_age", target = uk_pop) |>
+  weigh_by_dayofweek() |>
+  weigh_by_age(uk_pop) |>
   compute_matrix(weight_threshold = 3)
 #>           contact.age.group
 #> age.group   [0,18)  [18,60)  [60,Inf)
@@ -793,7 +814,7 @@ ggplot(df, aes(x = age.group, y = age.group.contact, fill = contacts)) +
   geom_tile()
 ```
 
-![](intro_files/figure-html/unnamed-chunk-38-1.png)
+![](intro_files/figure-html/unnamed-chunk-39-1.png)
 
 ### Using R base
 
@@ -807,13 +828,13 @@ cells. Heat colours are used by default, though this can be changed.
 matrix_plot(mr)
 ```
 
-![](intro_files/figure-html/unnamed-chunk-39-1.png)
+![](intro_files/figure-html/unnamed-chunk-40-1.png)
 
 ``` r
 
 matrix_plot(mr, color.palette = gray.colors)
 ```
 
-![](intro_files/figure-html/unnamed-chunk-39-2.png)
+![](intro_files/figure-html/unnamed-chunk-40-2.png)
 
 ## References

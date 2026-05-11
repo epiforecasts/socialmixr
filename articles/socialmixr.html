@@ -692,25 +692,38 @@ exclusive cells equal the known population totals <span class="citation">(<a hre
 exclusive and cover the whole population. <code><a href="../reference/compute_matrix.html">compute_matrix()</a></code>
 applies this post-stratification normalisation within age groups.</p>
 <p><code><a href="../reference/weigh.html">weigh()</a></code> is composable: each call multiplies new weights
-into the participants’ <code>weight</code> column. In POLYMOD, the
-<code>dayofweek</code> column uses 0 for Sunday and 6 for Saturday, so
-weekdays are 1-5 and weekend days are 0 and 6:</p>
+into the participants’ <code>weight</code> column. Common recipes are
+wrapped as <code>weigh_by_*()</code> convenience functions:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"dayofweek"</span>, target <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">2</span><span class="op">)</span>, groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"part_age"</span>, target <span class="op">=</span> <span class="va">uk_pop</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/weigh.html">weigh_by_dayofweek</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/weigh.html">weigh_by_age</a></span><span class="op">(</span><span class="va">uk_pop</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group    [0,18)  [18,60)  [60,Inf)</span></span>
 <span><span class="co">#&gt;   [0,18)   11.72388 5.092404 0.2908445</span></span>
 <span><span class="co">#&gt;   [18,60)        NA       NA        NA</span></span>
 <span><span class="co">#&gt;   [60,Inf)       NA       NA        NA</span></span></code></pre></div>
-<p>The first <code><a href="../reference/weigh.html">weigh()</a></code> call assigns weekday participants a
+<p><code><a href="../reference/weigh.html">weigh_by_dayofweek()</a></code> assigns weekday participants a
 total weight of 5 and weekend participants a total weight of 2 (the
-weekly 5/2 split). The second call post-stratifies against the
-population structure in <code>uk_pop</code> (passed as a data
-frame).</p>
+weekly 5/2 split). <code><a href="../reference/weigh.html">weigh_by_age()</a></code> post-stratifies against a
+target population: it interpolates <code>uk_pop</code> to single-year
+ages with <code><a href="../reference/pop_age.html">pop_age()</a></code> and multiplies in the ratio of target
+to observed age share.</p>
+<p>For arbitrary discrete joins, <code><a href="../reference/weigh.html">weigh()</a></code> itself takes a
+two-column data frame whose key column matches <code>by</code> —
+e.g. pooling participants across countries by a target share:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">country_target</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  country <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"United Kingdom"</span>, <span class="st">"Germany"</span>, <span class="st">"Italy"</span><span class="op">)</span>,</span>
+<span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.3</span><span class="op">)</span>,</span>
+<span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">polymod</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"country"</span>, target <span class="op">=</span> <span class="va">country_target</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="user-defined-participant-weights">User-defined participant weights<a class="anchor" aria-label="anchor" href="#user-defined-participant-weights"></a>
@@ -718,7 +731,7 @@ frame).</p>
 <p><code><a href="../reference/weigh.html">weigh()</a></code> with no <code>target</code> multiplies an
 existing participant column directly into the weight. For instance, to
 give more importance to participants from large households:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">polymod</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"hh_size"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -741,11 +754,11 @@ weights. <code><a href="../reference/compute_matrix.html">compute_matrix()</a></
 re-normalises so that the weight sum equals the group size. Weights
 close to the threshold may slightly exceed it after
 re-normalisation.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"dayofweek"</span>, target <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">2</span><span class="op">)</span>, groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"part_age"</span>, target <span class="op">=</span> <span class="va">uk_pop</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/weigh.html">weigh_by_dayofweek</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/weigh.html">weigh_by_age</a></span><span class="op">(</span><span class="va">uk_pop</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span>weight_threshold <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group   [0,18)  [18,60)  [60,Inf)</span></span>
@@ -821,7 +834,7 @@ represented by
 </table>
 <p>The summary statistics for the sample (N) and reference population
 (P) are as follows</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">6</span></span>
 <span><span class="va">N_age</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">N_age.group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span></span>
@@ -1455,7 +1468,7 @@ at 3. As such, the weighted population average equals:</p>
 <p>The contact matrices can be plotted by using the
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a></code> function of the <code>ggplot2</code>
 package.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">reshape2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/melt.html" class="external-link">melt</a></span><span class="op">(</span></span>
 <span>  <span class="va">mr</span>,</span>
 <span>  varnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age.group"</span>, <span class="st">"age.group.contact"</span><span class="op">)</span>,</span>
@@ -1464,7 +1477,7 @@ package.</p>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age.group</span>, y <span class="op">=</span> <span class="va">age.group.contact</span>, fill <span class="op">=</span> <span class="va">contacts</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="socialmixr_files/figure-html/unnamed-chunk-34-1.png" class="r-plt" alt="" width="384"></p>
+<p><img src="socialmixr_files/figure-html/unnamed-chunk-35-1.png" class="r-plt" alt="" width="384"></p>
 </div>
 <div class="section level3">
 <h3 id="using-r-base">Using R base<a class="anchor" aria-label="anchor" href="#using-r-base"></a>
@@ -1473,12 +1486,12 @@ package.</p>
 <code><a href="../reference/matrix_plot.html">matrix_plot()</a></code> function as a grid of coloured rectangles
 with the numeric values in the cells. Heat colours are used by default,
 though this can be changed.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/matrix_plot.html">matrix_plot</a></span><span class="op">(</span><span class="va">mr</span><span class="op">)</span></span></code></pre></div>
-<p><img src="socialmixr_files/figure-html/unnamed-chunk-35-1.png" class="r-plt" alt="" width="384"></p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/matrix_plot.html">matrix_plot</a></span><span class="op">(</span><span class="va">mr</span><span class="op">)</span></span></code></pre></div>
+<p><img src="socialmixr_files/figure-html/unnamed-chunk-36-1.png" class="r-plt" alt="" width="384"></p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/matrix_plot.html">matrix_plot</a></span><span class="op">(</span><span class="va">mr</span>, color.palette <span class="op">=</span> <span class="va">gray.colors</span><span class="op">)</span></span></code></pre></div>
-<p><img src="socialmixr_files/figure-html/unnamed-chunk-35-2.png" class="r-plt" alt="" width="384"></p>
+<p><img src="socialmixr_files/figure-html/unnamed-chunk-36-2.png" class="r-plt" alt="" width="384"></p>
 </div>
 </div>
 <div class="section level2">

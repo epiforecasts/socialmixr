@@ -57,8 +57,10 @@
   **\[deprecated\]** : Get survey country population data
 - [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md)
   : Symmetrise a contact matrix
-- [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md) :
-  Weigh survey participants
+- [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  [`weigh_by_dayofweek()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  [`weigh_by_age()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  : Weigh survey participants
 - [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md)
   **\[deprecated\]** : Get age-specific population data according to the
   World Population Prospects 2017 edition

@@ -231,10 +231,10 @@
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group       [0,1)     [1,5)    [5,15)  [15,Inf)</span></span>
-<span><span class="co">#&gt;   [0,1)    0.29470085 1.1606838  2.953504  8.615043</span></span>
-<span><span class="co">#&gt;   [1,5)    0.13206436 3.7159656  2.628838 11.334171</span></span>
-<span><span class="co">#&gt;   [5,15)   0.04805830 0.7577509 16.362650 11.733569</span></span>
-<span><span class="co">#&gt;   [15,Inf) 0.06019965 0.5871647  2.773384 19.188292</span></span></code></pre></div>
+<span><span class="co">#&gt;   [0,1)    0.53215035 1.6925175  2.340647  9.893304</span></span>
+<span><span class="co">#&gt;   [1,5)    0.26633433 3.7805425  2.154390 10.810434</span></span>
+<span><span class="co">#&gt;   [5,15)   0.02604082 1.1632021 17.151424 12.765926</span></span>
+<span><span class="co">#&gt;   [15,Inf) 0.05595742 0.8467467  2.693283 19.773390</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
 </h2>
@@ -405,13 +405,13 @@
 <p>Participant weights are commonly used to align sample and population characteristics in terms of temporal aspects and the age distribution. For example, the day of the week has been reported as a driving factor for social contact behaviour, hence to obtain a weekly average, the survey data should represent the weekly 2/5 distribution of weekend/week days. To align the survey data to this distribution, one can obtain participant weights in the form of: <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mtext mathvariant="normal">day.of.week</mtext></msub><mo>=</mo><mstyle displaystyle="false"><mfrac><mrow><mn>5</mn><mi>/</mi><mn>7</mn></mrow><mrow><msub><mi>N</mi><mtext mathvariant="normal">weekday</mtext></msub><mi>/</mi><mi>N</mi></mrow></mfrac></mstyle><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> OR </mtext><mspace width="0.333em"></mspace></mrow><mstyle displaystyle="false"><mfrac><mrow><mn>2</mn><mi>/</mi><mn>7</mn></mrow><mrow><msub><mi>N</mi><mtext mathvariant="normal">weekend</mtext></msub><mi>/</mi><mi>N</mi></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">w_{\textrm{day.of.week}} = \tfrac{5/7}{N_{\textrm{weekday}}/N} \text{  OR   } \tfrac{2/7}{N_{\textrm{weekend}}/N}</annotation></semantics></math> with sample size <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mrow><mi>w</mi><mi>e</mi><mi>e</mi><mi>k</mi><mi>d</mi><mi>a</mi><mi>y</mi></mrow></msub><annotation encoding="application/x-tex">N_{weekday}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mrow><mi>w</mi><mi>e</mi><mi>e</mi><mi>k</mi><mi>e</mi><mi>n</mi><mi>d</mi></mrow></msub><annotation encoding="application/x-tex">N_{weekend}</annotation></semantics></math> the number of participants that were surveyed during weekdays and weekend days, respectively.</p>
 <p>Another driver of social contact patterns is age. To improve the representativeness of survey data, age-specific weights can be calculated as: <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mrow><mi>a</mi><mi>g</mi><mi>e</mi></mrow></msub><mo>=</mo><mstyle displaystyle="false"><mfrac><mrow><msub><mi>P</mi><mi>a</mi></msub><mspace width="0.222em"></mspace><mi>/</mi><mspace width="0.222em"></mspace><mi>P</mi></mrow><mrow><msub><mi>N</mi><mi>a</mi></msub><mspace width="0.222em"></mspace><mi>/</mi><mspace width="0.222em"></mspace><mi>N</mi></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">w_{age} = \tfrac{P_{a}\ /\ P}{N_{a}\ /\ N}</annotation></semantics></math> with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math> the population size, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>P</mi><mi>a</mi></msub><annotation encoding="application/x-tex">P_a</annotation></semantics></math> the population fraction of age <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> the survey sample size and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mi>a</mi></msub><annotation encoding="application/x-tex">N_a</annotation></semantics></math> the survey fraction of age <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>. The combination of age-specific and temporal weights for participant <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> of age <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math> can be constructed as: <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>i</mi></msub><mo>=</mo><msub><mi>w</mi><mtext mathvariant="normal">age</mtext></msub><mo>*</mo><msub><mi>w</mi><mtext mathvariant="normal">day.of.week</mtext></msub></mrow><annotation encoding="application/x-tex">w_{i} = w_{\textrm{age}} * w_{\textrm{day.of.week}} </annotation></semantics></math></p>
 <p>If the social contact analysis is based on stratification by splitting the population into non-overlapping groups, it requires the weights to be standardised so that the weighted totals within mutually exclusive cells equal the known population totals <span class="citation" data-cites="kolenikov_post-stratification_2016">[@kolenikov_post-stratification_2016]</span>. <code><a href="../reference/compute_matrix.html">compute_matrix()</a></code> applies this post-stratification normalisation within age groups.</p>
-<p><code><a href="../reference/weigh.html">weigh()</a></code> is composable: each call multiplies new weights into the participants’ <code>weight</code> column. In POLYMOD, the <code>dayofweek</code> column uses 0 for Sunday and 6 for Saturday, so weekdays are 1-5 and weekend days are 0 and 6:</p>
+<p><code><a href="../reference/weigh.html">weigh()</a></code> is composable: each call multiplies new weights into the participants’ <code>weight</code> column. Common recipes are wrapped as <code>weigh_by_*()</code> convenience functions:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"dayofweek"</span>, target <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">2</span><span class="op">)</span>, groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"part_age"</span>, target <span class="op">=</span> <span class="va">uk_pop</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/weigh.html">weigh_by_dayofweek</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/weigh.html">weigh_by_age</a></span><span class="op">(</span><span class="va">uk_pop</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group    [0,18)  [18,60)  [60,Inf)</span></span>
@@ -419,12 +419,25 @@
 <span><span class="co">#&gt;   [18,60)        NA       NA        NA</span></span>
 <span><span class="co">#&gt;   [60,Inf)       NA       NA        NA</span></span></code></pre></div>
 </div>
-<p>The first <code><a href="../reference/weigh.html">weigh()</a></code> call assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). The second call post-stratifies against the population structure in <code>uk_pop</code>.</p>
+<p><code><a href="../reference/weigh.html">weigh_by_dayofweek()</a></code> assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). <code><a href="../reference/weigh.html">weigh_by_age()</a></code> post-stratifies against a target population: it interpolates <code>uk_pop</code> to single-year ages with <code><a href="../reference/pop_age.html">pop_age()</a></code> and multiplies in the ratio of target to observed age share.</p>
+<p>For arbitrary discrete joins, <code><a href="../reference/weigh.html">weigh()</a></code> itself takes a two-column data frame whose key column matches <code>by</code> — e.g. pooling participants across countries by a target share:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">country_target</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  country <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"United Kingdom"</span>, <span class="st">"Germany"</span>, <span class="st">"Italy"</span><span class="op">)</span>,</span>
+<span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.3</span><span class="op">)</span>,</span>
+<span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">polymod</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"country"</span>, target <span class="op">=</span> <span class="va">country_target</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
 </section><section class="level2"><h3 id="user-defined-participant-weights">User-defined participant weights<a class="anchor" aria-label="anchor" href="#user-defined-participant-weights"></a>
 </h3>
 <p><code><a href="../reference/weigh.html">weigh()</a></code> with no <code>target</code> multiplies an existing participant column directly into the weight. For instance, to give more importance to participants from large households:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">polymod</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"hh_size"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -439,11 +452,11 @@
 </h3>
 <p>If the survey population differs extensively from the demography, some participants can end up with relatively high weights and as such, an excessive contribution to the population average. This warrants the limitation of single participant influences by a truncation of the weights. <code><a href="../reference/compute_matrix.html">compute_matrix()</a></code> accepts a numeric <code>weight_threshold</code> which caps the standardised weights and re-normalises so that the weight sum equals the group size. Weights close to the threshold may slightly exceed it after re-normalisation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"dayofweek"</span>, target <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">2</span><span class="op">)</span>, groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"part_age"</span>, target <span class="op">=</span> <span class="va">uk_pop</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/weigh.html">weigh_by_dayofweek</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/weigh.html">weigh_by_age</a></span><span class="op">(</span><span class="va">uk_pop</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span>weight_threshold <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group   [0,18)  [18,60)  [60,Inf)</span></span>
@@ -509,7 +522,7 @@
 </div>
 <p>The summary statistics for the sample (N) and reference population (P) are as follows</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">6</span></span>
 <span><span class="va">N_age</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">N_age.group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span></span>
@@ -1134,7 +1147,7 @@
 </h3>
 <p>The contact matrices can be plotted by using the <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a></code> function of the <code>ggplot2</code> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">reshape2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/melt.html" class="external-link">melt</a></span><span class="op">(</span></span>
 <span>  <span class="va">mr</span>,</span>
 <span>  varnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age.group"</span>, <span class="st">"age.group.contact"</span><span class="op">)</span>,</span>
@@ -1145,7 +1158,7 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure><p><img src="intro_files/figure-html/unnamed-chunk-38-1.png" width="384"></p>
+<figure><p><img src="intro_files/figure-html/unnamed-chunk-39-1.png" width="384"></p>
 </figure>
 </div>
 </div>
@@ -1154,19 +1167,19 @@
 </h3>
 <p>The contact matrices can also be plotted with the <code><a href="../reference/matrix_plot.html">matrix_plot()</a></code> function as a grid of coloured rectangles with the numeric values in the cells. Heat colours are used by default, though this can be changed.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/matrix_plot.html">matrix_plot</a></span><span class="op">(</span><span class="va">mr</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure><p><img src="intro_files/figure-html/unnamed-chunk-39-1.png" width="384"></p>
+<figure><p><img src="intro_files/figure-html/unnamed-chunk-40-1.png" width="384"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/matrix_plot.html">matrix_plot</a></span><span class="op">(</span><span class="va">mr</span>, color.palette <span class="op">=</span> <span class="va">gray.colors</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure><p><img src="intro_files/figure-html/unnamed-chunk-39-2.png" width="384"></p>
+<figure><p><img src="intro_files/figure-html/unnamed-chunk-40-2.png" width="384"></p>
 </figure>
 </div>
 </div>

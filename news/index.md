@@ -2,6 +2,21 @@
 
 ## socialmixr (development version)
 
+- [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  gains a new canonical target shape: a two-column data frame whose key
+  column matches `by` is joined and multiplied into `weight`. This makes
+  recipes like `weigh(survey, "country", target = ...)` natural. The
+  previous silent dispatch on a population data frame (a `target` data
+  frame with `lower.age.limit`/`population` and no column matching `by`)
+  is soft-deprecated; use the new
+  [`weigh_by_age()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  for the same effect with an explicit name. New
+  [`weigh_by_dayofweek()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  is a thin wrapper around the existing 5/2 split.
+  [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)’s
+  named vector and `groups` paths are unchanged
+  ([\#314](https://github.com/epiforecasts/socialmixr/issues/314)).
+
 - Advance deprecation cycle
   ([\#312](https://github.com/epiforecasts/socialmixr/issues/312)).
   [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md),
