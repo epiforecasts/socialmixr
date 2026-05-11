@@ -60,7 +60,10 @@ test_that("weigh() data.frame target warns about unmatched values", {
 test_that("weigh() data.frame target errors on wrong number of columns", {
   survey <- copy(polymod_grouped)
   bad <- data.frame(
-    age.group = "[0,5)", w = 1, extra = 0, stringsAsFactors = FALSE
+    age.group = "[0,5)",
+    w = 1,
+    extra = 0,
+    stringsAsFactors = FALSE
   )
   expect_error(
     weigh(survey, "age.group", target = bad),
@@ -71,7 +74,9 @@ test_that("weigh() data.frame target errors on wrong number of columns", {
 test_that("weigh() data.frame target errors on non-numeric value column", {
   survey <- copy(polymod_grouped)
   bad <- data.frame(
-    age.group = "[0,5)", w = "x", stringsAsFactors = FALSE
+    age.group = "[0,5)",
+    w = "x",
+    stringsAsFactors = FALSE
   )
   expect_error(
     weigh(survey, "age.group", target = bad),
@@ -112,7 +117,9 @@ test_that("weigh() with unnamed vector + groups works (no deprecation)", {
 test_that("multiple weigh() calls accumulate", {
   ages <- levels(polymod_grouped$participants$age.group)
   target <- data.frame(
-    age.group = ages, w = rep(2, length(ages)), stringsAsFactors = FALSE
+    age.group = ages,
+    w = rep(2, length(ages)),
+    stringsAsFactors = FALSE
   )
 
   twice <- polymod_grouped |>
@@ -134,7 +141,9 @@ test_that("weigh() auto-creates the weight column", {
   }
   ages <- levels(survey$participants$age.group)
   target <- data.frame(
-    age.group = ages, w = seq_along(ages), stringsAsFactors = FALSE
+    age.group = ages,
+    w = seq_along(ages),
+    stringsAsFactors = FALSE
   )
   result <- weigh(survey, "age.group", target = target)
   expect_true("weight" %in% colnames(result$participants))
@@ -152,7 +161,9 @@ test_that("weigh() does not modify original", {
   original <- copy(polymod_grouped$participants)
   ages <- levels(polymod_grouped$participants$age.group)
   target <- data.frame(
-    age.group = ages, w = seq_along(ages), stringsAsFactors = FALSE
+    age.group = ages,
+    w = seq_along(ages),
+    stringsAsFactors = FALSE
   )
   weigh(polymod_grouped, "age.group", target = target)
   expect_identical(polymod_grouped$participants, original)
@@ -222,7 +233,8 @@ test_that("weigh_by_age() errors when part_age missing", {
   survey <- polymod[country == "Italy"]
   survey$participants <- copy(survey$participants)
   uk_pop <- data.frame(
-    lower.age.limit = 0:99, population = rep(500000L, 100)
+    lower.age.limit = 0:99,
+    population = rep(500000L, 100)
   )
   expect_error(weigh_by_age(survey, uk_pop), "assign_age_groups")
 })
@@ -239,7 +251,8 @@ test_that("weigh() with population data frame is deprecated", {
   )
 })
 
-test_that("weigh() errors for mismatched target/groups lengths", { # nolint: nonportable_path_linter
+# nolint next: nonportable_path_linter
+test_that("weigh() errors for mismatched target/groups lengths", {
   expect_error(
     weigh(
       polymod_grouped,

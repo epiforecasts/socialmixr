@@ -215,16 +215,26 @@ weigh_by_age <- function(survey, pop, ...) {
 
 classify_target <- function(target, by, groups) {
   if (is.null(target)) {
-    if (is.null(groups)) return("direct")
+    if (is.null(groups)) {
+      return("direct")
+    }
     return("unknown")
   }
   if (is.data.frame(target)) {
-    if (by %in% colnames(target)) return("join")
+    if (by %in% colnames(target)) {
+      return("join")
+    }
     return("population")
   }
-  if (!is.numeric(target)) return("unknown")
-  if (!is.null(names(target))) return("named")
-  if (!is.null(groups)) return("grouped")
+  if (!is.numeric(target)) {
+    return("unknown")
+  }
+  if (!is.null(names(target))) {
+    return("named")
+  }
+  if (!is.null(groups)) {
+    return("grouped")
+  }
   "unknown"
 }
 
