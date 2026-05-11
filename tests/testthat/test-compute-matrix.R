@@ -68,11 +68,11 @@ test_that("pipeline matches contact_matrix() without weighting", {
 test_that("compute_matrix(by = age, gender) returns a rank-4 array", {
   result <- compute_matrix(polymod_uk_grouped, by = c("age", "gender"))
   expect_true(is.array(result$matrix))
-  expect_identical(length(dim(result$matrix)), 4L)
+  expect_length(dim(result$matrix), 4L)
   dn <- dimnames(result$matrix)
   ## dim names are the column names that drove the cross-tab
-  expect_identical(
-    names(dn),
+  expect_named(
+    dn,
     c("age.group", "part_gender", "contact.age.group", "cnt_gender")
   )
   ## age (3 groups) on both sides
