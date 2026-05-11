@@ -398,7 +398,7 @@ contact_matrix <- function(
 
   if (weigh_dayofweek) {
     if ("dayofweek" %in% colnames(survey$participants)) {
-      survey <- weigh_by_dayofweek(survey) # nolint: object_usage_linter
+      survey <- weigh_by_dayofweek(survey)
       # Add is.weekday for return_part_weights compatibility
       # Use fifelse to preserve NA (NA %in% 1:5 would return FALSE)
       survey$participants[,
