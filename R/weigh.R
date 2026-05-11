@@ -140,7 +140,21 @@ weigh <- function(survey, by, target = NULL, groups = NULL, ...) {
     participants[, weight := 1]
   }
 
-  participants <- weigh_dispatch(participants, by, target, groups, ...)
+  kind <- classify_target(target, by, groups)
+  participants <- switch(
+    kind,
+    direct = weigh_direct(participants, by),
+    join = weigh_join_warn_groups(participants, by, target, groups),
+    population = weigh_population_deprecated(participants, target, ...),
+    named = weigh_named_warn_groups(participants, by, target, groups),
+    grouped = weigh_grouped(participants, by, target, groups),
+    cli::cli_abort(
+      "Cannot interpret {.arg target}. It must be {.code NULL} (direct \\
+       numeric weighting), a data frame with a column matching {.arg by}, \\
+       a named numeric vector, or an unnamed numeric vector with \\
+       {.arg groups}."
+    )
+  )
 
   survey$participants <- participants
   survey
@@ -197,24 +211,6 @@ weigh_by_age <- function(survey, pop, ...) {
 
   survey$participants <- weight_by_age(participants, survey_pop_full)
   survey
-}
-
-weigh_dispatch <- function(participants, by, target, groups, ...) {
-  kind <- classify_target(target, by, groups)
-  switch(
-    kind,
-    direct = weigh_direct(participants, by),
-    join = weigh_join_warn_groups(participants, by, target, groups),
-    population = weigh_population_deprecated(participants, target, ...),
-    named = weigh_named_warn_groups(participants, by, target, groups),
-    grouped = weigh_grouped(participants, by, target, groups),
-    cli::cli_abort(
-      "Cannot interpret {.arg target}. It must be {.code NULL} (direct \\
-       numeric weighting), a data frame with a column matching {.arg by}, \\
-       a named numeric vector, or an unnamed numeric vector with \\
-       {.arg groups}."
-    )
-  )
 }
 
 classify_target <- function(target, by, groups) {
