@@ -408,12 +408,7 @@ contact_matrix <- function(
 
   if (weigh_dayofweek) {
     if ("dayofweek" %in% colnames(survey$participants)) {
-      survey <- weigh(
-        survey,
-        "dayofweek",
-        target = c(5, 2),
-        groups = list(1:5, c(0, 6))
-      )
+      survey <- weigh_by_dayofweek(survey) # nolint: object_usage_linter
       # Add is.weekday for return_part_weights compatibility
       # Use fifelse to preserve NA (NA %in% 1:5 would return FALSE)
       survey$participants[,
@@ -432,7 +427,10 @@ contact_matrix <- function(
   }
 
   if (weigh_age) {
-    survey <- weigh(survey, "part_age", target = survey_pop.full)
+    survey$participants <- weight_by_age(
+      survey$participants,
+      survey_pop.full
+    )
   }
 
   if (length(weights) > 0) {

@@ -97,7 +97,9 @@ utils::globalVariables(c(
   "part_id", # <[.contact_survey>
   "population", # <survey_country_population>
   "weight", # <weigh>
+  "weight", # <weigh_by_age>
   "weight", # <weigh_direct>
+  "weight", # <weigh_join>
   "weight", # <weigh_grouped>
   "weight", # <weigh_named>
   "sex", # <wpp_age>
