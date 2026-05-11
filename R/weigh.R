@@ -217,19 +217,18 @@ weigh_dispatch <- function(participants, by, target, groups, ...) {
   )
 }
 
-classify_target <- function(target, by, groups) { # nolint: cyclocomp_linter
-  if (is.null(target) && is.null(groups)) {
-    return("direct")
+classify_target <- function(target, by, groups) {
+  if (is.null(target)) {
+    if (is.null(groups)) return("direct")
+    return("unknown")
   }
   if (is.data.frame(target)) {
-    return(if (by %in% colnames(target)) "join" else "population")
+    if (by %in% colnames(target)) return("join")
+    return("population")
   }
-  if (is.numeric(target) && !is.null(names(target))) {
-    return("named")
-  }
-  if (is.numeric(target) && !is.null(groups)) {
-    return("grouped")
-  }
+  if (!is.numeric(target)) return("unknown")
+  if (!is.null(names(target))) return("named")
+  if (!is.null(groups)) return("grouped")
   "unknown"
 }
 
