@@ -399,7 +399,6 @@ contact_matrix <- function(
 
   if (weigh_dayofweek) {
     survey <- weigh_by_dayofweek(survey)
-    weigh_dayofweek <- "dayofweek" %in% colnames(survey$participants)
   }
 
   if (weigh_age) {
