@@ -379,9 +379,10 @@ contact_matrix <- function(
       age_breaks = part.age.group.present
     )
 
+    ## interpolate population to single-year ages once for downstream
+    ## age weighting (before `survey_pop` is overwritten below)
     if (weigh_age) {
-      ## keep reference of survey_pop
-      survey_pop.full <- survey_pop_reference(survey_pop, ...)
+      interpolated_survey_pop <- survey_pop_reference(survey_pop, ...)
     }
 
     ## adjust age groups by interpolating, in case they don't match between
@@ -397,32 +398,11 @@ contact_matrix <- function(
   survey$participants[, weight := 1]
 
   if (weigh_dayofweek) {
-    if ("dayofweek" %in% colnames(survey$participants)) {
-      survey <- weigh(
-        survey,
-        "dayofweek",
-        target = c(5, 2),
-        groups = list(1:5, c(0, 6))
-      )
-      # Add is.weekday for return_part_weights compatibility
-      # Use fifelse to preserve NA (NA %in% 1:5 would return FALSE)
-      survey$participants[,
-        is.weekday := fifelse(is.na(dayofweek), NA, dayofweek %in% 1:5)
-      ]
-    } else {
-      cli::cli_warn(
-        c(
-          "{.code weigh_dayofweek} is {.val TRUE}, but no {.col dayofweek} \\
-            column in the data.",
-          i = "Will ignore."
-        )
-      )
-      weigh_dayofweek <- FALSE
-    }
+    survey <- weigh_by_dayofweek(survey)
   }
 
   if (weigh_age) {
-    survey <- weigh(survey, "part_age", target = survey_pop.full)
+    survey <- weigh_by_age(survey, interpolated_survey_pop, ...)
   }
 
   if (length(weights) > 0) {
@@ -557,31 +537,8 @@ contact_matrix <- function(
 
   # option to return participant weights ---------------------------------------
   if (return_part_weights) {
-    # default
     part_weights <- survey$participants[, .N, by = list(age.group, weight)]
     part_weights <- part_weights[order(age.group, weight), ]
-
-    # add age and/or dayofweek info
-    if (weigh_age && weigh_dayofweek) {
-      part_weights <- survey$participants[,
-        .N,
-        by = list(age.group, participant.age = part_age, is.weekday, weight)
-      ]
-    }
-
-    if (weigh_age && !weigh_dayofweek) {
-      part_weights <- survey$participants[,
-        .N,
-        by = list(age.group, participant.age = part_age, weight)
-      ]
-    }
-
-    if (weigh_dayofweek && !weigh_age) {
-      part_weights <- survey$participants[,
-        .N,
-        by = list(age.group, is.weekday, weight)
-      ]
-    }
 
     # order (from left to right)
     part_weights <- part_weights[order(part_weights), ] # nolint
