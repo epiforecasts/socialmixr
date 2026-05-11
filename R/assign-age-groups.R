@@ -23,11 +23,14 @@
 #'   without age information are removed; if set to "keep", participants with
 #'   missing age are kept and treated as a separate age group
 #' @param missing_contact_age if set to "remove" (default), participants that
-#'   have contacts without age information are removed; if set to "sample",
-#'   contacts without age information are sampled from all the contacts of
-#'   participants of the same age group; if set to "keep", contacts with missing
-#'   age are kept and treated as a separate age group; if set to "ignore",
-#'   contact with missing age are ignored in the contact analysis
+#'   have contacts without age information are removed; if set to "keep",
+#'   contacts with missing age are kept and treated as a separate age group;
+#'   if set to "ignore", contacts with missing age are ignored in the contact
+#'   analysis. The "sample" option is defunct (errors). For contacts that
+#'   have only an age range (rather than a truly missing age),
+#'   `estimated_contact_age` controls how the range is resolved into a single
+#'   age; it is not a substitute for `missing_contact_age` when the age is
+#'   entirely missing.
 #' @returns
 #' The survey object with processed age data.
 #'
@@ -59,11 +62,10 @@ assign_age_groups <- function(
   missing_contact_age <- rlang::arg_match(missing_contact_age)
 
   if (missing_contact_age == "sample") {
-    lifecycle::deprecate_warn(
+    lifecycle::deprecate_stop(
       "0.5.0",
       "assign_age_groups(missing_contact_age = 'sample')",
       details = paste(
-        "Sampling missing contact ages will be removed in a future version.",
         "Use 'remove' to exclude contacts with missing ages, 'keep' to retain",
         "them as a separate age group, or 'ignore' to drop only those contacts."
       )

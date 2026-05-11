@@ -25,7 +25,8 @@ test_that("age groups are ordered factors", {
 })
 
 test_that("pop_age doesn't change total population size", {
-  ages_it_2015 <- wpp_age("Italy", 2015)
+  skip_if_not_installed("wpp2017")
+  ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
 
   ages_it_2015_10 <- pop_age(ages_it_2015, age_limits = seq(0, 100, by = 10))
 
@@ -54,7 +55,8 @@ test_that("pop_age doesn't change total population size", {
 })
 
 test_that("pop_age returns data unchanged when age_limits is NULL", {
-  ages_it_2015 <- wpp_age("Italy", 2015)
+  skip_if_not_installed("wpp2017")
+  ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
 
   # Calling without age_limits should return identical data
   result <- pop_age(ages_it_2015)
@@ -102,6 +104,11 @@ test_that("pop_age throws warnings or errors", {
     pop_age(3)
   )
   expect_error(pop_age(3), "to be a data.frame")
+})
+
+test_that("wpp_age warns when historical year is unavailable", {
+  skip_if_not_installed("wpp2017")
+  withr::local_options(lifecycle_verbosity = "quiet")
   expect_warning(wpp_age("Germany", 2011), "Don't have population data")
   expect_snapshot_warning(
     cran = FALSE,

@@ -44,7 +44,10 @@ test_that("as.matrix() extracts the matrix element", {
 
 ## Class preservation through postprocess --------------------------------------
 
-pop <- wpp_age("United Kingdom", 2005)
+pop <- data.frame(
+  lower.age.limit = c(0, 5, 15),
+  population = c(3500000, 6000000, 50000000)
+)
 
 test_that("symmetrise() preserves contact_matrix class", {
   sym <- symmetrise(result, survey_pop = pop)
