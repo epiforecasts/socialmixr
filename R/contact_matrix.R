@@ -397,18 +397,8 @@ contact_matrix <- function(
   survey$participants[, weight := 1]
 
   if (weigh_dayofweek) {
-    if ("dayofweek" %in% colnames(survey$participants)) {
-      survey <- weigh_by_dayofweek(survey)
-    } else {
-      cli::cli_warn(
-        c(
-          "{.code weigh_dayofweek} is {.val TRUE}, but no {.col dayofweek} \\
-            column in the data.",
-          i = "Will ignore."
-        )
-      )
-      weigh_dayofweek <- FALSE
-    }
+    survey <- weigh_by_dayofweek(survey)
+    weigh_dayofweek <- "dayofweek" %in% colnames(survey$participants)
   }
 
   if (weigh_age) {

@@ -206,8 +206,8 @@
 
 # warning if day of week weigh requested but not present
 
-    `weigh_dayofweek` is "TRUE", but no `dayofweek` column in the data.
-    i Will ignore.
+    Column "dayofweek" not found in participant data.
+    i Returning `survey` unchanged.
 
 # warning is thrown if country has no survey population
 

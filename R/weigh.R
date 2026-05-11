@@ -151,6 +151,14 @@ weigh <- function(survey, by, target = NULL, groups = NULL, ...) {
 #' @rdname weigh
 #' @export
 weigh_by_dayofweek <- function(survey) {
+  check_if_contact_survey(survey)
+  if (!"dayofweek" %in% colnames(survey$participants)) {
+    cli::cli_warn(c(
+      "Column {.val dayofweek} not found in participant data.",
+      i = "Returning {.arg survey} unchanged."
+    ))
+    return(survey)
+  }
   weigh(survey, "dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6)))
 }
 

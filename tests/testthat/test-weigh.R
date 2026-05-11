@@ -178,6 +178,14 @@ test_that("weigh_by_dayofweek() produces the 5/2 split", {
   }
 })
 
+test_that("weigh_by_dayofweek() warns and is a no-op without dayofweek", {
+  survey <- copy(polymod_grouped)
+  survey$participants[, dayofweek := NULL]
+  before <- copy(survey$participants)
+  expect_warning(out <- weigh_by_dayofweek(survey), "dayofweek")
+  expect_identical(out$participants, before)
+})
+
 test_that("weigh_by_age() matches old internal weight_by_age()", {
   uk_pop <- data.frame(
     lower.age.limit = 0:99,
