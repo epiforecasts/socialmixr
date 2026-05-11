@@ -16,14 +16,14 @@
 #' * `target = NULL` (the default) — multiply the numeric column `by`
 #'   directly into `weight`. Useful when participants already carry a
 #'   precomputed weight column.
-#' * a **two-column data frame whose key column is named `by`** —
+#' * a two-column data frame whose key column is named `by` —
 #'   pure discrete join: multiply the value column into `weight` where the
 #'   key matches. Unmatched values get `NA` (with a warning).
-#' * an **unnamed numeric vector together with `groups`** — each element of
+#' * an unnamed numeric vector together with `groups` — each element of
 #'   `target` is the *total* weight assigned across participants matching
 #'   the corresponding entry in `groups`. The per-participant factor is
 #'   `target[g] / n_in_group`.
-#' * a **named numeric vector** — same as above but `names(target)` are
+#' * a named numeric vector — same as above but `names(target)` are
 #'   matched against values of the `by` column.
 #'
 #' A data frame target that does *not* have a column named `by` but does

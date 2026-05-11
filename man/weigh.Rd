@@ -48,14 +48,14 @@ the dedicated sections below for what they compute exactly.
 \item \code{target = NULL} (the default) — multiply the numeric column \code{by}
 directly into \code{weight}. Useful when participants already carry a
 precomputed weight column.
-\item a \strong{two-column data frame whose key column is named \code{by}} —
+\item a two-column data frame whose key column is named \code{by} —
 pure discrete join: multiply the value column into \code{weight} where the
 key matches. Unmatched values get \code{NA} (with a warning).
-\item an \strong{unnamed numeric vector together with \code{groups}} — each element of
+\item an unnamed numeric vector together with \code{groups} — each element of
 \code{target} is the \emph{total} weight assigned across participants matching
 the corresponding entry in \code{groups}. The per-participant factor is
 \code{target[g] / n_in_group}.
-\item a \strong{named numeric vector} — same as above but \code{names(target)} are
+\item a named numeric vector — same as above but \code{names(target)} are
 matched against values of the \code{by} column.
 }
 
