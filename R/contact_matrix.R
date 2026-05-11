@@ -379,10 +379,8 @@ contact_matrix <- function(
       age_breaks = part.age.group.present
     )
 
-    if (weigh_age) {
-      ## keep reference of survey_pop
-      survey_pop.full <- survey_pop_reference(survey_pop, ...)
-    }
+    ## keep the un-adjusted population data for downstream age weighting
+    survey_pop_orig <- survey_pop
 
     ## adjust age groups by interpolating, in case they don't match between
     ## demographic and survey data
@@ -402,10 +400,7 @@ contact_matrix <- function(
   }
 
   if (weigh_age) {
-    survey$participants <- weight_by_age(
-      survey$participants,
-      survey_pop.full
-    )
+    survey <- weigh_by_age(survey, survey_pop_orig, ...)
   }
 
   if (length(weights) > 0) {
