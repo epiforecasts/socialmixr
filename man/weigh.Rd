@@ -84,19 +84,17 @@ Equivalent to:
 \section{\code{weigh_by_age()}}{
 
 
-Post-stratifies participant weights against a reference age population.
-For each single-year age \eqn{a} it computes the ratio of target share
-to observed share,
+Convenience wrapper for age post-stratification. The main thing it
+adds over a raw \code{\link[=weigh]{weigh()}} call is \strong{interpolation}: the reference
+\code{pop} is expanded to single-year ages with \code{\link[=pop_age]{pop_age()}}, so it can be
+supplied at any age resolution (e.g. 5-year bands).
+
+For each single-year age \eqn{a} the weight then becomes
 
 \deqn{w_a = \frac{P_a / P}{N_a / N},}
 
 where \eqn{P_a} is the target population at age \eqn{a}, \eqn{P} the
-total, and \eqn{N_a}, \eqn{N} the corresponding sample counts. This
-factor is multiplied into each participant's \code{weight} so that the
-weighted age distribution matches the reference. The reference \code{pop}
-is interpolated to single-year ages with \code{\link[=pop_age]{pop_age()}} before the ratio
-is computed, so it can be supplied at any age resolution
-(e.g. 5-year bands).
+total, and \eqn{N_a}, \eqn{N} the corresponding sample counts.
 
 \code{survey} must already have been processed by \code{\link[=assign_age_groups]{assign_age_groups()}} so
 that a \code{part_age} column is available for the join.

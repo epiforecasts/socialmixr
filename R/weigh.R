@@ -47,19 +47,17 @@
 #'
 #' @section `weigh_by_age()`:
 #'
-#' Post-stratifies participant weights against a reference age population.
-#' For each single-year age \eqn{a} it computes the ratio of target share
-#' to observed share,
+#' Convenience wrapper for age post-stratification. The main thing it
+#' adds over a raw [weigh()] call is **interpolation**: the reference
+#' `pop` is expanded to single-year ages with [pop_age()], so it can be
+#' supplied at any age resolution (e.g. 5-year bands).
+#'
+#' For each single-year age \eqn{a} the weight then becomes
 #'
 #' \deqn{w_a = \frac{P_a / P}{N_a / N},}
 #'
 #' where \eqn{P_a} is the target population at age \eqn{a}, \eqn{P} the
-#' total, and \eqn{N_a}, \eqn{N} the corresponding sample counts. This
-#' factor is multiplied into each participant's `weight` so that the
-#' weighted age distribution matches the reference. The reference `pop`
-#' is interpolated to single-year ages with [pop_age()] before the ratio
-#' is computed, so it can be supplied at any age resolution
-#' (e.g. 5-year bands).
+#' total, and \eqn{N_a}, \eqn{N} the corresponding sample counts.
 #'
 #' `survey` must already have been processed by [assign_age_groups()] so
 #' that a `part_age` column is available for the join.
