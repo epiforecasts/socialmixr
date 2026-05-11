@@ -4,11 +4,20 @@
 \alias{compute_matrix}
 \title{Compute contact matrix from prepared survey data}
 \usage{
-compute_matrix(survey, counts = FALSE, weight_threshold = NULL)
+compute_matrix(survey, by = "age", counts = FALSE, weight_threshold = NULL)
 }
 \arguments{
-\item{survey}{a \code{\link[=survey]{survey()}} object with age groups assigned (via
-\code{\link[=assign_age_groups]{assign_age_groups()}})}
+\item{survey}{a \code{\link[=survey]{survey()}} object with the columns named in \code{by}
+present on both participants and contacts. Age groupings come from
+\code{\link[=assign_age_groups]{assign_age_groups()}}; other groupings should already be present as
+\verb{part_<name>} / \verb{cnt_<name>} columns on the survey.}
+
+\item{by}{character vector or list of grouping specifications. Each
+entry is either the string \code{"age"} (uses \code{age.group} /
+\code{contact.age.group}), a stem string \code{"<name>"} (uses \verb{part_<name>} /
+\verb{cnt_<name>}), or an explicit \code{c(part = "X", cnt = "Y")}.
+Default \code{"age"} reproduces the single-grouping behaviour of previous
+releases.}
 
 \item{counts}{whether to return counts instead of means}
 
@@ -16,7 +25,9 @@ compute_matrix(survey, counts = FALSE, weight_threshold = NULL)
 are capped to the threshold value and then re-normalised (default NULL)}
 }
 \value{
-a list with elements \code{matrix} and \code{participants}
+a \code{contact_matrix} object with elements \code{matrix} (a rank-\verb{2K}
+array) and \code{participants} (a long table with one row per grouping
+combination)
 }
 \description{
 Computes a contact matrix from a \code{contact_survey} that has been processed
@@ -24,12 +35,31 @@ by \code{\link[=assign_age_groups]{assign_age_groups()}} and optionally \code{\l
 in the pipeline workflow.
 
 For post-processing, pipe the result into \code{\link[=symmetrise]{symmetrise()}},
-\code{\link[=split_matrix]{split_matrix()}}, or \code{\link[=per_capita]{per_capita()}}.
+\code{\link[=split_matrix]{split_matrix()}}, or \code{\link[=per_capita]{per_capita()}}. These post-processing functions
+currently support single-grouping (age-only) matrices.
 }
+\section{Multi-dimensional matrices}{
+
+
+Passing more than one entry to \code{by} produces a matrix of rank \verb{2K},
+where \code{K = length(by)}. The first \code{K} dimensions index participants and
+the last \code{K} dimensions index contacts, in the order given to \code{by}.
+For example, \code{by = c("age", "gender")} returns an array with dimensions
+\verb{(age, gender, age, gender)} — \code{age} and \code{gender} of the participant
+first, then of the contact. Dim names carry the levels of each grouping.
+}
+
 \examples{
 data(polymod)
+
+# Single-grouping (age) — default
 polymod |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
   compute_matrix()
+
+# Two-grouping (age x gender)
+polymod |>
+  assign_age_groups(age_limits = c(0, 5, 15)) |>
+  compute_matrix(by = c("age", "gender"))
 
 }

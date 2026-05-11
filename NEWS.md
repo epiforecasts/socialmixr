@@ -1,5 +1,16 @@
 # socialmixr (development version)
 
+* `compute_matrix()` gains a `by` argument that accepts any combination of
+  participant/contact groupings, not just age. Each entry is either the
+  string `"age"` (matching the columns produced by `assign_age_groups()`),
+  a stem `"<name>"` (resolving to `part_<name>` and `cnt_<name>`), or an
+  explicit `c(part = "X", cnt = "Y")` override. The result is a rank-`2K`
+  array where the first `K` axes index participants and the last `K`
+  index contacts. The default `by = "age"` reproduces the single-grouping
+  behaviour of previous releases. Post-processing functions
+  (`symmetrise()`, `per_capita()`, `split_matrix()`) currently still
+  require single-grouping matrices (#143).
+
 * `weigh()` gains a new canonical target shape: a two-column data frame
   whose key column matches `by` is joined and multiplied into `weight`.
   This makes recipes like `weigh(survey, "country", target = ...)`

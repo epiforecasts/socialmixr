@@ -6,26 +6,54 @@
 #' in the pipeline workflow.
 #'
 #' For post-processing, pipe the result into [symmetrise()],
-#' [split_matrix()], or [per_capita()].
+#' [split_matrix()], or [per_capita()]. These post-processing functions
+#' currently support single-grouping (age-only) matrices.
 #'
-#' @param survey a [survey()] object with age groups assigned (via
-#'   [assign_age_groups()])
+#' @section Multi-dimensional matrices:
+#'
+#' Passing more than one entry to `by` produces a matrix of rank `2K`,
+#' where `K = length(by)`. The first `K` dimensions index participants and
+#' the last `K` dimensions index contacts, in the order given to `by`.
+#' For example, `by = c("age", "gender")` returns an array with dimensions
+#' `(age, gender, age, gender)` — `age` and `gender` of the participant
+#' first, then of the contact. Dim names carry the levels of each grouping.
+#'
+#' @param survey a [survey()] object with the columns named in `by`
+#'   present on both participants and contacts. Age groupings come from
+#'   [assign_age_groups()]; other groupings should already be present as
+#'   `part_<name>` / `cnt_<name>` columns on the survey.
+#' @param by character vector or list of grouping specifications. Each
+#'   entry is either the string `"age"` (uses `age.group` /
+#'   `contact.age.group`), a stem string `"<name>"` (uses `part_<name>` /
+#'   `cnt_<name>`), or an explicit `c(part = "X", cnt = "Y")`.
+#'   Default `"age"` reproduces the single-grouping behaviour of previous
+#'   releases.
 #' @param counts whether to return counts instead of means
 #' @param weight_threshold numeric; if provided, weights above this threshold
 #'   are capped to the threshold value and then re-normalised (default NULL)
-#' @returns a list with elements `matrix` and `participants`
+#' @returns a `contact_matrix` object with elements `matrix` (a rank-`2K`
+#'   array) and `participants` (a long table with one row per grouping
+#'   combination)
 #'
 #' @examples
 #' data(polymod)
+#'
+#' # Single-grouping (age) — default
 #' polymod |>
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix()
+#'
+#' # Two-grouping (age x gender)
+#' polymod |>
+#'   assign_age_groups(age_limits = c(0, 5, 15)) |>
+#'   compute_matrix(by = c("age", "gender"))
 #'
 #' @importFrom data.table uniqueN
 #' @export
 #' @autoglobal
 compute_matrix <- function(
   survey,
+  by = "age",
   counts = FALSE,
   weight_threshold = NULL
 ) {
@@ -39,19 +67,8 @@ compute_matrix <- function(
     filter_hint = "pipeline"
   )
 
-  if (!"age.group" %in% colnames(survey$participants)) {
-    cli::cli_abort(
-      "Column {.val age.group} not found in participant data. \\
-       Call {.fn assign_age_groups} first."
-    )
-  }
-
-  if (!"contact.age.group" %in% colnames(survey$contacts)) {
-    cli::cli_abort(
-      "Column {.val contact.age.group} not found in contact data. \\
-       Call {.fn assign_age_groups} first."
-    )
-  }
+  groupings <- resolve_groupings(by)
+  check_grouping_columns(groupings, survey)
 
   ## Initialise weight if not present ------------------------------------------
   if (!"weight" %in% colnames(survey$participants)) {
@@ -72,20 +89,70 @@ compute_matrix <- function(
   survey$participants[, sampled.weight := weight]
 
   weighted_matrix <- weighted_matrix_array(
-    contacts = survey$contacts
+    contacts = survey$contacts,
+    groupings = groupings
   )
 
   if (!counts) {
     weighted_matrix <- normalise_weights_to_counts(
       sampled_participants = survey$participants,
-      weighted_matrix = weighted_matrix
+      weighted_matrix = weighted_matrix,
+      groupings = groupings
     )
   }
 
-  part_pop <- n_participants_per_age_group(survey$participants)
+  part_pop <- n_participants_per_group(survey$participants, groupings)
 
   new_contact_matrix(
     matrix = weighted_matrix,
     participants = part_pop[]
   )
+}
+
+check_grouping_columns <- function(groupings, survey) {
+  abort_if_missing(
+    groupings,
+    colnames(survey$participants),
+    key = "part",
+    side = "participant data"
+  )
+  abort_if_missing(
+    groupings,
+    colnames(survey$contacts),
+    key = "cnt",
+    side = "contact data"
+  )
+}
+
+abort_if_missing <- function(groupings, available_cols, key, side) {
+  missing_mask <- vapply(
+    groupings,
+    function(g) !g[[key]] %in% available_cols,
+    logical(1)
+  )
+  if (!any(missing_mask)) {
+    return(invisible())
+  }
+  # nolint next: object_usage_linter. Used in cli interpolation below.
+  missing_cols <- vapply(
+    groupings[missing_mask],
+    `[[`,
+    character(1),
+    key
+  )
+  has_age <- any(vapply(
+    groupings[missing_mask],
+    function(g) g$name == "age",
+    logical(1)
+  ))
+  hint <- if (has_age) {
+    c(i = "Run {.fn assign_age_groups} first for the {.val age} grouping.")
+  } else {
+    NULL
+  }
+  cli::cli_abort(c(
+    "{cli::qty(missing_cols)}Column{?s} {.val {missing_cols}} not found \\
+     in {side}.",
+    hint
+  ))
 }

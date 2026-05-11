@@ -988,10 +988,21 @@ sample_contacts_participants <- function(
 }
 
 #' @autoglobal
-weighted_matrix_array <- function(contacts) {
+weighted_matrix_array <- function(
+  contacts,
+  groupings = default_age_groupings()
+) {
+  part_cols <- vapply(groupings, `[[`, character(1), "part")
+  cnt_cols <- vapply(groupings, `[[`, character(1), "cnt")
+
+  xtab_formula <- stats::as.formula(paste(
+    "sampled.weight ~",
+    paste(c(part_cols, cnt_cols), collapse = " + ")
+  ))
+
   weighted_matrix <- xtabs(
     data = contacts,
-    formula = sampled.weight ~ age.group + contact.age.group,
+    formula = xtab_formula,
     addNA = TRUE
   )
 
@@ -1037,17 +1048,40 @@ calculate_weighted_matrix <- function(
 }
 
 #' @autoglobal
-normalise_weights_to_counts <- function(sampled_participants, weighted_matrix) {
+normalise_weights_to_counts <- function(
+  sampled_participants,
+  weighted_matrix,
+  groupings = default_age_groupings()
+) {
   ## normalise to give mean number of contacts
-  ## calculate normalisation vector
-  norm_vector <- c(xtabs(
-    data = sampled_participants,
-    formula = sampled.weight ~ age.group,
-    addNA = TRUE
+  ## calculate normalisation tensor over the participant axes
+  part_cols <- vapply(groupings, `[[`, character(1), "part")
+  norm_formula <- stats::as.formula(paste(
+    "sampled.weight ~",
+    paste(part_cols, collapse = " + ")
   ))
+  norm_array <- xtabs(
+    data = sampled_participants,
+    formula = norm_formula,
+    addNA = TRUE
+  )
 
-  ## normalise contact matrix
-  weighted_matrix <- weighted_matrix / norm_vector
+  ## flatten weighted_matrix to (T_part x T_cnt) for the division, then
+  ## reshape back to the original rank-2K dims
+  k <- length(groupings)
+  part_dim <- dim(weighted_matrix)[seq_len(k)]
+  cnt_dim <- dim(weighted_matrix)[seq_len(k) + k]
+  flat <- matrix(
+    weighted_matrix,
+    nrow = prod(part_dim),
+    ncol = prod(cnt_dim)
+  )
+  flat <- flat / as.vector(norm_array)
+  weighted_matrix <- array(
+    flat,
+    dim = dim(weighted_matrix),
+    dimnames = dimnames(weighted_matrix)
+  )
 
   ## set non-existent data to NA
   weighted_matrix[is.nan(weighted_matrix)] <- NA_real_
@@ -1199,11 +1233,23 @@ matrix_per_capita <- function(weighted_matrix, survey_pop) {
 
 #' @autoglobal
 n_participants_per_age_group <- function(participants) {
-  participant_population <- data.table(table(
-    participants[, age.group],
-    useNA = "ifany"
-  ))
-  setnames(participant_population, c("age.group", "participants"))
+  n_participants_per_group(participants, default_age_groupings())
+}
+
+#' @autoglobal
+n_participants_per_group <- function(
+  participants,
+  groupings = default_age_groupings()
+) {
+  part_cols <- vapply(groupings, `[[`, character(1), "part")
+  table_args <- lapply(part_cols, function(col) participants[[col]])
+  names(table_args) <- part_cols
+  table_args$useNA <- "ifany"
+  participant_population <- data.table(do.call(table, table_args))
+  setnames(
+    participant_population,
+    c(part_cols, "participants")
+  )
   participant_population[, proportion := participants / sum(participants)]
   participant_population
 }
