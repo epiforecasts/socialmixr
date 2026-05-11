@@ -538,40 +538,8 @@ contact_matrix <- function(
 
   # option to return participant weights ---------------------------------------
   if (return_part_weights) {
-    # default
     part_weights <- survey$participants[, .N, by = list(age.group, weight)]
     part_weights <- part_weights[order(age.group, weight), ]
-
-    # add age and/or dayofweek info
-    if (weigh_age && weigh_dayofweek) {
-      part_weights <- survey$participants[,
-        .N,
-        by = list(
-          age.group,
-          participant.age = part_age,
-          is.weekday = fifelse(is.na(dayofweek), NA, dayofweek %in% 1:5),
-          weight
-        )
-      ]
-    }
-
-    if (weigh_age && !weigh_dayofweek) {
-      part_weights <- survey$participants[,
-        .N,
-        by = list(age.group, participant.age = part_age, weight)
-      ]
-    }
-
-    if (weigh_dayofweek && !weigh_age) {
-      part_weights <- survey$participants[,
-        .N,
-        by = list(
-          age.group,
-          is.weekday = fifelse(is.na(dayofweek), NA, dayofweek %in% 1:5),
-          weight
-        )
-      ]
-    }
 
     # order (from left to right)
     part_weights <- part_weights[order(part_weights), ] # nolint
