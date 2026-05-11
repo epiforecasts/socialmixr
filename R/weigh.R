@@ -33,8 +33,8 @@
 #'
 #' @section `weigh_by_dayofweek()`:
 #'
-#' Rescales weights so that **weekday participants together carry a total
-#' weight of 5 and weekend participants a total weight of 2** — the weekly
+#' Rescales weights so that weekday participants together carry a total
+#' weight of 5 and weekend participants a total weight of 2 — the weekly
 #' 5/2 split that corrects for the typical over-representation of weekdays
 #' in diary surveys. Concretely, each weekday participant gets
 #' `5 / n_weekday` and each weekend participant `2 / n_weekend`;
