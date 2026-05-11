@@ -399,11 +399,6 @@ contact_matrix <- function(
   if (weigh_dayofweek) {
     if ("dayofweek" %in% colnames(survey$participants)) {
       survey <- weigh_by_dayofweek(survey)
-      # Add is.weekday for return_part_weights compatibility
-      # Use fifelse to preserve NA (NA %in% 1:5 would return FALSE)
-      survey$participants[,
-        is.weekday := fifelse(is.na(dayofweek), NA, dayofweek %in% 1:5)
-      ]
     } else {
       cli::cli_warn(
         c(
@@ -563,7 +558,12 @@ contact_matrix <- function(
     if (weigh_age && weigh_dayofweek) {
       part_weights <- survey$participants[,
         .N,
-        by = list(age.group, participant.age = part_age, is.weekday, weight)
+        by = list(
+          age.group,
+          participant.age = part_age,
+          is.weekday = fifelse(is.na(dayofweek), NA, dayofweek %in% 1:5),
+          weight
+        )
       ]
     }
 
@@ -577,7 +577,11 @@ contact_matrix <- function(
     if (weigh_dayofweek && !weigh_age) {
       part_weights <- survey$participants[,
         .N,
-        by = list(age.group, is.weekday, weight)
+        by = list(
+          age.group,
+          is.weekday = fifelse(is.na(dayofweek), NA, dayofweek %in% 1:5),
+          weight
+        )
       ]
     }
 
