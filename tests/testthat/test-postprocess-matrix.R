@@ -155,8 +155,7 @@ polymod_uk_gendered <- {
   survey <- polymod_uk_grouped
   survey$participants <- survey$participants[part_gender %in% c("F", "M")]
   survey$contacts <- survey$contacts[
-    part_id %in% survey$participants$part_id &
-      cnt_gender %in% c("F", "M")
+    part_id %in% survey$participants$part_id & cnt_gender %in% c("F", "M")
   ]
   survey
 }
@@ -171,8 +170,12 @@ joint_pop <- expand.grid(
   stringsAsFactors = FALSE
 )
 joint_pop$population <- c(
-  1750000, 3000000, 25000000, # F: 0-5, 5-15, 15+
-  1750000, 3000000, 25000000  # M: 0-5, 5-15, 15+
+  1750000,
+  3000000,
+  25000000, # F: 0-5, 5-15, 15+
+  1750000,
+  3000000,
+  25000000 # M: 0-5, 5-15, 15+
 )
 
 test_that("contact_matrix carries its groupings on the object", {
