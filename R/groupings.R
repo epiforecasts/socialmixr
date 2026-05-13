@@ -28,6 +28,17 @@ resolve_groupings <- function(by) {
   lapply(by, resolve_one_grouping)
 }
 
+#' Resolve a single `by` entry to a grouping triple
+#'
+#' @description
+#' Internal dispatch helper used by [resolve_groupings()]. Identifies
+#' whether `entry` is a stem string or an explicit `c(part, cnt)` vector
+#' and delegates to [stem_grouping()] or [explicit_grouping()] accordingly.
+#' Raises an error if `entry` matches neither shape.
+#'
+#' @param entry one element of the user-facing `by` argument
+#' @returns a `list(name, part, cnt)` triple
+#' @keywords internal
 resolve_one_grouping <- function(entry) {
   if (is_stem_entry(entry)) {
     return(stem_grouping(entry))
@@ -41,10 +52,26 @@ resolve_one_grouping <- function(entry) {
   )
 }
 
+#' Predicates classifying a `by` entry
+#'
+#' @description
+#' `is_stem_entry()` returns `TRUE` for an unnamed single-element character
+#' string (a stem like `"age"` or `"gender"`). `is_explicit_entry()` returns
+#' `TRUE` for a two-element character vector with names `"part"` and `"cnt"`.
+#' Used by [resolve_one_grouping()] to choose the right constructor.
+#'
+#' @param entry one element of the user-facing `by` argument
+#' @returns a logical scalar
+#' @name grouping_predicates
+#' @keywords internal
+NULL
+
+#' @rdname grouping_predicates
 is_stem_entry <- function(entry) {
   is.character(entry) && length(entry) == 1L && is.null(names(entry))
 }
 
+#' @rdname grouping_predicates
 is_explicit_entry <- function(entry) {
   if (!is.character(entry) || length(entry) != 2L) {
     return(FALSE)
@@ -52,6 +79,17 @@ is_explicit_entry <- function(entry) {
   identical(sort(names(entry)), c("cnt", "part"))
 }
 
+#' Build a grouping triple from a stem string
+#'
+#' @description
+#' Internal constructor used by [resolve_one_grouping()] for the
+#' single-string form of a `by` entry. Special-cases `"age"` to the
+#' columns produced by [assign_age_groups()]; for any other stem
+#' `"<x>"` returns `list(part = "part_<x>", cnt = "cnt_<x>")`.
+#'
+#' @param stem a single character string
+#' @returns a `list(name, part, cnt)` triple
+#' @keywords internal
 stem_grouping <- function(stem) {
   if (stem == "age") {
     return(list(name = "age", part = "age.group", cnt = "contact.age.group"))
@@ -63,6 +101,18 @@ stem_grouping <- function(stem) {
   )
 }
 
+#' Build a grouping triple from an explicit `c(part, cnt)` entry
+#'
+#' @description
+#' Internal constructor used by [resolve_one_grouping()] for the explicit
+#' two-element form of a `by` entry, e.g. `c(part = "X", cnt = "Y")`. The
+#' grouping's `name` is the participant column with any leading `"part_"`
+#' stripped.
+#'
+#' @param entry a named two-element character vector with names `"part"`
+#'   and `"cnt"`
+#' @returns a `list(name, part, cnt)` triple
+#' @keywords internal
 explicit_grouping <- function(entry) {
   list(
     name = sub("^part_", "", unname(entry["part"])),
@@ -112,6 +162,24 @@ check_grouping_columns <- function(groupings, survey) {
   )
 }
 
+#' Abort if grouping columns are absent from a list of available columns
+#'
+#' @description
+#' Internal helper used by [check_grouping_columns()] to validate one side
+#' (participant or contact) of a survey against a list of groupings.
+#' Builds a single `cli::cli_abort()` listing every column that is missing
+#' and, if the missing set includes the `"age"` grouping, hints at calling
+#' [assign_age_groups()].
+#'
+#' @param groupings a list of grouping triples as returned by
+#'   [resolve_groupings()]
+#' @param available_cols character vector of column names that are present
+#' @param key either `"part"` or `"cnt"`, the slot of each grouping to
+#'   check against `available_cols`
+#' @param side label inserted into the error message describing which
+#'   side of the survey was checked (e.g. `"participant data"`)
+#' @returns invisibly `NULL` on success; otherwise raises a `cli` error
+#' @keywords internal
 abort_if_missing <- function(groupings, available_cols, key, side) {
   missing_mask <- vapply(
     groupings,

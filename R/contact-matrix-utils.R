@@ -987,6 +987,22 @@ sample_contacts_participants <- function(
   sampled_contacts_participants
 }
 
+#' Cross-tab contact weights over grouping columns
+#'
+#' @description
+#' Internal helper used by [compute_matrix()] and the legacy
+#' [contact_matrix()] to turn a merged contacts table into the rank-`2K`
+#' array of weighted contact counts. Each grouping contributes a
+#' participant-side and a contact-side axis, in that order across the two
+#' halves of the array.
+#'
+#' @param contacts the merged contacts data.table (must have
+#'   `sampled.weight` plus the participant/contact columns referenced by
+#'   `groupings`)
+#' @param groupings a list of grouping triples (see [resolve_groupings()]);
+#'   defaults to single-age, matching pre-existing single-grouping output
+#' @returns a rank-`2K` array with `K = length(groupings)`
+#' @keywords internal
 #' @autoglobal
 weighted_matrix_array <- function(
   contacts,
@@ -1047,6 +1063,24 @@ calculate_weighted_matrix <- function(
   weighted_matrix
 }
 
+#' Normalise a weighted contact array to mean contacts per participant
+#'
+#' @description
+#' Divides the rank-`2K` array of weighted contact counts produced by
+#' [weighted_matrix_array()] by the participant-side weight totals
+#' (cross-tabulated over the same grouping columns), giving the mean
+#' number of contacts per participant. Cells with no participants
+#' become `NA`.
+#'
+#' @param sampled_participants the sampled participants data.table
+#'   (must have `sampled.weight` plus the participant columns referenced
+#'   by `groupings`)
+#' @param weighted_matrix a rank-`2K` array of weighted contact counts
+#' @param groupings a list of grouping triples (see [resolve_groupings()]);
+#'   defaults to single-age, matching pre-existing single-grouping output
+#' @returns the array with the same `dim` and `dimnames` as
+#'   `weighted_matrix`
+#' @keywords internal
 #' @autoglobal
 normalise_weights_to_counts <- function(
   sampled_participants,
@@ -1231,11 +1265,37 @@ matrix_per_capita <- function(weighted_matrix, survey_pop) {
   weighted_matrix_per_capita
 }
 
+#' Count participants per age group
+#'
+#' @description
+#' Internal helper used by the legacy [contact_matrix()] for back-compat
+#' output. A thin wrapper around [n_participants_per_group()] with the
+#' default age-only grouping.
+#'
+#' @param participants the participants data.table
+#' @returns a long data.table with columns `age.group`, `participants`,
+#'   `proportion`
+#' @keywords internal
 #' @autoglobal
 n_participants_per_age_group <- function(participants) {
   n_participants_per_group(participants, default_age_groupings())
 }
 
+#' Count participants per grouping combination
+#'
+#' @description
+#' Cross-tabulates participants across all participant-side grouping
+#' columns and returns a long data.table with one row per observed
+#' combination, plus the share of participants in each cell. Used by
+#' [compute_matrix()] to populate the `participants` slot of a
+#' `contact_matrix` object.
+#'
+#' @param participants the participants data.table
+#' @param groupings a list of grouping triples (see [resolve_groupings()]);
+#'   defaults to single-age, matching pre-existing single-grouping output
+#' @returns a long data.table with one column per grouping plus
+#'   `participants` and `proportion`
+#' @keywords internal
 #' @autoglobal
 n_participants_per_group <- function(
   participants,
