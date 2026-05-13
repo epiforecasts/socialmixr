@@ -82,3 +82,65 @@ explicit_grouping <- function(entry) {
 default_age_groupings <- function() {
   list(list(name = "age", part = "age.group", cnt = "contact.age.group"))
 }
+
+#' Check that a survey contains the columns required by a list of groupings
+#'
+#' @description
+#' Internal helper used by [compute_matrix()] to validate that every
+#' grouping's participant- and contact-side column is present on the
+#' supplied [survey()] object. Aborts with a single message listing all
+#' missing columns; suggests [assign_age_groups()] when the `"age"`
+#' grouping is among the missing.
+#'
+#' @param groupings a list of grouping triples as returned by
+#'   [resolve_groupings()]
+#' @param survey a [survey()] object
+#' @returns invisibly `NULL` on success; otherwise raises a `cli` error
+#' @keywords internal
+check_grouping_columns <- function(groupings, survey) {
+  abort_if_missing(
+    groupings,
+    colnames(survey$participants),
+    key = "part",
+    side = "participant data"
+  )
+  abort_if_missing(
+    groupings,
+    colnames(survey$contacts),
+    key = "cnt",
+    side = "contact data"
+  )
+}
+
+abort_if_missing <- function(groupings, available_cols, key, side) {
+  missing_mask <- vapply(
+    groupings,
+    function(g) !g[[key]] %in% available_cols,
+    logical(1)
+  )
+  if (!any(missing_mask)) {
+    return(invisible())
+  }
+  # nolint next: object_usage_linter. Used in cli interpolation below.
+  missing_cols <- vapply(
+    groupings[missing_mask],
+    `[[`,
+    character(1),
+    key
+  )
+  has_age <- any(vapply(
+    groupings[missing_mask],
+    function(g) g$name == "age",
+    logical(1)
+  ))
+  hint <- if (has_age) {
+    c(i = "Run {.fn assign_age_groups} first for the {.val age} grouping.")
+  } else {
+    NULL
+  }
+  cli::cli_abort(c(
+    "{cli::qty(missing_cols)}Column{?s} {.val {missing_cols}} not found \\
+     in {side}.",
+    hint
+  ))
+}
