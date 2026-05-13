@@ -141,8 +141,9 @@ flatten.contact_matrix <- function(x) {
   if (k == 1L) {
     return(x$matrix)
   }
-  t_size <- prod(dim(x$matrix)[seq_len(k)])
-  flat <- matrix(x$matrix, nrow = t_size, ncol = t_size)
+  t_part <- prod(dim(x$matrix)[seq_len(k)])
+  t_cnt <- prod(dim(x$matrix)[seq_len(k) + k])
+  flat <- matrix(x$matrix, nrow = t_part, ncol = t_cnt)
   dimnames(flat) <- list(
     flat_level_labels(dimnames(x$matrix)[seq_len(k)]),
     flat_level_labels(dimnames(x$matrix)[seq_len(k) + k])
@@ -153,9 +154,9 @@ flatten.contact_matrix <- function(x) {
 #' Build colon-joined tuple labels from a list of level vectors
 #'
 #' @description
-#' Internal helper used by [flatten.contact_matrix()] to produce
-#' dim-name labels for the `T x T` form. Iterates the first grouping
-#' fastest, matching the column-major reshape order.
+#' Internal helper used by [flatten()] to produce dim-name labels for
+#' the `T x T` form. Iterates the first grouping fastest, matching the
+#' column-major reshape order.
 #'
 #' @param levels a list of character vectors, one per grouping
 #' @returns a character vector of length `T = prod(lengths)`
@@ -163,8 +164,10 @@ flatten.contact_matrix <- function(x) {
 flat_level_labels <- function(levels) {
   combos <- do.call(
     expand.grid,
-    c(lapply(levels, as.character),
-      list(stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE))
+    c(
+      lapply(levels, as.character),
+      list(stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE)
+    )
   )
   do.call(paste, c(as.list(combos), list(sep = ":")))
 }

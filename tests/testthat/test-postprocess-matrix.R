@@ -191,8 +191,12 @@ test_that("flatten() produces a T x T matrix with joined dim labels", {
   expect_setequal(
     rownames(flat),
     c(
-      "[0,5):F", "[5,15):F", "[15,Inf):F",
-      "[0,5):M", "[5,15):M", "[15,Inf):M"
+      "[0,5):F",
+      "[5,15):F",
+      "[15,Inf):F",
+      "[0,5):M",
+      "[5,15):M",
+      "[15,Inf):M"
     )
   )
 })

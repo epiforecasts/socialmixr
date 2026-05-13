@@ -13,8 +13,8 @@ flat_level_labels(levels)
 a character vector of length \code{T = prod(lengths)}
 }
 \description{
-Internal helper used by \code{\link[=flatten.contact_matrix]{flatten.contact_matrix()}} to produce
-dim-name labels for the \verb{T x T} form. Iterates the first grouping
-fastest, matching the column-major reshape order.
+Internal helper used by \code{\link[=flatten]{flatten()}} to produce dim-name labels for
+the \verb{T x T} form. Iterates the first grouping fastest, matching the
+column-major reshape order.
 }
 \keyword{internal}
