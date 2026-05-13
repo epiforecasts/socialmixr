@@ -178,6 +178,25 @@ joint_pop$population <- c(
   25000000 # M: 0-5, 5-15, 15+
 )
 
+test_that("flatten() returns the rank-2 matrix unchanged", {
+  flat <- flatten(result_base)
+  expect_identical(flat, result_base$matrix)
+})
+
+test_that("flatten() produces a T x T matrix with joined dim labels", {
+  flat <- flatten(multidim_result)
+  t_size <- as.integer(prod(dim(multidim_result$matrix)[1:2]))
+  expect_identical(dim(flat), c(t_size, t_size))
+  expect_true(all(grepl(":", rownames(flat), fixed = TRUE)))
+  expect_setequal(
+    rownames(flat),
+    c(
+      "[0,5):F", "[5,15):F", "[15,Inf):F",
+      "[0,5):M", "[5,15):M", "[15,Inf):M"
+    )
+  )
+})
+
 test_that("contact_matrix carries its groupings on the object", {
   expect_identical(
     vapply(multidim_result$groupings, `[[`, character(1), "name"),

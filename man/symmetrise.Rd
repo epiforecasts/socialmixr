@@ -25,19 +25,20 @@ age path}
 Makes a contact matrix symmetric so that \eqn{c_{ab} N_a = c_{ba} N_b},
 where \eqn{c_{ab}} is the (a, b) entry and \eqn{N_a} is the population
 of group \code{a}. Each pair is replaced by half their sum, weighted by
-population size. For multi-dimensional matrices, the symmetry
-condition operates on the flattened representation, so the
-participant- and contact-side groupings must share the same levels —
-otherwise reciprocity is not defined and the function aborts.
+population size. Reciprocity requires that each grouping has the same
+levels on the participant and contact side; if not, the function
+aborts.
 }
 \section{Population data}{
 
 \itemize{
-\item Single-grouping (age) matrices: \code{survey_pop} is the existing
-\code{data.frame(lower.age.limit, population)} format, optionally at a
-finer age resolution than the matrix (interpolated via \code{\link[=pop_age]{pop_age()}}).
-\item Multi-grouping matrices: \code{survey_pop} must be a wide data frame with
-one column matching each participant-side dim of the matrix (e.g.
+\item Single-grouping age matrices: \code{survey_pop} is a
+\code{data.frame(lower.age.limit, population)}, optionally at a finer age
+resolution than the matrix (interpolated via \code{\link[=pop_age]{pop_age()}}). The age
+case is special-cased because age is numeric and admits
+interpolation; categorical groupings do not.
+\item Multi-grouping matrices: \code{survey_pop} is a wide data frame with one
+column matching each participant-side dim of the matrix (e.g.
 \code{age.group}, \code{part_gender}) plus a \code{population} column. One row per
 combination is required; no interpolation is performed.
 }

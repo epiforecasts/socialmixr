@@ -97,10 +97,74 @@ plot.contact_matrix <- function(x, ...) {
 #' @export
 as.matrix.contact_matrix <- function(x, ...) {
   if (length(dim(x$matrix)) > 2L) {
-    cli::cli_abort(
+    cli::cli_abort(c(
       "{.fn as.matrix} is only defined for single-grouping \\
-       (rank-2) contact matrices."
-    )
+       (rank-2) contact matrices.",
+      i = "Call {.fn flatten} on this object to get the T x T flattened \\
+           form (Manna et al.'s generalised contact matrix)."
+    ))
   }
   x$matrix
+}
+
+#' Flatten a multi-grouping contact matrix to its `T x T` form
+#'
+#' @description
+#' Returns the contact matrix in the flattened representation of
+#' Manna et al. — a `T x T` matrix where each axis enumerates the
+#' Cartesian product of grouping levels. For a single-grouping matrix
+#' this is the matrix itself.
+#'
+#' Row/column names join the grouping levels with a colon, e.g.
+#' `"[0,5):F"`. The participant axes vary fastest in the first grouping
+#' (column-major reshape).
+#'
+#' @param x a `contact_matrix` object as returned by [compute_matrix()]
+#' @returns a numeric `T x T` matrix
+#'
+#' @examples
+#' data(polymod)
+#' polymod |>
+#'   (\(s) s[country == "United Kingdom"])() |>
+#'   assign_age_groups(age_limits = c(0, 5, 15)) |>
+#'   compute_matrix(by = c("age", "gender")) |>
+#'   flatten()
+#'
+#' @export
+flatten <- function(x) {
+  UseMethod("flatten")
+}
+
+#' @export
+flatten.contact_matrix <- function(x) {
+  k <- length(dim(x$matrix)) %/% 2L
+  if (k == 1L) {
+    return(x$matrix)
+  }
+  t_size <- prod(dim(x$matrix)[seq_len(k)])
+  flat <- matrix(x$matrix, nrow = t_size, ncol = t_size)
+  dimnames(flat) <- list(
+    flat_level_labels(dimnames(x$matrix)[seq_len(k)]),
+    flat_level_labels(dimnames(x$matrix)[seq_len(k) + k])
+  )
+  flat
+}
+
+#' Build colon-joined tuple labels from a list of level vectors
+#'
+#' @description
+#' Internal helper used by [flatten.contact_matrix()] to produce
+#' dim-name labels for the `T x T` form. Iterates the first grouping
+#' fastest, matching the column-major reshape order.
+#'
+#' @param levels a list of character vectors, one per grouping
+#' @returns a character vector of length `T = prod(lengths)`
+#' @keywords internal
+flat_level_labels <- function(levels) {
+  combos <- do.call(
+    expand.grid,
+    c(lapply(levels, as.character),
+      list(stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE))
+  )
+  do.call(paste, c(as.list(combos), list(sep = ":")))
 }

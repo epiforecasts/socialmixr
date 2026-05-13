@@ -25,6 +25,11 @@
   by the multi-grouping post-processing functions; users can read it to
   introspect the matrix's structure (#319).
 
+* New `flatten()` returns a `T x T` matrix view of a multi-grouping
+  contact matrix — Manna et al.'s generalised representation, with
+  colon-joined dim labels (e.g. `"[0,5):F"`). For single-grouping
+  matrices it returns the matrix unchanged (#319).
+
 * `weigh()` gains a new canonical target shape: a two-column data frame
   whose key column matches `by` is joined and multiplied into `weight`.
   This makes recipes like `weigh(survey, "country", target = ...)`

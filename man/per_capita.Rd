@@ -28,11 +28,13 @@ column by the population of that tuple.
 \section{Population data}{
 
 \itemize{
-\item Single-grouping (age) matrices: \code{survey_pop} is the existing
-\code{data.frame(lower.age.limit, population)} format, optionally at a
-finer age resolution than the matrix (interpolated via \code{\link[=pop_age]{pop_age()}}).
-\item Multi-grouping matrices: \code{survey_pop} must be a wide data frame with
-one column matching each participant-side dim of the matrix (e.g.
+\item Single-grouping age matrices: \code{survey_pop} is a
+\code{data.frame(lower.age.limit, population)}, optionally at a finer age
+resolution than the matrix (interpolated via \code{\link[=pop_age]{pop_age()}}). The age
+case is special-cased because age is numeric and admits
+interpolation; categorical groupings do not.
+\item Multi-grouping matrices: \code{survey_pop} is a wide data frame with one
+column matching each participant-side dim of the matrix (e.g.
 \code{age.group}, \code{part_gender}) plus a \code{population} column. One row per
 combination is required; no interpolation is performed.
 }
