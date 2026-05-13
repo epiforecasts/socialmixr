@@ -2,6 +2,23 @@
 
 ## socialmixr (development version)
 
+- [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
+  gains a `by` argument that accepts any combination of
+  participant/contact groupings, not just age. Each entry is either the
+  string `"age"` (matching the columns produced by
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)),
+  a stem `"<name>"` (resolving to `part_<name>` and `cnt_<name>`), or an
+  explicit `c(part = "X", cnt = "Y")` override. The result is a
+  rank-`2K` array where the first `K` axes index participants and the
+  last `K` index contacts. The default `by = "age"` reproduces the
+  single-grouping behaviour of previous releases. Post-processing
+  functions
+  ([`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md),
+  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md))
+  currently still require single-grouping matrices
+  ([\#143](https://github.com/epiforecasts/socialmixr/issues/143)).
+
 - [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
   gains a new canonical target shape: a two-column data frame whose key
   column matches `by` is joined and multiplied into `weight`. This makes

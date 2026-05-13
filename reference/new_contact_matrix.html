@@ -52,12 +52,16 @@
 
 
 <dl><dt id="arg-matrix">matrix<a class="anchor" aria-label="anchor" href="#arg-matrix"></a></dt>
-<dd><p>a numeric matrix with age group dimnames</p></dd>
+<dd><p>a numeric array. For single-grouping matrices this is a
+2D matrix with age-group dimnames; for multi-grouping it is a
+rank-<code>2K</code> array where the first <code>K</code> dimensions index participants and
+the last <code>K</code> index contacts.</p></dd>
 
 
 <dt id="arg-participants">participants<a class="anchor" aria-label="anchor" href="#arg-participants"></a></dt>
-<dd><p>a data.frame with columns <code>age.group</code>, <code>participants</code>,
-<code>proportion</code></p></dd>
+<dd><p>a data.frame with one row per participant grouping
+combination (<code>participants</code>, <code>proportion</code>, plus one column per
+grouping)</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

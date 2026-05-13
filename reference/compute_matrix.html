@@ -3,11 +3,13 @@
 by assign_age_groups() and optionally weigh(). This is the final step
 in the pipeline workflow.
 For post-processing, pipe the result into symmetrise(),
-split_matrix(), or per_capita()."><meta property="og:description" content="Computes a contact matrix from a contact_survey that has been processed
+split_matrix(), or per_capita(). These post-processing functions
+currently support single-grouping (age-only) matrices."><meta property="og:description" content="Computes a contact matrix from a contact_survey that has been processed
 by assign_age_groups() and optionally weigh(). This is the final step
 in the pipeline workflow.
 For post-processing, pipe the result into symmetrise(),
-split_matrix(), or per_capita()."></head><body>
+split_matrix(), or per_capita(). These post-processing functions
+currently support single-grouping (age-only) matrices."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -51,12 +53,13 @@ split_matrix(), or per_capita()."></head><body>
 by <code><a href="assign_age_groups.html">assign_age_groups()</a></code> and optionally <code><a href="weigh.html">weigh()</a></code>. This is the final step
 in the pipeline workflow.</p>
 <p>For post-processing, pipe the result into <code><a href="symmetrise.html">symmetrise()</a></code>,
-<code><a href="split_matrix.html">split_matrix()</a></code>, or <code><a href="per_capita.html">per_capita()</a></code>.</p>
+<code><a href="split_matrix.html">split_matrix()</a></code>, or <code><a href="per_capita.html">per_capita()</a></code>. These post-processing functions
+currently support single-grouping (age-only) matrices.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compute_matrix</span><span class="op">(</span><span class="va">survey</span>, counts <span class="op">=</span> <span class="cn">FALSE</span>, weight_threshold <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compute_matrix</span><span class="op">(</span><span class="va">survey</span>, by <span class="op">=</span> <span class="st">"age"</span>, counts <span class="op">=</span> <span class="cn">FALSE</span>, weight_threshold <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -64,8 +67,19 @@ in the pipeline workflow.</p>
 
 
 <dl><dt id="arg-survey">survey<a class="anchor" aria-label="anchor" href="#arg-survey"></a></dt>
-<dd><p>a <code><a href="survey.html">survey()</a></code> object with age groups assigned (via
-<code><a href="assign_age_groups.html">assign_age_groups()</a></code>)</p></dd>
+<dd><p>a <code><a href="survey.html">survey()</a></code> object with the columns named in <code>by</code>
+present on both participants and contacts. Age groupings come from
+<code><a href="assign_age_groups.html">assign_age_groups()</a></code>; other groupings should already be present as
+<code>part_&lt;name&gt;</code> / <code>cnt_&lt;name&gt;</code> columns on the survey.</p></dd>
+
+
+<dt id="arg-by">by<a class="anchor" aria-label="anchor" href="#arg-by"></a></dt>
+<dd><p>character vector or list of grouping specifications. Each
+entry is either the string <code>"age"</code> (uses <code>age.group</code> /
+<code>contact.age.group</code>), a stem string <code>"&lt;name&gt;"</code> (uses <code>part_&lt;name&gt;</code> /
+<code>cnt_&lt;name&gt;</code>), or an explicit <code>c(part = "X", cnt = "Y")</code>.
+Default <code>"age"</code> reproduces the single-grouping behaviour of previous
+releases.</p></dd>
 
 
 <dt id="arg-counts">counts<a class="anchor" aria-label="anchor" href="#arg-counts"></a></dt>
@@ -79,12 +93,28 @@ are capped to the threshold value and then re-normalised (default NULL)</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>a list with elements <code>matrix</code> and <code>participants</code></p>
+    <p>a <code>contact_matrix</code> object with elements <code>matrix</code> (a rank-<code>2K</code>
+array) and <code>participants</code> (a long table with one row per grouping
+combination)</p>
+    </div>
+    <div class="section level2">
+    <h2 id="multi-dimensional-matrices">Multi-dimensional matrices<a class="anchor" aria-label="anchor" href="#multi-dimensional-matrices"></a></h2>
+
+
+
+<p>Passing more than one entry to <code>by</code> produces a matrix of rank <code>2K</code>,
+where <code>K = length(by)</code>. The first <code>K</code> dimensions index participants and
+the last <code>K</code> dimensions index contacts, in the order given to <code>by</code>.
+For example, <code>by = c("age", "gender")</code> returns an array with dimensions
+<code>(age, gender, age, gender)</code> — <code>age</code> and <code>gender</code> of the participant
+first, then of the contact. Dim names carry the levels of each grouping.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Single-grouping (age) — default</span></span></span>
 <span class="r-in"><span><span class="va">polymod</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">compute_matrix</span><span class="op">(</span><span class="op">)</span></span></span>
@@ -99,6 +129,89 @@ are capped to the threshold value and then re-normalised (default NULL)</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    2.2370031 1.556575  6.434251</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   0.5252009 8.948137  7.100804</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 0.3478261 1.019710 11.705507</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Two-grouping (age x gender)</span></span></span>
+<span class="r-in"><span><span class="va">polymod</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">compute_matrix</span><span class="op">(</span>by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"gender"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Contact matrix (2 groupings, rank-4 array)</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Groupings: <span style="color: #0000BB;">"age.group"</span>, <span style="color: #0000BB;">"part_gender"</span>, <span style="color: #0000BB;">"contact.age.group"</span>, and <span style="color: #0000BB;">"cnt_gender"</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Participants: 7198</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , contact.age.group = [0,5), cnt_gender = </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           part_gender</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> age.group              F          M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    0 0.054054054 0.15937500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   0 0.006182380 0.01805556</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 0 0.007862759 0.01055298</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , contact.age.group = [5,15), cnt_gender = </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           part_gender</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> age.group               F          M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    0.0 0.10810811 0.02187500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   0.5 0.14992272 0.11944444</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 0.0 0.02966405 0.01224145</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , contact.age.group = [15,Inf), cnt_gender = </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           part_gender</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> age.group                 F         M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    0.000 0.07807808 0.0468750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   0.000 0.06646059 0.0625000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 1.375 0.12044317 0.1262136</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , contact.age.group = [0,5), cnt_gender = F</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           part_gender</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> age.group                F         M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    0.000 1.0420420 1.2312500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   0.000 0.2982998 0.2527778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 0.125 0.2051465 0.1025749</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , contact.age.group = [5,15), cnt_gender = F</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           part_gender</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> age.group                F         M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    0.000 0.7777778 0.7187500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   0.000 5.3276662 3.2875000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 1.125 0.6508220 0.3288307</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , contact.age.group = [15,Inf), cnt_gender = F</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           part_gender</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> age.group               F        M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    3.000 3.789790 4.087500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   2.500 4.440495 3.909722</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 7.375 6.560400 5.165471</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , contact.age.group = [0,5), cnt_gender = M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           part_gender</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> age.group                F         M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    0.000 0.9009009 1.1031250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   0.000 0.2534776 0.2263889</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 0.125 0.2248034 0.1287463</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , contact.age.group = [5,15), cnt_gender = M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           part_gender</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> age.group                F        M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    0.000 0.6846847 0.806250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   1.000 3.5270479 5.511111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 0.625 0.5514653 0.425496</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , contact.age.group = [15,Inf), cnt_gender = M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           part_gender</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> age.group           F        M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    2 2.354354 2.525000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   1 2.862442 2.897222</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 4 4.721944 6.767835</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

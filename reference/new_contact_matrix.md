@@ -12,11 +12,15 @@ new_contact_matrix(matrix, participants, ...)
 
 - matrix:
 
-  a numeric matrix with age group dimnames
+  a numeric array. For single-grouping matrices this is a 2D matrix with
+  age-group dimnames; for multi-grouping it is a rank-`2K` array where
+  the first `K` dimensions index participants and the last `K` index
+  contacts.
 
 - participants:
 
-  a data.frame with columns `age.group`, `participants`, `proportion`
+  a data.frame with one row per participant grouping combination
+  (`participants`, `proportion`, plus one column per grouping)
 
 - ...:
 
