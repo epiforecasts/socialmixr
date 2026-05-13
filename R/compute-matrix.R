@@ -108,4 +108,3 @@ compute_matrix <- function(
     participants = part_pop[]
   )
 }
-
