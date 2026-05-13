@@ -10,23 +10,39 @@ symmetrise(x, survey_pop, symmetric_norm_threshold = 2, ...)
 \item{x}{a list as returned by \code{\link[=compute_matrix]{compute_matrix()}}, with elements \code{matrix}
 and \code{participants}}
 
-\item{survey_pop}{a data frame with columns \code{lower.age.limit} and
-\code{population} (e.g. from \code{\link[=wpp_age]{wpp_age()}})}
+\item{survey_pop}{a data frame; see \emph{Population data} above}
 
 \item{symmetric_norm_threshold}{threshold for the normalisation factor
 before issuing a warning (default 2)}
 
-\item{...}{passed to \code{\link[=pop_age]{pop_age()}} for interpolation}
+\item{...}{passed to \code{\link[=pop_age]{pop_age()}} for interpolation in the single-grouping
+age path}
 }
 \value{
 \code{x} with \verb{$matrix} replaced by the symmetrised version
 }
 \description{
-Makes a contact matrix symmetric so that \eqn{c_{ij} N_i = c_{ji} N_j},
-where \eqn{c_{ij}} is the (i, j) entry and \eqn{N_i} is the population
-of age group i. This is done by replacing each pair with half their sum,
-weighted by population size.
+Makes a contact matrix symmetric so that \eqn{c_{ab} N_a = c_{ba} N_b},
+where \eqn{c_{ab}} is the (a, b) entry and \eqn{N_a} is the population
+of group \code{a}. Each pair is replaced by half their sum, weighted by
+population size. For multi-dimensional matrices, the symmetry
+condition operates on the flattened representation, so the
+participant- and contact-side groupings must share the same levels —
+otherwise reciprocity is not defined and the function aborts.
 }
+\section{Population data}{
+
+\itemize{
+\item Single-grouping (age) matrices: \code{survey_pop} is the existing
+\code{data.frame(lower.age.limit, population)} format, optionally at a
+finer age resolution than the matrix (interpolated via \code{\link[=pop_age]{pop_age()}}).
+\item Multi-grouping matrices: \code{survey_pop} must be a wide data frame with
+one column matching each participant-side dim of the matrix (e.g.
+\code{age.group}, \code{part_gender}) plus a \code{population} column. One row per
+combination is required; no interpolation is performed.
+}
+}
+
 \examples{
 data(polymod)
 pop <- data.frame(

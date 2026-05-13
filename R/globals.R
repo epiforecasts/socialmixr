@@ -90,6 +90,7 @@ utils::globalVariables(c(
   "..original.lower.age.limit", # <pop_age>
   "..segment", # <pop_age>
   "..upper.age.limit", # <pop_age>
+  ".idx", # <joint_population_vector>
   "part_id", # <[.contact_survey>
   "population", # <survey_country_population>
   "weight", # <weigh>

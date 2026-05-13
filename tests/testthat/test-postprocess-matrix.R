@@ -146,3 +146,99 @@ test_that("resolve_survey_pop() errors on non-data-frame input", {
     "data frame"
   )
 })
+
+## multi-grouping --------------------------------------------------------------
+
+## Restrict polymod to participants/contacts with known gender so each
+## grouping has matching part/cnt levels (required for symmetrise).
+polymod_uk_gendered <- {
+  survey <- polymod_uk_grouped
+  survey$participants <- survey$participants[part_gender %in% c("F", "M")]
+  survey$contacts <- survey$contacts[
+    part_id %in% survey$participants$part_id &
+      cnt_gender %in% c("F", "M")
+  ]
+  survey
+}
+multidim_result <- compute_matrix(
+  polymod_uk_gendered,
+  by = c("age", "gender")
+)
+
+joint_pop <- expand.grid(
+  age.group = c("[0,5)", "[5,15)", "[15,Inf)"),
+  part_gender = c("F", "M"),
+  stringsAsFactors = FALSE
+)
+joint_pop$population <- c(
+  1750000, 3000000, 25000000, # F: 0-5, 5-15, 15+
+  1750000, 3000000, 25000000  # M: 0-5, 5-15, 15+
+)
+
+test_that("contact_matrix carries its groupings on the object", {
+  expect_identical(
+    vapply(multidim_result$groupings, `[[`, character(1), "name"),
+    c("age", "gender")
+  )
+})
+
+test_that("symmetrise() satisfies reciprocity on a multi-grouping matrix", {
+  sym <- symmetrise(multidim_result, survey_pop = joint_pop)
+  k <- length(dim(sym$matrix)) %/% 2L
+  t_size <- prod(dim(sym$matrix)[seq_len(k)])
+  flat <- matrix(sym$matrix, nrow = t_size, ncol = t_size)
+
+  ## joint_pop was built via expand.grid(age.group, part_gender) which
+  ## matches the column-major reshape used by symmetrise/per_capita —
+  ## no reordering required.
+  n <- joint_pop$population
+
+  scaled <- flat * n
+  expect_equal(unname(scaled), unname(t(scaled)), tolerance = 1e-10)
+})
+
+# nolint next: nonportable_path_linter
+test_that("symmetrise() errors when part/cnt dim names mismatch", {
+  # Build a matrix where contact-gender has an extra level
+  res <- compute_matrix(polymod_uk_grouped, by = c("age", "gender"))
+  expect_error(
+    symmetrise(res, survey_pop = joint_pop),
+    "matching levels"
+  )
+})
+
+test_that("symmetrise() errors when survey_pop is missing grouping columns", {
+  bad_pop <- joint_pop[, c("age.group", "population")]
+  expect_error(
+    symmetrise(multidim_result, survey_pop = bad_pop),
+    "part_gender"
+  )
+})
+
+test_that("symmetrise() errors when survey_pop is missing tuples", {
+  partial_pop <- joint_pop[joint_pop$part_gender == "F", ]
+  expect_error(
+    symmetrise(multidim_result, survey_pop = partial_pop),
+    "missing population"
+  )
+})
+
+test_that("per_capita() divides each contact tuple by its population", {
+  pc <- per_capita(multidim_result, survey_pop = joint_pop)
+  ## Numerical check: pc[a, b] * N_b should equal the un-normalised m[a, b]
+  k <- length(dim(pc$matrix)) %/% 2L
+  t_size <- prod(dim(pc$matrix)[seq_len(k)])
+  flat_pc <- matrix(pc$matrix, nrow = t_size, ncol = t_size)
+  flat_orig <- matrix(multidim_result$matrix, nrow = t_size, ncol = t_size)
+
+  ## joint_pop was built via expand.grid(age.group, part_gender) which
+  ## matches the column-major reshape used by symmetrise/per_capita —
+  ## no reordering required.
+  n <- joint_pop$population
+
+  expect_equal(
+    flat_pc * matrix(n, nrow = t_size, ncol = t_size, byrow = TRUE),
+    flat_orig,
+    tolerance = 1e-10
+  )
+})

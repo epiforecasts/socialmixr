@@ -7,9 +7,23 @@
   explicit `c(part = "X", cnt = "Y")` override. The result is a rank-`2K`
   array where the first `K` axes index participants and the last `K`
   index contacts. The default `by = "age"` reproduces the single-grouping
-  behaviour of previous releases. Post-processing functions
-  (`symmetrise()`, `per_capita()`, `split_matrix()`) currently still
-  require single-grouping matrices (#143).
+  behaviour of previous releases. `split_matrix()` currently still
+  requires a single-grouping matrix (#143).
+
+* `symmetrise()` and `per_capita()` now accept multi-grouping matrices.
+  For these, `survey_pop` must be a wide data frame with one column per
+  participant-side dim of the matrix (e.g. `age.group`, `part_gender`)
+  plus a `population` column, supplying one row per grouping combination.
+  Single-grouping callers (passing the existing 2-column
+  `lower.age.limit` / `population` form) are unchanged. `symmetrise()`
+  additionally requires the participant- and contact-side dims to share
+  the same levels — otherwise reciprocity is not defined and the
+  function aborts (#319).
+
+* The `contact_matrix` S3 object now carries a `groupings` field — the
+  list of grouping triples that produced its `matrix`. Used internally
+  by the multi-grouping post-processing functions; users can read it to
+  introspect the matrix's structure (#319).
 
 * `weigh()` gains a new canonical target shape: a two-column data frame
   whose key column matches `by` is joined and multiplied into `weight`.

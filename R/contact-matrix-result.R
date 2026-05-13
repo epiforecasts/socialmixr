@@ -7,17 +7,30 @@
 #' @param participants a data.frame with one row per participant grouping
 #'   combination (`participants`, `proportion`, plus one column per
 #'   grouping)
+#' @param groupings the list of grouping triples (see [resolve_groupings()])
+#'   that produced `matrix`. Defaults to the age-only single-grouping spec
+#'   for back-compat with the legacy [contact_matrix()] path.
 #' @param ... additional named elements (e.g. `mean.contacts`, `normalisation`,
 #'   `contacts` from [split_matrix()])
 #' @returns a `contact_matrix` object (an S3 class inheriting from `list`)
 #' @keywords internal
-new_contact_matrix <- function(matrix, participants, ...) {
+new_contact_matrix <- function(
+  matrix,
+  participants,
+  groupings = default_age_groupings(),
+  ...
+) {
   checkmate::assert(
     checkmate::check_matrix(matrix),
     checkmate::check_array(matrix)
   )
   checkmate::assert_data_frame(participants)
-  result <- list(matrix = matrix, participants = participants, ...)
+  result <- list(
+    matrix = matrix,
+    participants = participants,
+    groupings = groupings,
+    ...
+  )
   structure(result, class = c("contact_matrix", "list"))
 }
 

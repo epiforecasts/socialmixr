@@ -105,6 +105,7 @@ compute_matrix <- function(
 
   new_contact_matrix(
     matrix = weighted_matrix,
-    participants = part_pop[]
+    participants = part_pop[],
+    groupings = groupings
   )
 }

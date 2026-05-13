@@ -35,18 +35,31 @@ resolve_survey_pop <- function(survey_pop, age_limits, ...) {
 #' Symmetrise a contact matrix
 #'
 #' @description
-#' Makes a contact matrix symmetric so that \eqn{c_{ij} N_i = c_{ji} N_j},
-#' where \eqn{c_{ij}} is the (i, j) entry and \eqn{N_i} is the population
-#' of age group i. This is done by replacing each pair with half their sum,
-#' weighted by population size.
+#' Makes a contact matrix symmetric so that \eqn{c_{ab} N_a = c_{ba} N_b},
+#' where \eqn{c_{ab}} is the (a, b) entry and \eqn{N_a} is the population
+#' of group `a`. Each pair is replaced by half their sum, weighted by
+#' population size. For multi-dimensional matrices, the symmetry
+#' condition operates on the flattened representation, so the
+#' participant- and contact-side groupings must share the same levels —
+#' otherwise reciprocity is not defined and the function aborts.
+#'
+#' @section Population data:
+#'
+#' * Single-grouping (age) matrices: `survey_pop` is the existing
+#'   `data.frame(lower.age.limit, population)` format, optionally at a
+#'   finer age resolution than the matrix (interpolated via [pop_age()]).
+#' * Multi-grouping matrices: `survey_pop` must be a wide data frame with
+#'   one column matching each participant-side dim of the matrix (e.g.
+#'   `age.group`, `part_gender`) plus a `population` column. One row per
+#'   combination is required; no interpolation is performed.
 #'
 #' @param x a list as returned by [compute_matrix()], with elements `matrix`
 #'   and `participants`
-#' @param survey_pop a data frame with columns `lower.age.limit` and
-#'   `population` (e.g. from [wpp_age()])
+#' @param survey_pop a data frame; see *Population data* above
 #' @param symmetric_norm_threshold threshold for the normalisation factor
 #'   before issuing a warning (default 2)
-#' @param ... passed to [pop_age()] for interpolation
+#' @param ... passed to [pop_age()] for interpolation in the single-grouping
+#'   age path
 #' @returns `x` with `$matrix` replaced by the symmetrised version
 #'
 #' @examples
@@ -76,13 +89,6 @@ symmetrise <- function(
     )
   }
 
-  age_limits <- agegroups_to_limits(x$participants$age.group)
-  resolved_pop <- resolve_survey_pop(
-    survey_pop = survey_pop,
-    age_limits = age_limits,
-    ...
-  )
-
   if (na_in_weighted_matrix(x$matrix)) {
     cli::cli_abort(
       c(
@@ -98,12 +104,122 @@ symmetrise <- function(
     return(x)
   }
 
-  x$matrix <- normalise_weighted_matrix(
-    survey_pop = resolved_pop,
-    weighted_matrix = x$matrix,
+  k <- length(dim(x$matrix)) %/% 2L
+  if (k == 1L) {
+    age_limits <- agegroups_to_limits(x$participants$age.group)
+    resolved_pop <- resolve_survey_pop(
+      survey_pop = survey_pop,
+      age_limits = age_limits,
+      ...
+    )
+    x$matrix <- normalise_weighted_matrix(
+      survey_pop = resolved_pop,
+      weighted_matrix = x$matrix,
+      symmetric_norm_threshold = symmetric_norm_threshold
+    )
+    return(x)
+  }
+
+  check_part_cnt_dims_match(x$matrix, k, op = "symmetrise")
+  pop_vec <- joint_population_vector(survey_pop, x$matrix, x$groupings)
+  t_size <- prod(dim(x$matrix)[seq_len(k)])
+  flat <- matrix(x$matrix, nrow = t_size, ncol = t_size)
+  flat <- normalise_weighted_matrix(
+    survey_pop = list(population = pop_vec),
+    weighted_matrix = flat,
     symmetric_norm_threshold = symmetric_norm_threshold
   )
+  x$matrix <- array(flat, dim = dim(x$matrix), dimnames = dimnames(x$matrix))
   x
+}
+
+#' Build the joint-population vector aligned with a flattened matrix
+#'
+#' @description
+#' Internal helper used by [symmetrise()] and [per_capita()] to align a
+#' user-supplied `survey_pop` data frame with the flattened (`T x T`)
+#' representation of a multi-grouping contact matrix. The user provides
+#' one column per participant-side dim plus `population`; the helper joins
+#' onto the canonical tuple ordering (column-major over the participant
+#' axes, matching `matrix()`'s reshape).
+#'
+#' @param survey_pop a wide data frame with one column matching each
+#'   participant-side dim of `matrix` plus a `population` column
+#' @param matrix the rank-`2K` contact matrix
+#' @param groupings the list of grouping triples stored on the
+#'   `contact_matrix` object
+#' @returns a numeric vector of length `T = prod(participant dim sizes)`
+#'   in canonical (column-major) tuple order
+#' @keywords internal
+#' @autoglobal
+joint_population_vector <- function(survey_pop, matrix, groupings) {
+  if (!is.data.frame(survey_pop)) {
+    cli::cli_abort("{.arg survey_pop} must be a data frame.")
+  }
+  k <- length(groupings)
+  part_cols <- vapply(groupings, `[[`, character(1), "part")
+  expected <- c(part_cols, "population")
+  missing_cols <- setdiff(expected, colnames(survey_pop))
+  if (length(missing_cols) > 0) {
+    cli::cli_abort(
+      "{.arg survey_pop} must have column{?s} \\
+       {.val {missing_cols}} for this multi-grouping matrix."
+    )
+  }
+
+  part_levels <- lapply(
+    dimnames(matrix)[seq_len(k)],
+    as.character
+  )
+  names(part_levels) <- part_cols
+  combos <- do.call(
+    expand.grid,
+    c(part_levels, list(stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE))
+  )
+  combos <- data.table::as.data.table(combos)
+  combos[, .idx := .I]
+
+  pop <- data.table::as.data.table(survey_pop)[,
+    c(part_cols, "population"),
+    with = FALSE
+  ]
+  for (col in part_cols) {
+    pop[[col]] <- as.character(pop[[col]])
+  }
+
+  joined <- merge(combos, pop, by = part_cols, all.x = TRUE, sort = FALSE)
+  data.table::setorder(joined, .idx)
+  if (anyNA(joined$population)) {
+    cli::cli_abort(
+      "{.arg survey_pop} is missing population entries for some \\
+       grouping combinations of the matrix."
+    )
+  }
+  joined$population
+}
+
+#' Abort if participant and contact dims of a multi-grouping matrix differ
+#'
+#' @description
+#' Internal sanity check for [symmetrise()] and related operations that
+#' require reciprocity. Reciprocity is only defined when each grouping has
+#' the same levels on the participant and contact side, which lets us flatten
+#' the rank-`2K` array into a square `T x T` matrix.
+#'
+#' @param matrix the rank-`2K` contact matrix
+#' @param k the number of groupings (`length(dim(matrix)) %/% 2L`)
+#' @param op short label used in the error message
+#' @returns invisibly `NULL` on success; otherwise raises a `cli` error
+#' @keywords internal
+check_part_cnt_dims_match <- function(matrix, k, op) {
+  part_dn <- dimnames(matrix)[seq_len(k)]
+  cnt_dn <- dimnames(matrix)[seq_len(k) + k]
+  if (!identical(unname(part_dn), unname(cnt_dn))) {
+    cli::cli_abort(
+      "{.fn {op}} requires the participant and contact sides of the \\
+       matrix to have matching levels for every grouping."
+    )
+  }
 }
 
 #' Decompose a contact matrix into mean contacts, normalisation and
@@ -178,9 +294,12 @@ split_matrix <- function(x, survey_pop, ...) {
 #'
 #' @description
 #' Divides each column of the contact matrix by the population of the
-#' corresponding age group, giving the contact rate of age group i with
-#' one individual of age group j.
+#' corresponding group, giving the contact rate of group `a` with one
+#' individual of group `b`. For multi-grouping matrices the division is
+#' performed on the flattened representation, dividing each contact-tuple
+#' column by the population of that tuple.
 #'
+#' @inheritSection symmetrise Population data
 #' @inheritParams symmetrise
 #' @returns `x` with `$matrix` replaced by the per-capita version
 #'
@@ -206,16 +325,26 @@ per_capita <- function(x, survey_pop, ...) {
     )
   }
 
-  age_limits <- agegroups_to_limits(x$participants$age.group)
-  resolved_pop <- resolve_survey_pop(
-    survey_pop = survey_pop,
-    age_limits = age_limits,
-    ...
-  )
+  k <- length(dim(x$matrix)) %/% 2L
+  if (k == 1L) {
+    age_limits <- agegroups_to_limits(x$participants$age.group)
+    resolved_pop <- resolve_survey_pop(
+      survey_pop = survey_pop,
+      age_limits = age_limits,
+      ...
+    )
+    x$matrix <- matrix_per_capita(
+      weighted_matrix = x$matrix,
+      survey_pop = resolved_pop
+    )
+    return(x)
+  }
 
-  x$matrix <- matrix_per_capita(
-    weighted_matrix = x$matrix,
-    survey_pop = resolved_pop
-  )
+  check_part_cnt_dims_match(x$matrix, k, op = "per_capita")
+  pop_vec <- joint_population_vector(survey_pop, x$matrix, x$groupings)
+  t_size <- prod(dim(x$matrix)[seq_len(k)])
+  flat <- matrix(x$matrix, nrow = t_size, ncol = t_size)
+  flat <- flat / matrix(pop_vec, nrow = t_size, ncol = t_size, byrow = TRUE)
+  x$matrix <- array(flat, dim = dim(x$matrix), dimnames = dimnames(x$matrix))
   x
 }

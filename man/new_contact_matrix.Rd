@@ -4,7 +4,12 @@
 \alias{new_contact_matrix}
 \title{Create a contact_matrix object}
 \usage{
-new_contact_matrix(matrix, participants, ...)
+new_contact_matrix(
+  matrix,
+  participants,
+  groupings = default_age_groupings(),
+  ...
+)
 }
 \arguments{
 \item{matrix}{a numeric array. For single-grouping matrices this is a
@@ -15,6 +20,10 @@ the last \code{K} index contacts.}
 \item{participants}{a data.frame with one row per participant grouping
 combination (\code{participants}, \code{proportion}, plus one column per
 grouping)}
+
+\item{groupings}{the list of grouping triples (see \code{\link[=resolve_groupings]{resolve_groupings()}})
+that produced \code{matrix}. Defaults to the age-only single-grouping spec
+for back-compat with the legacy \code{\link[=contact_matrix]{contact_matrix()}} path.}
 
 \item{...}{additional named elements (e.g. \code{mean.contacts}, \code{normalisation},
 \code{contacts} from \code{\link[=split_matrix]{split_matrix()}})}

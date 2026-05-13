@@ -10,19 +10,34 @@ per_capita(x, survey_pop, ...)
 \item{x}{a list as returned by \code{\link[=compute_matrix]{compute_matrix()}}, with elements \code{matrix}
 and \code{participants}}
 
-\item{survey_pop}{a data frame with columns \code{lower.age.limit} and
-\code{population} (e.g. from \code{\link[=wpp_age]{wpp_age()}})}
+\item{survey_pop}{a data frame; see \emph{Population data} above}
 
-\item{...}{passed to \code{\link[=pop_age]{pop_age()}} for interpolation}
+\item{...}{passed to \code{\link[=pop_age]{pop_age()}} for interpolation in the single-grouping
+age path}
 }
 \value{
 \code{x} with \verb{$matrix} replaced by the per-capita version
 }
 \description{
 Divides each column of the contact matrix by the population of the
-corresponding age group, giving the contact rate of age group i with
-one individual of age group j.
+corresponding group, giving the contact rate of group \code{a} with one
+individual of group \code{b}. For multi-grouping matrices the division is
+performed on the flattened representation, dividing each contact-tuple
+column by the population of that tuple.
 }
+\section{Population data}{
+
+\itemize{
+\item Single-grouping (age) matrices: \code{survey_pop} is the existing
+\code{data.frame(lower.age.limit, population)} format, optionally at a
+finer age resolution than the matrix (interpolated via \code{\link[=pop_age]{pop_age()}}).
+\item Multi-grouping matrices: \code{survey_pop} must be a wide data frame with
+one column matching each participant-side dim of the matrix (e.g.
+\code{age.group}, \code{part_gender}) plus a \code{population} column. One row per
+combination is required; no interpolation is performed.
+}
+}
+
 \examples{
 data(polymod)
 pop <- data.frame(
