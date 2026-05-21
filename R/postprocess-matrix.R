@@ -232,6 +232,10 @@ check_part_cnt_dims_match <- function(matrix, k, op) {
 #' (replacing `$matrix`). For details, see the "Getting Started" vignette.
 #'
 #' @inheritParams symmetrise
+#' @param survey_pop a data frame with columns `lower.age.limit` and
+#'   `population` (optionally at a finer age resolution than the matrix;
+#'   interpolated via [pop_age()]). Multi-grouping populations are not yet
+#'   supported by `split_matrix()`.
 #' @returns `x` with `$matrix` replaced by the assortativity matrix, plus
 #'   additional elements `$mean.contacts`, `$normalisation`, and `$contacts`
 #'

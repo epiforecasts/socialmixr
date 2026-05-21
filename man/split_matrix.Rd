@@ -11,7 +11,10 @@ split_matrix(x, survey_pop, ...)
 \item{x}{a list as returned by \code{\link[=compute_matrix]{compute_matrix()}}, with elements \code{matrix}
 and \code{participants}}
 
-\item{survey_pop}{a data frame; see \emph{Population data} above}
+\item{survey_pop}{a data frame with columns \code{lower.age.limit} and
+\code{population} (optionally at a finer age resolution than the matrix;
+interpolated via \code{\link[=pop_age]{pop_age()}}). Multi-grouping populations are not yet
+supported by \code{split_matrix()}.}
 
 \item{...}{passed to \code{\link[=pop_age]{pop_age()}} for interpolation in the single-grouping
 age path}
