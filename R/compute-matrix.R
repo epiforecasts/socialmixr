@@ -6,8 +6,9 @@
 #' in the pipeline workflow.
 #'
 #' For post-processing, pipe the result into [symmetrise()],
-#' [split_matrix()], or [per_capita()]. These post-processing functions
-#' currently support single-grouping (age-only) matrices.
+#' [split_matrix()], or [per_capita()]. [symmetrise()] and [per_capita()]
+#' accept multi-grouping matrices; [split_matrix()] currently still
+#' requires a single-grouping matrix.
 #'
 #' @section Multi-dimensional matrices:
 #'
