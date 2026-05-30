@@ -35,9 +35,7 @@ by \code{\link[=assign_age_groups]{assign_age_groups()}} and optionally \code{\l
 in the pipeline workflow.
 
 For post-processing, pipe the result into \code{\link[=symmetrise]{symmetrise()}},
-\code{\link[=split_matrix]{split_matrix()}}, or \code{\link[=per_capita]{per_capita()}}. \code{\link[=symmetrise]{symmetrise()}} and \code{\link[=per_capita]{per_capita()}}
-accept multi-grouping matrices; \code{\link[=split_matrix]{split_matrix()}} currently still
-requires a single-grouping matrix.
+\code{\link[=split_matrix]{split_matrix()}}, or \code{\link[=per_capita]{per_capita()}}.
 }
 \section{Multi-dimensional matrices}{
 

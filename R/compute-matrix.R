@@ -6,9 +6,7 @@
 #' in the pipeline workflow.
 #'
 #' For post-processing, pipe the result into [symmetrise()],
-#' [split_matrix()], or [per_capita()]. [symmetrise()] and [per_capita()]
-#' accept multi-grouping matrices; [split_matrix()] currently still
-#' requires a single-grouping matrix.
+#' [split_matrix()], or [per_capita()].
 #'
 #' @section Multi-dimensional matrices:
 #'
