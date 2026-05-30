@@ -298,10 +298,10 @@ split_matrix <- function(x, survey_pop, ...) {
 #'
 #' @description
 #' Divides each column of the contact matrix by the population of the
-#' corresponding group, giving the contact rate of group `a` with one
-#' individual of group `b`. For multi-grouping matrices the division is
-#' performed on the flattened representation, dividing each contact-tuple
-#' column by the population of that tuple.
+#' contacted group, so that entry (`a`, `b`) becomes the mean number of
+#' contacts a member of group `a` makes with a single individual of group
+#' `b`. Multi-grouping matrices are handled the same way, with each
+#' combination of grouping levels treated as a group.
 #'
 #' @inheritSection symmetrise Population data
 #' @inheritParams symmetrise

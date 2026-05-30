@@ -20,10 +20,10 @@ age path}
 }
 \description{
 Divides each column of the contact matrix by the population of the
-corresponding group, giving the contact rate of group \code{a} with one
-individual of group \code{b}. For multi-grouping matrices the division is
-performed on the flattened representation, dividing each contact-tuple
-column by the population of that tuple.
+contacted group, so that entry (\code{a}, \code{b}) becomes the mean number of
+contacts a member of group \code{a} makes with a single individual of group
+\code{b}. Multi-grouping matrices are handled the same way, with each
+combination of grouping levels treated as a group.
 }
 \section{Population data}{
 
