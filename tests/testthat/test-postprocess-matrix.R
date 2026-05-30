@@ -150,7 +150,9 @@ test_that("resolve_survey_pop() errors on non-data-frame input", {
 ## multi-grouping --------------------------------------------------------------
 
 ## Restrict polymod to participants/contacts with known gender so each
-## grouping has matching part/cnt levels (required for symmetrise).
+## grouping has matching part/cnt levels (required for symmetrise). There
+## is no standard helper for dropping missing gender (the missing-age
+## handling in assign_age_groups() only covers age), so we filter directly.
 polymod_uk_gendered <- {
   survey <- polymod_uk_grouped
   survey$participants <- survey$participants[part_gender %in% c("F", "M")]
