@@ -5,19 +5,13 @@
 \title{Decompose a contact matrix into mean contacts, normalisation and
 assortativity}
 \usage{
-split_matrix(x, survey_pop, ...)
+split_matrix(x, survey_pop)
 }
 \arguments{
 \item{x}{a list as returned by \code{\link[=compute_matrix]{compute_matrix()}}, with elements \code{matrix}
 and \code{participants}}
 
-\item{survey_pop}{a data frame with columns \code{lower.age.limit} and
-\code{population} (optionally at a finer age resolution than the matrix;
-interpolated via \code{\link[=pop_age]{pop_age()}}). Multi-grouping populations are not yet
-supported by \code{split_matrix()}.}
-
-\item{...}{passed to \code{\link[=pop_age]{pop_age()}} for interpolation in the single-grouping
-age path}
+\item{survey_pop}{a data frame; see \emph{Population data} above}
 }
 \value{
 \code{x} with \verb{$matrix} replaced by the assortativity matrix, plus
@@ -29,15 +23,36 @@ population (\code{mean.contacts}), a normalisation constant (\code{normalisation
 age-specific contact rates (\code{contacts}), and an assortativity matrix
 (replacing \verb{$matrix}). For details, see the "Getting Started" vignette.
 }
+\details{
+\code{split_matrix()} currently supports single-grouping (rank-2) matrices
+only; multi-grouping support is tracked in issue #320.
+}
+\section{Population data}{
+
+
+\code{survey_pop} is a data frame with one column per grouping, holding the
+participant-side levels of the matrix (e.g. \code{age.group}, \code{part_gender}),
+plus a \code{population} column with the size of each combination. One row per
+combination of levels is required, and the levels are matched to the
+matrix exactly — no interpolation is performed.
+
+Age is treated like any other grouping: the matching column is
+\code{age.group}, holding the same interval labels as the matrix. To build it
+from a population at arbitrary age resolution, coarsen the population to
+the matrix's age limits with \code{\link[=pop_age]{pop_age()}} and label the groups with
+\code{\link[=limits_to_agegroups]{limits_to_agegroups()}}.
+}
+
 \examples{
 data(polymod)
+age_limits <- c(0, 5, 15)
 pop <- data.frame(
-  lower.age.limit = c(0, 5, 15),
+  age.group = limits_to_agegroups(age_limits, notation = "brackets"),
   population = c(3500000, 6000000, 50000000)
 )
 polymod |>
   (\(s) s[country == "United Kingdom"])() |>
-  assign_age_groups(age_limits = c(0, 5, 15)) |>
+  assign_age_groups(age_limits = age_limits) |>
   compute_matrix() |>
   split_matrix(survey_pop = pop)
 

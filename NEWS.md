@@ -10,15 +10,17 @@
   behaviour of previous releases. `split_matrix()` currently still
   requires a single-grouping matrix (#143).
 
-* `symmetrise()` and `per_capita()` now accept multi-grouping matrices.
-  For these, `survey_pop` must be a wide data frame with one column per
-  participant-side dim of the matrix (e.g. `age.group`, `part_gender`)
-  plus a `population` column, supplying one row per grouping combination.
-  Single-grouping callers (passing the existing 2-column
-  `lower.age.limit` / `population` form) are unchanged. `symmetrise()`
-  additionally requires the participant- and contact-side dims to share
-  the same levels — otherwise reciprocity is not defined and the
-  function aborts (#319).
+* `symmetrise()` and `per_capita()` now accept multi-grouping matrices,
+  with a single `survey_pop` format across all groupings, including age.
+  `survey_pop` is a data frame with one column per grouping holding the
+  participant-side levels of the matrix (e.g. `age.group`, `part_gender`)
+  plus a `population` column, with one row per combination. Levels are
+  matched exactly: there is no interpolation, and age is no longer
+  special-cased. To use a population at a different age resolution,
+  coarsen it to the matrix's age limits with `pop_age()` and label the
+  groups with `limits_to_agegroups()` first. `symmetrise()` additionally
+  requires the participant- and contact-side dims to share the same
+  levels, otherwise reciprocity is undefined and it aborts (#319).
 
 * The `contact_matrix` S3 object now carries a `groupings` field — the
   list of grouping triples that produced its `matrix`. Used internally

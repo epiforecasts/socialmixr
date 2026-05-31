@@ -1,37 +1,3 @@
-#' Resolve survey population to match matrix age groups
-#'
-#' @param survey_pop a data frame with columns `lower.age.limit` and
-#'   `population` (e.g. from [wpp_age()])
-#' @param age_limits numeric vector of age group lower limits from the matrix
-#' @param ... passed to [pop_age()] for interpolation
-#' @returns a data.table with `lower.age.limit`, `population`, and
-#'   `upper.age.limit` aligned to the matrix age groups
-#' @keywords internal
-#' @autoglobal
-resolve_survey_pop <- function(survey_pop, age_limits, ...) {
-  if (!is.data.frame(survey_pop)) {
-    cli::cli_abort("{.arg survey_pop} must be a data frame.")
-  }
-  required <- c("lower.age.limit", "population")
-  missing_cols <- setdiff(required, colnames(survey_pop))
-  if (length(missing_cols) > 0) {
-    cli::cli_abort(
-      "{.arg survey_pop} must have column{?s} {.val {missing_cols}}."
-    )
-  }
-
-  survey_pop <- data.table::data.table(survey_pop)
-  survey_pop <- add_survey_upper_age_limit(
-    survey = survey_pop,
-    age_breaks = age_limits
-  )
-  adjust_survey_age_groups(
-    survey_pop = survey_pop,
-    part_age_group_present = age_limits,
-    ...
-  )
-}
-
 #' Symmetrise a contact matrix
 #'
 #' @description
@@ -44,34 +10,35 @@ resolve_survey_pop <- function(survey_pop, age_limits, ...) {
 #'
 #' @section Population data:
 #'
-#' * Single-grouping age matrices: `survey_pop` is a
-#'   `data.frame(lower.age.limit, population)`, optionally at a finer age
-#'   resolution than the matrix (interpolated via [pop_age()]). The age
-#'   case is special-cased because age is numeric and admits
-#'   interpolation; categorical groupings do not.
-#' * Multi-grouping matrices: `survey_pop` is a wide data frame with one
-#'   column matching each participant-side dim of the matrix (e.g.
-#'   `age.group`, `part_gender`) plus a `population` column. One row per
-#'   combination is required; no interpolation is performed.
+#' `survey_pop` is a data frame with one column per grouping, holding the
+#' participant-side levels of the matrix (e.g. `age.group`, `part_gender`),
+#' plus a `population` column with the size of each combination. One row per
+#' combination of levels is required, and the levels are matched to the
+#' matrix exactly — no interpolation is performed.
+#'
+#' Age is treated like any other grouping: the matching column is
+#' `age.group`, holding the same interval labels as the matrix. To build it
+#' from a population at arbitrary age resolution, coarsen the population to
+#' the matrix's age limits with [pop_age()] and label the groups with
+#' [limits_to_agegroups()].
 #'
 #' @param x a list as returned by [compute_matrix()], with elements `matrix`
 #'   and `participants`
 #' @param survey_pop a data frame; see *Population data* above
 #' @param symmetric_norm_threshold threshold for the normalisation factor
 #'   before issuing a warning (default 2)
-#' @param ... passed to [pop_age()] for interpolation in the single-grouping
-#'   age path
 #' @returns `x` with `$matrix` replaced by the symmetrised version
 #'
 #' @examples
 #' data(polymod)
+#' age_limits <- c(0, 5, 15)
 #' pop <- data.frame(
-#'   lower.age.limit = c(0, 5, 15),
+#'   age.group = limits_to_agegroups(age_limits, notation = "brackets"),
 #'   population = c(3500000, 6000000, 50000000)
 #' )
 #' polymod |>
 #'   (\(s) s[country == "United Kingdom"])() |>
-#'   assign_age_groups(age_limits = c(0, 5, 15)) |>
+#'   assign_age_groups(age_limits = age_limits) |>
 #'   compute_matrix() |>
 #'   symmetrise(survey_pop = pop)
 #'
@@ -80,8 +47,7 @@ resolve_survey_pop <- function(survey_pop, age_limits, ...) {
 symmetrise <- function(
   x,
   survey_pop,
-  symmetric_norm_threshold = 2,
-  ...
+  symmetric_norm_threshold = 2
 ) {
   if (!is.list(x) || is.null(x$matrix) || is.null(x$participants)) {
     cli::cli_abort(
@@ -101,26 +67,11 @@ symmetrise <- function(
     )
   }
 
-  if (prod(dim(as.matrix(x$matrix))) <= 1) {
+  if (prod(dim(x$matrix)) <= 1) {
     return(x)
   }
 
   k <- length(dim(x$matrix)) %/% 2L
-  if (k == 1L) {
-    age_limits <- agegroups_to_limits(x$participants$age.group)
-    resolved_pop <- resolve_survey_pop(
-      survey_pop = survey_pop,
-      age_limits = age_limits,
-      ...
-    )
-    x$matrix <- normalise_weighted_matrix(
-      survey_pop = resolved_pop,
-      weighted_matrix = x$matrix,
-      symmetric_norm_threshold = symmetric_norm_threshold
-    )
-    return(x)
-  }
-
   check_part_cnt_dims_match(x$matrix, k, op = "symmetrise")
   pop_vec <- joint_population_vector(survey_pop, x$matrix, x$groupings)
   flat <- flatten(x)
@@ -133,17 +84,18 @@ symmetrise <- function(
   x
 }
 
-#' Build the joint-population vector aligned with a flattened matrix
+#' Resolve a survey population to a vector aligned with the matrix strata
 #'
 #' @description
-#' Internal helper used by [symmetrise()] and [per_capita()] to align a
-#' user-supplied `survey_pop` data frame with the flattened (`T x T`)
-#' representation of a multi-grouping contact matrix. The user provides
-#' one column per participant-side dim plus `population`; the helper joins
-#' onto the canonical tuple ordering (column-major over the participant
-#' axes, matching `matrix()`'s reshape).
+#' Internal helper used by [symmetrise()], [split_matrix()] and
+#' [per_capita()] to align a user-supplied `survey_pop` data frame with the
+#' participant strata of a contact matrix. The user provides one column per
+#' participant-side dim plus `population`; the helper joins onto the
+#' canonical tuple ordering (column-major over the participant axes, matching
+#' `matrix()`'s reshape) and returns the population in that order. Works for
+#' any number of groupings, including single-grouping (age-only) matrices.
 #'
-#' @param survey_pop a wide data frame with one column matching each
+#' @param survey_pop a data frame with one column matching each
 #'   participant-side dim of `matrix` plus a `population` column
 #' @param matrix the rank-`2K` contact matrix
 #' @param groupings the list of grouping triples stored on the
@@ -161,10 +113,16 @@ joint_population_vector <- function(survey_pop, matrix, groupings) {
   expected <- c(part_cols, "population")
   missing_cols <- setdiff(expected, colnames(survey_pop))
   if (length(missing_cols) > 0) {
-    cli::cli_abort(
-      "{.arg survey_pop} must have column{?s} \\
-       {.val {missing_cols}} for this multi-grouping matrix."
-    )
+    msg <- "{.arg survey_pop} must have column{?s} {.val {missing_cols}}."
+    has_lower_age_limit <- "lower.age.limit" %in% colnames(survey_pop)
+    if ("age.group" %in% missing_cols && has_lower_age_limit) {
+      msg <- c(
+        msg,
+        i = "Build an {.code age.group} column from {.code lower.age.limit} \\
+             with {.fn limits_to_agegroups}."
+      )
+    }
+    cli::cli_abort(msg)
   }
 
   part_levels <- lapply(
@@ -190,10 +148,17 @@ joint_population_vector <- function(survey_pop, matrix, groupings) {
   joined <- merge(combos, pop, by = part_cols, all.x = TRUE, sort = FALSE)
   data.table::setorder(joined, .idx)
   if (anyNA(joined$population)) {
-    cli::cli_abort(
-      "{.arg survey_pop} is missing population entries for some \\
-       grouping combinations of the matrix."
-    )
+    msg <- "{.arg survey_pop} is missing population entries for some \\
+            grouping combinations of the matrix."
+    if ("age.group" %in% part_cols) {
+      msg <- c(
+        msg,
+        i = "If the population is at a different age resolution, coarsen it \\
+             to the matrix's age groups with {.fn pop_age} and label them \\
+             with {.fn limits_to_agegroups}."
+      )
+    }
+    cli::cli_abort(msg)
   }
   joined$population
 }
@@ -231,29 +196,31 @@ check_part_cnt_dims_match <- function(matrix, k, op) {
 #' age-specific contact rates (`contacts`), and an assortativity matrix
 #' (replacing `$matrix`). For details, see the "Getting Started" vignette.
 #'
+#' @inheritSection symmetrise Population data
 #' @inheritParams symmetrise
-#' @param survey_pop a data frame with columns `lower.age.limit` and
-#'   `population` (optionally at a finer age resolution than the matrix;
-#'   interpolated via [pop_age()]). Multi-grouping populations are not yet
-#'   supported by `split_matrix()`.
 #' @returns `x` with `$matrix` replaced by the assortativity matrix, plus
 #'   additional elements `$mean.contacts`, `$normalisation`, and `$contacts`
 #'
+#' @details
+#' `split_matrix()` currently supports single-grouping (rank-2) matrices
+#' only; multi-grouping support is tracked in issue #320.
+#'
 #' @examples
 #' data(polymod)
+#' age_limits <- c(0, 5, 15)
 #' pop <- data.frame(
-#'   lower.age.limit = c(0, 5, 15),
+#'   age.group = limits_to_agegroups(age_limits, notation = "brackets"),
 #'   population = c(3500000, 6000000, 50000000)
 #' )
 #' polymod |>
 #'   (\(s) s[country == "United Kingdom"])() |>
-#'   assign_age_groups(age_limits = c(0, 5, 15)) |>
+#'   assign_age_groups(age_limits = age_limits) |>
 #'   compute_matrix() |>
 #'   split_matrix(survey_pop = pop)
 #'
 #' @export
 #' @autoglobal
-split_matrix <- function(x, survey_pop, ...) {
+split_matrix <- function(x, survey_pop) {
   if (!is.list(x) || is.null(x$matrix) || is.null(x$participants)) {
     cli::cli_abort(
       "{.arg x} must be a list with elements {.val matrix} and \\
@@ -261,12 +228,15 @@ split_matrix <- function(x, survey_pop, ...) {
     )
   }
 
-  age_limits <- agegroups_to_limits(x$participants$age.group)
-  resolved_pop <- resolve_survey_pop(
-    survey_pop = survey_pop,
-    age_limits = age_limits,
-    ...
-  )
+  if (length(dim(x$matrix)) > 2L) {
+    cli::cli_abort(
+      c(
+        "{.fn split_matrix} currently supports single-grouping (rank-2) \\
+         matrices only.",
+        i = "Multi-grouping support is tracked in issue #320."
+      )
+    )
+  }
 
   if (na_in_weighted_matrix(x$matrix)) {
     cli::cli_abort(
@@ -279,11 +249,12 @@ split_matrix <- function(x, survey_pop, ...) {
     )
   }
 
+  pop_vec <- joint_population_vector(survey_pop, x$matrix, x$groupings)
   retained_dimnames <- dimnames(x$matrix)
 
   splitted <- split_mean_norm_contacts(
     weighted_matrix = x$matrix,
-    population = resolved_pop$population
+    population = pop_vec
   )
 
   x$matrix <- splitted$weighted_matrix
@@ -309,19 +280,20 @@ split_matrix <- function(x, survey_pop, ...) {
 #'
 #' @examples
 #' data(polymod)
+#' age_limits <- c(0, 5, 15)
 #' pop <- data.frame(
-#'   lower.age.limit = c(0, 5, 15),
+#'   age.group = limits_to_agegroups(age_limits, notation = "brackets"),
 #'   population = c(3500000, 6000000, 50000000)
 #' )
 #' polymod |>
 #'   (\(s) s[country == "United Kingdom"])() |>
-#'   assign_age_groups(age_limits = c(0, 5, 15)) |>
+#'   assign_age_groups(age_limits = age_limits) |>
 #'   compute_matrix() |>
 #'   per_capita(survey_pop = pop)
 #'
 #' @export
 #' @autoglobal
-per_capita <- function(x, survey_pop, ...) {
+per_capita <- function(x, survey_pop) {
   if (!is.list(x) || is.null(x$matrix) || is.null(x$participants)) {
     cli::cli_abort(
       "{.arg x} must be a list with elements {.val matrix} and \\
@@ -330,20 +302,6 @@ per_capita <- function(x, survey_pop, ...) {
   }
 
   k <- length(dim(x$matrix)) %/% 2L
-  if (k == 1L) {
-    age_limits <- agegroups_to_limits(x$participants$age.group)
-    resolved_pop <- resolve_survey_pop(
-      survey_pop = survey_pop,
-      age_limits = age_limits,
-      ...
-    )
-    x$matrix <- matrix_per_capita(
-      weighted_matrix = x$matrix,
-      survey_pop = resolved_pop
-    )
-    return(x)
-  }
-
   check_part_cnt_dims_match(x$matrix, k, op = "per_capita")
   pop_vec <- joint_population_vector(survey_pop, x$matrix, x$groupings)
   flat <- flatten(x)

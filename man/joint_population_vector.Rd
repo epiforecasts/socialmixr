@@ -2,12 +2,12 @@
 % Please edit documentation in R/postprocess-matrix.R
 \name{joint_population_vector}
 \alias{joint_population_vector}
-\title{Build the joint-population vector aligned with a flattened matrix}
+\title{Resolve a survey population to a vector aligned with the matrix strata}
 \usage{
 joint_population_vector(survey_pop, matrix, groupings)
 }
 \arguments{
-\item{survey_pop}{a wide data frame with one column matching each
+\item{survey_pop}{a data frame with one column matching each
 participant-side dim of \code{matrix} plus a \code{population} column}
 
 \item{matrix}{the rank-\verb{2K} contact matrix}
@@ -20,11 +20,12 @@ a numeric vector of length \verb{T = prod(participant dim sizes)}
 in canonical (column-major) tuple order
 }
 \description{
-Internal helper used by \code{\link[=symmetrise]{symmetrise()}} and \code{\link[=per_capita]{per_capita()}} to align a
-user-supplied \code{survey_pop} data frame with the flattened (\verb{T x T})
-representation of a multi-grouping contact matrix. The user provides
-one column per participant-side dim plus \code{population}; the helper joins
-onto the canonical tuple ordering (column-major over the participant
-axes, matching \code{matrix()}'s reshape).
+Internal helper used by \code{\link[=symmetrise]{symmetrise()}}, \code{\link[=split_matrix]{split_matrix()}} and
+\code{\link[=per_capita]{per_capita()}} to align a user-supplied \code{survey_pop} data frame with the
+participant strata of a contact matrix. The user provides one column per
+participant-side dim plus \code{population}; the helper joins onto the
+canonical tuple ordering (column-major over the participant axes, matching
+\code{matrix()}'s reshape) and returns the population in that order. Works for
+any number of groupings, including single-grouping (age-only) matrices.
 }
 \keyword{internal}

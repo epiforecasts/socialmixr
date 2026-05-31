@@ -4,16 +4,13 @@
 \alias{per_capita}
 \title{Convert a contact matrix to per-capita rates}
 \usage{
-per_capita(x, survey_pop, ...)
+per_capita(x, survey_pop)
 }
 \arguments{
 \item{x}{a list as returned by \code{\link[=compute_matrix]{compute_matrix()}}, with elements \code{matrix}
 and \code{participants}}
 
 \item{survey_pop}{a data frame; see \emph{Population data} above}
-
-\item{...}{passed to \code{\link[=pop_age]{pop_age()}} for interpolation in the single-grouping
-age path}
 }
 \value{
 \code{x} with \verb{$matrix} replaced by the per-capita version
@@ -27,28 +24,30 @@ combination of grouping levels treated as a group.
 }
 \section{Population data}{
 
-\itemize{
-\item Single-grouping age matrices: \code{survey_pop} is a
-\code{data.frame(lower.age.limit, population)}, optionally at a finer age
-resolution than the matrix (interpolated via \code{\link[=pop_age]{pop_age()}}). The age
-case is special-cased because age is numeric and admits
-interpolation; categorical groupings do not.
-\item Multi-grouping matrices: \code{survey_pop} is a wide data frame with one
-column matching each participant-side dim of the matrix (e.g.
-\code{age.group}, \code{part_gender}) plus a \code{population} column. One row per
-combination is required; no interpolation is performed.
-}
+
+\code{survey_pop} is a data frame with one column per grouping, holding the
+participant-side levels of the matrix (e.g. \code{age.group}, \code{part_gender}),
+plus a \code{population} column with the size of each combination. One row per
+combination of levels is required, and the levels are matched to the
+matrix exactly — no interpolation is performed.
+
+Age is treated like any other grouping: the matching column is
+\code{age.group}, holding the same interval labels as the matrix. To build it
+from a population at arbitrary age resolution, coarsen the population to
+the matrix's age limits with \code{\link[=pop_age]{pop_age()}} and label the groups with
+\code{\link[=limits_to_agegroups]{limits_to_agegroups()}}.
 }
 
 \examples{
 data(polymod)
+age_limits <- c(0, 5, 15)
 pop <- data.frame(
-  lower.age.limit = c(0, 5, 15),
+  age.group = limits_to_agegroups(age_limits, notation = "brackets"),
   population = c(3500000, 6000000, 50000000)
 )
 polymod |>
   (\(s) s[country == "United Kingdom"])() |>
-  assign_age_groups(age_limits = c(0, 5, 15)) |>
+  assign_age_groups(age_limits = age_limits) |>
   compute_matrix() |>
   per_capita(survey_pop = pop)
 
