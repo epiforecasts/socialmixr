@@ -15,7 +15,7 @@
   a data frame with one column per grouping holding the participant-side
   levels of the matrix (e.g. `age.group`, `part_gender`) plus a
   `population` column, with one row per combination. For age you may
-  instead supply the familiar `lower.age.limit` column, which is labelled
+  instead supply a `lower.age.limit` column, which is labelled
   to match. Levels are matched exactly: there is no interpolation. To use
   a population at a different age resolution, coarsen it to the matrix's
   age limits with `pop_age()` first. `symmetrise()` additionally requires

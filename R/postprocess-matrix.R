@@ -17,7 +17,7 @@
 #' matrix exactly — no interpolation is performed.
 #'
 #' For the age grouping you may supply either an `age.group` column (the
-#' matrix's interval labels) or the familiar `lower.age.limit` column, which
+#' matrix's interval labels) or a `lower.age.limit` column, which
 #' is labelled to match. If the population is at a different age resolution
 #' than the matrix, coarsen it to the matrix's age limits with [pop_age()]
 #' first.
@@ -110,7 +110,7 @@ joint_population_vector <- function(survey_pop, matrix, groupings) {
   k <- length(groupings)
   part_cols <- vapply(groupings, `[[`, character(1), "part")
 
-  ## accept the familiar lower.age.limit form for age, labelling it to match
+  ## accept the lower.age.limit form for age, labelling it to match
   ## the matrix's age groups (exact, no interpolation)
   if (
     "age.group" %in% part_cols &&

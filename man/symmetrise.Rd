@@ -36,7 +36,7 @@ combination of levels is required, and the levels are matched to the
 matrix exactly — no interpolation is performed.
 
 For the age grouping you may supply either an \code{age.group} column (the
-matrix's interval labels) or the familiar \code{lower.age.limit} column, which
+matrix's interval labels) or a \code{lower.age.limit} column, which
 is labelled to match. If the population is at a different age resolution
 than the matrix, coarsen it to the matrix's age limits with \code{\link[=pop_age]{pop_age()}}
 first.
