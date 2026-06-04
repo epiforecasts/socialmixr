@@ -36,23 +36,22 @@ plus a \code{population} column with the size of each combination. One row per
 combination of levels is required, and the levels are matched to the
 matrix exactly — no interpolation is performed.
 
-Age is treated like any other grouping: the matching column is
-\code{age.group}, holding the same interval labels as the matrix. To build it
-from a population at arbitrary age resolution, coarsen the population to
-the matrix's age limits with \code{\link[=pop_age]{pop_age()}} and label the groups with
-\code{\link[=limits_to_agegroups]{limits_to_agegroups()}}.
+For the age grouping you may supply either an \code{age.group} column (the
+matrix's interval labels) or the familiar \code{lower.age.limit} column, which
+is labelled to match. If the population is at a different age resolution
+than the matrix, coarsen it to the matrix's age limits with \code{\link[=pop_age]{pop_age()}}
+first.
 }
 
 \examples{
 data(polymod)
-age_limits <- c(0, 5, 15)
 pop <- data.frame(
-  age.group = limits_to_agegroups(age_limits, notation = "brackets"),
+  lower.age.limit = c(0, 5, 15),
   population = c(3500000, 6000000, 50000000)
 )
 polymod |>
   (\(s) s[country == "United Kingdom"])() |>
-  assign_age_groups(age_limits = age_limits) |>
+  assign_age_groups(age_limits = c(0, 5, 15)) |>
   compute_matrix() |>
   split_matrix(survey_pop = pop)
 

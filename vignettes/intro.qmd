@@ -139,7 +139,7 @@ mr
 
 Obtaining symmetric contact matrices, splitting out their components (see below) and population-based participant weights require information about the underlying demographic composition of the survey population.
 
-The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) match the population to the matrix's groups exactly. Supply a `data.frame` with an `age.group` column holding the same interval labels as the matrix -- `limits_to_agegroups()` builds these from a set of age limits -- and a `population` column. If your population data are at a different age resolution, coarsen them to the matrix's age limits with `pop_age()` first. Matrices with additional groupings take one extra column per grouping (e.g. `part_gender`).
+The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) take this as a `data.frame` with columns `lower.age.limit` (the lower end of each age group) and `population`, at the matrix's age groups. If your population data are at a different age resolution, coarsen them to the matrix's age limits with `pop_age()` first. Matrices with additional groupings take one extra column per grouping (e.g. `part_gender`).
 
 ## Using custom population data
 
@@ -147,7 +147,7 @@ You can construct any comparable data frame and pass it to the relevant post-pro
 
 ```{r message=FALSE, warning=FALSE}
 custom_pop <- data.frame(
-  age.group = limits_to_agegroups(c(0, 18, 60), notation = "brackets"),
+  lower.age.limit = c(0, 18, 60),
   population = c(12000000, 35000000, 20000000)
 )
 polymod[country == "United Kingdom"] |>
@@ -156,21 +156,16 @@ polymod[country == "United Kingdom"] |>
   symmetrise(survey_pop = custom_pop)
 ```
 
-For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). The 1-year bands are coarsened to the matrix's age limits with `pop_age()` and labelled with `limits_to_agegroups()`:
+For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). The 1-year bands are coarsened to the matrix's age limits with `pop_age()`:
 
 ```{r eval=requireNamespace("wpp2024", quietly = TRUE), message=FALSE, warning=FALSE}
 data("popAge1dt", package = "wpp2024")
-age_limits <- c(0, 18, 60)
 uk_pop <- popAge1dt[name == "United Kingdom" & year == 2020,
   .(lower.age.limit = age, population = pop * 1000)
 ] |>
-  pop_age(age_limits = age_limits)
-uk_pop$age.group <- limits_to_agegroups(
-  uk_pop$lower.age.limit,
-  notation = "brackets"
-)
+  pop_age(age_limits = c(0, 18, 60))
 polymod[country == "United Kingdom"] |>
-  assign_age_groups(age_limits = age_limits) |>
+  assign_age_groups(age_limits = c(0, 18, 60)) |>
   compute_matrix() |>
   symmetrise(survey_pop = uk_pop)
 ```
@@ -179,7 +174,7 @@ For the rest of this section we use a small constructed `uk_pop` for the United 
 
 ```{r}
 uk_pop <- data.frame(
-  age.group = limits_to_agegroups(c(0, 1, 5, 15), notation = "brackets"),
+  lower.age.limit = c(0, 1, 5, 15),
   population = c(750000, 3200000, 7500000, 56000000)
 )
 ```
@@ -217,7 +212,7 @@ $$c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}$$
 
 ```{r message=FALSE, warning=FALSE}
 de_pop <- data.frame(
-  age.group = limits_to_agegroups(c(0, 60), notation = "brackets"),
+  lower.age.limit = c(0, 60),
   population = c(67000000, 16000000)
 )
 

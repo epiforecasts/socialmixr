@@ -16,11 +16,11 @@
 #' combination of levels is required, and the levels are matched to the
 #' matrix exactly — no interpolation is performed.
 #'
-#' Age is treated like any other grouping: the matching column is
-#' `age.group`, holding the same interval labels as the matrix. To build it
-#' from a population at arbitrary age resolution, coarsen the population to
-#' the matrix's age limits with [pop_age()] and label the groups with
-#' [limits_to_agegroups()].
+#' For the age grouping you may supply either an `age.group` column (the
+#' matrix's interval labels) or the familiar `lower.age.limit` column, which
+#' is labelled to match. If the population is at a different age resolution
+#' than the matrix, coarsen it to the matrix's age limits with [pop_age()]
+#' first.
 #'
 #' @param x a list as returned by [compute_matrix()], with elements `matrix`
 #'   and `participants`
@@ -31,14 +31,13 @@
 #'
 #' @examples
 #' data(polymod)
-#' age_limits <- c(0, 5, 15)
 #' pop <- data.frame(
-#'   age.group = limits_to_agegroups(age_limits, notation = "brackets"),
+#'   lower.age.limit = c(0, 5, 15),
 #'   population = c(3500000, 6000000, 50000000)
 #' )
 #' polymod |>
 #'   (\(s) s[country == "United Kingdom"])() |>
-#'   assign_age_groups(age_limits = age_limits) |>
+#'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix() |>
 #'   symmetrise(survey_pop = pop)
 #'
@@ -110,19 +109,26 @@ joint_population_vector <- function(survey_pop, matrix, groupings) {
   }
   k <- length(groupings)
   part_cols <- vapply(groupings, `[[`, character(1), "part")
+
+  ## accept the familiar lower.age.limit form for age, labelling it to match
+  ## the matrix's age groups (exact, no interpolation)
+  if (
+    "age.group" %in% part_cols &&
+      !"age.group" %in% colnames(survey_pop) &&
+      "lower.age.limit" %in% colnames(survey_pop)
+  ) {
+    survey_pop$age.group <- limits_to_agegroups(
+      survey_pop$lower.age.limit,
+      notation = "brackets"
+    )
+  }
+
   expected <- c(part_cols, "population")
   missing_cols <- setdiff(expected, colnames(survey_pop))
   if (length(missing_cols) > 0) {
-    msg <- "{.arg survey_pop} must have column{?s} {.val {missing_cols}}."
-    has_lower_age_limit <- "lower.age.limit" %in% colnames(survey_pop)
-    if ("age.group" %in% missing_cols && has_lower_age_limit) {
-      msg <- c(
-        msg,
-        i = "Build an {.code age.group} column from {.code lower.age.limit} \\
-             with {.fn limits_to_agegroups}."
-      )
-    }
-    cli::cli_abort(msg)
+    cli::cli_abort(
+      "{.arg survey_pop} must have column{?s} {.val {missing_cols}}."
+    )
   }
 
   part_levels <- lapply(
@@ -207,14 +213,13 @@ check_part_cnt_dims_match <- function(matrix, k, op) {
 #'
 #' @examples
 #' data(polymod)
-#' age_limits <- c(0, 5, 15)
 #' pop <- data.frame(
-#'   age.group = limits_to_agegroups(age_limits, notation = "brackets"),
+#'   lower.age.limit = c(0, 5, 15),
 #'   population = c(3500000, 6000000, 50000000)
 #' )
 #' polymod |>
 #'   (\(s) s[country == "United Kingdom"])() |>
-#'   assign_age_groups(age_limits = age_limits) |>
+#'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix() |>
 #'   split_matrix(survey_pop = pop)
 #'
@@ -280,14 +285,13 @@ split_matrix <- function(x, survey_pop) {
 #'
 #' @examples
 #' data(polymod)
-#' age_limits <- c(0, 5, 15)
 #' pop <- data.frame(
-#'   age.group = limits_to_agegroups(age_limits, notation = "brackets"),
+#'   lower.age.limit = c(0, 5, 15),
 #'   population = c(3500000, 6000000, 50000000)
 #' )
 #' polymod |>
 #'   (\(s) s[country == "United Kingdom"])() |>
-#'   assign_age_groups(age_limits = age_limits) |>
+#'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix() |>
 #'   per_capita(survey_pop = pop)
 #'

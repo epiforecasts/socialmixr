@@ -11,16 +11,16 @@
   requires a single-grouping matrix (#143).
 
 * `symmetrise()` and `per_capita()` now accept multi-grouping matrices,
-  with a single `survey_pop` format across all groupings, including age.
-  `survey_pop` is a data frame with one column per grouping holding the
-  participant-side levels of the matrix (e.g. `age.group`, `part_gender`)
-  plus a `population` column, with one row per combination. Levels are
-  matched exactly: there is no interpolation, and age is no longer
-  special-cased. To use a population at a different age resolution,
-  coarsen it to the matrix's age limits with `pop_age()` and label the
-  groups with `limits_to_agegroups()` first. `symmetrise()` additionally
-  requires the participant- and contact-side dims to share the same
-  levels, otherwise reciprocity is undefined and it aborts (#319).
+  with a single `survey_pop` format across all groupings. `survey_pop` is
+  a data frame with one column per grouping holding the participant-side
+  levels of the matrix (e.g. `age.group`, `part_gender`) plus a
+  `population` column, with one row per combination. For age you may
+  instead supply the familiar `lower.age.limit` column, which is labelled
+  to match. Levels are matched exactly: there is no interpolation. To use
+  a population at a different age resolution, coarsen it to the matrix's
+  age limits with `pop_age()` first. `symmetrise()` additionally requires
+  the participant- and contact-side dims to share the same levels,
+  otherwise reciprocity is undefined and it aborts (#319).
 
 * The `contact_matrix` S3 object now carries a `groupings` field — the
   list of grouping triples that produced its `matrix`. Used internally

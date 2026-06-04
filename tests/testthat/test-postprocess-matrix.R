@@ -4,15 +4,8 @@ polymod_uk_grouped <- polymod |>
   (\(s) s[country == "United Kingdom"])() |>
   assign_age_groups(age_limits = age_limits)
 
-## legacy contact_matrix() form (interpolated internally)
 pop <- data.frame(
   lower.age.limit = age_limits,
-  population = c(3500000, 6000000, 50000000)
-)
-
-## pipeline form: one row per matrix age group, keyed by age.group label
-pop_ag <- data.frame(
-  age.group = limits_to_agegroups(age_limits, notation = "brackets"),
   population = c(3500000, 6000000, 50000000)
 )
 
@@ -21,17 +14,17 @@ result_base <- compute_matrix(polymod_uk_grouped)
 ## symmetrise ------------------------------------------------------------------
 
 test_that("symmetrise() satisfies reciprocity", {
-  sym <- symmetrise(result_base, survey_pop = pop_ag)
+  sym <- symmetrise(result_base, survey_pop = pop)
 
   # c_ij * N_i should equal c_ji * N_j, i.e. M * N should be symmetric
-  n <- pop_ag$population
+  n <- pop$population
   scaled <- sym$matrix * n # M[i,j] * N[i] via column recycling
 
   expect_equal(unname(scaled), unname(t(scaled)), tolerance = 1e-10)
 })
 
 test_that("symmetrise() matches contact_matrix(symmetric = TRUE)", {
-  sym <- symmetrise(result_base, survey_pop = pop_ag)
+  sym <- symmetrise(result_base, survey_pop = pop)
 
   legacy <- contact_matrix(
     polymod,
@@ -70,7 +63,7 @@ test_that("symmetrise() returns scalar matrix unchanged", {
 ## split_matrix ----------------------------------------------------------------
 
 test_that("split_matrix() returns expected elements", {
-  sp <- split_matrix(result_base, survey_pop = pop_ag)
+  sp <- split_matrix(result_base, survey_pop = pop)
   expect_true("mean.contacts" %in% names(sp))
   expect_true("normalisation" %in% names(sp))
   expect_true("contacts" %in% names(sp))
@@ -83,7 +76,7 @@ test_that("split_matrix() returns expected elements", {
 })
 
 test_that("split_matrix() matches contact_matrix(split = TRUE)", {
-  sp <- split_matrix(result_base, survey_pop = pop_ag)
+  sp <- split_matrix(result_base, survey_pop = pop)
 
   legacy <- contact_matrix(
     polymod,
@@ -112,14 +105,14 @@ test_that("split_matrix() errors on invalid input", {
 ## per_capita ------------------------------------------------------------------
 
 test_that("per_capita() replaces $matrix with per-capita rates", {
-  pc <- per_capita(result_base, survey_pop = pop_ag)
+  pc <- per_capita(result_base, survey_pop = pop)
   expect_true(is.matrix(pc$matrix))
   # Per-capita rates should be smaller than original rates
   expect_true(all(pc$matrix < result_base$matrix))
 })
 
 test_that("per_capita() matches contact_matrix(per_capita = TRUE)", {
-  pc <- per_capita(result_base, survey_pop = pop_ag)
+  pc <- per_capita(result_base, survey_pop = pop)
 
   legacy <- contact_matrix(
     polymod,
@@ -142,14 +135,14 @@ test_that("symmetrise() errors when survey_pop is not a data frame", {
   expect_error(symmetrise(result_base, survey_pop = "not a df"), "data frame")
 })
 
-test_that("symmetrise() errors when age is keyed by lower.age.limit", {
-  expect_error(symmetrise(result_base, survey_pop = pop), "age.group")
-})
-
-test_that("symmetrise() hints at limits_to_agegroups() for lower.age.limit", {
-  expect_error(
-    symmetrise(result_base, survey_pop = pop),
-    "limits_to_agegroups"
+test_that("symmetrise() accepts the lower.age.limit form for age", {
+  labelled <- data.frame(
+    age.group = limits_to_agegroups(age_limits, notation = "brackets"),
+    population = pop$population
+  )
+  expect_identical(
+    symmetrise(result_base, survey_pop = pop)$matrix,
+    symmetrise(result_base, survey_pop = labelled)$matrix
   )
 })
 
