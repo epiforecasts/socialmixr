@@ -150,6 +150,12 @@ joint_population_vector <- function(survey_pop, matrix, groupings) {
     pop[[col]] <- as.character(pop[[col]])
   }
 
+  if (anyDuplicated(pop, by = part_cols) > 0L) {
+    cli::cli_abort(
+      "{.arg survey_pop} has duplicate rows for some grouping combination."
+    )
+  }
+
   joined <- merge(combos, pop, by = part_cols, all.x = TRUE, sort = FALSE)
   data.table::setorder(joined, .idx)
   if (anyNA(joined$population)) {

@@ -265,6 +265,14 @@ test_that("symmetrise() errors when survey_pop is missing tuples", {
   )
 })
 
+test_that("symmetrise() errors on duplicate population tuples", {
+  dup_pop <- rbind(joint_pop, joint_pop[1, ])
+  expect_error(
+    symmetrise(multidim_result, survey_pop = dup_pop),
+    "duplicate"
+  )
+})
+
 test_that("per_capita() divides each contact tuple by its population", {
   pc <- per_capita(multidim_result, survey_pop = joint_pop)
   ## Numerical check: pc[a, b] * N_b should equal the un-normalised m[a, b]
