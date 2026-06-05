@@ -224,6 +224,44 @@ test_that("contact_matrix carries its groupings on the object", {
   )
 })
 
+test_that("multi-grouping matrix entries equal the direct mean contacts", {
+  ## Reconstruct each (participant tuple, contact tuple) entry independently:
+  ## with unit weights it is the number of matching contact records divided
+  ## by the number of participants in that tuple.
+  parts <- polymod_uk_gendered$participants
+  conts <- polymod_uk_gendered$contacts
+  np <- parts[, list(np = .N), by = list(age.group, part_gender)]
+  conts_p <- merge(
+    conts,
+    parts[, list(part_id, p_age = age.group, p_gender = part_gender)],
+    by = "part_id"
+  )
+  cc <- conts_p[,
+    list(nc = .N),
+    by = list(p_age, p_gender, contact.age.group, cnt_gender)
+  ]
+  cc <- merge(
+    cc,
+    np,
+    by.x = c("p_age", "p_gender"),
+    by.y = c("age.group", "part_gender")
+  )
+  cc[, expected := nc / np]
+
+  ## every participant/contact tuple is populated, so the matrix has no
+  ## zero (unobserved) cells to miss
+  expect_identical(nrow(cc), as.integer(prod(dim(multidim_result$matrix))))
+
+  actual <- mapply(
+    function(pa, pg, ca, cg) multidim_result$matrix[pa, pg, ca, cg],
+    cc$p_age,
+    cc$p_gender,
+    cc$contact.age.group,
+    cc$cnt_gender
+  )
+  expect_equal(actual, cc$expected, tolerance = 1e-10)
+})
+
 test_that("symmetrise() satisfies reciprocity on a multi-grouping matrix", {
   sym <- symmetrise(multidim_result, survey_pop = joint_pop)
   k <- length(dim(sym$matrix)) %/% 2L
