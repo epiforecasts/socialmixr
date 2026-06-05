@@ -146,7 +146,7 @@ test_that("symmetrise() accepts the lower.age.limit form for age", {
   )
 })
 
-test_that("symmetrise() errors and points to pop_age() on resolution mismatch", {
+test_that("symmetrise() points to pop_age() on age resolution mismatch", {
   finer <- data.frame(
     age.group = limits_to_agegroups(c(0, 5, 10, 15), notation = "brackets"),
     population = c(1e6, 2e6, 3e6, 4e6)

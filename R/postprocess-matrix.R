@@ -112,11 +112,10 @@ joint_population_vector <- function(survey_pop, matrix, groupings) {
 
   ## accept the lower.age.limit form for age, labelling it to match
   ## the matrix's age groups (exact, no interpolation)
-  if (
-    "age.group" %in% part_cols &&
-      !"age.group" %in% colnames(survey_pop) &&
-      "lower.age.limit" %in% colnames(survey_pop)
-  ) {
+  age_grouped <- "age.group" %in% part_cols
+  has_age_group <- "age.group" %in% colnames(survey_pop)
+  has_lower_age_limit <- "lower.age.limit" %in% colnames(survey_pop)
+  if (age_grouped && !has_age_group && has_lower_age_limit) {
     survey_pop$age.group <- limits_to_agegroups(
       survey_pop$lower.age.limit,
       notation = "brackets"
