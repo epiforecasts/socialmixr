@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>The socialmixr package • socialmixr</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="intro_files/libs/quarto-html/popper.min.js"></script><script src="intro_files/libs/quarto-html/tippy.umd.min.js"></script><link href="intro_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="intro_files/libs/quarto-html/light-border.css" rel="stylesheet">
@@ -58,7 +58,7 @@
       <h1>The socialmixr package</h1>
 
       <p class="author">Sebastian Funk</p>
-      <p class="date">2026-05-13</p>
+      <p class="date">2026-06-30</p>
 
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/vignettes/intro.qmd" class="external-link"><code>vignettes/intro.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -230,11 +230,11 @@
 <span><span class="va">mr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">m</span><span class="op">[</span><span class="st">"matrix"</span>, <span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
-<span><span class="co">#&gt; age.group       [0,1)     [1,5)    [5,15) [15,Inf)</span></span>
-<span><span class="co">#&gt;   [0,1)    0.87257409 1.3611455  1.948159 12.18693</span></span>
-<span><span class="co">#&gt;   [1,5)    0.14264617 4.1499348  3.262223 10.67810</span></span>
-<span><span class="co">#&gt;   [5,15)   0.08125083 1.2880114 16.003548 14.07385</span></span>
-<span><span class="co">#&gt;   [15,Inf) 0.05650288 0.6471815  2.580666 19.27007</span></span></code></pre></div>
+<span><span class="co">#&gt; age.group       [0,1)     [1,5)    [5,15)  [15,Inf)</span></span>
+<span><span class="co">#&gt;   [0,1)    0.23884921 1.8744048  2.296706  8.984722</span></span>
+<span><span class="co">#&gt;   [1,5)    0.21833428 3.5356916  2.568646 12.083638</span></span>
+<span><span class="co">#&gt;   [5,15)   0.08644013 1.0298587 16.205296 12.169899</span></span>
+<span><span class="co">#&gt;   [15,Inf) 0.04215734 0.6656337  2.356978 18.903224</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
 </h2>
