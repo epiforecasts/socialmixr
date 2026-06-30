@@ -1,5 +1,11 @@
 # socialmixr (development version)
 
+* `pop_age()` has been renamed to `regroup_ages()` to describe what it
+  does -- regroup a population into a different set of age groups, summing
+  when coarser groups are requested and interpolating when finer ones are.
+  `pop_age()` still works but is deprecated and warns; it will be removed in
+  a future release (#328).
+
 * `compute_matrix()` gains a `by` argument that accepts any combination of
   participant/contact groupings, not just age. Each entry is either the
   string `"age"` (matching the columns produced by `assign_age_groups()`),

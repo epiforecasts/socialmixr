@@ -23,7 +23,7 @@ weigh_by_age(survey, pop, ...)
 with an unnamed numeric \code{target} vector); must be the same length as
 \code{target}.}
 
-\item{...}{further arguments passed to \code{\link[=pop_age]{pop_age()}} for interpolation.}
+\item{...}{further arguments passed to \code{\link[=regroup_ages]{regroup_ages()}} for interpolation.}
 
 \item{pop}{a data frame with columns \code{lower.age.limit} and \code{population}
 (used by \code{\link[=weigh_by_age]{weigh_by_age()}}).}
@@ -86,7 +86,7 @@ Equivalent to:
 
 Convenience wrapper for age post-stratification. The main thing it
 adds over a raw \code{\link[=weigh]{weigh()}} call is \strong{interpolation}: the reference
-\code{pop} is expanded to single-year ages with \code{\link[=pop_age]{pop_age()}}, so it can be
+\code{pop} is expanded to single-year ages with \code{\link[=regroup_ages]{regroup_ages()}}, so it can be
 supplied at any age resolution (e.g. 5-year bands).
 
 For each single-year age \eqn{a} the weight then becomes

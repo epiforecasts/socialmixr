@@ -14,7 +14,7 @@ and \code{participants}}
 \item{survey_pop}{a data frame with columns \code{lower.age.limit} and
 \code{population} (e.g. from \code{\link[=wpp_age]{wpp_age()}})}
 
-\item{...}{passed to \code{\link[=pop_age]{pop_age()}} for interpolation}
+\item{...}{passed to \code{\link[=regroup_ages]{regroup_ages()}} for interpolation}
 }
 \value{
 \code{x} with \verb{$matrix} replaced by the assortativity matrix, plus

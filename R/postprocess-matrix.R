@@ -3,7 +3,7 @@
 #' @param survey_pop a data frame with columns `lower.age.limit` and
 #'   `population` (e.g. from [wpp_age()])
 #' @param age_limits numeric vector of age group lower limits from the matrix
-#' @param ... passed to [pop_age()] for interpolation
+#' @param ... passed to [regroup_ages()] for interpolation
 #' @returns a data.table with `lower.age.limit`, `population`, and
 #'   `upper.age.limit` aligned to the matrix age groups
 #' @keywords internal
@@ -46,7 +46,7 @@ resolve_survey_pop <- function(survey_pop, age_limits, ...) {
 #'   `population` (e.g. from [wpp_age()])
 #' @param symmetric_norm_threshold threshold for the normalisation factor
 #'   before issuing a warning (default 2)
-#' @param ... passed to [pop_age()] for interpolation
+#' @param ... passed to [regroup_ages()] for interpolation
 #' @returns `x` with `$matrix` replaced by the symmetrised version
 #'
 #' @examples
