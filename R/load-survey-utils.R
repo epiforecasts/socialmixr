@@ -135,6 +135,26 @@ get_mergeable_files <- function(survey_files, contact_data, main_cols) {
   names(can_merge[can_merge])
 }
 
+#' Is a file contact-level data that should attach to the contact table?
+#'
+#' A file with one row per contact is contact-level data (e.g. a file of
+#' contact attributes sharing only `part_id` with participants but keyed at the
+#' contact level). Such a file must attach to contacts; merging it into
+#' participants would inflate the participant table to one row per contact. The
+#' test is that the columns the file shares with the contact table uniquely
+#' identify a contact *and* the file has at most one row per contact. This
+#' distinguishes a genuine contact file from a participant-level longitudinal
+#' file (e.g. a per-`wave` diary), which broadcasts across a participant's many
+#' contacts rather than identifying one.
+#' @noRd
+fits_contact_table <- function(file_data, contact_table) {
+  shared <- intersect(colnames(file_data), colnames(contact_table))
+  shared <- shared[!startsWith(shared, "..")]
+  length(shared) > 0 &&
+    anyDuplicated(contact_table, by = shared) == 0L &&
+    anyDuplicated(file_data, by = shared) == 0L
+}
+
 #' Resolve the unique key for a merged data.table with duplicates
 #'
 #' Validates a user-provided participant_key or auto-detects one via
@@ -182,6 +202,7 @@ try_merge_one_file <- function(
   main_survey,
   contact_data,
   participant_key = NULL,
+  contact_table = NULL,
   call = rlang::caller_env()
 ) {
   null_result <- list(merged = NULL, detected_key = NULL)
@@ -223,6 +244,9 @@ try_merge_one_file <- function(
 
   if (has_duplicates) {
     if (type == "contact") {
+      return(null_result)
+    }
+    if (fits_contact_table(contact_data[[file]], contact_table)) {
       return(null_result)
     }
     detected_key <- resolve_longitudinal_key(merged, participant_key, call)
@@ -282,6 +306,7 @@ merge_all_files <- function(
   survey_files,
   contact_data,
   participant_key = NULL,
+  contact_table = NULL,
   call = rlang::caller_env()
 ) {
   detected_key <- NULL
@@ -300,6 +325,7 @@ merge_all_files <- function(
         main_survey,
         contact_data,
         participant_key = participant_key,
+        contact_table = contact_table,
         call = call
       )
       if (!is.null(result$merged)) {
@@ -374,12 +400,16 @@ try_merge_additional_files <- function(
   observation_key <- NULL
 
   for (type in main_types) {
+    contact_table <- if (type == "participant") {
+      main_surveys[["contact"]]
+    }
     result <- merge_all_files(
       type,
       main_surveys[[type]],
       survey_files,
       contact_data,
       participant_key = participant_key,
+      contact_table = contact_table,
       call = call
     )
     main_surveys[[type]] <- result$merged[, ("..main_id") := NULL]

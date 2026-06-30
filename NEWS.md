@@ -128,6 +128,12 @@ class. The vignette and README are rewritten around the pipeline (#288).
   parameters (`new`, `pty`) and the error handler (`err`) were left
   modified in the user's session (#307).
 
+* `load_survey()` now attaches contact-level files (those keyed at the contact
+  level, e.g. a contact-attributes file sharing only `part_id` with
+  participants) to the contact table instead of inflating the participant
+  table to one row per contact. Previously such files were merged into
+  participants, squaring contact counts in the resulting matrix (#326).
+
 ## Deprecations
 
 * `wpp_age()` and `wpp_countries()` are now soft-deprecated. Pass population
