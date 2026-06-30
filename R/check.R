@@ -68,7 +68,7 @@ check <- function(x, ...) UseMethod("check")
 #' @return invisibly returns a character vector of the relevant columns
 #' @examples
 #' data(polymod)
-#' check(polymod)
+#' try(check(polymod))
 #' @export
 check.contact_survey <- function(
   x,
@@ -79,69 +79,12 @@ check.contact_survey <- function(
   contact.age.column = "cnt_age",
   ...
 ) {
-  lifecycle::deprecate_warn(
-    "1.0.0",
+  lifecycle::deprecate_stop(
+    "0.5.0",
     "check()",
     details = paste(
       "Use `as_contact_survey()` instead to construct a `<contact_survey>`",
       "object. This will perform necessary checks."
     )
   )
-  chkDots(...)
-  if (!is.data.frame(x$participants) || !is.data.frame(x$contacts)) {
-    cli::cli_abort(
-      "The {.field participants} and {.field contacts} elements of \\
-      {.arg x} must be data.frames."
-    )
-  }
-
-  x <- clean(x)
-
-  success <- TRUE
-  if (
-    !(id.column %in%
-      colnames(x$participants) &&
-      id.column %in% colnames(x$contacts))
-  ) {
-    cli::cli_warn(
-      "{.arg id.column} {.val {id.column}} does not exist in both \\
-      the participants and contacts data frames."
-    )
-    success <- FALSE
-  }
-
-  if (
-    !check_age_column(
-      x$participants,
-      participant.age.column,
-      "Participant"
-    )
-  ) {
-    success <- FALSE
-  }
-
-  if (!check_age_column(x$contacts, contact.age.column, "Contact")) {
-    success <- FALSE
-  }
-
-  if (!(country.column %in% colnames(x$participants))) {
-    cli::cli_warn(
-      "Country column {.arg {country.column}} does not exist in the \\
-      participant data frame."
-    )
-    success <- FALSE
-  }
-  if (success) {
-    cli::cli_alert("Check OK.")
-  } else {
-    cli::cli_alert("Check FAILED.")
-  }
-
-  invisible(c(
-    id = id.column,
-    participant.age = participant.age.column,
-    country = country.column,
-    year = year.column,
-    contact.age = contact.age.column
-  ))
 }

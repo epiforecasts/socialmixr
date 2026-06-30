@@ -7,10 +7,14 @@
 new_contact_matrix(matrix, participants, ...)
 }
 \arguments{
-\item{matrix}{a numeric matrix with age group dimnames}
+\item{matrix}{a numeric array. For single-grouping matrices this is a
+2D matrix with age-group dimnames; for multi-grouping it is a
+rank-\verb{2K} array where the first \code{K} dimensions index participants and
+the last \code{K} index contacts.}
 
-\item{participants}{a data.frame with columns \code{age.group}, \code{participants},
-\code{proportion}}
+\item{participants}{a data.frame with one row per participant grouping
+combination (\code{participants}, \code{proportion}, plus one column per
+grouping)}
 
 \item{...}{additional named elements (e.g. \code{mean.contacts}, \code{normalisation},
 \code{contacts} from \code{\link[=split_matrix]{split_matrix()}})}

@@ -141,13 +141,14 @@ custom_pop <- data.frame(
 )
 ```
 
-If the survey has a `country` column, `survey_country_population()` looks up country- and year-specific population data:
+For the rest of this vignette we use a small constructed `uk_pop` for the United Kingdom, sufficient to illustrate the post-processing functions:
 
 ```{r}
-survey_country_population(polymod, countries = "United Kingdom")
+uk_pop <- data.frame(
+  lower.age.limit = c(0, 1, 5, 15),
+  population = c(750000, 3200000, 7500000, 56000000)
+)
 ```
-
-This uses the older [`wpp2017`](https://cran.r-project.org/package=wpp2017) package, an optional (Suggests) dependency that needs to be installed separately. It is kept for backwards compatibility; use more recent population data (as shown above) where possible.
 
 # Symmetric contact matrices
 
@@ -162,8 +163,6 @@ $$m'_{ij} = \frac{1}{2N_i} (m_{ij} N_i + m_{ji} N_j)$$
 To get this version of the contact matrix, pipe the matrix through `symmetrise()`, passing the population data:
 
 ```{r message=FALSE, warning=FALSE}
-uk_pop <- survey_country_population(polymod, countries = "United Kingdom")
-
 polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
   compute_matrix() |>
@@ -181,7 +180,10 @@ Pipe the matrix through `per_capita()` to convert to per-capita rates. If combin
 $$c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}$$
 
 ```{r message=FALSE, warning=FALSE}
-de_pop <- survey_country_population(polymod, countries = "Germany")
+de_pop <- data.frame(
+  lower.age.limit = c(0, 60),
+  population = c(67000000, 16000000)
+)
 
 polymod[country == "Germany"] |>
   assign_age_groups(age_limits = c(0, 60)) |>
@@ -243,17 +245,31 @@ $$w_{i} = w_{\textrm{age}} * w_{\textrm{day.of.week}} $$
 
 If the social contact analysis is based on stratification by splitting the population into non-overlapping groups, it requires the weights to be standardised so that the weighted totals within mutually exclusive cells equal the known population totals [@kolenikov_post-stratification_2016]. The post-stratification cells need to be mutually exclusive and cover the whole population. `compute_matrix()` applies this post-stratification normalisation within age groups.
 
-`weigh()` is composable: each call multiplies new weights into the participants' `weight` column. In POLYMOD, the `dayofweek` column uses 0 for Sunday and 6 for Saturday, so weekdays are 1-5 and weekend days are 0 and 6:
+`weigh()` is composable: each call multiplies new weights into the participants' `weight` column. Common recipes are wrapped as `weigh_by_*()` convenience functions:
 
 ```{r message=FALSE, warning=FALSE}
 polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 18, 60)) |>
-  weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6))) |>
-  weigh("part_age", target = uk_pop) |>
+  weigh_by_dayofweek() |>
+  weigh_by_age(uk_pop) |>
   compute_matrix()
 ```
 
-The first `weigh()` call assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). The second call post-stratifies against the population structure in `uk_pop` (passed as a data frame).
+`weigh_by_dayofweek()` assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). `weigh_by_age()` post-stratifies against a target population: it interpolates `uk_pop` to single-year ages with `pop_age()` and multiplies in the ratio of target to observed age share.
+
+For arbitrary discrete joins, `weigh()` itself takes a two-column data frame whose key column matches `by` — e.g. pooling participants across countries by a target share:
+
+```{r eval=FALSE}
+country_target <- data.frame(
+  country = c("United Kingdom", "Germany", "Italy"),
+  p = c(0.3, 0.4, 0.3),
+  stringsAsFactors = FALSE
+)
+polymod |>
+  assign_age_groups(age_limits = c(0, 18, 60)) |>
+  weigh("country", target = country_target) |>
+  compute_matrix()
+```
 
 ## User-defined participant weights
 
@@ -273,8 +289,8 @@ If the survey population differs extensively from the demography, some participa
 ```{r message=FALSE, warning=FALSE}
 polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 18, 60)) |>
-  weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6))) |>
-  weigh("part_age", target = uk_pop) |>
+  weigh_by_dayofweek() |>
+  weigh_by_age(uk_pop) |>
   compute_matrix(weight_threshold = 3)
 ```
 

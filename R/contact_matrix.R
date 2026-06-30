@@ -7,13 +7,14 @@
 #'   (default), will use all countries in the survey; these can be
 #'   given as country names or 2-letter (ISO Alpha-2) country
 #'   codes.
-#' @param survey_pop survey population -- either a data frame with
-#'   columns 'lower.age.limit' and 'population', or a character
-#'   vector giving the name(s) of a country or countries from the
-#'   list that can be obtained via `wpp_countries`; if NULL
-#'   (default), will use the country populations from the chosen
-#'   countries, or all countries in the survey if `countries` is
-#'   NULL.
+#' @param survey_pop survey population -- a data frame with columns
+#'   `lower.age.limit` and `population`. Passing `NULL` (the default)
+#'   or a character vector of country names triggers the
+#'   `r lifecycle::badge("deprecated")` implicit lookup via [wpp_age()]
+#'   when `symmetric`, `split`, `per_capita`, `weigh_age`, or
+#'   `return_demography` is `TRUE`; supply an explicit data frame
+#'   (e.g. constructed from the `wpp2024` package or another source)
+#'   instead.
 #' @param age_limits lower limits of the age groups over which to
 #'   construct the matrix. If NULL (default), age limits are
 #'   inferred from participant and contact ages.
@@ -59,13 +60,12 @@
 #'   appear in the contact matrix in a row labelled "NA".
 #' @param missing_contact_age if set to "remove" (default),
 #'   participants that have contacts without age information are
-#'   removed; if set to "sample", contacts without age information
-#'   are sampled from all the contacts of participants of the same
-#'   age group; if set to "keep", contacts with missing age are
+#'   removed; if set to "keep", contacts with missing age are
 #'   kept and will appear in the contact matrix in a column
 #'   labelled "NA"; if set to "ignore", contacts without age
 #'   information are removed from the analysis (but the
-#'   participants that made them are kept).
+#'   participants that made them are kept). The "sample" option is
+#'   defunct (errors).
 #' @param weights column name(s) of the participant data of the
 #'   [survey()] object with user-specified weights (default =
 #'   empty vector).
@@ -103,7 +103,7 @@
 #' @param survey.pop,age.limits,sample.participants,estimated.participant.age,estimated.contact.age,missing.participant.age,missing.contact.age,weigh.dayofweek,weigh.age,weight.threshold,symmetric.norm.threshold,sample.all.age.groups,sample.participants.max.tries,return.part.weights,return.demography,per.capita `r lifecycle::badge("deprecated")` Use the underscore-separated versions of these arguments instead.
 # nolint end
 #' @param ... further arguments to pass to [get_survey()],
-#'   [check()] and [pop_age()] (especially column names).
+#'   [check()] and [regroup_ages()] (especially column names).
 #' @return a contact matrix, and the underlying demography of the
 #'   surveyed population
 #' @importFrom stats xtabs runif median
@@ -288,11 +288,10 @@ contact_matrix <- function(
   missing_contact_age <- match.arg(missing_contact_age)
 
   if (missing_contact_age == "sample") {
-    lifecycle::deprecate_warn(
+    lifecycle::deprecate_stop(
       "0.5.0",
       "contact_matrix(missing_contact_age = 'sample')",
       details = paste(
-        "Sampling missing contact ages will be removed in a future version.",
         "Use 'remove' to exclude contacts with missing ages, 'keep' to retain",
         "them as a separate age group, or 'ignore' to drop only those contacts."
       )
@@ -354,21 +353,12 @@ contact_matrix <- function(
       lifecycle::deprecate_warn(
         when = "0.6.0",
         what = I("Automatic country population lookup in `contact_matrix()`"),
-        details = c(
-          paste(
-            "When `countries` is given (or a `country` column is present)",
-            "without `survey_pop`, contact_matrix() currently calls the",
-            "soft-deprecated `wpp_age()` to look up population data. This",
-            "automatic lookup will be removed in a future release: callers",
-            "will then have to supply `survey_pop` whenever `symmetric`,",
-            "`split`, `per_capita`, `weigh_age`, or `return_demography` is",
-            "TRUE."
-          ),
-          i = paste(
-            "Pass `survey_pop` explicitly to silence this warning, e.g.",
-            "`survey_pop = survey_country_population(survey, countries)` or a",
-            "data frame from the wpp2024 package."
-          )
+        details = paste(
+          "Pass `survey_pop` explicitly when `symmetric`, `split`,",
+          "`per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g.",
+          "as a data frame with columns `lower.age.limit` and `population`",
+          "constructed from the wpp2024 package or another source. The",
+          "implicit lookup will error in a future release."
         )
       )
     }
@@ -389,9 +379,10 @@ contact_matrix <- function(
       age_breaks = part.age.group.present
     )
 
+    ## interpolate population to single-year ages once for downstream
+    ## age weighting (before `survey_pop` is overwritten below)
     if (weigh_age) {
-      ## keep reference of survey_pop
-      survey_pop.full <- survey_pop_reference(survey_pop, ...)
+      interpolated_survey_pop <- survey_pop_reference(survey_pop, ...)
     }
 
     ## adjust age groups by interpolating, in case they don't match between
@@ -407,32 +398,11 @@ contact_matrix <- function(
   survey$participants[, weight := 1]
 
   if (weigh_dayofweek) {
-    if ("dayofweek" %in% colnames(survey$participants)) {
-      survey <- weigh(
-        survey,
-        "dayofweek",
-        target = c(5, 2),
-        groups = list(1:5, c(0, 6))
-      )
-      # Add is.weekday for return_part_weights compatibility
-      # Use fifelse to preserve NA (NA %in% 1:5 would return FALSE)
-      survey$participants[,
-        is.weekday := fifelse(is.na(dayofweek), NA, dayofweek %in% 1:5)
-      ]
-    } else {
-      cli::cli_warn(
-        c(
-          "{.code weigh_dayofweek} is {.val TRUE}, but no {.col dayofweek} \\
-            column in the data.",
-          i = "Will ignore."
-        )
-      )
-      weigh_dayofweek <- FALSE
-    }
+    survey <- weigh_by_dayofweek(survey)
   }
 
   if (weigh_age) {
-    survey <- weigh(survey, "part_age", target = survey_pop.full)
+    survey <- weigh_by_age(survey, interpolated_survey_pop, ...)
   }
 
   if (length(weights) > 0) {
@@ -567,31 +537,8 @@ contact_matrix <- function(
 
   # option to return participant weights ---------------------------------------
   if (return_part_weights) {
-    # default
     part_weights <- survey$participants[, .N, by = list(age.group, weight)]
     part_weights <- part_weights[order(age.group, weight), ]
-
-    # add age and/or dayofweek info
-    if (weigh_age && weigh_dayofweek) {
-      part_weights <- survey$participants[,
-        .N,
-        by = list(age.group, participant.age = part_age, is.weekday, weight)
-      ]
-    }
-
-    if (weigh_age && !weigh_dayofweek) {
-      part_weights <- survey$participants[,
-        .N,
-        by = list(age.group, participant.age = part_age, weight)
-      ]
-    }
-
-    if (weigh_dayofweek && !weigh_age) {
-      part_weights <- survey$participants[,
-        .N,
-        by = list(age.group, is.weekday, weight)
-      ]
-    }
 
     # order (from left to right)
     part_weights <- part_weights[order(part_weights), ] # nolint

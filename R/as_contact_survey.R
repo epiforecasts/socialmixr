@@ -28,7 +28,7 @@
 #' @return invisibly returns a character vector of the relevant columns
 #' @examples
 #' data(polymod)
-#' check(polymod)
+#' as_contact_survey(polymod)
 #' @export
 as_contact_survey <- function(
   x,

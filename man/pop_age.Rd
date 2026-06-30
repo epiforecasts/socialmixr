@@ -17,16 +17,16 @@ pop_age(
 }
 \arguments{
 \item{pop}{a data frame with columns indicating lower age
-limits and population sizes (see 'pop_age_column' and
-'pop_column')}
+limits and population sizes (see \code{pop_age_column} and
+\code{pop_column})}
 
-\item{age_limits}{lower age limits of age groups to extract; if NULL
+\item{age_limits}{lower age limits of age groups to extract; if \code{NULL}
 (default), the population data is returned unchanged}
 
-\item{pop_age_column}{column in the 'pop' data frame indicating
+\item{pop_age_column}{column in the \code{pop} data frame indicating
 the lower age group limit}
 
-\item{pop_column}{column in the 'pop' data frame indicating
+\item{pop_column}{column in the \code{pop} data frame indicating
 the population size}
 
 \item{...}{ignored}
@@ -38,18 +38,9 @@ versions (e.g., \code{age_limits}) instead.}
 data frame of age-specific population data
 }
 \description{
-This changes population data to have age groups with the given
-age_limits, extrapolating linearly between age groups (if more
-are requested than available) and summing populations (if fewer
-are requested than available)
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{pop_age()} was renamed to \code{\link[=regroup_ages]{regroup_ages()}} to describe what it does.
+Please use \code{\link[=regroup_ages]{regroup_ages()}} instead.
 }
-\examples{
-ages_it_2015 <- wpp_age("Italy", 2015)
-
-# Modify the age data.frame to get age groups of 10 years instead of 5
-pop_age(ages_it_2015, age_limits = seq(0, 100, by = 10))
-
-# The function will also automatically interpolate if necessary
-pop_age(ages_it_2015, age_limits = c(0, 18, 40, 65))
-
-}
+\keyword{internal}

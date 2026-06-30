@@ -2,55 +2,152 @@
 % Please edit documentation in R/weigh.R
 \name{weigh}
 \alias{weigh}
+\alias{weigh_by_dayofweek}
+\alias{weigh_by_age}
 \title{Weigh survey participants}
 \usage{
 weigh(survey, by, target = NULL, groups = NULL, ...)
+
+weigh_by_dayofweek(survey)
+
+weigh_by_age(survey, pop, ...)
 }
 \arguments{
-\item{survey}{a \code{\link[=survey]{survey()}} object (must have been processed by
-\code{\link[=assign_age_groups]{assign_age_groups()}} if using data frame target)}
+\item{survey}{a \code{\link[=survey]{survey()}} object}
 
-\item{by}{column name in the participant data to weigh by}
+\item{by}{column name in the participant data to join on}
 
-\item{target}{target weights: \code{NULL} for direct numeric weighting, an
-unnamed numeric vector (with \code{groups}), a named numeric vector, or a
-data frame with columns \code{lower.age.limit} and \code{population}}
+\item{target}{see \emph{Target shapes accepted by \code{weigh()}}.}
 
 \item{groups}{a list of value sets mapping column values to groups (used
-with unnamed \code{target} vector); must be the same length as \code{target}}
+with an unnamed numeric \code{target} vector); must be the same length as
+\code{target}.}
 
-\item{...}{further arguments passed to \code{\link[=pop_age]{pop_age()}} when \code{target} is a data
-frame}
+\item{...}{further arguments passed to \code{\link[=regroup_ages]{regroup_ages()}} for interpolation.}
+
+\item{pop}{a data frame with columns \code{lower.age.limit} and \code{population}
+(used by \code{\link[=weigh_by_age]{weigh_by_age()}}).}
 }
 \value{
 the survey object with updated participant weights
 }
 \description{
-Applies weights to participants in a \code{contact_survey} object. Weights are
-always multiplied into an existing \code{weight} column (or one is created with
-value 1), making multiple calls composable.
+\code{\link[=weigh]{weigh()}} multiplies participant weights by values looked up from a
+\code{target}. The existing \code{weight} column is multiplied in place, so
+multiple calls compose; if no \code{weight} column is present, one is created
+with value 1.
 
-The behaviour depends on the combination of arguments:
-\describe{
-\item{\code{target = NULL}}{Numeric column: multiply \code{weight} by column values
-directly.}
-\item{Unnamed \code{target} + \code{groups}}{Map column values to groups, assign
-\code{target[g] / n_in_group} per participant.}
-\item{Named \code{target}}{Names match column values, assign
-\code{target[val] / n_with_val} per participant.}
-\item{Data frame \code{target}}{Post-stratify against population data (expanded
-to single-year ages via \code{\link[=pop_age]{pop_age()}}).}
+\code{\link[=weigh_by_dayofweek]{weigh_by_dayofweek()}} and \code{\link[=weigh_by_age]{weigh_by_age()}} are thin convenience
+wrappers around the two most common recipes — the weekly weekday/weekend
+split and age post-stratification against a reference population. See
+the dedicated sections below for what they compute exactly.
 }
+\section{Target shapes accepted by \code{weigh()}}{
+
+\itemize{
+\item \code{target = NULL} (the default) — multiply the numeric column \code{by}
+directly into \code{weight}. Useful when participants already carry a
+precomputed weight column.
+\item a two-column data frame whose key column is named \code{by} —
+pure discrete join: multiply the value column into \code{weight} where the
+key matches. Unmatched values get \code{NA} (with a warning).
+\item an unnamed numeric vector together with \code{groups} — each element of
+\code{target} is the \emph{total} weight assigned across participants matching
+the corresponding entry in \code{groups}. The per-participant factor is
+\code{target[g] / n_in_group}.
+\item a named numeric vector — same as above but \code{names(target)} are
+matched against values of the \code{by} column.
 }
+
+A data frame target that does \emph{not} have a column named \code{by} but does
+have \code{lower.age.limit} and \code{population} triggers a deprecation warning
+and falls back to the old hidden age post-stratification path; use
+\code{\link[=weigh_by_age]{weigh_by_age()}} instead.
+}
+
+\section{\code{weigh_by_dayofweek()}}{
+
+
+Rescales weights so that weekday participants together carry a total
+weight of 5 and weekend participants a total weight of 2 — the weekly
+5/2 split that corrects for the typical over-representation of weekdays
+in diary surveys. Concretely, each weekday participant gets
+\code{5 / n_weekday} and each weekend participant \code{2 / n_weekend};
+participants with \code{NA} day-of-week get the neutral average \code{7 / N}.
+The \code{dayofweek} column is taken to use 0 = Sunday through 6 = Saturday
+(the POLYMOD convention).
+
+Equivalent to:
+\code{weigh(survey, "dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6)))}
+}
+
+\section{\code{weigh_by_age()}}{
+
+
+Convenience wrapper for age post-stratification. The main thing it
+adds over a raw \code{\link[=weigh]{weigh()}} call is \strong{interpolation}: the reference
+\code{pop} is expanded to single-year ages with \code{\link[=regroup_ages]{regroup_ages()}}, so it can be
+supplied at any age resolution (e.g. 5-year bands).
+
+For each single-year age \eqn{a} the weight then becomes
+
+\deqn{w_a = \frac{P_a / P}{N_a / N},}
+
+where \eqn{P_a} is the target population at age \eqn{a}, \eqn{P} the
+total, and \eqn{N_a}, \eqn{N} the corresponding sample counts.
+
+\code{survey} must already have been processed by \code{\link[=assign_age_groups]{assign_age_groups()}} so
+that a \code{part_age} column is available for the join.
+}
+
 \examples{
 data(polymod)
-# Direct numeric weighting
-if ("survey_weight" \%in\% names(polymod$participants)) {
-  polymod |> weigh("survey_weight")
-}
+uk <- polymod[country == "United Kingdom"] |>
+  assign_age_groups(age_limits = c(0, 5, 15))
 
-# Dayofweek weighting with groups (POLYMOD uses 0 = Sunday, 6 = Saturday)
+# ── target = NULL ────────────────────────────────────────────────
+# Multiply an existing numeric column directly into the weight:
+uk |> weigh("hh_size")
+
+# ── data-frame target (discrete join) ────────────────────────────
+# The key column of `target` must match `by`. Each participant
+# has its weight multiplied by the matching value column.
+age_target <- data.frame(
+  age.group = c("[0,5)", "[5,15)", "[15,Inf)"),
+  p = c(0.06, 0.12, 0.82)
+)
+uk |> weigh("age.group", target = age_target)
+
+# Same idea, joining on `country` to pool participants across studies
+# by a target population share:
+country_target <- data.frame(
+  country = c("United Kingdom", "Germany", "Italy"),
+  p = c(0.3, 0.4, 0.3)
+)
 polymod |>
-  weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6)))
+  assign_age_groups(age_limits = c(0, 5, 15)) |>
+  weigh("country", target = country_target)
+
+# ── unnamed vector + groups (total-weight semantics) ─────────────
+# Each `target[g]` is the *total* weight assigned to participants in
+# `groups[[g]]`. Here weekdays together carry weight 5, weekend days
+# together carry weight 2:
+uk |> weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6)))
+
+# The same is available as the convenience:
+uk |> weigh_by_dayofweek()
+
+# ── named vector ─────────────────────────────────────────────────
+# `names(target)` are matched against `by` values; each value is the
+# total weight for participants with that key.
+uk$participants[, agecat := ifelse(part_age < 18, "child", "adult")]
+uk |> weigh("agecat", target = c(child = 0.25, adult = 0.75))
+
+# ── age post-stratification ──────────────────────────────────────
+uk_pop <- data.frame(
+  lower.age.limit = c(0, 5, 15, 65),
+  population = c(3500000, 6000000, 40000000, 10000000)
+)
+uk |> weigh_by_age(uk_pop)
 
 }

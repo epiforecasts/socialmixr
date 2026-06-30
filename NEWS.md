@@ -1,3 +1,52 @@
+# socialmixr (development version)
+
+* `pop_age()` has been renamed to `regroup_ages()` to describe what it
+  does -- regroup a population into a different set of age groups, summing
+  when coarser groups are requested and interpolating when finer ones are.
+  `pop_age()` still works but is deprecated and warns; it will be removed in
+  a future release (#328).
+
+* `compute_matrix()` gains a `by` argument that accepts any combination of
+  participant/contact groupings, not just age. Each entry is either the
+  string `"age"` (matching the columns produced by `assign_age_groups()`),
+  a stem `"<name>"` (resolving to `part_<name>` and `cnt_<name>`), or an
+  explicit `c(part = "X", cnt = "Y")` override. The result is a rank-`2K`
+  array where the first `K` axes index participants and the last `K`
+  index contacts. The default `by = "age"` reproduces the single-grouping
+  behaviour of previous releases. Post-processing functions
+  (`symmetrise()`, `per_capita()`, `split_matrix()`) currently still
+  require single-grouping matrices (#143).
+
+* `weigh()` gains a new canonical target shape: a two-column data frame
+  whose key column matches `by` is joined and multiplied into `weight`.
+  This makes recipes like `weigh(survey, "country", target = ...)`
+  natural. The previous silent dispatch on a population data frame
+  (a `target` data frame with `lower.age.limit`/`population` and no
+  column matching `by`) is soft-deprecated; use the new `weigh_by_age()`
+  for the same effect with an explicit name. New `weigh_by_dayofweek()`
+  is a thin wrapper around the existing 5/2 split. `weigh()`'s named
+  vector and `groups` paths are unchanged (#314).
+
+* Advance deprecation cycle (#312). `wpp_age()`, `wpp_countries()`, and
+  `survey_country_population()` are deprecated (warn) — all three are
+  thin layers over `wpp2017`, which is on its way out. Construct a
+  `data.frame` with columns `lower.age.limit` and `population` from a
+  current source (e.g. the `wpp2024` package from GitHub) and pass it to
+  `contact_matrix()` via `survey_pop` instead. The implicit population
+  lookup in `contact_matrix()` (when `survey_pop` is not given but
+  `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography`
+  is set) keeps the warning introduced in 0.6.0 with a sharper "will
+  error in a future release" message. The `wpp2017` package moves from
+  `Imports` to `Suggests`. The following are now defunct
+  (`deprecate_stop`): `survey()`, `check()`, `get_survey()`,
+  `download_survey()`, `list_surveys()`, `survey_countries()`,
+  `get_citation()`, the dotted argument names (`age.limits`,
+  `survey.pop`, `country.column`, etc.) on `contact_matrix()`,
+  `pop_age()`, `clean()`, and `as_contact_survey()`, and the
+  `missing_contact_age = "sample"` option on `assign_age_groups()` and
+  `contact_matrix()`. Bogus `"1.0.0"` versions on the `survey()` and
+  `check()` deprecation messages have been corrected.
+
 # socialmixr 0.6.0
 
 This release adds a pipeline of composable functions for building contact

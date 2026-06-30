@@ -11,7 +11,9 @@ survey_files <- readRDS(here("surveys", "survey_files.rds"))
 cli_h1("Loaded {length(survey_files)} survey files")
 
 ## define safe checking function
-safe_check <- safely(\(files) socialmixr::check(load_survey(files)))
+## load_survey() validates each survey via as_contact_survey(), aborting on
+## any problem
+safe_check <- safely(\(files) load_survey(files))
 
 ## check all surveys
 cli_h1("Checking all surveys...")
@@ -26,7 +28,7 @@ cli_li("Total surveys: {length(survey_files)}")
 cli_li("Successful checks: {sum(no_error)}")
 cli_li("Failed checks: {sum(!no_error)}")
 
-if (sum(!no_error) > 0) {
+if (!all(no_error)) {
   iwalk(
     error_messages,
     ~ {
@@ -50,12 +52,15 @@ summary_md <- c(
   sprintf("- Failed: %d", sum(!no_error))
 )
 
-if (sum(!no_error) > 0) {
+if (!all(no_error)) {
   summary_md <- c(
     summary_md,
     "",
     "## Failed surveys",
-    paste0("- ", names(error_messages))
+    unlist(imap(
+      error_messages,
+      ~ sprintf("- %s: %s", .y, gsub("\n", " ", .x, fixed = TRUE))
+    ))
   )
 }
 
@@ -70,8 +75,8 @@ if (nzchar(sum_path)) {
 
 # Report results but don't fail the workflow
 # (Some surveys may always fail, so we log the issues but don't block CI)
-if (sum(!no_error) > 0) {
-  cli_h1("Some surveys failed checks. Results saved for review.")
-} else {
+if (all(no_error)) {
   cli_h1("All surveys passed checks successfully!")
+} else {
+  cli_h1("Some surveys failed checks. Results saved for review.")
 }

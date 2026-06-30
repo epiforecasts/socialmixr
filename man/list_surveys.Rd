@@ -13,13 +13,12 @@ this function to access the same survey will not result in repeated
 downloads.}
 }
 \value{
-character vector of surveys
+Always errors.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
 
-\code{list_surveys()} has been deprecated in favour of
-\code{contactsurveys::list_surveys()}.
+\code{list_surveys()} is defunct. Use \code{contactsurveys::list_surveys()} instead.
 }
 \examples{
 # we recommend using the contactsurveys package now for listing surveys.

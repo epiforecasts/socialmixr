@@ -16,7 +16,7 @@ and \code{participants}}
 \item{symmetric_norm_threshold}{threshold for the normalisation factor
 before issuing a warning (default 2)}
 
-\item{...}{passed to \code{\link[=pop_age]{pop_age()}} for interpolation}
+\item{...}{passed to \code{\link[=regroup_ages]{regroup_ages()}} for interpolation}
 }
 \value{
 \code{x} with \verb{$matrix} replaced by the symmetrised version
@@ -29,7 +29,10 @@ weighted by population size.
 }
 \examples{
 data(polymod)
-pop <- wpp_age("United Kingdom", 2005)
+pop <- data.frame(
+  lower.age.limit = c(0, 5, 15),
+  population = c(3500000, 6000000, 50000000)
+)
 polymod |>
   (\(s) s[country == "United Kingdom"])() |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
