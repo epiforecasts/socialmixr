@@ -47,16 +47,10 @@ For more on how to use the socialmixr package, see the [introduction vignette](h
 
 ## Contributors
 
-
-
-
-
-
-
-
-
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+
 <!-- prettier-ignore-start -->
+
 <!-- markdownlint-disable -->
 
 All contributions to this project are gratefully acknowledged using the [`allcontributors` package](https://github.com/ropensci/allcontributors) following the [allcontributors](https://allcontributors.org) specification. Contributions of any kind are welcome!
@@ -110,18 +104,14 @@ All contributions to this project are gratefully acknowledged using the [`allcon
 
 
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Avikkytom">vikkytom</a>, 
+<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Ajoshwlambert">joshwlambert</a>, 
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Abahadzie">bahadzie</a>, 
-<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Ajoshwlambert">joshwlambert</a>
+<a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Acoderabbitai">coderabbitai</a>
 
 
 <!-- markdownlint-enable -->
+
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-
-
-
-
-
-
-
 
