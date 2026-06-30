@@ -9,7 +9,7 @@
 #'   grouping)
 #' @param groupings the list of grouping triples (see [resolve_groupings()])
 #'   that produced `matrix`. Defaults to the age-only single-grouping spec
-#'   for back-compat with the legacy [contact_matrix()] path.
+#'   used by [contact_matrix()].
 #' @param ... additional named elements (e.g. `mean.contacts`, `normalisation`,
 #'   `contacts` from [split_matrix()])
 #' @returns a `contact_matrix` object (an S3 class inheriting from `list`)

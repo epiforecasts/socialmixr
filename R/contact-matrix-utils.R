@@ -990,8 +990,8 @@ sample_contacts_participants <- function(
 #' Cross-tab contact weights over grouping columns
 #'
 #' @description
-#' Internal helper used by [compute_matrix()] and the legacy
-#' [contact_matrix()] to turn a merged contacts table into the rank-`2K`
+#' Internal helper used by [compute_matrix()] and [contact_matrix()] to
+#' turn a merged contacts table into the rank-`2K`
 #' array of weighted contact counts. Each grouping contributes a
 #' participant-side and a contact-side axis, in that order across the two
 #' halves of the array.
@@ -1268,9 +1268,9 @@ matrix_per_capita <- function(weighted_matrix, survey_pop) {
 #' Count participants per age group
 #'
 #' @description
-#' Internal helper used by the legacy [contact_matrix()] for back-compat
-#' output. A thin wrapper around [n_participants_per_group()] with the
-#' default age-only grouping.
+#' Internal helper used by [contact_matrix()] to build its per-age-group
+#' participant counts. A thin wrapper around [n_participants_per_group()]
+#' with the default age-only grouping.
 #'
 #' @param participants the participants data.table
 #' @returns a long data.table with columns `age.group`, `participants`,

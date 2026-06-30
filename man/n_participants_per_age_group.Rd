@@ -14,8 +14,8 @@ a long data.table with columns \code{age.group}, \code{participants},
 \code{proportion}
 }
 \description{
-Internal helper used by the legacy \code{\link[=contact_matrix]{contact_matrix()}} for back-compat
-output. A thin wrapper around \code{\link[=n_participants_per_group]{n_participants_per_group()}} with the
-default age-only grouping.
+Internal helper used by \code{\link[=contact_matrix]{contact_matrix()}} to build its per-age-group
+participant counts. A thin wrapper around \code{\link[=n_participants_per_group]{n_participants_per_group()}}
+with the default age-only grouping.
 }
 \keyword{internal}

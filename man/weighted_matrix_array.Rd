@@ -18,8 +18,8 @@ defaults to single-age, matching pre-existing single-grouping output}
 a rank-\verb{2K} array with \code{K = length(groupings)}
 }
 \description{
-Internal helper used by \code{\link[=compute_matrix]{compute_matrix()}} and the legacy
-\code{\link[=contact_matrix]{contact_matrix()}} to turn a merged contacts table into the rank-\verb{2K}
+Internal helper used by \code{\link[=compute_matrix]{compute_matrix()}} and \code{\link[=contact_matrix]{contact_matrix()}} to
+turn a merged contacts table into the rank-\verb{2K}
 array of weighted contact counts. Each grouping contributes a
 participant-side and a contact-side axis, in that order across the two
 halves of the array.

@@ -213,8 +213,7 @@ check_part_cnt_dims_match <- function(matrix, k, op) {
 #'   additional elements `$mean.contacts`, `$normalisation`, and `$contacts`
 #'
 #' @details
-#' `split_matrix()` currently supports single-grouping (rank-2) matrices
-#' only; multi-grouping support is tracked in issue #320.
+#' `split_matrix()` supports single-grouping (rank-2) matrices only.
 #'
 #' @examples
 #' data(polymod)

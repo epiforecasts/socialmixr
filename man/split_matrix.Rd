@@ -24,8 +24,7 @@ age-specific contact rates (\code{contacts}), and an assortativity matrix
 (replacing \verb{$matrix}). For details, see the "Getting Started" vignette.
 }
 \details{
-\code{split_matrix()} currently supports single-grouping (rank-2) matrices
-only; multi-grouping support is tracked in issue #320.
+\code{split_matrix()} supports single-grouping (rank-2) matrices only.
 }
 \section{Population data}{
 

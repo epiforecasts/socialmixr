@@ -23,7 +23,7 @@ grouping)}
 
 \item{groupings}{the list of grouping triples (see \code{\link[=resolve_groupings]{resolve_groupings()}})
 that produced \code{matrix}. Defaults to the age-only single-grouping spec
-for back-compat with the legacy \code{\link[=contact_matrix]{contact_matrix()}} path.}
+used by \code{\link[=contact_matrix]{contact_matrix()}}.}
 
 \item{...}{additional named elements (e.g. \code{mean.contacts}, \code{normalisation},
 \code{contacts} from \code{\link[=split_matrix]{split_matrix()}})}
