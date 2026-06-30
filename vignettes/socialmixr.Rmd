@@ -150,6 +150,7 @@ uk_pop <- data.frame(
   lower.age.limit = c(0, 1, 5, 15),
   population = c(750000, 3200000, 7500000, 56000000)
 )
+uk_pop$age <- limits_to_agegroups(uk_pop$lower.age.limit, notation = "brackets")
 ```
 
 # Symmetric contact matrices
