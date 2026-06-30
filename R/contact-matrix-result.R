@@ -116,7 +116,8 @@ as.matrix.contact_matrix <- function(x, ...) {
 #' this is the matrix itself.
 #'
 #' Row/column names join the grouping levels with a colon, e.g.
-#' `"[0,5):F"`. The participant axes vary fastest in the first grouping
+#' `"[0,5):F"` for the age group `[0,5)` combined with gender level `F`.
+#' The participant axes vary fastest in the first grouping
 #' (column-major reshape).
 #'
 #' @param x a `contact_matrix` object as returned by [compute_matrix()]

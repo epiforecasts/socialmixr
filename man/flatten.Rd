@@ -19,7 +19,8 @@ Cartesian product of grouping levels. For a single-grouping matrix
 this is the matrix itself.
 
 Row/column names join the grouping levels with a colon, e.g.
-\code{"[0,5):F"}. The participant axes vary fastest in the first grouping
+\code{"[0,5):F"} for the age group \code{[0,5)} combined with gender level
+\code{F}. The participant axes vary fastest in the first grouping
 (column-major reshape).
 }
 \examples{
