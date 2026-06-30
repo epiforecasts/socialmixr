@@ -101,5 +101,6 @@ specification. Contributions of any kind are welcome!
 ### Issue Contributors
 
 [vikkytom](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Avikkytom),
+[joshwlambert](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Ajoshwlambert),
 [bahadzie](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Abahadzie),
-[joshwlambert](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Ajoshwlambert)
+[coderabbitai](https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Acoderabbitai)
