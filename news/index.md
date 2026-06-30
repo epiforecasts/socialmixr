@@ -219,6 +219,15 @@ around the pipeline
   user’s session
   ([\#307](https://github.com/epiforecasts/socialmixr/issues/307)).
 
+- [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
+  now attaches contact-level files (those keyed at the contact level,
+  e.g. a contact-attributes file sharing only `part_id` with
+  participants) to the contact table instead of inflating the
+  participant table to one row per contact. Previously such files were
+  merged into participants, squaring contact counts in the resulting
+  matrix
+  ([\#326](https://github.com/epiforecasts/socialmixr/issues/326)).
+
 ### Deprecations
 
 - [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md)
