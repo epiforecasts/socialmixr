@@ -13,9 +13,9 @@ new_contact_matrix(
 }
 \arguments{
 \item{matrix}{a numeric array. For single-grouping matrices this is a
-2D matrix with age-group dimnames; for multi-grouping it is a
-rank-\verb{2K} array where the first \code{K} dimensions index participants and
-the last \code{K} index contacts.}
+2D matrix whose dimnames are the grouping's levels (e.g. age groups);
+for multi-grouping it is a rank-\verb{2K} array where the first \code{K}
+dimensions index participants and the last \code{K} index contacts.}
 
 \item{participants}{a data.frame with one row per participant grouping
 combination (\code{participants}, \code{proportion}, plus one column per

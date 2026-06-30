@@ -1,9 +1,9 @@
 #' Create a contact_matrix object
 #'
 #' @param matrix a numeric array. For single-grouping matrices this is a
-#'   2D matrix with age-group dimnames; for multi-grouping it is a
-#'   rank-`2K` array where the first `K` dimensions index participants and
-#'   the last `K` index contacts.
+#'   2D matrix whose dimnames are the grouping's levels (e.g. age groups);
+#'   for multi-grouping it is a rank-`2K` array where the first `K`
+#'   dimensions index participants and the last `K` index contacts.
 #' @param participants a data.frame with one row per participant grouping
 #'   combination (`participants`, `proportion`, plus one column per
 #'   grouping)
