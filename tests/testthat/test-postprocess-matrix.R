@@ -4,9 +4,16 @@ polymod_uk_grouped <- polymod |>
   (\(s) s[country == "United Kingdom"])() |>
   assign_age_groups(age_limits = age_limits)
 
+## `pop` keeps the `lower.age.limit` form expected by the legacy
+## contact_matrix(); the pipeline functions take a column named after the
+## grouping (`age`) holding the matrix's interval labels.
 pop <- data.frame(
   lower.age.limit = age_limits,
   population = c(3500000, 6000000, 50000000)
+)
+pop_grouped <- data.frame(
+  age = limits_to_agegroups(age_limits, notation = "brackets"),
+  population = pop$population
 )
 
 result_base <- compute_matrix(polymod_uk_grouped)
@@ -14,17 +21,17 @@ result_base <- compute_matrix(polymod_uk_grouped)
 ## symmetrise ------------------------------------------------------------------
 
 test_that("symmetrise() satisfies reciprocity", {
-  sym <- symmetrise(result_base, survey_pop = pop)
+  sym <- symmetrise(result_base, survey_pop = pop_grouped)
 
   # c_ij * N_i should equal c_ji * N_j, i.e. M * N should be symmetric
-  n <- pop$population
+  n <- pop_grouped$population
   scaled <- sym$matrix * n # M[i,j] * N[i] via column recycling
 
   expect_equal(unname(scaled), unname(t(scaled)), tolerance = 1e-10)
 })
 
 test_that("symmetrise() matches contact_matrix(symmetric = TRUE)", {
-  sym <- symmetrise(result_base, survey_pop = pop)
+  sym <- symmetrise(result_base, survey_pop = pop_grouped)
 
   legacy <- contact_matrix(
     polymod,
@@ -40,15 +47,15 @@ test_that("symmetrise() matches contact_matrix(symmetric = TRUE)", {
 test_that("symmetrise() errors on NA matrix", {
   bad <- result_base
   bad$matrix[1, 1] <- NA
-  expect_error(symmetrise(bad, survey_pop = pop), "NA")
+  expect_error(symmetrise(bad, survey_pop = pop_grouped), "NA")
 })
 
 test_that("symmetrise() errors on invalid input", {
   expect_error(
-    symmetrise(list(matrix = NULL), survey_pop = pop),
+    symmetrise(list(matrix = NULL), survey_pop = pop_grouped),
     "participants"
   )
-  expect_error(symmetrise("not a list", survey_pop = pop), "list")
+  expect_error(symmetrise("not a list", survey_pop = pop_grouped), "list")
 })
 
 test_that("symmetrise() returns scalar matrix unchanged", {
@@ -56,14 +63,14 @@ test_that("symmetrise() returns scalar matrix unchanged", {
     (\(s) s[country == "United Kingdom"])() |>
     assign_age_groups(age_limits = 0) |>
     compute_matrix()
-  result <- symmetrise(one_group, survey_pop = pop)
+  result <- symmetrise(one_group, survey_pop = pop_grouped)
   expect_identical(result$matrix, one_group$matrix)
 })
 
 ## split_matrix ----------------------------------------------------------------
 
 test_that("split_matrix() returns expected elements", {
-  sp <- split_matrix(result_base, survey_pop = pop)
+  sp <- split_matrix(result_base, survey_pop = pop_grouped)
   expect_true("mean.contacts" %in% names(sp))
   expect_true("normalisation" %in% names(sp))
   expect_true("contacts" %in% names(sp))
@@ -76,7 +83,7 @@ test_that("split_matrix() returns expected elements", {
 })
 
 test_that("split_matrix() matches contact_matrix(split = TRUE)", {
-  sp <- split_matrix(result_base, survey_pop = pop)
+  sp <- split_matrix(result_base, survey_pop = pop_grouped)
 
   legacy <- contact_matrix(
     polymod,
@@ -95,24 +102,24 @@ test_that("split_matrix() matches contact_matrix(split = TRUE)", {
 test_that("split_matrix() errors on NA matrix", {
   bad <- result_base
   bad$matrix[1, 1] <- NA
-  expect_error(split_matrix(bad, survey_pop = pop), "NA")
+  expect_error(split_matrix(bad, survey_pop = pop_grouped), "NA")
 })
 
 test_that("split_matrix() errors on invalid input", {
-  expect_error(split_matrix("not a list", survey_pop = pop), "list")
+  expect_error(split_matrix("not a list", survey_pop = pop_grouped), "list")
 })
 
 ## per_capita ------------------------------------------------------------------
 
 test_that("per_capita() replaces $matrix with per-capita rates", {
-  pc <- per_capita(result_base, survey_pop = pop)
+  pc <- per_capita(result_base, survey_pop = pop_grouped)
   expect_true(is.matrix(pc$matrix))
   # Per-capita rates should be smaller than original rates
   expect_true(all(pc$matrix < result_base$matrix))
 })
 
 test_that("per_capita() matches contact_matrix(per_capita = TRUE)", {
-  pc <- per_capita(result_base, survey_pop = pop)
+  pc <- per_capita(result_base, survey_pop = pop_grouped)
 
   legacy <- contact_matrix(
     polymod,
@@ -126,7 +133,7 @@ test_that("per_capita() matches contact_matrix(per_capita = TRUE)", {
 })
 
 test_that("per_capita() errors on invalid input", {
-  expect_error(per_capita("not a list", survey_pop = pop), "list")
+  expect_error(per_capita("not a list", survey_pop = pop_grouped), "list")
 })
 
 ## population resolution -------------------------------------------------------
@@ -135,20 +142,9 @@ test_that("symmetrise() errors when survey_pop is not a data frame", {
   expect_error(symmetrise(result_base, survey_pop = "not a df"), "data frame")
 })
 
-test_that("symmetrise() accepts the lower.age.limit form for age", {
-  labelled <- data.frame(
-    age.group = limits_to_agegroups(age_limits, notation = "brackets"),
-    population = pop$population
-  )
-  expect_identical(
-    symmetrise(result_base, survey_pop = pop)$matrix,
-    symmetrise(result_base, survey_pop = labelled)$matrix
-  )
-})
-
-test_that("symmetrise() points to pop_age() on age resolution mismatch", {
+test_that("symmetrise() points to regroup_ages() on age resolution mismatch", {
   finer <- data.frame(
-    age.group = limits_to_agegroups(c(0, 5, 10, 15), notation = "brackets"),
+    age = limits_to_agegroups(c(0, 5, 10, 15), notation = "brackets"),
     population = c(1e6, 2e6, 3e6, 4e6)
   )
   expect_error(
@@ -157,7 +153,7 @@ test_that("symmetrise() points to pop_age() on age resolution mismatch", {
   )
   expect_error(
     symmetrise(result_base, survey_pop = finer),
-    "pop_age"
+    "regroup_ages"
   )
 })
 
@@ -180,9 +176,11 @@ multidim_result <- compute_matrix(
   by = c("age", "gender")
 )
 
+## survey_pop columns are named after the groupings (`age`, `gender`) and
+## hold the matrix's levels.
 joint_pop <- expand.grid(
-  age.group = c("[0,5)", "[5,15)", "[15,Inf)"),
-  part_gender = c("F", "M"),
+  age = c("[0,5)", "[5,15)", "[15,Inf)"),
+  gender = c("F", "M"),
   stringsAsFactors = FALSE
 )
 joint_pop$population <- c(
@@ -268,9 +266,9 @@ test_that("symmetrise() satisfies reciprocity on a multi-grouping matrix", {
   t_size <- prod(dim(sym$matrix)[seq_len(k)])
   flat <- matrix(sym$matrix, nrow = t_size, ncol = t_size)
 
-  ## joint_pop was built via expand.grid(age.group, part_gender) which
-  ## matches the column-major reshape used by symmetrise/per_capita —
-  ## no reordering required.
+  ## joint_pop was built via expand.grid(age, gender) which matches the
+  ## column-major reshape used by symmetrise/per_capita — no reordering
+  ## required.
   n <- joint_pop$population
 
   scaled <- flat * n
@@ -288,15 +286,15 @@ test_that("symmetrise() errors when part/cnt dim names mismatch", {
 })
 
 test_that("symmetrise() errors when survey_pop is missing grouping columns", {
-  bad_pop <- joint_pop[, c("age.group", "population")]
+  bad_pop <- joint_pop[, c("age", "population")]
   expect_error(
     symmetrise(multidim_result, survey_pop = bad_pop),
-    "part_gender"
+    "gender"
   )
 })
 
 test_that("symmetrise() errors when survey_pop is missing tuples", {
-  partial_pop <- joint_pop[joint_pop$part_gender == "F", ]
+  partial_pop <- joint_pop[joint_pop$gender == "F", ]
   expect_error(
     symmetrise(multidim_result, survey_pop = partial_pop),
     "missing population"
@@ -319,9 +317,9 @@ test_that("per_capita() divides each contact tuple by its population", {
   flat_pc <- matrix(pc$matrix, nrow = t_size, ncol = t_size)
   flat_orig <- matrix(multidim_result$matrix, nrow = t_size, ncol = t_size)
 
-  ## joint_pop was built via expand.grid(age.group, part_gender) which
-  ## matches the column-major reshape used by symmetrise/per_capita —
-  ## no reordering required.
+  ## joint_pop was built via expand.grid(age, gender) which matches the
+  ## column-major reshape used by symmetrise/per_capita — no reordering
+  ## required.
   n <- joint_pop$population
 
   expect_equal(

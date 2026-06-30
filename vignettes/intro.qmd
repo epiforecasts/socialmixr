@@ -139,7 +139,7 @@ mr
 
 Obtaining symmetric contact matrices, splitting out their components (see below) and population-based participant weights require information about the underlying demographic composition of the survey population.
 
-The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) take this as a `data.frame` with columns `lower.age.limit` (the lower end of each age group) and `population`, at the matrix's age groups. If your population data are at a different age resolution, coarsen them to the matrix's age limits with `pop_age()` first. Matrices with additional groupings take one extra column per grouping (e.g. `part_gender`).
+The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) take this as a `data.frame` with one column per grouping, named after the grouping (e.g. `age`, `gender`) and holding that grouping's levels as they appear in the matrix, plus a `population` column. For the age grouping the column holds the matrix's age-group interval labels (e.g. from `limits_to_agegroups()`). If your population data are at a different age resolution, coarsen them to the matrix's age limits with `regroup_ages()` first.
 
 ## Using custom population data
 
@@ -147,7 +147,7 @@ You can construct any comparable data frame and pass it to the relevant post-pro
 
 ```{r message=FALSE, warning=FALSE}
 custom_pop <- data.frame(
-  lower.age.limit = c(0, 18, 60),
+  age = limits_to_agegroups(c(0, 18, 60), notation = "brackets"),
   population = c(12000000, 35000000, 20000000)
 )
 polymod[country == "United Kingdom"] |>
@@ -156,14 +156,15 @@ polymod[country == "United Kingdom"] |>
   symmetrise(survey_pop = custom_pop)
 ```
 
-For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). The 1-year bands are coarsened to the matrix's age limits with `pop_age()`:
+For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). The 1-year bands are coarsened to the matrix's age limits with `regroup_ages()`, then labelled as age groups:
 
 ```{r eval=requireNamespace("wpp2024", quietly = TRUE), message=FALSE, warning=FALSE}
 data("popAge1dt", package = "wpp2024")
 uk_pop <- popAge1dt[name == "United Kingdom" & year == 2020,
   .(lower.age.limit = age, population = pop * 1000)
 ] |>
-  pop_age(age_limits = c(0, 18, 60))
+  regroup_ages(age_limits = c(0, 18, 60))
+uk_pop$age <- limits_to_agegroups(uk_pop$lower.age.limit, notation = "brackets")
 polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 18, 60)) |>
   compute_matrix() |>
@@ -174,7 +175,7 @@ For the rest of this section we use a small constructed `uk_pop` for the United 
 
 ```{r}
 uk_pop <- data.frame(
-  lower.age.limit = c(0, 1, 5, 15),
+  age = limits_to_agegroups(c(0, 1, 5, 15), notation = "brackets"),
   population = c(750000, 3200000, 7500000, 56000000)
 )
 ```
@@ -212,7 +213,7 @@ $$c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}$$
 
 ```{r message=FALSE, warning=FALSE}
 de_pop <- data.frame(
-  lower.age.limit = c(0, 60),
+  age = limits_to_agegroups(c(0, 60), notation = "brackets"),
   population = c(67000000, 16000000)
 )
 
@@ -286,7 +287,7 @@ polymod[country == "United Kingdom"] |>
   compute_matrix()
 ```
 
-`weigh_by_dayofweek()` assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). `weigh_by_age()` post-stratifies against a target population: it interpolates `uk_pop` to single-year ages with `pop_age()` and multiplies in the ratio of target to observed age share.
+`weigh_by_dayofweek()` assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). `weigh_by_age()` post-stratifies against a target population: it interpolates `uk_pop` to single-year ages with `regroup_ages()` and multiplies in the ratio of target to observed age share.
 
 For arbitrary discrete joins, `weigh()` itself takes a two-column data frame whose key column matches `by` — e.g. pooling participants across countries by a target share:
 

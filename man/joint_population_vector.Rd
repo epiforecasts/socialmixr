@@ -7,8 +7,8 @@
 joint_population_vector(survey_pop, matrix, groupings)
 }
 \arguments{
-\item{survey_pop}{a data frame with one column matching each
-participant-side dim of \code{matrix} plus a \code{population} column}
+\item{survey_pop}{a data frame with one column named after each grouping
+of \code{matrix} plus a \code{population} column}
 
 \item{matrix}{the rank-\verb{2K} contact matrix}
 
@@ -23,9 +23,10 @@ in canonical (column-major) tuple order
 Internal helper used by \code{\link[=symmetrise]{symmetrise()}}, \code{\link[=split_matrix]{split_matrix()}} and
 \code{\link[=per_capita]{per_capita()}} to align a user-supplied \code{survey_pop} data frame with the
 participant strata of a contact matrix. The user provides one column per
-participant-side dim plus \code{population}; the helper joins onto the
-canonical tuple ordering (column-major over the participant axes, matching
-\code{matrix()}'s reshape) and returns the population in that order. Works for
-any number of groupings, including single-grouping (age-only) matrices.
+grouping (named after the grouping) plus \code{population}; the helper joins
+onto the canonical tuple ordering (column-major over the participant axes,
+matching \code{matrix()}'s reshape) and returns the population in that order.
+Works for any number of groupings, including single-grouping (age-only)
+matrices.
 }
 \keyword{internal}

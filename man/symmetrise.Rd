@@ -29,23 +29,22 @@ aborts.
 \section{Population data}{
 
 
-\code{survey_pop} is a data frame with one column per grouping, holding the
-participant-side levels of the matrix (e.g. \code{age.group}, \code{part_gender}),
-plus a \code{population} column with the size of each combination. One row per
-combination of levels is required, and the levels are matched to the
-matrix exactly — no interpolation is performed.
+\code{survey_pop} is a data frame with one column per grouping, named after the
+grouping (e.g. \code{age}, \code{gender}) and holding that grouping's levels as they
+appear in the matrix, plus a \code{population} column with the size of each
+combination. One row per combination of levels is required, and the levels
+are matched to the matrix exactly — no interpolation is performed.
 
-For the age grouping you may supply either an \code{age.group} column (the
-matrix's interval labels) or a \code{lower.age.limit} column, which
-is labelled to match. If the population is at a different age resolution
-than the matrix, coarsen it to the matrix's age limits with \code{\link[=pop_age]{pop_age()}}
-first.
+For the age grouping, the column holds the matrix's age-group interval
+labels (e.g. from \code{\link[=limits_to_agegroups]{limits_to_agegroups()}}). If the population is at a
+different age resolution than the matrix, coarsen it to the matrix's age
+limits with \code{\link[=regroup_ages]{regroup_ages()}} first.
 }
 
 \examples{
 data(polymod)
 pop <- data.frame(
-  lower.age.limit = c(0, 5, 15),
+  age = limits_to_agegroups(c(0, 5, 15), notation = "brackets"),
   population = c(3500000, 6000000, 50000000)
 )
 polymod |>
