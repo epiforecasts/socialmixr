@@ -23,7 +23,7 @@ resolve_survey_pop(survey_pop, age_limits, ...)
 - ...:
 
   passed to
-  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+  [`regroup_ages()`](https://epiforecasts.io/socialmixr/reference/regroup_ages.md)
   for interpolation
 
 ## Value

@@ -205,7 +205,7 @@ contact_matrix(
   further arguments to pass to
   [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md),
   [`check()`](https://epiforecasts.io/socialmixr/reference/check.md) and
-  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+  [`regroup_ages()`](https://epiforecasts.io/socialmixr/reference/regroup_ages.md)
   (especially column names).
 
 - survey.pop, age.limits, sample.participants,

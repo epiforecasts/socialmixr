@@ -33,7 +33,7 @@ symmetrise(x, survey_pop, symmetric_norm_threshold = 2, ...)
 - ...:
 
   passed to
-  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+  [`regroup_ages()`](https://epiforecasts.io/socialmixr/reference/regroup_ages.md)
   for interpolation
 
 ## Value

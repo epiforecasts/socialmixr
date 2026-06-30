@@ -27,7 +27,7 @@ per_capita(x, survey_pop, ...)
 - ...:
 
   passed to
-  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+  [`regroup_ages()`](https://epiforecasts.io/socialmixr/reference/regroup_ages.md)
   for interpolation
 
 ## Value

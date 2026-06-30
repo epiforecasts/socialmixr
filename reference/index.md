@@ -40,10 +40,10 @@
   : Convert a contact matrix to per-capita rates
 - [`polymod`](https://epiforecasts.io/socialmixr/reference/polymod.md) :
   Social contact data from 8 European countries
-- [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
-  : Change age groups in population data
 - [`reduce_agegroups()`](https://epiforecasts.io/socialmixr/reference/reduce_agegroups.md)
   : Reduce the number of age groups given a broader set of limits
+- [`regroup_ages()`](https://epiforecasts.io/socialmixr/reference/regroup_ages.md)
+  : Regroup population data into age groups
 - [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
   : Decompose a contact matrix into mean contacts, normalisation and
   assortativity

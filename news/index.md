@@ -2,6 +2,17 @@
 
 ## socialmixr (development version)
 
+- [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+  has been renamed to
+  [`regroup_ages()`](https://epiforecasts.io/socialmixr/reference/regroup_ages.md)
+  to describe what it does – regroup a population into a different set
+  of age groups, summing when coarser groups are requested and
+  interpolating when finer ones are.
+  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+  still works but is deprecated and warns; it will be removed in a
+  future release
+  ([\#328](https://github.com/epiforecasts/socialmixr/issues/328)).
+
 - [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
   gains a `by` argument that accepts any combination of
   participant/contact groupings, not just age. Each entry is either the

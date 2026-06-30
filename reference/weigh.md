@@ -43,7 +43,7 @@ weigh_by_age(survey, pop, ...)
 - ...:
 
   further arguments passed to
-  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+  [`regroup_ages()`](https://epiforecasts.io/socialmixr/reference/regroup_ages.md)
   for interpolation.
 
 - pop:
@@ -97,7 +97,7 @@ Equivalent to:
 Convenience wrapper for age post-stratification. The main thing it adds
 over a raw `weigh()` call is **interpolation**: the reference `pop` is
 expanded to single-year ages with
-[`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md),
+[`regroup_ages()`](https://epiforecasts.io/socialmixr/reference/regroup_ages.md),
 so it can be supplied at any age resolution (e.g. 5-year bands).
 
 For each single-year age \\a\\ the weight then becomes
