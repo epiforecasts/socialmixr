@@ -1,14 +1,14 @@
-# pop_age doesn't change total population size
+# regroup_ages doesn't change total population size
 
     Not all age groups represented in population data (5-year age band).
     i Linearly estimating age group sizes from the 5-year bands.
 
-# pop_age throws warnings or errors
+# regroup_ages throws warnings or errors
 
     Code
-      pop_age(3)
+      regroup_ages(3)
     Condition
-      Error in `pop_age()`:
+      Error in `regroup_ages()`:
       ! Expecting `pop` to be a data.frame with columns `lower.age.limit` and `population`.
 
 # wpp_age warns when historical year is unavailable
