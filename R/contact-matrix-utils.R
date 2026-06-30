@@ -659,7 +659,7 @@ add_survey_upper_age_limit <- function(survey, age_breaks) {
 #' @autoglobal
 survey_pop_reference <- function(survey_pop, ...) {
   data.table(
-    pop_age(
+    regroup_ages(
       survey_pop,
       seq(
         min(survey_pop$lower.age.limit),
@@ -673,7 +673,9 @@ survey_pop_reference <- function(survey_pop, ...) {
 #' @autoglobal
 adjust_survey_age_groups <- function(survey_pop, part_age_group_present, ...) {
   survey_pop_max <- max(survey_pop$upper.age.limit)
-  survey_pop <- data.table(pop_age(survey_pop, part_age_group_present, ...))
+  survey_pop <- data.table(
+    regroup_ages(survey_pop, part_age_group_present, ...)
+  )
 
   ## use the actual lower.age.limits from survey_pop (which may be a subset
   ## of part_age_group_present if population data doesn't cover all ages)
@@ -732,7 +734,7 @@ weight_by_age <- function(participants, survey_pop_full) {
 
   # get reference population by age (absolute and proportional)
   part_age_all <- range(unique(participants[, part_age]))
-  survey_pop_detail <- data.table(pop_age(
+  survey_pop_detail <- data.table(regroup_ages(
     survey_pop_full,
     seq(part_age_all[1], part_age_all[2] + 1)
   ))

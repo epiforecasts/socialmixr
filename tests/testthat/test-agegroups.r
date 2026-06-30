@@ -24,11 +24,14 @@ test_that("age groups are ordered factors", {
   expect_s3_class(age_groups, "factor")
 })
 
-test_that("pop_age doesn't change total population size", {
+test_that("regroup_ages doesn't change total population size", {
   skip_if_not_installed("wpp2017")
   ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
 
-  ages_it_2015_10 <- pop_age(ages_it_2015, age_limits = seq(0, 100, by = 10))
+  ages_it_2015_10 <- regroup_ages(
+    ages_it_2015,
+    age_limits = seq(0, 100, by = 10)
+  )
 
   expect_identical(
     sum(ages_it_2015$population),
@@ -38,14 +41,17 @@ test_that("pop_age doesn't change total population size", {
   # Even with interpolation
   # nolint start: implicit_assignment_linter
   expect_warning(
-    ages_it_2015_cat <- pop_age(ages_it_2015, age_limits = c(0, 18, 40, 65)),
+    ages_it_2015_cat <- regroup_ages(
+      ages_it_2015,
+      age_limits = c(0, 18, 40, 65)
+    ),
     "Linearly estimating"
   )
   # nolint end
 
   expect_snapshot_warning(
     cran = FALSE,
-    pop_age(ages_it_2015, age_limits = c(0, 18, 40, 65))
+    regroup_ages(ages_it_2015, age_limits = c(0, 18, 40, 65))
   )
 
   expect_identical(
@@ -54,25 +60,25 @@ test_that("pop_age doesn't change total population size", {
   )
 })
 
-test_that("pop_age returns data unchanged when age_limits is NULL", {
+test_that("regroup_ages returns data unchanged when age_limits is NULL", {
   skip_if_not_installed("wpp2017")
   ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
 
   # Calling without age_limits should return identical data
-  result <- pop_age(ages_it_2015)
+  result <- regroup_ages(ages_it_2015)
   expect_identical(result, ages_it_2015)
 
   # Explicitly passing NULL should also work
-  result_null <- pop_age(ages_it_2015, age_limits = NULL)
+  result_null <- regroup_ages(ages_it_2015, age_limits = NULL)
   expect_identical(result_null, ages_it_2015)
 
   # Data.table input should also be returned unchanged
   ages_dt <- data.table::as.data.table(ages_it_2015)
-  result_dt <- pop_age(ages_dt)
+  result_dt <- regroup_ages(ages_dt)
   expect_identical(result_dt, ages_dt)
 })
 
-test_that("pop_age works with custom column names and interpolation", {
+test_that("regroup_ages works with custom column names and interpolation", {
   # Create test data with non-standard column names
   pop_data <- data.frame(
     age_lower = c(0, 5, 10, 15, 20),
@@ -82,7 +88,7 @@ test_that("pop_age works with custom column names and interpolation", {
   # Test with interpolation (age_limits not matching existing groups)
   # nolint start: implicit_assignment_linter
   result <- suppressWarnings(
-    pop_age(
+    regroup_ages(
       pop_data,
       age_limits = c(0, 8, 15),
       pop_age_column = "age_lower",
@@ -97,13 +103,23 @@ test_that("pop_age works with custom column names and interpolation", {
   expect_identical(sum(result$pop_count), sum(pop_data$pop_count))
 })
 
-test_that("pop_age throws warnings or errors", {
+test_that("regroup_ages throws warnings or errors", {
   expect_snapshot(
     error = TRUE,
     cran = FALSE,
-    pop_age(3)
+    regroup_ages(3)
   )
-  expect_error(pop_age(3), "to be a data.frame")
+  expect_error(regroup_ages(3), "to be a data.frame")
+})
+
+test_that("pop_age() is deprecated in favour of regroup_ages()", {
+  pop_data <- data.frame(
+    lower.age.limit = c(0, 5),
+    population = c(1e6, 5e6)
+  )
+  lifecycle::expect_deprecated(pop_age(pop_data))
+  withr::local_options(lifecycle_verbosity = "quiet")
+  expect_identical(pop_age(pop_data), regroup_ages(pop_data))
 })
 
 test_that("wpp_age warns when historical year is unavailable", {

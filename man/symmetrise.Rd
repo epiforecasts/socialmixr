@@ -16,7 +16,7 @@ and \code{participants}}
 \item{symmetric_norm_threshold}{threshold for the normalisation factor
 before issuing a warning (default 2)}
 
-\item{...}{passed to \code{\link[=pop_age]{pop_age()}} for interpolation}
+\item{...}{passed to \code{\link[=regroup_ages]{regroup_ages()}} for interpolation}
 }
 \value{
 \code{x} with \verb{$matrix} replaced by the symmetrised version

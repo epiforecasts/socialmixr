@@ -12,7 +12,7 @@ resolve_survey_pop(survey_pop, age_limits, ...)
 
 \item{age_limits}{numeric vector of age group lower limits from the matrix}
 
-\item{...}{passed to \code{\link[=pop_age]{pop_age()}} for interpolation}
+\item{...}{passed to \code{\link[=regroup_ages]{regroup_ages()}} for interpolation}
 }
 \value{
 a data.table with \code{lower.age.limit}, \code{population}, and
