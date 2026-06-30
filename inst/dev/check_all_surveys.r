@@ -11,7 +11,9 @@ survey_files <- readRDS(here("surveys", "survey_files.rds"))
 cli_h1("Loaded {length(survey_files)} survey files")
 
 ## define safe checking function
-safe_check <- safely(\(files) socialmixr::check(load_survey(files)))
+## load_survey() validates each survey via as_contact_survey(), aborting on
+## any problem
+safe_check <- safely(\(files) load_survey(files))
 
 ## check all surveys
 cli_h1("Checking all surveys...")
@@ -55,7 +57,10 @@ if (sum(!no_error) > 0) {
     summary_md,
     "",
     "## Failed surveys",
-    paste0("- ", names(error_messages))
+    unlist(imap(
+      error_messages,
+      ~ sprintf("- %s: %s", .y, gsub("\n", " ", .x))
+    ))
   )
 }
 
