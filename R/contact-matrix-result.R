@@ -122,6 +122,12 @@ as.matrix.contact_matrix <- function(x, ...) {
 #' @param x a `contact_matrix` object as returned by [compute_matrix()]
 #' @returns a numeric `T x T` matrix
 #'
+#' @references
+#' Manna A, Dall'Amico L, Tizzoni M, Karsai M, Perra N (2024).
+#' Generalized contact matrices allow integrating socioeconomic variables
+#' into epidemic models. *Science Advances* **10**(41), eadk4606.
+#' \doi{10.1126/sciadv.adk4606}
+#'
 #' @examples
 #' data(polymod)
 #' polymod |>

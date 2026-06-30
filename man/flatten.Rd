@@ -31,3 +31,9 @@ polymod |>
   flatten()
 
 }
+\references{
+Manna A, Dall'Amico L, Tizzoni M, Karsai M, Perra N (2024).
+Generalized contact matrices allow integrating socioeconomic variables
+into epidemic models. \emph{Science Advances} \strong{10}(41), eadk4606.
+\doi{10.1126/sciadv.adk4606}
+}
