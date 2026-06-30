@@ -49,7 +49,7 @@
 #'
 #' Convenience wrapper for age post-stratification. The main thing it
 #' adds over a raw [weigh()] call is **interpolation**: the reference
-#' `pop` is expanded to single-year ages with [regroup_ages()], so it can be
+#' `pop` is expanded to single-year ages internally, so it can be
 #' supplied at any age resolution (e.g. 5-year bands).
 #'
 #' For each single-year age \eqn{a} the weight then becomes
@@ -70,7 +70,7 @@
 #'   `target`.
 #' @param pop a data frame with columns `lower.age.limit` and `population`
 #'   (used by [weigh_by_age()]).
-#' @param ... further arguments passed to [regroup_ages()] for interpolation.
+#' @param ... further arguments passed on for age interpolation.
 #' @returns the survey object with updated participant weights
 #'
 #' @examples

@@ -28,7 +28,7 @@ test_that("regroup_ages doesn't change total population size", {
   skip_if_not_installed("wpp2017")
   ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
 
-  ages_it_2015_10 <- regroup_ages(
+  ages_it_2015_10 <- socialmixr:::regroup_ages_numeric(
     ages_it_2015,
     age_limits = seq(0, 100, by = 10)
   )
@@ -41,7 +41,7 @@ test_that("regroup_ages doesn't change total population size", {
   # Even with interpolation
   # nolint start: implicit_assignment_linter
   expect_warning(
-    ages_it_2015_cat <- regroup_ages(
+    ages_it_2015_cat <- socialmixr:::regroup_ages_numeric(
       ages_it_2015,
       age_limits = c(0, 18, 40, 65)
     ),
@@ -51,7 +51,7 @@ test_that("regroup_ages doesn't change total population size", {
 
   expect_snapshot_warning(
     cran = FALSE,
-    regroup_ages(ages_it_2015, age_limits = c(0, 18, 40, 65))
+    socialmixr:::regroup_ages_numeric(ages_it_2015, age_limits = c(0, 18, 40, 65))
   )
 
   expect_identical(
@@ -65,16 +65,16 @@ test_that("regroup_ages returns data unchanged when age_limits is NULL", {
   ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
 
   # Calling without age_limits should return identical data
-  result <- regroup_ages(ages_it_2015)
+  result <- socialmixr:::regroup_ages_numeric(ages_it_2015)
   expect_identical(result, ages_it_2015)
 
   # Explicitly passing NULL should also work
-  result_null <- regroup_ages(ages_it_2015, age_limits = NULL)
+  result_null <- socialmixr:::regroup_ages_numeric(ages_it_2015, age_limits = NULL)
   expect_identical(result_null, ages_it_2015)
 
   # Data.table input should also be returned unchanged
   ages_dt <- data.table::as.data.table(ages_it_2015)
-  result_dt <- regroup_ages(ages_dt)
+  result_dt <- socialmixr:::regroup_ages_numeric(ages_dt)
   expect_identical(result_dt, ages_dt)
 })
 
@@ -88,7 +88,7 @@ test_that("regroup_ages works with custom column names and interpolation", {
   # Test with interpolation (age_limits not matching existing groups)
   # nolint start: implicit_assignment_linter
   result <- suppressWarnings(
-    regroup_ages(
+    socialmixr:::regroup_ages_numeric(
       pop_data,
       age_limits = c(0, 8, 15),
       pop_age_column = "age_lower",
@@ -107,9 +107,9 @@ test_that("regroup_ages throws warnings or errors", {
   expect_snapshot(
     error = TRUE,
     cran = FALSE,
-    regroup_ages(3)
+    socialmixr:::regroup_ages_numeric(3)
   )
-  expect_error(regroup_ages(3), "to be a data.frame")
+  expect_error(socialmixr:::regroup_ages_numeric(3), "to be a data.frame")
 })
 
 test_that("pop_age() is deprecated in favour of regroup_ages()", {
@@ -119,7 +119,7 @@ test_that("pop_age() is deprecated in favour of regroup_ages()", {
   )
   lifecycle::expect_deprecated(pop_age(pop_data))
   withr::local_options(lifecycle_verbosity = "quiet")
-  expect_identical(pop_age(pop_data), regroup_ages(pop_data))
+  expect_identical(pop_age(pop_data), socialmixr:::regroup_ages_numeric(pop_data))
 })
 
 test_that("wpp_age warns when historical year is unavailable", {

@@ -1,10 +1,7 @@
 # socialmixr (development version)
 
-* `pop_age()` has been renamed to `regroup_ages()` to describe what it
-  does -- regroup a population into a different set of age groups, summing
-  when coarser groups are requested and interpolating when finer ones are.
-  `pop_age()` still works but is deprecated and warns; it will be removed in
-  a future release (#328).
+* `pop_age()` is deprecated and warns; it will be removed in a future
+  release. Its numeric age-regrouping is now an internal helper (#328).
 
 * `compute_matrix()` gains a `by` argument that accepts any combination of
   participant/contact groupings, not just age. Each entry is either the
@@ -21,12 +18,20 @@
   a data frame with one column per grouping, named after the grouping
   (e.g. `age`, `gender`) and holding that grouping's levels as they appear
   in the matrix, plus a `population` column, with one row per combination.
-  For age the column holds the matrix's interval labels (e.g. from
-  `limits_to_agegroups()`). Levels are matched exactly: there is no
-  interpolation. To use a population at a different age resolution, coarsen
-  it to the matrix's age limits with `regroup_ages()` first. `symmetrise()`
+  Levels are matched exactly: there is no interpolation. `symmetrise()`
   additionally requires the participant- and contact-side dims to share the
   same levels, otherwise reciprocity is undefined and it aborts (#319).
+
+* New `regroup_ages()` aligns a raw population table to a contact matrix's
+  groupings, returning the `survey_pop` data frame that `symmetrise()`,
+  `split_matrix()` and `per_capita()` expect. Supply population with a
+  `lower.age.limit` column for age (at any resolution) plus a column per
+  other grouping; `regroup_ages()` regroups age to the matrix's age groups
+  (summing for coarser bands, interpolating for finer) within each
+  combination of the other groupings and aggregates categorical groupings by
+  exact name. A typical workflow is
+  `result |> symmetrise(survey_pop = regroup_ages(population, result))`
+  (#319).
 
 * The `contact_matrix` S3 object now carries a `groupings` field — the
   list of grouping triples that produced its `matrix`. Used internally

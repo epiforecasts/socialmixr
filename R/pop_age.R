@@ -3,11 +3,11 @@
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #'
-#' `pop_age()` was renamed to [regroup_ages()] to describe what it does.
-#' Please use [regroup_ages()] instead.
+#' `pop_age()` is deprecated. To align a population table to a contact
+#' matrix's age groups, use [regroup_ages()].
 #'
 #' @return data frame of age-specific population data
-#' @inheritParams regroup_ages
+#' @inheritParams regroup_ages_numeric
 #' @param age.limits,pop.age.column,pop.column
 #'   `r lifecycle::badge("deprecated")` Use the underscore
 #'   versions (e.g., `age_limits`) instead.
@@ -50,7 +50,7 @@ pop_age <- function(
     "pop_age"
   )
 
-  regroup_ages(
+  regroup_ages_numeric(
     pop = pop,
     age_limits = age_limits,
     pop_age_column = pop_age_column,

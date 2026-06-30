@@ -2,52 +2,40 @@
 % Please edit documentation in R/regroup_ages.R
 \name{regroup_ages}
 \alias{regroup_ages}
-\title{Regroup population data into age groups}
+\title{Align a population table to a contact matrix's grouping levels}
 \usage{
-regroup_ages(
-  pop,
-  age_limits = NULL,
-  pop_age_column = "lower.age.limit",
-  pop_column = "population",
-  ...
-)
+regroup_ages(population, x)
 }
 \arguments{
-\item{pop}{a data frame with columns indicating lower age
-limits and population sizes (see \code{pop_age_column} and
-\code{pop_column})}
+\item{population}{a data frame with a \code{population} column and one column
+per grouping: \code{lower.age.limit} for the age grouping, and a column named
+after each categorical grouping holding its levels.}
 
-\item{age_limits}{lower age limits of age groups to extract; if \code{NULL}
-(default), the population data is returned unchanged}
-
-\item{pop_age_column}{column in the \code{pop} data frame indicating
-the lower age group limit}
-
-\item{pop_column}{column in the \code{pop} data frame indicating
-the population size}
-
-\item{...}{ignored}
+\item{x}{a \code{contact_matrix} object as returned by \code{\link[=compute_matrix]{compute_matrix()}}}
 }
 \value{
-data frame of age-specific population data
+a data frame with one column per grouping (named after the
+grouping, holding the matrix's levels) plus a \code{population} column, ready
+to pass as \code{survey_pop}
 }
 \description{
-Regroups population data into the age groups defined by \code{age_limits},
-summing populations when coarser groups are requested and linearly
-interpolating between groups when finer ones are requested than are
-available.
+Coarsens a population table to the levels of each grouping in a contact
+matrix produced by \code{\link[=compute_matrix]{compute_matrix()}}, returning the \code{survey_pop} data
+frame that \code{\link[=symmetrise]{symmetrise()}}, \code{\link[=split_matrix]{split_matrix()}} and \code{\link[=per_capita]{per_capita()}} expect.
+
+The age grouping is regrouped to the matrix's age groups (summing for
+coarser groups, interpolating for finer ones), within each combination of
+the other groupings. Categorical groupings are aggregated to the matrix's
+levels by exact name; interpolation is undefined for them, so a level not
+present in the matrix is an error.
 }
 \examples{
-# 5-year age bands for a population of 70 million
-it_pop <- data.frame(
-  lower.age.limit = seq(0, 80, by = 5),
-  population = c(rep(2.5e6, 4), rep(3.5e6, 4), rep(5e6, 6), 5e6, 7e6, 4e6)
-)
-
-# regroup into 10-year age groups instead of 5
-regroup_ages(it_pop, age_limits = seq(0, 100, by = 10))
-
-# interpolates when finer groups are requested than are available
-regroup_ages(it_pop, age_limits = c(0, 18, 40, 65))
+data(polymod)
+result <- polymod |>
+  (\(s) s[country == "United Kingdom"])() |>
+  assign_age_groups(age_limits = c(0, 5, 15)) |>
+  compute_matrix()
+uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+result |> symmetrise(survey_pop = regroup_ages(uk_pop, result))
 
 }

@@ -16,10 +16,9 @@
 #' combination. One row per combination of levels is required, and the levels
 #' are matched to the matrix exactly — no interpolation is performed.
 #'
-#' For the age grouping, the column holds the matrix's age-group interval
-#' labels (e.g. from [limits_to_agegroups()]). If the population is at a
-#' different age resolution than the matrix, coarsen it to the matrix's age
-#' limits with [regroup_ages()] first.
+#' Use [regroup_ages()] to build this from a raw population table: it aggregates
+#' each grouping to the matrix's levels (interpolating the age grouping where
+#' needed) and labels the columns to match.
 #'
 #' @param x a list as returned by [compute_matrix()], with elements `matrix`
 #'   and `participants`
@@ -30,15 +29,12 @@
 #'
 #' @examples
 #' data(polymod)
-#' pop <- data.frame(
-#'   age = limits_to_agegroups(c(0, 5, 15), notation = "brackets"),
-#'   population = c(3500000, 6000000, 50000000)
-#' )
-#' polymod |>
+#' result <- polymod |>
 #'   (\(s) s[country == "United Kingdom"])() |>
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
-#'   compute_matrix() |>
-#'   symmetrise(survey_pop = pop)
+#'   compute_matrix()
+#' uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+#' result |> symmetrise(survey_pop = regroup_ages(uk_pop, result))
 #'
 #' @export
 #' @autoglobal
@@ -152,9 +148,8 @@ joint_population_vector <- function(survey_pop, matrix, groupings) {
     if ("age" %in% group_names) {
       msg <- c(
         msg,
-        i = "If the population is at a different age resolution, coarsen it \\
-             to the matrix's age groups with {.fn regroup_ages} and label \\
-             them with {.fn limits_to_agegroups}."
+        i = "Use {.fn regroup_ages} to align a raw population table to this \\
+             matrix's groupings."
       )
     }
     cli::cli_abort(msg)
@@ -205,15 +200,12 @@ check_part_cnt_dims_match <- function(matrix, k, op) {
 #'
 #' @examples
 #' data(polymod)
-#' pop <- data.frame(
-#'   age = limits_to_agegroups(c(0, 5, 15), notation = "brackets"),
-#'   population = c(3500000, 6000000, 50000000)
-#' )
-#' polymod |>
+#' result <- polymod |>
 #'   (\(s) s[country == "United Kingdom"])() |>
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
-#'   compute_matrix() |>
-#'   split_matrix(survey_pop = pop)
+#'   compute_matrix()
+#' uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+#' result |> split_matrix(survey_pop = regroup_ages(uk_pop, result))
 #'
 #' @export
 #' @autoglobal
@@ -273,15 +265,12 @@ split_matrix <- function(x, survey_pop) {
 #'
 #' @examples
 #' data(polymod)
-#' pop <- data.frame(
-#'   age = limits_to_agegroups(c(0, 5, 15), notation = "brackets"),
-#'   population = c(3500000, 6000000, 50000000)
-#' )
-#' polymod |>
+#' result <- polymod |>
 #'   (\(s) s[country == "United Kingdom"])() |>
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
-#'   compute_matrix() |>
-#'   per_capita(survey_pop = pop)
+#'   compute_matrix()
+#' uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+#' result |> per_capita(survey_pop = regroup_ages(uk_pop, result))
 #'
 #' @export
 #' @autoglobal
