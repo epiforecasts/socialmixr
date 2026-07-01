@@ -117,12 +117,34 @@ test_that("rebin_ages throws warnings or errors", {
 
 test_that("pop_age() is deprecated in favour of rebin_ages()", {
   pop_data <- data.frame(
-    lower.age.limit = c(0, 5),
-    population = c(1e6, 5e6)
+    lower.age.limit = c(0, 5, 15),
+    population = c(1e6, 5e6, 2e6)
   )
   lifecycle::expect_deprecated(pop_age(pop_data))
   withr::local_options(lifecycle_verbosity = "quiet")
-  expect_identical(pop_age(pop_data), socialmixr:::rebin_ages_numeric(pop_data))
+
+  ## age_limits are forwarded (not just the NULL passthrough)
+  expect_identical(
+    pop_age(pop_data, age_limits = c(0, 5)),
+    socialmixr:::rebin_ages_numeric(pop_data, age_limits = c(0, 5))
+  )
+
+  ## custom column names are forwarded too
+  custom <- data.frame(age_lower = c(0, 5, 15), pop = c(1e6, 5e6, 2e6))
+  expect_identical(
+    pop_age(
+      custom,
+      age_limits = c(0, 5),
+      pop_age_column = "age_lower",
+      pop_column = "pop"
+    ),
+    socialmixr:::rebin_ages_numeric(
+      custom,
+      age_limits = c(0, 5),
+      pop_age_column = "age_lower",
+      pop_column = "pop"
+    )
+  )
 })
 
 test_that("wpp_age warns when historical year is unavailable", {

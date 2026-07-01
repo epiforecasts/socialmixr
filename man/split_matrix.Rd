@@ -11,7 +11,7 @@ split_matrix(x, survey_pop)
 \item{x}{a list as returned by \code{\link[=compute_matrix]{compute_matrix()}}, with elements \code{matrix}
 and \code{participants}}
 
-\item{survey_pop}{a data frame; see \emph{Population data} above}
+\item{survey_pop}{a data frame; see \emph{Population data} below}
 }
 \value{
 \code{x} with \verb{$matrix} replaced by the assortativity matrix, plus

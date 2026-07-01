@@ -10,7 +10,7 @@ symmetrise(x, survey_pop, symmetric_norm_threshold = 2)
 \item{x}{a list as returned by \code{\link[=compute_matrix]{compute_matrix()}}, with elements \code{matrix}
 and \code{participants}}
 
-\item{survey_pop}{a data frame; see \emph{Population data} above}
+\item{survey_pop}{a data frame; see \emph{Population data} below}
 
 \item{symmetric_norm_threshold}{threshold for the normalisation factor
 before issuing a warning (default 2)}

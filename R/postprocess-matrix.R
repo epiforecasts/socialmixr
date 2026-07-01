@@ -22,7 +22,7 @@
 #'
 #' @param x a list as returned by [compute_matrix()], with elements `matrix`
 #'   and `participants`
-#' @param survey_pop a data frame; see *Population data* above
+#' @param survey_pop a data frame; see *Population data* below
 #' @param symmetric_norm_threshold threshold for the normalisation factor
 #'   before issuing a warning (default 2)
 #' @returns `x` with `$matrix` replaced by the symmetrised version
