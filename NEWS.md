@@ -1,7 +1,7 @@
 # socialmixr (development version)
 
-* `pop_age()` is deprecated and warns; it will be removed in a future
-  release. Its numeric age-regrouping is now an internal helper (#328).
+* `pop_age()` is deprecated in favour of `rebin_ages()` and warns; it will
+  be removed in a future release (#328).
 
 * `compute_matrix()` gains a `by` argument that accepts any combination of
   participant/contact groupings, not just age. Each entry is either the
@@ -22,16 +22,18 @@
   additionally requires the participant- and contact-side dims to share the
   same levels, otherwise reciprocity is undefined and it aborts (#319).
 
-* New `rebin_ages()` aligns a raw population table to a contact matrix's
+* New `rebin_ages()` rebins a population table to a set of age limits
+  (summing for coarser bands, interpolating for finer). This is the renamed,
+  public form of the old `pop_age()` numeric coarsener.
+
+* New `align_ages()` aligns a raw population table to a contact matrix's
   groupings, returning the `survey_pop` data frame that `symmetrise()`,
   `split_matrix()` and `per_capita()` expect. Supply population with a
   `lower.age.limit` column for age (at any resolution) plus a column per
-  other grouping; `rebin_ages()` regroups age to the matrix's age groups
-  (summing for coarser bands, interpolating for finer) within each
-  combination of the other groupings and aggregates categorical groupings by
-  exact name. A typical workflow is
-  `result |> symmetrise(survey_pop = rebin_ages(population, result))`
-  (#319).
+  other grouping; `align_ages()` rebins age to the matrix's age groups within
+  each combination of the other groupings (via `rebin_ages()`) and aggregates
+  categorical groupings by exact name. A typical workflow is
+  `result |> symmetrise(survey_pop = align_ages(population, result))` (#319).
 
 * The `contact_matrix` S3 object now carries a `groupings` field — the
   list of grouping triples that produced its `matrix`. Used internally

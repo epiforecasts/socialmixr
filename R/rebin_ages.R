@@ -1,12 +1,11 @@
-#' Regroup population data into a set of age limits (numeric)
+#' Rebin a population table to a set of age limits
 #'
 #' @description
-#' Internal numeric coarsener: regroups a population table into the age
-#' groups defined by `age_limits`, summing populations when coarser groups
-#' are requested and linearly interpolating between groups when finer ones
-#' are requested than are available. Operates on `lower.age.limit` columns;
-#' used by [rebin_ages()] (per grouping stratum), [pop_age()] and the
-#' internal weighting helpers.
+#' Rebins a population table to the age groups defined by `age_limits`,
+#' summing populations when coarser groups are requested and linearly
+#' interpolating between groups when finer ones are requested than are
+#' available. To align a population to a contact matrix's groupings (for the
+#' post-processing functions), use [align_ages()] instead.
 #'
 #' @return data frame of age-specific population data
 #' @importFrom data.table data.table setkeyv
@@ -22,9 +21,19 @@
 #'   the population size
 #' @param ... ignored
 #'
+#' @examples
+#' it_pop <- data.frame(
+#'   lower.age.limit = seq(0, 80, by = 5),
+#'   population = c(rep(2.5e6, 4), rep(3.5e6, 4), rep(5e6, 6), 5e6, 7e6, 4e6)
+#' )
+#' # regroup into 10-year age groups
+#' rebin_ages(it_pop, age_limits = seq(0, 100, by = 10))
+#' # interpolates when finer groups are requested than available
+#' rebin_ages(it_pop, age_limits = c(0, 18, 40, 65))
+#'
 #' @autoglobal
-#' @keywords internal
-rebin_ages_numeric <- function(
+#' @export
+rebin_ages <- function(
   pop,
   age_limits = NULL,
   pop_age_column = "lower.age.limit",
@@ -108,81 +117,54 @@ rebin_ages_numeric <- function(
   as.data.frame(pop)
 }
 
-#' Rebin a population table by age
+#' Align a population table to a contact matrix's grouping levels
 #'
 #' @description
-#' Rebins a population table to a new set of age groups. The target is given
-#' by `to`:
+#' Aligns a raw population table to the groupings of a contact matrix
+#' produced by [compute_matrix()], returning the `survey_pop` data frame that
+#' [symmetrise()], [split_matrix()] and [per_capita()] expect.
 #'
-#' * a numeric vector of **age limits** — rebins the population to those age
-#'   groups, summing for coarser bands and linearly interpolating for finer
-#'   ones. Returns a data frame with `lower.age.limit` and `population`.
-#' * a **`contact_matrix`** (as returned by [compute_matrix()]) — aligns the
-#'   population to that matrix's groupings and returns the `survey_pop` data
-#'   frame that [symmetrise()], [split_matrix()] and [per_capita()] expect.
-#'   The age grouping is rebinned to the matrix's age groups within each
-#'   combination of the other groupings; categorical groupings are aggregated
-#'   to the matrix's levels by exact name (a level not present in the matrix
-#'   is an error).
+#' The age grouping is rebinned to the matrix's age groups (via [rebin_ages()],
+#' summing for coarser bands and interpolating for finer) within each
+#' combination of the other groupings. Categorical groupings are aggregated to
+#' the matrix's levels by exact name; interpolation is undefined for them, so a
+#' level not present in the matrix is an error.
 #'
-#' @param pop a data frame with a population column (`pop_column`) and, for
-#'   the age grouping, a lower-age-limit column (`pop_age_column`); when `to`
-#'   is a `contact_matrix`, one further column per non-age grouping, named
-#'   after the grouping.
-#' @param to either a numeric vector of age limits, or a `contact_matrix`
-#'   object as returned by [compute_matrix()].
-#' @param pop_age_column,pop_column column names for the lower age limit and
-#'   population size (used when `to` is a numeric vector of age limits).
-#' @param ... passed on for interpolation when `to` is numeric.
-#' @returns a data frame; see the target-specific descriptions above.
+#' @param pop a data frame with a `population` column and one column per
+#'   grouping: `lower.age.limit` for the age grouping, and a column named after
+#'   each categorical grouping holding its levels.
+#' @param x a `contact_matrix` object as returned by [compute_matrix()]
+#' @returns a data frame with one column per grouping (named after the
+#'   grouping, holding the matrix's levels) plus a `population` column, ready
+#'   to pass as `survey_pop`
 #'
 #' @examples
-#' # rebin to explicit age limits
-#' it_pop <- data.frame(
-#'   lower.age.limit = seq(0, 80, by = 5),
-#'   population = c(rep(2.5e6, 4), rep(3.5e6, 4), rep(5e6, 6), 5e6, 7e6, 4e6)
-#' )
-#' rebin_ages(it_pop, to = seq(0, 100, by = 10))
-#'
-#' # align to a contact matrix's groupings
 #' data(polymod)
 #' result <- polymod |>
 #'   (\(s) s[country == "United Kingdom"])() |>
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix()
 #' uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
-#' result |> symmetrise(survey_pop = rebin_ages(uk_pop, result))
+#' result |> symmetrise(survey_pop = align_ages(uk_pop, result))
 #'
 #' @export
 #' @autoglobal
-rebin_ages <- function(
-  pop,
-  to,
-  pop_age_column = "lower.age.limit",
-  pop_column = "population",
-  ...
-) {
+align_ages <- function(pop, x) {
   if (!is.data.frame(pop)) {
-    cli::cli_abort("Expecting {.arg pop} to be a data.frame.")
+    cli::cli_abort("{.arg pop} must be a data frame.")
+  }
+  if (!is_contact_matrix(x)) {
+    cli::cli_abort(
+      "{.arg x} must be a {.cls contact_matrix} as returned by \\
+       {.fn compute_matrix}."
+    )
   }
 
-  ## numeric target: rebin ages to explicit limits
-  if (!is_contact_matrix(to)) {
-    return(rebin_ages_numeric(
-      pop,
-      age_limits = to,
-      pop_age_column = pop_age_column,
-      pop_column = pop_column,
-      ...
-    ))
-  }
-
-  ## contact_matrix target: align to its groupings
-  groupings <- to$groupings
+  groupings <- x$groupings
   k <- length(groupings)
   group_names <- vapply(groupings, `[[`, character(1), "name")
   target_levels <- lapply(seq_len(k), function(i) {
-    as.character(dimnames(to$matrix)[[i]])
+    as.character(dimnames(x$matrix)[[i]])
   })
   names(target_levels) <- group_names
 
@@ -216,7 +198,7 @@ rebin_ages <- function(
   if (any(is_age)) {
     age_limits <- agegroups_to_limits(target_levels[["age"]])
     rebin_one <- function(sub) {
-      rebin_ages_numeric(
+      rebin_ages(
         data.frame(
           lower.age.limit = sub$lower.age.limit,
           population = sub$population
