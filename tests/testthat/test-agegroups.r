@@ -24,11 +24,11 @@ test_that("age groups are ordered factors", {
   expect_s3_class(age_groups, "factor")
 })
 
-test_that("regroup_ages doesn't change total population size", {
+test_that("rebin_ages doesn't change total population size", {
   skip_if_not_installed("wpp2017")
   ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
 
-  ages_it_2015_10 <- socialmixr:::regroup_ages_numeric(
+  ages_it_2015_10 <- socialmixr:::rebin_ages_numeric(
     ages_it_2015,
     age_limits = seq(0, 100, by = 10)
   )
@@ -41,7 +41,7 @@ test_that("regroup_ages doesn't change total population size", {
   # Even with interpolation
   # nolint start: implicit_assignment_linter
   expect_warning(
-    ages_it_2015_cat <- socialmixr:::regroup_ages_numeric(
+    ages_it_2015_cat <- socialmixr:::rebin_ages_numeric(
       ages_it_2015,
       age_limits = c(0, 18, 40, 65)
     ),
@@ -51,7 +51,7 @@ test_that("regroup_ages doesn't change total population size", {
 
   expect_snapshot_warning(
     cran = FALSE,
-    socialmixr:::regroup_ages_numeric(ages_it_2015, age_limits = c(0, 18, 40, 65))
+    socialmixr:::rebin_ages_numeric(ages_it_2015, age_limits = c(0, 18, 40, 65))
   )
 
   expect_identical(
@@ -60,25 +60,25 @@ test_that("regroup_ages doesn't change total population size", {
   )
 })
 
-test_that("regroup_ages returns data unchanged when age_limits is NULL", {
+test_that("rebin_ages returns data unchanged when age_limits is NULL", {
   skip_if_not_installed("wpp2017")
   ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
 
   # Calling without age_limits should return identical data
-  result <- socialmixr:::regroup_ages_numeric(ages_it_2015)
+  result <- socialmixr:::rebin_ages_numeric(ages_it_2015)
   expect_identical(result, ages_it_2015)
 
   # Explicitly passing NULL should also work
-  result_null <- socialmixr:::regroup_ages_numeric(ages_it_2015, age_limits = NULL)
+  result_null <- socialmixr:::rebin_ages_numeric(ages_it_2015, age_limits = NULL)
   expect_identical(result_null, ages_it_2015)
 
   # Data.table input should also be returned unchanged
   ages_dt <- data.table::as.data.table(ages_it_2015)
-  result_dt <- socialmixr:::regroup_ages_numeric(ages_dt)
+  result_dt <- socialmixr:::rebin_ages_numeric(ages_dt)
   expect_identical(result_dt, ages_dt)
 })
 
-test_that("regroup_ages works with custom column names and interpolation", {
+test_that("rebin_ages works with custom column names and interpolation", {
   # Create test data with non-standard column names
   pop_data <- data.frame(
     age_lower = c(0, 5, 10, 15, 20),
@@ -88,7 +88,7 @@ test_that("regroup_ages works with custom column names and interpolation", {
   # Test with interpolation (age_limits not matching existing groups)
   # nolint start: implicit_assignment_linter
   result <- suppressWarnings(
-    socialmixr:::regroup_ages_numeric(
+    socialmixr:::rebin_ages_numeric(
       pop_data,
       age_limits = c(0, 8, 15),
       pop_age_column = "age_lower",
@@ -103,23 +103,23 @@ test_that("regroup_ages works with custom column names and interpolation", {
   expect_identical(sum(result$pop_count), sum(pop_data$pop_count))
 })
 
-test_that("regroup_ages throws warnings or errors", {
+test_that("rebin_ages throws warnings or errors", {
   expect_snapshot(
     error = TRUE,
     cran = FALSE,
-    socialmixr:::regroup_ages_numeric(3)
+    socialmixr:::rebin_ages_numeric(3)
   )
-  expect_error(socialmixr:::regroup_ages_numeric(3), "to be a data.frame")
+  expect_error(socialmixr:::rebin_ages_numeric(3), "to be a data.frame")
 })
 
-test_that("pop_age() is deprecated in favour of regroup_ages()", {
+test_that("pop_age() is deprecated in favour of rebin_ages()", {
   pop_data <- data.frame(
     lower.age.limit = c(0, 5),
     population = c(1e6, 5e6)
   )
   lifecycle::expect_deprecated(pop_age(pop_data))
   withr::local_options(lifecycle_verbosity = "quiet")
-  expect_identical(pop_age(pop_data), socialmixr:::regroup_ages_numeric(pop_data))
+  expect_identical(pop_age(pop_data), socialmixr:::rebin_ages_numeric(pop_data))
 })
 
 test_that("wpp_age warns when historical year is unavailable", {

@@ -22,15 +22,15 @@
   additionally requires the participant- and contact-side dims to share the
   same levels, otherwise reciprocity is undefined and it aborts (#319).
 
-* New `regroup_ages()` aligns a raw population table to a contact matrix's
+* New `rebin_ages()` aligns a raw population table to a contact matrix's
   groupings, returning the `survey_pop` data frame that `symmetrise()`,
   `split_matrix()` and `per_capita()` expect. Supply population with a
   `lower.age.limit` column for age (at any resolution) plus a column per
-  other grouping; `regroup_ages()` regroups age to the matrix's age groups
+  other grouping; `rebin_ages()` regroups age to the matrix's age groups
   (summing for coarser bands, interpolating for finer) within each
   combination of the other groupings and aggregates categorical groupings by
   exact name. A typical workflow is
-  `result |> symmetrise(survey_pop = regroup_ages(population, result))`
+  `result |> symmetrise(survey_pop = rebin_ages(population, result))`
   (#319).
 
 * The `contact_matrix` S3 object now carries a `groupings` field — the

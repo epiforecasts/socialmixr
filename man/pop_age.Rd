@@ -41,6 +41,6 @@ data frame of age-specific population data
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 \code{pop_age()} is deprecated. To align a population table to a contact
-matrix's age groups, use \code{\link[=regroup_ages]{regroup_ages()}}.
+matrix's age groups, use \code{\link[=rebin_ages]{rebin_ages()}}.
 }
 \keyword{internal}
