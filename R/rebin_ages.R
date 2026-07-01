@@ -233,9 +233,11 @@ rebin_ages <- function(
     } else {
       out <- data.table::as.data.table(rebin_one(pop_dt))
     }
-    out[, age := as.character(
-      limits_to_agegroups(lower.age.limit, notation = "brackets")
-    )]
+    out[,
+      age := as.character(
+        limits_to_agegroups(lower.age.limit, notation = "brackets")
+      )
+    ]
   } else {
     out <- pop_dt[, list(population = sum(population)), by = cat_names]
   }

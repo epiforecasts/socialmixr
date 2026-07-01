@@ -69,7 +69,10 @@ test_that("rebin_ages returns data unchanged when age_limits is NULL", {
   expect_identical(result, ages_it_2015)
 
   # Explicitly passing NULL should also work
-  result_null <- socialmixr:::rebin_ages_numeric(ages_it_2015, age_limits = NULL)
+  result_null <- socialmixr:::rebin_ages_numeric(
+    ages_it_2015,
+    age_limits = NULL
+  )
   expect_identical(result_null, ages_it_2015)
 
   # Data.table input should also be returned unchanged
