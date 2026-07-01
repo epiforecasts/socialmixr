@@ -95,7 +95,7 @@ with an unnamed numeric <code>target</code> vector); must be the same length as
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>further arguments passed to <code><a href="regroup_ages.html">regroup_ages()</a></code> for interpolation.</p></dd>
+<dd><p>further arguments passed on for age interpolation.</p></dd>
 
 
 <dt id="arg-pop">pop<a class="anchor" aria-label="anchor" href="#arg-pop"></a></dt>
@@ -151,7 +151,7 @@ The <code>dayofweek</code> column is taken to use 0 = Sunday through 6 = Saturda
 
 <p>Convenience wrapper for age post-stratification. The main thing it
 adds over a raw <code>weigh()</code> call is <strong>interpolation</strong>: the reference
-<code>pop</code> is expanded to single-year ages with <code><a href="regroup_ages.html">regroup_ages()</a></code>, so it can be
+<code>pop</code> is expanded to single-year ages internally, so it can be
 supplied at any age resolution (e.g. 5-year bands).</p>
 <p>For each single-year age \(a\) the weight then becomes</p>
 <p>$$w_a = \frac{P_a / P}{N_a / N},$$</p>

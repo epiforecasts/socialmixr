@@ -1,23 +1,24 @@
-# Change age groups in population data
+# Regroup population data into a set of age limits (numeric)
 
-**\[deprecated\]**
-
-`pop_age()` is deprecated. To align a population table to a contact
-matrix's age groups, use
-[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md).
+Internal numeric coarsener: regroups a population table into the age
+groups defined by `age_limits`, summing populations when coarser groups
+are requested and linearly interpolating between groups when finer ones
+are requested than are available. Operates on `lower.age.limit` columns;
+used by
+[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+(per grouping stratum),
+[`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+and the internal weighting helpers.
 
 ## Usage
 
 ``` r
-pop_age(
+rebin_ages_numeric(
   pop,
   age_limits = NULL,
   pop_age_column = "lower.age.limit",
   pop_column = "population",
-  ...,
-  age.limits = deprecated(),
-  pop.age.column = deprecated(),
-  pop.column = deprecated()
+  ...
 )
 ```
 
@@ -44,11 +45,6 @@ pop_age(
 - ...:
 
   ignored
-
-- age.limits, pop.age.column, pop.column:
-
-  **\[deprecated\]** Use the underscore versions (e.g., `age_limits`)
-  instead.
 
 ## Value
 

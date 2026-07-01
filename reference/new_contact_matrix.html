@@ -44,7 +44,12 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">new_contact_matrix</span><span class="op">(</span><span class="va">matrix</span>, <span class="va">participants</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">new_contact_matrix</span><span class="op">(</span></span>
+<span>  <span class="va">matrix</span>,</span>
+<span>  <span class="va">participants</span>,</span>
+<span>  groupings <span class="op">=</span> <span class="fu"><a href="default_age_groupings.html">default_age_groupings</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -53,15 +58,21 @@
 
 <dl><dt id="arg-matrix">matrix<a class="anchor" aria-label="anchor" href="#arg-matrix"></a></dt>
 <dd><p>a numeric array. For single-grouping matrices this is a
-2D matrix with age-group dimnames; for multi-grouping it is a
-rank-<code>2K</code> array where the first <code>K</code> dimensions index participants and
-the last <code>K</code> index contacts.</p></dd>
+2D matrix whose dimnames are the grouping's levels (e.g. age groups);
+for multi-grouping it is a rank-<code>2K</code> array where the first <code>K</code>
+dimensions index participants and the last <code>K</code> index contacts.</p></dd>
 
 
 <dt id="arg-participants">participants<a class="anchor" aria-label="anchor" href="#arg-participants"></a></dt>
 <dd><p>a data.frame with one row per participant grouping
 combination (<code>participants</code>, <code>proportion</code>, plus one column per
 grouping)</p></dd>
+
+
+<dt id="arg-groupings">groupings<a class="anchor" aria-label="anchor" href="#arg-groupings"></a></dt>
+<dd><p>the list of grouping triples (see <code><a href="resolve_groupings.html">resolve_groupings()</a></code>)
+that produced <code>matrix</code>. Defaults to the age-only single-grouping spec
+used by <code><a href="contact_matrix.html">contact_matrix()</a></code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

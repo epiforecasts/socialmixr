@@ -3,14 +3,8 @@
 ## socialmixr (development version)
 
 - [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
-  has been renamed to
-  [`regroup_ages()`](https://epiforecasts.io/socialmixr/reference/regroup_ages.md)
-  to describe what it does – regroup a population into a different set
-  of age groups, summing when coarser groups are requested and
-  interpolating when finer ones are.
-  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
-  still works but is deprecated and warns; it will be removed in a
-  future release
+  is deprecated and warns; it will be removed in a future release. Its
+  numeric age-regrouping is now an internal helper
   ([\#328](https://github.com/epiforecasts/socialmixr/issues/328)).
 
 - [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
@@ -22,13 +16,56 @@
   explicit `c(part = "X", cnt = "Y")` override. The result is a
   rank-`2K` array where the first `K` axes index participants and the
   last `K` index contacts. The default `by = "age"` reproduces the
-  single-grouping behaviour of previous releases. Post-processing
-  functions
-  ([`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
-  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md),
-  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md))
-  currently still require single-grouping matrices
+  single-grouping behaviour of previous releases.
+  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
+  currently still requires a single-grouping matrix
   ([\#143](https://github.com/epiforecasts/socialmixr/issues/143)).
+
+- [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md)
+  and
+  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md)
+  now accept multi-grouping matrices, with a single `survey_pop` format
+  across all groupings. `survey_pop` is a data frame with one column per
+  grouping, named after the grouping (e.g. `age`, `gender`) and holding
+  that grouping’s levels as they appear in the matrix, plus a
+  `population` column, with one row per combination. Levels are matched
+  exactly: there is no interpolation.
+  [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md)
+  additionally requires the participant- and contact-side dims to share
+  the same levels, otherwise reciprocity is undefined and it aborts
+  ([\#319](https://github.com/epiforecasts/socialmixr/issues/319)).
+
+- New
+  [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+  aligns a raw population table to a contact matrix’s groupings,
+  returning the `survey_pop` data frame that
+  [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
+  and
+  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md)
+  expect. Supply population with a `lower.age.limit` column for age (at
+  any resolution) plus a column per other grouping;
+  [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+  regroups age to the matrix’s age groups (summing for coarser bands,
+  interpolating for finer) within each combination of the other
+  groupings and aggregates categorical groupings by exact name. A
+  typical workflow is
+  `result |> symmetrise(survey_pop = rebin_ages(population, result))`
+  ([\#319](https://github.com/epiforecasts/socialmixr/issues/319)).
+
+- The `contact_matrix` S3 object now carries a `groupings` field — the
+  list of grouping triples that produced its `matrix`. Used internally
+  by the multi-grouping post-processing functions; users can read it to
+  introspect the matrix’s structure
+  ([\#319](https://github.com/epiforecasts/socialmixr/issues/319)).
+
+- New
+  [`flatten()`](https://epiforecasts.io/socialmixr/reference/flatten.md)
+  returns a `T x T` matrix view of a multi-grouping contact matrix —
+  Manna et al.’s generalised representation, with colon-joined dim
+  labels (e.g. `"[0,5):F"`). For single-grouping matrices it returns the
+  matrix unchanged
+  ([\#319](https://github.com/epiforecasts/socialmixr/issues/319)).
 
 - [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
   gains a new canonical target shape: a two-column data frame whose key

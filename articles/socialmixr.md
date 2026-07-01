@@ -378,12 +378,25 @@ mean across samples as shown above.
 Obtaining symmetric contact matrices, splitting out their components
 (see below) and population-based participant weights require information
 about the underlying demographic composition of the survey population.
-This is represented as a `data.frame` with columns `lower.age.limit`
-(the lower end of each age group) and `population` (the number of people
-in that age group).
+
+The post-processing functions
+([`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+[`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md),
+[`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md))
+need population data. In practice you supply a raw population table —
+any age resolution, with a `lower.age.limit` column for age and a column
+per other grouping — and align it to a computed matrix with
+[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md).
+[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+aggregates each grouping to the matrix’s levels (interpolating the age
+grouping where needed) and returns the `data.frame` the post-processing
+functions expect.
 
 For recent UN World Population Prospects data, the `wpp2024` package is
-available from GitHub (`remotes::install_github("PPgp/wpp2024")`):
+available from GitHub (`remotes::install_github("PPgp/wpp2024")`). It
+comes as 1-year `lower.age.limit` bands, which
+[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+coarsens to the matrix’s age groups:
 
 ``` r
 
@@ -422,6 +435,7 @@ uk_pop <- data.frame(
   lower.age.limit = c(0, 1, 5, 15),
   population = c(750000, 3200000, 7500000, 56000000)
 )
+uk_pop$age <- limits_to_agegroups(uk_pop$lower.age.limit, notation = "brackets")
 ```
 
 ## Symmetric contact matrices
@@ -445,16 +459,18 @@ to obtain a symmetric contact matrix that fulfills it, one can use
 m'_{ij} = \frac{1}{2N_i} (m_{ij} N_i + m_{ji} N_j)
 ```
 
-To get this version of the contact matrix, pipe the matrix through
-[`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
-passing the population data:
+To get this version of the contact matrix, compute the matrix and pass
+the population through
+[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+to
+[`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md):
 
 ``` r
 
-polymod[country == "United Kingdom"] |>
+uk_matrix <- polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
-  compute_matrix() |>
-  symmetrise(survey_pop = uk_pop)
+  compute_matrix()
+uk_matrix |> symmetrise(survey_pop = rebin_ages(uk_pop, uk_matrix))
 #>           contact.age.group
 #> age.group       [0,1)     [1,5)    [5,15) [15,Inf)
 #>   [0,1)    0.40000000 0.6400000 0.7558824 4.172659
@@ -496,11 +512,12 @@ de_pop <- data.frame(
   population = c(67000000, 16000000)
 )
 
-polymod[country == "Germany"] |>
+de_matrix <- polymod[country == "Germany"] |>
   assign_age_groups(age_limits = c(0, 60)) |>
-  compute_matrix() |>
-  symmetrise(survey_pop = de_pop) |>
-  per_capita(survey_pop = de_pop)
+  compute_matrix()
+de_matrix |>
+  symmetrise(survey_pop = rebin_ages(de_pop, de_matrix)) |>
+  per_capita(survey_pop = rebin_ages(de_pop, de_matrix))
 #>           contact.age.group
 #> age.group        [0,60)     [60,Inf)
 #>   [0,60)   1.155803e-07 4.674434e-08
@@ -534,10 +551,7 @@ and `$contacts` ($`d_i`$).
 
 ``` r
 
-polymod[country == "United Kingdom"] |>
-  assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
-  compute_matrix() |>
-  split_matrix(survey_pop = uk_pop)
+uk_matrix |> split_matrix(survey_pop = rebin_ages(uk_pop, uk_matrix))
 #> 
 #> ── Contact matrix (4 age groups) ──
 #> 
@@ -662,7 +676,7 @@ participants a total weight of 2 (the weekly 5/2 split).
 [`weigh_by_age()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
 post-stratifies against a target population: it interpolates `uk_pop` to
 single-year ages with
-[`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
 and multiplies in the ratio of target to observed age share.
 
 For arbitrary discrete joins,

@@ -9,7 +9,7 @@ assortativity matrix (replacing `$matrix`). For details, see the
 ## Usage
 
 ``` r
-split_matrix(x, survey_pop, ...)
+split_matrix(x, survey_pop)
 ```
 
 ## Arguments
@@ -22,44 +22,52 @@ split_matrix(x, survey_pop, ...)
 
 - survey_pop:
 
-  a data frame with columns `lower.age.limit` and `population` (e.g.
-  from
-  [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md))
-
-- ...:
-
-  passed to
-  [`regroup_ages()`](https://epiforecasts.io/socialmixr/reference/regroup_ages.md)
-  for interpolation
+  a data frame; see *Population data* below
 
 ## Value
 
 `x` with `$matrix` replaced by the assortativity matrix, plus additional
 elements `$mean.contacts`, `$normalisation`, and `$contacts`
 
+## Details
+
+`split_matrix()` supports single-grouping (rank-2) matrices only.
+
+## Population data
+
+`survey_pop` is a data frame with one column per grouping, named after
+the grouping (e.g. `age`, `gender`) and holding that grouping's levels
+as they appear in the matrix, plus a `population` column with the size
+of each combination. One row per combination of levels is required, and
+the levels are matched to the matrix exactly — no interpolation is
+performed.
+
+Use
+[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+to build this from a raw population table: it aggregates each grouping
+to the matrix's levels (interpolating the age grouping where needed) and
+labels the columns to match.
+
 ## Examples
 
 ``` r
 data(polymod)
-pop <- data.frame(
-  lower.age.limit = c(0, 5, 15),
-  population = c(3500000, 6000000, 50000000)
-)
-polymod |>
+result <- polymod |>
   (\(s) s[country == "United Kingdom"])() |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
-  compute_matrix() |>
-  split_matrix(survey_pop = pop)
+  compute_matrix()
+uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+result |> split_matrix(survey_pop = rebin_ages(uk_pop, result))
 #> 
 #> ── Contact matrix (3 age groups) ──
 #> 
 #> Ages: "[0,5)", "[5,15)", and "[15,Inf)"
 #> Participants: 1011
-#> Mean contacts: 11.48
+#> Mean contacts: 11.55
 #> 
 #>           contact.age.group
-#> age.group      [0,5)   [5,15)  [15,Inf)
-#>   [0,5)    3.6702254 1.599842 0.7411032
-#>   [5,15)   0.6126126 5.363669 0.5034768
-#>   [15,Inf) 0.5886896 1.135204 1.0125673
+#> age.group      [0,5)    [5,15)  [15,Inf)
+#>   [0,5)    3.4975089 1.3067616 0.7643158
+#>   [5,15)   0.5837838 4.3810811 0.5192465
+#>   [15,Inf) 0.5609865 0.9272422 1.0442825
 ```

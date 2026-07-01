@@ -2,7 +2,7 @@
 
 Internal helper used by
 [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
-and the legacy
+and
 [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
 to turn a merged contacts table into the rank-`2K` array of weighted
 contact counts. Each grouping contributes a participant-side and a

@@ -53,7 +53,7 @@ age-specific contact rates (<code>contacts</code>), and an assortativity matrix
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">split_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">survey_pop</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">split_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">survey_pop</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -66,12 +66,7 @@ and <code>participants</code></p></dd>
 
 
 <dt id="arg-survey-pop">survey_pop<a class="anchor" aria-label="anchor" href="#arg-survey-pop"></a></dt>
-<dd><p>a data frame with columns <code>lower.age.limit</code> and
-<code>population</code> (e.g. from <code><a href="wpp_age.html">wpp_age()</a></code>)</p></dd>
-
-
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>passed to <code><a href="regroup_ages.html">regroup_ages()</a></code> for interpolation</p></dd>
+<dd><p>a data frame; see <em>Population data</em> below</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -79,31 +74,46 @@ and <code>participants</code></p></dd>
     <p><code>x</code> with <code>$matrix</code> replaced by the assortativity matrix, plus
 additional elements <code>$mean.contacts</code>, <code>$normalisation</code>, and <code>$contacts</code></p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p><code>split_matrix()</code> supports single-grouping (rank-2) matrices only.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="population-data">Population data<a class="anchor" aria-label="anchor" href="#population-data"></a></h2>
+
+
+
+<p><code>survey_pop</code> is a data frame with one column per grouping, named after the
+grouping (e.g. <code>age</code>, <code>gender</code>) and holding that grouping's levels as they
+appear in the matrix, plus a <code>population</code> column with the size of each
+combination. One row per combination of levels is required, and the levels
+are matched to the matrix exactly — no interpolation is performed.</p>
+<p>Use <code><a href="rebin_ages.html">rebin_ages()</a></code> to build this from a raw population table: it aggregates
+each grouping to the matrix's levels (interpolating the age grouping where
+needed) and labels the columns to match.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  lower.age.limit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3500000</span>, <span class="fl">6000000</span>, <span class="fl">50000000</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">polymod</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">polymod</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="op">(</span>\<span class="op">(</span><span class="va">s</span><span class="op">)</span> <span class="va">s</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span><span class="op">)</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">split_matrix</span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="va">pop</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">uk_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>lower.age.limit <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">80</span>, population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1e5</span>, <span class="fl">81</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">|&gt;</span> <span class="fu">split_matrix</span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="rebin_ages.html">rebin_ages</a></span><span class="op">(</span><span class="va">uk_pop</span>, <span class="va">result</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Contact matrix (3 age groups)</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Ages: <span style="color: #0000BB;">"[0,5)"</span>, <span style="color: #0000BB;">"[5,15)"</span>, and <span style="color: #0000BB;">"[15,Inf)"</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Participants: 1011</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Mean contacts: 11.48</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Mean contacts: 11.55</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           contact.age.group</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> age.group      [0,5)   [5,15)  [15,Inf)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    3.6702254 1.599842 0.7411032</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   0.6126126 5.363669 0.5034768</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 0.5886896 1.135204 1.0125673</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> age.group      [0,5)    [5,15)  [15,Inf)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [0,5)    3.4975089 1.3067616 0.7643158</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,15)   0.5837838 4.3810811 0.5192465</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [15,Inf) 0.5609865 0.9272422 1.0442825</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

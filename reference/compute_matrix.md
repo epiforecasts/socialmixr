@@ -12,8 +12,6 @@ For post-processing, pipe the result into
 [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md),
 or
 [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md).
-These post-processing functions currently support single-grouping
-(age-only) matrices.
 
 ## Usage
 

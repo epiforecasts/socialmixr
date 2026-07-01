@@ -4,66 +4,99 @@
 
 - [`agegroups_to_limits()`](https://epiforecasts.io/socialmixr/reference/agegroups_to_limits.md)
   : Convert age groups to lower age limits
+
 - [`as_contact_survey()`](https://epiforecasts.io/socialmixr/reference/as_contact_survey.md)
   : Check contact survey data
+
 - [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
   : Assign age groups in survey data
+
 - [`check(`*`<contact_survey>`*`)`](https://epiforecasts.io/socialmixr/reference/check.md)
   : Check contact survey data
+
 - [`clean(`*`<contact_survey>`*`)`](https://epiforecasts.io/socialmixr/reference/clean.md)
   : Clean contact survey data
+
 - [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
   : Compute contact matrix from prepared survey data
+
 - [`contact_age_distribution()`](https://epiforecasts.io/socialmixr/reference/contact_age_distribution.md)
   : Extract the empirical age distribution of contacts from a survey
+
 - [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
   : Generate a contact matrix from diary survey data
+
 - [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md)
   **\[defunct\]** : Download a survey from its Zenodo repository
+
+- [`flatten()`](https://epiforecasts.io/socialmixr/reference/flatten.md)
+  :
+
+  Flatten a multi-grouping contact matrix to its `T x T` form
+
 - [`get_citation()`](https://epiforecasts.io/socialmixr/reference/get_citation.md)
   **\[defunct\]** : Citation for a survey
+
 - [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md)
   **\[defunct\]** : Get a survey, either from its Zenodo repository, a
   set of files, or a survey variable
+
 - [`is_doi()`](https://epiforecasts.io/socialmixr/reference/is_doi.md) :
   Checks if a character string is a DOI
+
 - [`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md)
   : Convert lower age limits to age groups.
+
 - [`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md)
   **\[defunct\]** : List all surveys available for download
+
 - [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
   : Load a survey from local files
+
 - [`matrix_plot()`](https://epiforecasts.io/socialmixr/reference/matrix_plot.md)
   : Draws an image plot of a contact matrix with a legend strip and the
   numeric values in the cells.
+
 - [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md)
   : Convert a contact matrix to per-capita rates
+
 - [`polymod`](https://epiforecasts.io/socialmixr/reference/polymod.md) :
   Social contact data from 8 European countries
+
+- [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+  : Rebin a population table by age
+
 - [`reduce_agegroups()`](https://epiforecasts.io/socialmixr/reference/reduce_agegroups.md)
   : Reduce the number of age groups given a broader set of limits
-- [`regroup_ages()`](https://epiforecasts.io/socialmixr/reference/regroup_ages.md)
-  : Regroup population data into age groups
+
 - [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
   : Decompose a contact matrix into mean contacts, normalisation and
   assortativity
+
 - [`` `[`( ``*`<contact_survey>`*`)`](https://epiforecasts.io/socialmixr/reference/sub-.contact_survey.md)
   : Subset a contact survey
+
 - [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md)
   **\[defunct\]** : Contact survey (defunct)
+
 - [`survey_countries()`](https://epiforecasts.io/socialmixr/reference/survey_countries.md)
   **\[defunct\]** : List all countries contained in a survey
+
 - [`survey_country_population()`](https://epiforecasts.io/socialmixr/reference/survey_country_population.md)
   **\[deprecated\]** : Get survey country population data
+
 - [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md)
   : Symmetrise a contact matrix
+
 - [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
   [`weigh_by_dayofweek()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
   [`weigh_by_age()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
   : Weigh survey participants
+
 - [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md)
   **\[deprecated\]** : Get age-specific population data according to the
   World Population Prospects 2017 edition
+
 - [`wpp_countries()`](https://epiforecasts.io/socialmixr/reference/wpp_countries.md)
   **\[deprecated\]** : List all countries and regions for which
   socialmixr has population data

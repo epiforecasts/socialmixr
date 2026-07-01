@@ -1,13 +1,15 @@
 # Convert a contact matrix to per-capita rates
 
 Divides each column of the contact matrix by the population of the
-corresponding age group, giving the contact rate of age group i with one
-individual of age group j.
+contacted group, so that entry (`a`, `b`) becomes the mean number of
+contacts a member of group `a` makes with a single individual of group
+`b`. Multi-grouping matrices are handled the same way, with each
+combination of grouping levels treated as a group.
 
 ## Usage
 
 ``` r
-per_capita(x, survey_pop, ...)
+per_capita(x, survey_pop)
 ```
 
 ## Arguments
@@ -20,33 +22,37 @@ per_capita(x, survey_pop, ...)
 
 - survey_pop:
 
-  a data frame with columns `lower.age.limit` and `population` (e.g.
-  from
-  [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md))
-
-- ...:
-
-  passed to
-  [`regroup_ages()`](https://epiforecasts.io/socialmixr/reference/regroup_ages.md)
-  for interpolation
+  a data frame; see *Population data* below
 
 ## Value
 
 `x` with `$matrix` replaced by the per-capita version
 
+## Population data
+
+`survey_pop` is a data frame with one column per grouping, named after
+the grouping (e.g. `age`, `gender`) and holding that grouping's levels
+as they appear in the matrix, plus a `population` column with the size
+of each combination. One row per combination of levels is required, and
+the levels are matched to the matrix exactly — no interpolation is
+performed.
+
+Use
+[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+to build this from a raw population table: it aggregates each grouping
+to the matrix's levels (interpolating the age grouping where needed) and
+labels the columns to match.
+
 ## Examples
 
 ``` r
 data(polymod)
-pop <- data.frame(
-  lower.age.limit = c(0, 5, 15),
-  population = c(3500000, 6000000, 50000000)
-)
-polymod |>
+result <- polymod |>
   (\(s) s[country == "United Kingdom"])() |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
-  compute_matrix() |>
-  per_capita(survey_pop = pop)
+  compute_matrix()
+uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+result |> per_capita(survey_pop = rebin_ages(uk_pop, result))
 #> 
 #> ── Contact matrix (3 age groups) ──
 #> 
@@ -55,7 +61,7 @@ polymod |>
 #> 
 #>           contact.age.group
 #> age.group         [0,5)       [5,15)     [15,Inf)
-#>   [0,5)    5.473684e-07 2.385965e-07 1.105263e-07
-#>   [5,15)   1.512605e-07 1.324346e-06 1.243137e-07
-#>   [15,Inf) 1.115570e-07 2.151217e-07 1.918820e-07
+#>   [0,5)    3.831579e-06 1.431579e-06 8.373206e-07
+#>   [5,15)   1.058824e-06 7.946078e-06 9.417706e-07
+#>   [15,Inf) 7.808989e-07 1.290730e-06 1.453652e-06
 ```

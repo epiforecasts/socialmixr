@@ -1,8 +1,8 @@
 # Count participants per age group
 
-Internal helper used by the legacy
+Internal helper used by
 [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-for back-compat output. A thin wrapper around
+to build its per-age-group participant counts. A thin wrapper around
 [`n_participants_per_group()`](https://epiforecasts.io/socialmixr/reference/n_participants_per_group.md)
 with the default age-only grouping.
 

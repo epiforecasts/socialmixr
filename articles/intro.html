@@ -231,44 +231,42 @@
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group       [0,1)     [1,5)    [5,15) [15,Inf)</span></span>
-<span><span class="co">#&gt;   [0,1)    0.49945698 2.7743943  4.851211 13.43609</span></span>
-<span><span class="co">#&gt;   [1,5)    0.33693198 3.0746293  3.073258 10.57836</span></span>
-<span><span class="co">#&gt;   [5,15)   0.05423414 0.9674376 15.778440 12.01545</span></span>
-<span><span class="co">#&gt;   [15,Inf) 0.06158156 0.7172029  2.446620 18.87699</span></span></code></pre></div>
+<span><span class="co">#&gt;   [0,1)    1.24307692 1.3738084  1.309321 11.87708</span></span>
+<span><span class="co">#&gt;   [1,5)    0.24444976 3.5036741  2.828825 11.48349</span></span>
+<span><span class="co">#&gt;   [5,15)   0.04765294 0.8719665 16.060669 12.64404</span></span>
+<span><span class="co">#&gt;   [15,Inf) 0.06390973 0.7066177  2.503322 18.35970</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
 </h2>
-<p>Obtaining symmetric contact matrices, splitting out their components (see below) and population-based participant weights require information about the underlying demographic composition of the survey population. This is represented as a <code>data.frame</code> with columns <code>lower.age.limit</code> (the lower end of each age group) and <code>population</code> (the number of people in that age group).</p>
+<p>Obtaining symmetric contact matrices, splitting out their components (see below) and population-based participant weights require information about the underlying demographic composition of the survey population.</p>
+<p>The post-processing functions (<code><a href="../reference/symmetrise.html">symmetrise()</a></code>, <code><a href="../reference/split_matrix.html">split_matrix()</a></code>, <code><a href="../reference/per_capita.html">per_capita()</a></code>) need population data. In practice you supply a raw population table — any age resolution, with a <code>lower.age.limit</code> column for age and a column per other grouping — and align it to a computed matrix with <code><a href="../reference/rebin_ages.html">rebin_ages()</a></code>. <code><a href="../reference/rebin_ages.html">rebin_ages()</a></code> aggregates each grouping to the matrix’s levels (interpolating the age grouping where needed) and returns the <code>data.frame</code> the post-processing functions expect.</p>
 <section class="level2"><h3 id="using-custom-population-data">Using custom population data<a class="anchor" aria-label="anchor" href="#using-custom-population-data"></a>
 </h3>
-<p>You can construct any comparable data frame and pass it to the relevant post-processing step:</p>
+<p>You can construct any comparable data frame and pass it through <code><a href="../reference/rebin_ages.html">rebin_ages()</a></code> to the relevant post-processing step:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">custom_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  lower.age.limit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span>,</span>
 <span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12000000</span>, <span class="fl">35000000</span>, <span class="fl">20000000</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
+<span><span class="va">demo_matrix</span> <span class="op">&lt;-</span> <span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="va">custom_pop</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">demo_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/rebin_ages.html">rebin_ages</a></span><span class="op">(</span><span class="va">custom_pop</span>, <span class="va">demo_matrix</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group    [0,18)  [18,60) [60,Inf)</span></span>
 <span><span class="co">#&gt;   [0,18)   7.813187 5.899817 1.166637</span></span>
 <span><span class="co">#&gt;   [18,60)  2.022794 7.931429 2.084481</span></span>
 <span><span class="co">#&gt;   [60,Inf) 0.699982 3.647842 1.918033</span></span></code></pre></div>
 </div>
-<p>For recent UN World Population Prospects data, the <code>wpp2024</code> package is available from GitHub (<code>remotes::install_github("PPgp/wpp2024")</code>):</p>
+<p>For recent UN World Population Prospects data, the <code>wpp2024</code> package is available from GitHub (<code>remotes::install_github("PPgp/wpp2024")</code>). <code><a href="../reference/rebin_ages.html">rebin_ages()</a></code> coarsens its 1-year bands to the matrix’s age groups:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"popAge1dt"</span>, package <span class="op">=</span> <span class="st">"wpp2024"</span><span class="op">)</span></span>
-<span><span class="va">uk_pop</span> <span class="op">&lt;-</span> <span class="va">popAge1dt</span><span class="op">[</span><span class="va">name</span> <span class="op">==</span> <span class="st">"United Kingdom"</span> <span class="op">&amp;</span> <span class="va">year</span> <span class="op">==</span> <span class="fl">2020</span>,</span>
+<span><span class="va">uk_pop_raw</span> <span class="op">&lt;-</span> <span class="va">popAge1dt</span><span class="op">[</span><span class="va">name</span> <span class="op">==</span> <span class="st">"United Kingdom"</span> <span class="op">&amp;</span> <span class="va">year</span> <span class="op">==</span> <span class="fl">2020</span>,</span>
 <span>  <span class="fu">.</span><span class="op">(</span>lower.age.limit <span class="op">=</span> <span class="va">age</span>, population <span class="op">=</span> <span class="va">pop</span> <span class="op">*</span> <span class="fl">1000</span><span class="op">)</span></span>
 <span><span class="op">]</span></span>
-<span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="va">uk_pop</span><span class="op">)</span></span>
+<span><span class="va">demo_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/rebin_ages.html">rebin_ages</a></span><span class="op">(</span><span class="va">uk_pop_raw</span>, <span class="va">demo_matrix</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group     [0,18)  [18,60)  [60,Inf)</span></span>
 <span><span class="co">#&gt;   [0,18)   7.8131868 5.490727 0.8787841</span></span>
@@ -292,11 +290,11 @@
 <p>To get this version of the contact matrix, pipe the matrix through <code><a href="../reference/symmetrise.html">symmetrise()</a></code>, passing the population data:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">uk_matrix</span> <span class="op">&lt;-</span> <span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="va">uk_pop</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in normalise_weighted_matrix(survey_pop = resolved_pop, weighted_matrix = x$matrix, : Large differences in the size of the sub-populations with the current age</span></span>
+<span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">uk_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/rebin_ages.html">rebin_ages</a></span><span class="op">(</span><span class="va">uk_pop</span>, <span class="va">uk_matrix</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in normalise_weighted_matrix(survey_pop = list(population = pop_vec), : Large differences in the size of the sub-populations with the current age</span></span>
 <span><span class="co">#&gt; breaks are likely to result in artefacts after making the matrix symmetric.</span></span>
 <span><span class="co">#&gt; ! Please reconsider the age breaks to obtain more equally sized</span></span>
 <span><span class="co">#&gt;   sub-populations.</span></span>
@@ -327,11 +325,12 @@
 <span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">67000000</span>, <span class="fl">16000000</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"Germany"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
+<span><span class="va">de_matrix</span> <span class="op">&lt;-</span> <span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"Germany"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="va">de_pop</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/per_capita.html">per_capita</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="va">de_pop</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">de_matrix</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/rebin_ages.html">rebin_ages</a></span><span class="op">(</span><span class="va">de_pop</span>, <span class="va">de_matrix</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/per_capita.html">per_capita</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/rebin_ages.html">rebin_ages</a></span><span class="op">(</span><span class="va">de_pop</span>, <span class="va">de_matrix</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group        [0,60)     [60,Inf)</span></span>
 <span><span class="co">#&gt;   [0,60)   1.155803e-07 4.674434e-08</span></span>
@@ -345,10 +344,7 @@
 <p><code><a href="../reference/split_matrix.html">split_matrix()</a></code> returns the assortativity matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">a_{ij}</annotation></semantics></math> in <code>$matrix</code>, with additional components <code>$mean.contacts</code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>), <code>$normalisation</code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math>) and <code>$contacts</code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mi>i</mi></msub><annotation encoding="application/x-tex">d_i</annotation></semantics></math>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/split_matrix.html">split_matrix</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="va">uk_pop</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">uk_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/split_matrix.html">split_matrix</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/rebin_ages.html">rebin_ages</a></span><span class="op">(</span><span class="va">uk_pop</span>, <span class="va">uk_matrix</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── Contact matrix (4 age groups) ──</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -419,7 +415,7 @@
 <span><span class="co">#&gt;   [18,60)        NA       NA        NA</span></span>
 <span><span class="co">#&gt;   [60,Inf)       NA       NA        NA</span></span></code></pre></div>
 </div>
-<p><code><a href="../reference/weigh.html">weigh_by_dayofweek()</a></code> assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). <code><a href="../reference/weigh.html">weigh_by_age()</a></code> post-stratifies against a target population: it interpolates <code>uk_pop</code> to single-year ages with <code><a href="../reference/pop_age.html">pop_age()</a></code> and multiplies in the ratio of target to observed age share.</p>
+<p><code><a href="../reference/weigh.html">weigh_by_dayofweek()</a></code> assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). <code><a href="../reference/weigh.html">weigh_by_age()</a></code> post-stratifies against a target population: it interpolates <code>uk_pop</code> to single-year ages with <code><a href="../reference/rebin_ages.html">rebin_ages()</a></code> and multiplies in the ratio of target to observed age share.</p>
 <p>For arbitrary discrete joins, <code><a href="../reference/weigh.html">weigh()</a></code> itself takes a two-column data frame whose key column matches <code>by</code> — e.g. pooling participants across countries by a target share:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
