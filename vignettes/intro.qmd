@@ -139,11 +139,11 @@ mr
 
 Obtaining symmetric contact matrices, splitting out their components (see below) and population-based participant weights require information about the underlying demographic composition of the survey population.
 
-The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) need population data. In practice you supply a raw population table — any age resolution, with a `lower.age.limit` column for age and a column per other grouping — and align it to a computed matrix with `rebin_ages()`. `rebin_ages()` aggregates each grouping to the matrix's levels (interpolating the age grouping where needed) and returns the `data.frame` the post-processing functions expect.
+The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) need population data. In practice you supply a raw population table (any age resolution, with a `lower.age.limit` column for age and a column per other grouping) and align it to a computed matrix with `align_ages()`. `align_ages()` aggregates each grouping to the matrix's levels (interpolating the age grouping where needed) and returns the `data.frame` the post-processing functions expect.
 
 ## Using custom population data
 
-You can construct any comparable data frame and pass it through `rebin_ages()` to the relevant post-processing step:
+You can construct any comparable data frame and pass it through `align_ages()` to the relevant post-processing step:
 
 ```{r message=FALSE, warning=FALSE}
 custom_pop <- data.frame(
@@ -153,17 +153,17 @@ custom_pop <- data.frame(
 demo_matrix <- polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 18, 60)) |>
   compute_matrix()
-demo_matrix |> symmetrise(survey_pop = rebin_ages(custom_pop, demo_matrix))
+demo_matrix |> symmetrise(survey_pop = align_ages(custom_pop, demo_matrix))
 ```
 
-For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). `rebin_ages()` coarsens its 1-year bands to the matrix's age groups:
+For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). `align_ages()` coarsens its 1-year bands to the matrix's age groups:
 
 ```{r eval=requireNamespace("wpp2024", quietly = TRUE), message=FALSE, warning=FALSE}
 data("popAge1dt", package = "wpp2024")
 uk_pop_raw <- popAge1dt[name == "United Kingdom" & year == 2020,
   .(lower.age.limit = age, population = pop * 1000)
 ]
-demo_matrix |> symmetrise(survey_pop = rebin_ages(uk_pop_raw, demo_matrix))
+demo_matrix |> symmetrise(survey_pop = align_ages(uk_pop_raw, demo_matrix))
 ```
 
 For the rest of this section we use a small constructed `uk_pop` for the United Kingdom, sufficient to illustrate the post-processing functions:
@@ -192,7 +192,7 @@ To get this version of the contact matrix, pipe the matrix through `symmetrise()
 uk_matrix <- polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
   compute_matrix()
-uk_matrix |> symmetrise(survey_pop = rebin_ages(uk_pop, uk_matrix))
+uk_matrix |> symmetrise(survey_pop = align_ages(uk_pop, uk_matrix))
 ```
 
 # Contact rates per capita
@@ -216,8 +216,8 @@ de_matrix <- polymod[country == "Germany"] |>
   assign_age_groups(age_limits = c(0, 60)) |>
   compute_matrix()
 de_matrix |>
-  symmetrise(survey_pop = rebin_ages(de_pop, de_matrix)) |>
-  per_capita(survey_pop = rebin_ages(de_pop, de_matrix))
+  symmetrise(survey_pop = align_ages(de_pop, de_matrix)) |>
+  per_capita(survey_pop = align_ages(de_pop, de_matrix))
 ```
 
 # Splitting contact matrices
@@ -231,7 +231,7 @@ where $c$ is the mean number of contacts across the whole population, $c q d_i$ 
 `split_matrix()` returns the assortativity matrix $a_{ij}$ in `$matrix`, with additional components `$mean.contacts` ($c$), `$normalisation` ($q$) and `$contacts` ($d_i$).
 
 ```{r}
-uk_matrix |> split_matrix(survey_pop = rebin_ages(uk_pop, uk_matrix))
+uk_matrix |> split_matrix(survey_pop = align_ages(uk_pop, uk_matrix))
 ```
 
 # Filtering
@@ -280,7 +280,7 @@ polymod[country == "United Kingdom"] |>
   compute_matrix()
 ```
 
-`weigh_by_dayofweek()` assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). `weigh_by_age()` post-stratifies against a target population: it interpolates `uk_pop` to single-year ages with `rebin_ages()` and multiplies in the ratio of target to observed age share.
+`weigh_by_dayofweek()` assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). `weigh_by_age()` post-stratifies against a target population: it interpolates `uk_pop` to single-year ages with `align_ages()` and multiplies in the ratio of target to observed age share.
 
 For arbitrary discrete joins, `weigh()` itself takes a two-column data frame whose key column matches `by` — e.g. pooling participants across countries by a target share:
 

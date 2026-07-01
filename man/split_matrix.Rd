@@ -32,10 +32,10 @@ age-specific contact rates (\code{contacts}), and an assortativity matrix
 \code{survey_pop} is a data frame with one column per grouping, named after the
 grouping (e.g. \code{age}, \code{gender}) and holding that grouping's levels as they
 appear in the matrix, plus a \code{population} column with the size of each
-combination. One row per combination of levels is required, and the levels
-are matched to the matrix exactly — no interpolation is performed.
+combination. One row per combination of levels is required, and levels are
+matched to the matrix exactly, without interpolation.
 
-Use \code{\link[=rebin_ages]{rebin_ages()}} to build this from a raw population table: it aggregates
+Use \code{\link[=align_ages]{align_ages()}} to build this from a raw population table: it aggregates
 each grouping to the matrix's levels (interpolating the age grouping where
 needed) and labels the columns to match.
 }
@@ -47,6 +47,6 @@ result <- polymod |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
   compute_matrix()
 uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
-result |> split_matrix(survey_pop = rebin_ages(uk_pop, result))
+result |> split_matrix(survey_pop = align_ages(uk_pop, result))
 
 }

@@ -13,10 +13,10 @@
 #' `survey_pop` is a data frame with one column per grouping, named after the
 #' grouping (e.g. `age`, `gender`) and holding that grouping's levels as they
 #' appear in the matrix, plus a `population` column with the size of each
-#' combination. One row per combination of levels is required, and the levels
-#' are matched to the matrix exactly — no interpolation is performed.
+#' combination. One row per combination of levels is required, and levels are
+#' matched to the matrix exactly, without interpolation.
 #'
-#' Use [rebin_ages()] to build this from a raw population table: it aggregates
+#' Use [align_ages()] to build this from a raw population table: it aggregates
 #' each grouping to the matrix's levels (interpolating the age grouping where
 #' needed) and labels the columns to match.
 #'
@@ -34,7 +34,7 @@
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix()
 #' uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
-#' result |> symmetrise(survey_pop = rebin_ages(uk_pop, result))
+#' result |> symmetrise(survey_pop = align_ages(uk_pop, result))
 #'
 #' @export
 #' @autoglobal
@@ -148,7 +148,7 @@ joint_population_vector <- function(survey_pop, matrix, groupings) {
     if ("age" %in% group_names) {
       msg <- c(
         msg,
-        i = "Use {.fn rebin_ages} to align a raw population table to this \\
+        i = "Use {.fn align_ages} to align a raw population table to this \\
              matrix's groupings."
       )
     }
@@ -205,7 +205,7 @@ check_part_cnt_dims_match <- function(matrix, k, op) {
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix()
 #' uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
-#' result |> split_matrix(survey_pop = rebin_ages(uk_pop, result))
+#' result |> split_matrix(survey_pop = align_ages(uk_pop, result))
 #'
 #' @export
 #' @autoglobal
@@ -270,7 +270,7 @@ split_matrix <- function(x, survey_pop) {
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix()
 #' uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
-#' result |> per_capita(survey_pop = rebin_ages(uk_pop, result))
+#' result |> per_capita(survey_pop = align_ages(uk_pop, result))
 #'
 #' @export
 #' @autoglobal
