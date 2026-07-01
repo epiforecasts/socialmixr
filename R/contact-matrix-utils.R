@@ -659,7 +659,7 @@ add_survey_upper_age_limit <- function(survey, age_breaks) {
 #' @autoglobal
 survey_pop_reference <- function(survey_pop, ...) {
   data.table(
-    regroup_ages(
+    rebin_ages_numeric(
       survey_pop,
       seq(
         min(survey_pop$lower.age.limit),
@@ -674,7 +674,7 @@ survey_pop_reference <- function(survey_pop, ...) {
 adjust_survey_age_groups <- function(survey_pop, part_age_group_present, ...) {
   survey_pop_max <- max(survey_pop$upper.age.limit)
   survey_pop <- data.table(
-    regroup_ages(survey_pop, part_age_group_present, ...)
+    rebin_ages_numeric(survey_pop, part_age_group_present, ...)
   )
 
   ## use the actual lower.age.limits from survey_pop (which may be a subset
@@ -734,7 +734,7 @@ weight_by_age <- function(participants, survey_pop_full) {
 
   # get reference population by age (absolute and proportional)
   part_age_all <- range(unique(participants[, part_age]))
-  survey_pop_detail <- data.table(regroup_ages(
+  survey_pop_detail <- data.table(rebin_ages_numeric(
     survey_pop_full,
     seq(part_age_all[1], part_age_all[2] + 1)
   ))
@@ -992,8 +992,8 @@ sample_contacts_participants <- function(
 #' Cross-tab contact weights over grouping columns
 #'
 #' @description
-#' Internal helper used by [compute_matrix()] and the legacy
-#' [contact_matrix()] to turn a merged contacts table into the rank-`2K`
+#' Internal helper used by [compute_matrix()] and [contact_matrix()] to
+#' turn a merged contacts table into the rank-`2K`
 #' array of weighted contact counts. Each grouping contributes a
 #' participant-side and a contact-side axis, in that order across the two
 #' halves of the array.
@@ -1270,9 +1270,9 @@ matrix_per_capita <- function(weighted_matrix, survey_pop) {
 #' Count participants per age group
 #'
 #' @description
-#' Internal helper used by the legacy [contact_matrix()] for back-compat
-#' output. A thin wrapper around [n_participants_per_group()] with the
-#' default age-only grouping.
+#' Internal helper used by [contact_matrix()] to build its per-age-group
+#' participant counts. A thin wrapper around [n_participants_per_group()]
+#' with the default age-only grouping.
 #'
 #' @param participants the participants data.table
 #' @returns a long data.table with columns `age.group`, `participants`,

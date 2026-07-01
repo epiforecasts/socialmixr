@@ -4,39 +4,49 @@
 \alias{symmetrise}
 \title{Symmetrise a contact matrix}
 \usage{
-symmetrise(x, survey_pop, symmetric_norm_threshold = 2, ...)
+symmetrise(x, survey_pop, symmetric_norm_threshold = 2)
 }
 \arguments{
 \item{x}{a list as returned by \code{\link[=compute_matrix]{compute_matrix()}}, with elements \code{matrix}
 and \code{participants}}
 
-\item{survey_pop}{a data frame with columns \code{lower.age.limit} and
-\code{population} (e.g. from \code{\link[=wpp_age]{wpp_age()}})}
+\item{survey_pop}{a data frame; see \emph{Population data} below}
 
 \item{symmetric_norm_threshold}{threshold for the normalisation factor
 before issuing a warning (default 2)}
-
-\item{...}{passed to \code{\link[=regroup_ages]{regroup_ages()}} for interpolation}
 }
 \value{
 \code{x} with \verb{$matrix} replaced by the symmetrised version
 }
 \description{
-Makes a contact matrix symmetric so that \eqn{c_{ij} N_i = c_{ji} N_j},
-where \eqn{c_{ij}} is the (i, j) entry and \eqn{N_i} is the population
-of age group i. This is done by replacing each pair with half their sum,
-weighted by population size.
+Makes a contact matrix symmetric so that \eqn{c_{ab} N_a = c_{ba} N_b},
+where \eqn{c_{ab}} is the (a, b) entry and \eqn{N_a} is the population
+of group \code{a}. Each pair is replaced by half their sum, weighted by
+population size. Reciprocity requires that each grouping has the same
+levels on the participant and contact side; if not, the function
+aborts.
 }
+\section{Population data}{
+
+
+\code{survey_pop} is a data frame with one column per grouping, named after the
+grouping (e.g. \code{age}, \code{gender}) and holding that grouping's levels as they
+appear in the matrix, plus a \code{population} column with the size of each
+combination. One row per combination of levels is required, and the levels
+are matched to the matrix exactly — no interpolation is performed.
+
+Use \code{\link[=rebin_ages]{rebin_ages()}} to build this from a raw population table: it aggregates
+each grouping to the matrix's levels (interpolating the age grouping where
+needed) and labels the columns to match.
+}
+
 \examples{
 data(polymod)
-pop <- data.frame(
-  lower.age.limit = c(0, 5, 15),
-  population = c(3500000, 6000000, 50000000)
-)
-polymod |>
+result <- polymod |>
   (\(s) s[country == "United Kingdom"])() |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
-  compute_matrix() |>
-  symmetrise(survey_pop = pop)
+  compute_matrix()
+uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+result |> symmetrise(survey_pop = rebin_ages(uk_pop, result))
 
 }

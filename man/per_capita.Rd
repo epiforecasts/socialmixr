@@ -4,35 +4,45 @@
 \alias{per_capita}
 \title{Convert a contact matrix to per-capita rates}
 \usage{
-per_capita(x, survey_pop, ...)
+per_capita(x, survey_pop)
 }
 \arguments{
 \item{x}{a list as returned by \code{\link[=compute_matrix]{compute_matrix()}}, with elements \code{matrix}
 and \code{participants}}
 
-\item{survey_pop}{a data frame with columns \code{lower.age.limit} and
-\code{population} (e.g. from \code{\link[=wpp_age]{wpp_age()}})}
-
-\item{...}{passed to \code{\link[=regroup_ages]{regroup_ages()}} for interpolation}
+\item{survey_pop}{a data frame; see \emph{Population data} below}
 }
 \value{
 \code{x} with \verb{$matrix} replaced by the per-capita version
 }
 \description{
 Divides each column of the contact matrix by the population of the
-corresponding age group, giving the contact rate of age group i with
-one individual of age group j.
+contacted group, so that entry (\code{a}, \code{b}) becomes the mean number of
+contacts a member of group \code{a} makes with a single individual of group
+\code{b}. Multi-grouping matrices are handled the same way, with each
+combination of grouping levels treated as a group.
 }
+\section{Population data}{
+
+
+\code{survey_pop} is a data frame with one column per grouping, named after the
+grouping (e.g. \code{age}, \code{gender}) and holding that grouping's levels as they
+appear in the matrix, plus a \code{population} column with the size of each
+combination. One row per combination of levels is required, and the levels
+are matched to the matrix exactly — no interpolation is performed.
+
+Use \code{\link[=rebin_ages]{rebin_ages()}} to build this from a raw population table: it aggregates
+each grouping to the matrix's levels (interpolating the age grouping where
+needed) and labels the columns to match.
+}
+
 \examples{
 data(polymod)
-pop <- data.frame(
-  lower.age.limit = c(0, 5, 15),
-  population = c(3500000, 6000000, 50000000)
-)
-polymod |>
+result <- polymod |>
   (\(s) s[country == "United Kingdom"])() |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
-  compute_matrix() |>
-  per_capita(survey_pop = pop)
+  compute_matrix()
+uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+result |> per_capita(survey_pop = rebin_ages(uk_pop, result))
 
 }

@@ -6,8 +6,7 @@
 #' in the pipeline workflow.
 #'
 #' For post-processing, pipe the result into [symmetrise()],
-#' [split_matrix()], or [per_capita()]. These post-processing functions
-#' currently support single-grouping (age-only) matrices.
+#' [split_matrix()], or [per_capita()].
 #'
 #' @section Multi-dimensional matrices:
 #'
@@ -105,6 +104,7 @@ compute_matrix <- function(
 
   new_contact_matrix(
     matrix = weighted_matrix,
-    participants = part_pop[]
+    participants = part_pop[],
+    groupings = groupings
   )
 }
