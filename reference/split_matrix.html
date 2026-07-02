@@ -86,9 +86,9 @@ additional elements <code>$mean.contacts</code>, <code>$normalisation</code>, an
 <p><code>survey_pop</code> is a data frame with one column per grouping, named after the
 grouping (e.g. <code>age</code>, <code>gender</code>) and holding that grouping's levels as they
 appear in the matrix, plus a <code>population</code> column with the size of each
-combination. One row per combination of levels is required, and the levels
-are matched to the matrix exactly — no interpolation is performed.</p>
-<p>Use <code><a href="rebin_ages.html">rebin_ages()</a></code> to build this from a raw population table: it aggregates
+combination. One row per combination of levels is required, and levels are
+matched to the matrix exactly, without interpolation.</p>
+<p>Use <code><a href="align_ages.html">align_ages()</a></code> to build this from a raw population table: it aggregates
 each grouping to the matrix's levels (interpolating the age grouping where
 needed) and labels the columns to match.</p>
     </div>
@@ -101,7 +101,7 @@ needed) and labels the columns to match.</p>
 <span class="r-in"><span>  <span class="fu"><a href="assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">uk_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>lower.age.limit <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">80</span>, population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1e5</span>, <span class="fl">81</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">|&gt;</span> <span class="fu">split_matrix</span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="rebin_ages.html">rebin_ages</a></span><span class="op">(</span><span class="va">uk_pop</span>, <span class="va">result</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">|&gt;</span> <span class="fu">split_matrix</span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="align_ages.html">align_ages</a></span><span class="op">(</span><span class="va">uk_pop</span>, <span class="va">result</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Contact matrix (3 age groups)</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>

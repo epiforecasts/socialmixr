@@ -2,9 +2,11 @@
 
 **\[deprecated\]**
 
-`pop_age()` is deprecated. To align a population table to a contact
-matrix's age groups, use
+`pop_age()` is deprecated. To rebin a population table to explicit age
+limits, use
 [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md).
+To align a population table to a contact matrix's age groups, use
+[`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md).
 
 ## Usage
 

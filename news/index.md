@@ -3,8 +3,9 @@
 ## socialmixr (development version)
 
 - [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
-  is deprecated and warns; it will be removed in a future release. Its
-  numeric age-regrouping is now an internal helper
+  is deprecated in favour of
+  [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+  and warns; it will be removed in a future release
   ([\#328](https://github.com/epiforecasts/socialmixr/issues/328)).
 
 - [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
@@ -37,6 +38,14 @@
 
 - New
   [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+  rebins a population table to a set of age limits (summing for coarser
+  bands, interpolating for finer). This is the renamed, public form of
+  the old
+  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+  numeric coarsener.
+
+- New
+  [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
   aligns a raw population table to a contact matrix’s groupings,
   returning the `survey_pop` data frame that
   [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
@@ -45,12 +54,12 @@
   [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md)
   expect. Supply population with a `lower.age.limit` column for age (at
   any resolution) plus a column per other grouping;
-  [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
-  regroups age to the matrix’s age groups (summing for coarser bands,
-  interpolating for finer) within each combination of the other
-  groupings and aggregates categorical groupings by exact name. A
-  typical workflow is
-  `result |> symmetrise(survey_pop = rebin_ages(population, result))`
+  [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
+  rebins age to the matrix’s age groups within each combination of the
+  other groupings (via
+  [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md))
+  and aggregates categorical groupings by exact name. A typical workflow
+  is `result |> symmetrise(survey_pop = align_ages(population, result))`
   ([\#319](https://github.com/epiforecasts/socialmixr/issues/319)).
 
 - The `contact_matrix` S3 object now carries a `groupings` field — the

@@ -39,11 +39,10 @@ symmetrise(x, survey_pop, symmetric_norm_threshold = 2)
 the grouping (e.g. `age`, `gender`) and holding that grouping's levels
 as they appear in the matrix, plus a `population` column with the size
 of each combination. One row per combination of levels is required, and
-the levels are matched to the matrix exactly — no interpolation is
-performed.
+levels are matched to the matrix exactly, without interpolation.
 
 Use
-[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+[`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
 to build this from a raw population table: it aggregates each grouping
 to the matrix's levels (interpolating the age grouping where needed) and
 labels the columns to match.
@@ -57,7 +56,7 @@ result <- polymod |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
   compute_matrix()
 uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
-result |> symmetrise(survey_pop = rebin_ages(uk_pop, result))
+result |> symmetrise(survey_pop = align_ages(uk_pop, result))
 #> 
 #> ── Contact matrix (3 age groups) ──
 #> 

@@ -5,6 +5,9 @@
 - [`agegroups_to_limits()`](https://epiforecasts.io/socialmixr/reference/agegroups_to_limits.md)
   : Convert age groups to lower age limits
 
+- [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
+  : Align a population table to a contact matrix's grouping levels
+
 - [`as_contact_survey()`](https://epiforecasts.io/socialmixr/reference/as_contact_survey.md)
   : Check contact survey data
 
@@ -64,7 +67,7 @@
   Social contact data from 8 European countries
 
 - [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
-  : Rebin a population table by age
+  : Rebin a population table to a set of age limits
 
 - [`reduce_agegroups()`](https://epiforecasts.io/socialmixr/reference/reduce_agegroups.md)
   : Reduce the number of age groups given a broader set of limits

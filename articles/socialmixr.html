@@ -61,7 +61,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Funk</h4>
             
-            <h4 data-toc-skip class="date">2026-07-01</h4>
+            <h4 data-toc-skip class="date">2026-07-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
       <div class="d-none name"><code>socialmixr.Rmd</code></div>
@@ -431,10 +431,10 @@ about the underlying demographic composition of the survey
 population.</p>
 <p>The post-processing functions (<code><a href="../reference/symmetrise.html">symmetrise()</a></code>,
 <code><a href="../reference/split_matrix.html">split_matrix()</a></code>, <code><a href="../reference/per_capita.html">per_capita()</a></code>) need population
-data. In practice you supply a raw population table — any age
-resolution, with a <code>lower.age.limit</code> column for age and a
-column per other grouping — and align it to a computed matrix with
-<code><a href="../reference/rebin_ages.html">rebin_ages()</a></code>. <code><a href="../reference/rebin_ages.html">rebin_ages()</a></code> aggregates each
+data. In practice you supply a raw population table (any age resolution,
+with a <code>lower.age.limit</code> column for age and a column per
+other grouping) and align it to a computed matrix with
+<code><a href="../reference/align_ages.html">align_ages()</a></code>. <code><a href="../reference/align_ages.html">align_ages()</a></code> aggregates each
 grouping to the matrix’s levels (interpolating the age grouping where
 needed) and returns the <code>data.frame</code> the post-processing
 functions expect.</p>
@@ -442,7 +442,7 @@ functions expect.</p>
 <code>wpp2024</code> package is available from GitHub
 (<code>remotes::install_github("PPgp/wpp2024")</code>). It comes as
 1-year <code>lower.age.limit</code> bands, which
-<code><a href="../reference/rebin_ages.html">rebin_ages()</a></code> coarsens to the matrix’s age groups:</p>
+<code><a href="../reference/align_ages.html">align_ages()</a></code> coarsens to the matrix’s age groups:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"popAge1dt"</span>, package <span class="op">=</span> <span class="st">"wpp2024"</span><span class="op">)</span></span>
 <span><span class="va">uk_pop</span> <span class="op">&lt;-</span> <span class="va">popAge1dt</span><span class="op">[</span><span class="va">name</span> <span class="op">==</span> <span class="st">"United Kingdom"</span> <span class="op">&amp;</span> <span class="va">year</span> <span class="op">==</span> <span class="fl">2020</span>,</span>
@@ -495,13 +495,13 @@ obtained, this relationship is usually not fulfilled exactly. In order
 to obtain a symmetric contact matrix that fulfills it, one can use</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow><mo>′</mo></msubsup><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><msub><mi>N</mi><mi>i</mi></msub></mrow></mfrac><mo stretchy="false" form="prefix">(</mo><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>N</mi><mi>i</mi></msub><mo>+</mo><msub><mi>m</mi><mrow><mi>j</mi><mi>i</mi></mrow></msub><msub><mi>N</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">m'_{ij} = \frac{1}{2N_i} (m_{ij} N_i + m_{ji} N_j)</annotation></semantics></math></p>
 <p>To get this version of the contact matrix, compute the matrix and
-pass the population through <code><a href="../reference/rebin_ages.html">rebin_ages()</a></code> to
+pass the population through <code><a href="../reference/align_ages.html">align_ages()</a></code> to
 <code><a href="../reference/symmetrise.html">symmetrise()</a></code>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">uk_matrix</span> <span class="op">&lt;-</span> <span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">uk_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/rebin_ages.html">rebin_ages</a></span><span class="op">(</span><span class="va">uk_pop</span>, <span class="va">uk_matrix</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">uk_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/align_ages.html">align_ages</a></span><span class="op">(</span><span class="va">uk_pop</span>, <span class="va">uk_matrix</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group       [0,1)     [1,5)    [5,15) [15,Inf)</span></span>
 <span><span class="co">#&gt;   [0,1)    0.40000000 0.6400000 0.7558824 4.172659</span></span>
@@ -545,8 +545,8 @@ contact matrix per capita will be fully symmetric:</p>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">de_matrix</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/rebin_ages.html">rebin_ages</a></span><span class="op">(</span><span class="va">de_pop</span>, <span class="va">de_matrix</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/per_capita.html">per_capita</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/rebin_ages.html">rebin_ages</a></span><span class="op">(</span><span class="va">de_pop</span>, <span class="va">de_matrix</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/align_ages.html">align_ages</a></span><span class="op">(</span><span class="va">de_pop</span>, <span class="va">de_matrix</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/per_capita.html">per_capita</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/align_ages.html">align_ages</a></span><span class="op">(</span><span class="va">de_pop</span>, <span class="va">de_matrix</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group        [0,60)     [60,Inf)</span></span>
 <span><span class="co">#&gt;   [0,60)   1.155803e-07 4.674434e-08</span></span>
@@ -593,7 +593,7 @@ in <code>$matrix</code>, with additional components
 and <code>$contacts</code>
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mi>i</mi></msub><annotation encoding="application/x-tex">d_i</annotation></semantics></math>).</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">uk_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/split_matrix.html">split_matrix</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/rebin_ages.html">rebin_ages</a></span><span class="op">(</span><span class="va">uk_pop</span>, <span class="va">uk_matrix</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">uk_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/split_matrix.html">split_matrix</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/align_ages.html">align_ages</a></span><span class="op">(</span><span class="va">uk_pop</span>, <span class="va">uk_matrix</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Contact matrix (4 age groups)</span> ──</span></span>
 <span><span class="co">#&gt; </span></span>

@@ -383,11 +383,11 @@ The post-processing functions
 ([`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
 [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md),
 [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md))
-need population data. In practice you supply a raw population table —
-any age resolution, with a `lower.age.limit` column for age and a column
-per other grouping — and align it to a computed matrix with
-[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md).
-[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+need population data. In practice you supply a raw population table (any
+age resolution, with a `lower.age.limit` column for age and a column per
+other grouping) and align it to a computed matrix with
+[`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md).
+[`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
 aggregates each grouping to the matrix’s levels (interpolating the age
 grouping where needed) and returns the `data.frame` the post-processing
 functions expect.
@@ -395,7 +395,7 @@ functions expect.
 For recent UN World Population Prospects data, the `wpp2024` package is
 available from GitHub (`remotes::install_github("PPgp/wpp2024")`). It
 comes as 1-year `lower.age.limit` bands, which
-[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+[`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
 coarsens to the matrix’s age groups:
 
 ``` r
@@ -461,7 +461,7 @@ m'_{ij} = \frac{1}{2N_i} (m_{ij} N_i + m_{ji} N_j)
 
 To get this version of the contact matrix, compute the matrix and pass
 the population through
-[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+[`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
 to
 [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md):
 
@@ -470,7 +470,7 @@ to
 uk_matrix <- polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
   compute_matrix()
-uk_matrix |> symmetrise(survey_pop = rebin_ages(uk_pop, uk_matrix))
+uk_matrix |> symmetrise(survey_pop = align_ages(uk_pop, uk_matrix))
 #>           contact.age.group
 #> age.group       [0,1)     [1,5)    [5,15) [15,Inf)
 #>   [0,1)    0.40000000 0.6400000 0.7558824 4.172659
@@ -516,8 +516,8 @@ de_matrix <- polymod[country == "Germany"] |>
   assign_age_groups(age_limits = c(0, 60)) |>
   compute_matrix()
 de_matrix |>
-  symmetrise(survey_pop = rebin_ages(de_pop, de_matrix)) |>
-  per_capita(survey_pop = rebin_ages(de_pop, de_matrix))
+  symmetrise(survey_pop = align_ages(de_pop, de_matrix)) |>
+  per_capita(survey_pop = align_ages(de_pop, de_matrix))
 #>           contact.age.group
 #> age.group        [0,60)     [60,Inf)
 #>   [0,60)   1.155803e-07 4.674434e-08
@@ -551,7 +551,7 @@ and `$contacts` ($`d_i`$).
 
 ``` r
 
-uk_matrix |> split_matrix(survey_pop = rebin_ages(uk_pop, uk_matrix))
+uk_matrix |> split_matrix(survey_pop = align_ages(uk_pop, uk_matrix))
 #> 
 #> ── Contact matrix (4 age groups) ──
 #> 
