@@ -3,8 +3,9 @@
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #'
-#' `pop_age()` is deprecated. To align a population table to a contact
-#' matrix's age groups, use [rebin_ages()].
+#' `pop_age()` is deprecated. To rebin a population table to explicit age
+#' limits, use [rebin_ages()]. To align a population table to a contact
+#' matrix's age groups, use [align_ages()].
 #'
 #' @return data frame of age-specific population data
 #' @inheritParams rebin_ages
