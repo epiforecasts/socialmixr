@@ -344,8 +344,8 @@ test_that("align_ages() aggregates a raw age population to the matrix groups", {
   expect_named(sp, c("age", "population"))
   expect_setequal(sp$age, c("[0,5)", "[5,15)", "[15,Inf)"))
   ## 1-year bands of 1e5 each: [0,5) sums 5 bands, [5,15) sums 10
-  expect_equal(sp$population[sp$age == "[0,5)"], 5e5)
-  expect_equal(sp$population[sp$age == "[5,15)"], 1e6)
+  expect_identical(sp$population[sp$age == "[0,5)"], 5e5)
+  expect_identical(sp$population[sp$age == "[5,15)"], 1e6)
   ## the output feeds the resolver directly
   expect_true(is.matrix(symmetrise(result_base, survey_pop = sp)$matrix))
 })
