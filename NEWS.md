@@ -1,8 +1,8 @@
 # socialmixr (development version)
 
-* `rebin_ages()` now gives a clear error when passed a `contact_matrix` as
-  its second argument, pointing to `align_ages()` instead of failing deep
-  inside with an obscure message.
+* `rebin_ages()` now checks that `age_limits` is numeric and errors clearly
+  (pointing to `align_ages()`) instead of failing deep inside with an
+  obscure message when handed, for example, a `contact_matrix`.
 
 * `pop_age()` is deprecated in favour of `rebin_ages()` and warns; it will
   be removed in a future release (#328).
