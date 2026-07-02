@@ -56,6 +56,16 @@ rebin_ages <- function(
     return(pop)
   }
 
+  if (!is.numeric(age_limits)) {
+    if (is_contact_matrix(age_limits)) {
+      cli::cli_abort(c(
+        "{.arg age_limits} must be a numeric vector of age limits.",
+        i = "To align a population to a contact matrix, use {.fn align_ages}."
+      ))
+    }
+    cli::cli_abort("{.arg age_limits} must be a numeric vector of age limits.")
+  }
+
   pop <- data.table(pop)
   setkeyv(pop, pop_age_column)
 
