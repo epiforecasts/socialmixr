@@ -256,7 +256,7 @@ polymod[country == "United Kingdom"] |>
   compute_matrix()
 ```
 
-`weigh_by_dayofweek()` assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). `weigh_by_age()` post-stratifies against a target population: it interpolates `uk_pop` to single-year ages with `align_ages()` and multiplies in the ratio of target to observed age share.
+`weigh_by_dayofweek()` assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). `weigh_by_age()` post-stratifies against a target population: it interpolates `uk_pop` to single-year ages with `rebin_ages()` and multiplies in the ratio of target to observed age share.
 
 For arbitrary discrete joins, `weigh()` itself takes a two-column data frame whose key column matches `by` — e.g. pooling participants across countries by a target share:
 
