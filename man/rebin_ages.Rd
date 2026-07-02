@@ -2,64 +2,50 @@
 % Please edit documentation in R/rebin_ages.R
 \name{rebin_ages}
 \alias{rebin_ages}
-\title{Rebin a population table by age}
+\title{Rebin a population table to a set of age limits}
 \usage{
 rebin_ages(
   pop,
-  to,
+  age_limits = NULL,
   pop_age_column = "lower.age.limit",
   pop_column = "population",
   ...
 )
 }
 \arguments{
-\item{pop}{a data frame with a population column (\code{pop_column}) and, for
-the age grouping, a lower-age-limit column (\code{pop_age_column}); when \code{to}
-is a \code{contact_matrix}, one further column per non-age grouping, named
-after the grouping.}
+\item{pop}{a data frame with columns indicating lower age
+limits and population sizes (see \code{pop_age_column} and
+\code{pop_column})}
 
-\item{to}{either a numeric vector of age limits, or a \code{contact_matrix}
-object as returned by \code{\link[=compute_matrix]{compute_matrix()}}.}
+\item{age_limits}{lower age limits of age groups to extract; if \code{NULL}
+(default), the population data is returned unchanged}
 
-\item{pop_age_column, pop_column}{column names for the lower age limit and
-population size (used when \code{to} is a numeric vector of age limits).}
+\item{pop_age_column}{column in the \code{pop} data frame indicating
+the lower age group limit}
 
-\item{...}{passed on for interpolation when \code{to} is numeric.}
+\item{pop_column}{column in the \code{pop} data frame indicating
+the population size}
+
+\item{...}{ignored}
 }
 \value{
-a data frame; see the target-specific descriptions above.
+data frame of age-specific population data
 }
 \description{
-Rebins a population table to a new set of age groups. The target is given
-by \code{to}:
-\itemize{
-\item a numeric vector of \strong{age limits} — rebins the population to those age
-groups, summing for coarser bands and linearly interpolating for finer
-ones. Returns a data frame with \code{lower.age.limit} and \code{population}.
-\item a \strong{\code{contact_matrix}} (as returned by \code{\link[=compute_matrix]{compute_matrix()}}) — aligns the
-population to that matrix's groupings and returns the \code{survey_pop} data
-frame that \code{\link[=symmetrise]{symmetrise()}}, \code{\link[=split_matrix]{split_matrix()}} and \code{\link[=per_capita]{per_capita()}} expect.
-The age grouping is rebinned to the matrix's age groups within each
-combination of the other groupings; categorical groupings are aggregated
-to the matrix's levels by exact name (a level not present in the matrix
-is an error).
-}
+Rebins a population table to the age groups defined by \code{age_limits},
+summing populations when coarser groups are requested and linearly
+interpolating between groups when finer ones are requested than are
+available. To align a population to a contact matrix's groupings (for the
+post-processing functions), use \code{\link[=align_ages]{align_ages()}} instead.
 }
 \examples{
-# rebin to explicit age limits
 it_pop <- data.frame(
   lower.age.limit = seq(0, 80, by = 5),
   population = c(rep(2.5e6, 4), rep(3.5e6, 4), rep(5e6, 6), 5e6, 7e6, 4e6)
 )
-rebin_ages(it_pop, to = seq(0, 100, by = 10))
-
-# align to a contact matrix's groupings
-data(polymod)
-result <- polymod |>
-  (\(s) s[country == "United Kingdom"])() |>
-  assign_age_groups(age_limits = c(0, 5, 15)) |>
-  compute_matrix()
-uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
-result |> symmetrise(survey_pop = rebin_ages(uk_pop, result))
+# regroup into 10-year age groups
+rebin_ages(it_pop, age_limits = seq(0, 100, by = 10))
+# interpolates when finer groups are requested than available
+rebin_ages(it_pop, age_limits = c(0, 18, 40, 65))
 
 }

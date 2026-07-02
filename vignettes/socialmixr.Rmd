@@ -122,9 +122,9 @@ From these matrices, derived quantities can be obtained, for example the mean ac
 
 Obtaining symmetric contact matrices, splitting out their components (see below) and population-based participant weights require information about the underlying demographic composition of the survey population.
 
-The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) need population data. In practice you supply a raw population table — any age resolution, with a `lower.age.limit` column for age and a column per other grouping — and align it to a computed matrix with `rebin_ages()`. `rebin_ages()` aggregates each grouping to the matrix's levels (interpolating the age grouping where needed) and returns the `data.frame` the post-processing functions expect.
+The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) need population data. In practice you supply a raw population table (any age resolution, with a `lower.age.limit` column for age and a column per other grouping) and align it to a computed matrix with `align_ages()`. `align_ages()` aggregates each grouping to the matrix's levels (interpolating the age grouping where needed) and returns the `data.frame` the post-processing functions expect.
 
-For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). It comes as 1-year `lower.age.limit` bands, which `rebin_ages()` coarsens to the matrix's age groups:
+For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). It comes as 1-year `lower.age.limit` bands, which `align_ages()` coarsens to the matrix's age groups:
 
 ```{r eval=requireNamespace("wpp2024", quietly = TRUE), message=FALSE, warning=FALSE}
 data("popAge1dt", package = "wpp2024")
@@ -163,13 +163,13 @@ Because of variation in the sample from which the contact matrix is obtained, th
 
 $$m'_{ij} = \frac{1}{2N_i} (m_{ij} N_i + m_{ji} N_j)$$
 
-To get this version of the contact matrix, compute the matrix and pass the population through `rebin_ages()` to `symmetrise()`:
+To get this version of the contact matrix, compute the matrix and pass the population through `align_ages()` to `symmetrise()`:
 
 ```{r message=FALSE, warning=FALSE}
 uk_matrix <- polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 1, 5, 15)) |>
   compute_matrix()
-uk_matrix |> symmetrise(survey_pop = rebin_ages(uk_pop, uk_matrix))
+uk_matrix |> symmetrise(survey_pop = align_ages(uk_pop, uk_matrix))
 ```
 
 # Contact rates per capita
@@ -192,8 +192,8 @@ de_matrix <- polymod[country == "Germany"] |>
   assign_age_groups(age_limits = c(0, 60)) |>
   compute_matrix()
 de_matrix |>
-  symmetrise(survey_pop = rebin_ages(de_pop, de_matrix)) |>
-  per_capita(survey_pop = rebin_ages(de_pop, de_matrix))
+  symmetrise(survey_pop = align_ages(de_pop, de_matrix)) |>
+  per_capita(survey_pop = align_ages(de_pop, de_matrix))
 ```
 
 # Splitting contact matrices
@@ -207,7 +207,7 @@ where $c$ is the mean number of contacts across the whole population, $c q d_i$ 
 `split_matrix()` returns the assortativity matrix $a_{ij}$ in `$matrix`, with additional components `$mean.contacts` ($c$), `$normalisation` ($q$) and `$contacts` ($d_i$).
 
 ```{r}
-uk_matrix |> split_matrix(survey_pop = rebin_ages(uk_pop, uk_matrix))
+uk_matrix |> split_matrix(survey_pop = align_ages(uk_pop, uk_matrix))
 ```
 
 # Filtering

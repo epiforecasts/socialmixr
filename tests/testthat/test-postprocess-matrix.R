@@ -142,7 +142,7 @@ test_that("symmetrise() errors when survey_pop is not a data frame", {
   expect_error(symmetrise(result_base, survey_pop = "not a df"), "data frame")
 })
 
-test_that("symmetrise() points to rebin_ages() on age resolution mismatch", {
+test_that("symmetrise() points to align_ages() on age resolution mismatch", {
   finer <- data.frame(
     age = limits_to_agegroups(c(0, 5, 10, 15), notation = "brackets"),
     population = c(1e6, 2e6, 3e6, 4e6)
@@ -153,7 +153,7 @@ test_that("symmetrise() points to rebin_ages() on age resolution mismatch", {
   )
   expect_error(
     symmetrise(result_base, survey_pop = finer),
-    "rebin_ages"
+    "align_ages"
   )
 })
 
@@ -338,44 +338,44 @@ test_that("split_matrix() errors on a multi-grouping matrix", {
 
 ## regroup ---------------------------------------------------------------------
 
-test_that("rebin_ages() aggregates a raw age population to the matrix groups", {
+test_that("align_ages() aggregates a raw age population to the matrix groups", {
   raw <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
-  sp <- rebin_ages(raw, result_base)
+  sp <- align_ages(raw, result_base)
   expect_named(sp, c("age", "population"))
   expect_setequal(sp$age, c("[0,5)", "[5,15)", "[15,Inf)"))
   ## 1-year bands of 1e5 each: [0,5) sums 5 bands, [5,15) sums 10
-  expect_equal(sp$population[sp$age == "[0,5)"], 5e5)
-  expect_equal(sp$population[sp$age == "[5,15)"], 1e6)
+  expect_identical(sp$population[sp$age == "[0,5)"], 5e5)
+  expect_identical(sp$population[sp$age == "[5,15)"], 1e6)
   ## the output feeds the resolver directly
   expect_true(is.matrix(symmetrise(result_base, survey_pop = sp)$matrix))
 })
 
-test_that("rebin_ages() handles multiple groupings", {
+test_that("align_ages() handles multiple groupings", {
   raw <- expand.grid(
     lower.age.limit = 0:80,
     gender = c("F", "M"),
     stringsAsFactors = FALSE
   )
   raw$population <- 1e5
-  sp <- rebin_ages(raw, multidim_result)
+  sp <- align_ages(raw, multidim_result)
   expect_setequal(colnames(sp), c("age", "gender", "population"))
   expect_identical(nrow(sp), 6L)
   expect_true(is.array(symmetrise(multidim_result, survey_pop = sp)$matrix))
 })
 
-test_that("rebin_ages() errors on a categorical level not in the matrix", {
+test_that("align_ages() errors on a categorical level not in the matrix", {
   raw <- expand.grid(
     lower.age.limit = 0:80,
     gender = c("F", "M", "X"),
     stringsAsFactors = FALSE
   )
   raw$population <- 1e5
-  expect_error(rebin_ages(raw, multidim_result), "not in the matrix")
+  expect_error(align_ages(raw, multidim_result), "not in the matrix")
 })
 
-test_that("rebin_ages() errors on missing required columns", {
+test_that("align_ages() errors on missing required columns", {
   expect_error(
-    rebin_ages(data.frame(population = 1), result_base),
+    align_ages(data.frame(population = 1), result_base),
     "lower.age.limit"
   )
 })
