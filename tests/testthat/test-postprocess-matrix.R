@@ -384,4 +384,9 @@ test_that("rebin_ages() rejects a contact_matrix and points to align_ages()", {
   raw <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
   expect_error(rebin_ages(raw, result_base), "align_ages")
   expect_error(rebin_ages(raw, "not numeric"), "numeric vector of age limits")
+  ## a raw numeric matrix is numeric but has a dim - also rejected
+  expect_error(
+    rebin_ages(raw, matrix(c(0, 5, 15, 20), 2, 2)),
+    "numeric vector of age limits"
+  )
 })

@@ -56,7 +56,7 @@ rebin_ages <- function(
     return(pop)
   }
 
-  if (!is.numeric(age_limits)) {
+  if (!is.numeric(age_limits) || !is.null(dim(age_limits))) {
     cli::cli_abort(c(
       "{.arg age_limits} must be a numeric vector of age limits.",
       i = "To align a population to a contact matrix, use {.fn align_ages}."
