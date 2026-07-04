@@ -2,6 +2,13 @@
 
 ## socialmixr (development version)
 
+- [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+  now checks that `age_limits` is numeric and errors clearly (pointing
+  to
+  [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md))
+  instead of failing deep inside with an obscure message when handed,
+  for example, a `contact_matrix`.
+
 - [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
   is deprecated in favour of
   [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
