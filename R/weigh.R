@@ -68,8 +68,8 @@
 #' @param groups a list of value sets mapping column values to groups (used
 #'   with an unnamed numeric `target` vector); must be the same length as
 #'   `target`.
-#' @param pop a data frame with columns `lower.age.limit` and `population`
-#'   (used by [weigh_by_age()]).
+#' @param pop a data frame with columns `age` (age-group labels) and
+#'   `population` (used by [weigh_by_age()]).
 #' @param ... further arguments passed on for age interpolation.
 #' @returns the survey object with updated participant weights
 #'
@@ -118,7 +118,7 @@
 #'
 #' # ── age post-stratification ──────────────────────────────────────
 #' uk_pop <- data.frame(
-#'   lower.age.limit = c(0, 5, 15, 65),
+#'   age = limits_to_agegroups(c(0, 5, 15, 65), notation = "brackets"),
 #'   population = c(3500000, 6000000, 40000000, 10000000)
 #' )
 #' uk |> weigh_by_age(uk_pop)
@@ -193,10 +193,9 @@ weigh_by_age <- function(survey, pop, ...) {
        Run {.fn assign_age_groups} first."
     )
   }
-  if (!all(c("lower.age.limit", "population") %in% colnames(pop))) {
+  if (!all(c("age", "population") %in% colnames(pop))) {
     cli::cli_abort(
-      "{.arg pop} must have columns {.val lower.age.limit} and \\
-       {.val population}."
+      "{.arg pop} must have columns {.val age} and {.val population}."
     )
   }
 
@@ -205,6 +204,7 @@ weigh_by_age <- function(survey, pop, ...) {
   }
 
   survey_pop_full <- data.table(pop)
+  survey_pop_full[, lower.age.limit := agegroups_to_limits(age)]
   if (!"upper.age.limit" %in% colnames(survey_pop_full)) {
     age_breaks <- agegroups_to_limits(participants$age.group)
     survey_pop_full <- add_survey_upper_age_limit(

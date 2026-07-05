@@ -25,8 +25,8 @@ with an unnamed numeric \code{target} vector); must be the same length as
 
 \item{...}{further arguments passed on for age interpolation.}
 
-\item{pop}{a data frame with columns \code{lower.age.limit} and \code{population}
-(used by \code{\link[=weigh_by_age]{weigh_by_age()}}).}
+\item{pop}{a data frame with columns \code{age} (age-group labels) and
+\code{population} (used by \code{\link[=weigh_by_age]{weigh_by_age()}}).}
 }
 \value{
 the survey object with updated participant weights
@@ -145,7 +145,7 @@ uk |> weigh("agecat", target = c(child = 0.25, adult = 0.75))
 
 # ── age post-stratification ──────────────────────────────────────
 uk_pop <- data.frame(
-  lower.age.limit = c(0, 5, 15, 65),
+  age = limits_to_agegroups(c(0, 5, 15, 65), notation = "brackets"),
   population = c(3500000, 6000000, 40000000, 10000000)
 )
 uk |> weigh_by_age(uk_pop)

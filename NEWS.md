@@ -58,9 +58,11 @@
   natural. The previous silent dispatch on a population data frame
   (a `target` data frame with `lower.age.limit`/`population` and no
   column matching `by`) is soft-deprecated; use the new `weigh_by_age()`
-  for the same effect with an explicit name. New `weigh_by_dayofweek()`
-  is a thin wrapper around the existing 5/2 split. `weigh()`'s named
-  vector and `groups` paths are unchanged (#314).
+  for the same effect with an explicit name. `weigh_by_age()` takes a
+  reference population with an `age` column of age-group labels and a
+  `population` column. New `weigh_by_dayofweek()` is a thin wrapper around
+  the existing 5/2 split. `weigh()`'s named vector and `groups` paths are
+  unchanged (#314).
 
 * Advance deprecation cycle (#312). `wpp_age()`, `wpp_countries()`, and
   `survey_country_population()` are deprecated (warn) — all three are

@@ -96,6 +96,8 @@ utils::globalVariables(c(
   "population", # <survey_country_population>
   "weight", # <weigh>
   "weight", # <weigh_by_age>
+  "lower.age.limit", # <weigh_by_age>
+  "age", # <weigh_by_age>
   "weight", # <weigh_direct>
   "weight", # <weigh_join>
   "weight", # <weigh_grouped>

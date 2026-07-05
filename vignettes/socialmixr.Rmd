@@ -147,10 +147,9 @@ For the rest of this vignette we use a small constructed `uk_pop` for the United
 
 ```{r}
 uk_pop <- data.frame(
-  lower.age.limit = c(0, 1, 5, 15),
+  age = limits_to_agegroups(c(0, 1, 5, 15), notation = "brackets"),
   population = c(750000, 3200000, 7500000, 56000000)
 )
-uk_pop$age <- limits_to_agegroups(uk_pop$lower.age.limit, notation = "brackets")
 ```
 
 # Symmetric contact matrices

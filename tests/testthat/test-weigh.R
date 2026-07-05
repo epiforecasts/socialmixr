@@ -199,7 +199,7 @@ test_that("weigh_by_dayofweek() warns and is a no-op without dayofweek", {
 
 test_that("weigh_by_age() matches old internal weight_by_age()", {
   uk_pop <- data.frame(
-    lower.age.limit = 0:99,
+    age = limits_to_agegroups(0:99, notation = "brackets"),
     population = rep(500000L, 100)
   )
 
@@ -207,7 +207,10 @@ test_that("weigh_by_age() matches old internal weight_by_age()", {
 
   ref <- copy(polymod_grouped)
   ref$participants[, weight := 1]
-  survey_pop <- data.table(uk_pop)
+  survey_pop <- data.table(
+    lower.age.limit = 0:99,
+    population = rep(500000L, 100)
+  )
   survey_pop <- add_survey_upper_age_limit(
     survey = survey_pop,
     age_breaks = c(0, 5, 15)
@@ -223,7 +226,7 @@ test_that("weigh_by_age() matches old internal weight_by_age()", {
 })
 
 test_that("weigh_by_age() errors when pop is missing required columns", {
-  bad <- data.frame(lower.age.limit = 0:9)
+  bad <- data.frame(age = limits_to_agegroups(0:9, notation = "brackets"))
   expect_error(weigh_by_age(polymod_grouped, bad), "population")
 })
 
@@ -233,7 +236,7 @@ test_that("weigh_by_age() errors when part_age missing", {
   survey <- polymod[country == "Italy"]
   survey$participants <- copy(survey$participants)
   uk_pop <- data.frame(
-    lower.age.limit = 0:99,
+    age = limits_to_agegroups(0:99, notation = "brackets"),
     population = rep(500000L, 100)
   )
   expect_error(weigh_by_age(survey, uk_pop), "assign_age_groups")
