@@ -26,17 +26,20 @@
   additionally requires the participant- and contact-side dims to share the
   same levels, otherwise reciprocity is undefined and it aborts (#319).
 
-* New `rebin_ages()` rebins a population table to a set of age limits
-  (summing for coarser bands, interpolating for finer). This is the renamed,
-  public form of the old `pop_age()` numeric coarsener.
+* New `rebin_ages()` rebins a population table to a set of age groups
+  (summing for coarser bands, interpolating for finer). It operates on an
+  `age` column of age-group labels (as produced by `limits_to_agegroups()` or
+  `assign_age_groups()`) and returns the same form, so it composes directly
+  with the post-processing functions.
 
-* New `align_ages()` aligns a raw population table to a contact matrix's
+* New `align_ages()` aligns a population table to a contact matrix's
   groupings, returning the `survey_pop` data frame that `symmetrise()`,
-  `split_matrix()` and `per_capita()` expect. Supply population with a
-  `lower.age.limit` column for age (at any resolution) plus a column per
-  other grouping; `align_ages()` rebins age to the matrix's age groups within
-  each combination of the other groupings (via `rebin_ages()`) and aggregates
-  categorical groupings by exact name. A typical workflow is
+  `split_matrix()` and `per_capita()` expect. Supply population with an `age`
+  column of age-group labels (relabel raw `lower.age.limit` bands with
+  `limits_to_agegroups()`) plus a column per other grouping; `align_ages()`
+  rebins age to the matrix's age groups within each combination of the other
+  groupings (via `rebin_ages()`) and aggregates categorical groupings by exact
+  name. A typical workflow is
   `result |> symmetrise(survey_pop = align_ages(population, result))` (#319).
 
 * The `contact_matrix` S3 object now carries a `groupings` field — the

@@ -139,7 +139,7 @@ mr
 
 Obtaining symmetric contact matrices, splitting out their components (see below) and population-based participant weights require information about the underlying demographic composition of the survey population.
 
-The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) need population data. In practice you supply a raw population table (any age resolution, with a `lower.age.limit` column for age and a column per other grouping) and align it to a computed matrix with `align_ages()`. `align_ages()` aggregates each grouping to the matrix's levels (interpolating the age grouping where needed) and returns the `data.frame` the post-processing functions expect.
+The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) need population data. In practice you supply a population table with an `age` column of age-group labels (relabel raw `lower.age.limit` bands with `limits_to_agegroups()`), a `population` column, and a column per other grouping, then align it to a computed matrix with `align_ages()`. `align_ages()` aggregates each grouping to the matrix's levels (interpolating the age grouping where needed) and returns the `data.frame` the post-processing functions expect.
 
 ## Using custom population data
 
@@ -147,7 +147,7 @@ You can construct any comparable data frame and pass it through `align_ages()` t
 
 ```{r message=FALSE, warning=FALSE}
 custom_pop <- data.frame(
-  lower.age.limit = c(0, 18, 60),
+  age = limits_to_agegroups(c(0, 18, 60), notation = "brackets"),
   population = c(12000000, 35000000, 20000000)
 )
 demo_matrix <- polymod[country == "United Kingdom"] |>
@@ -156,12 +156,12 @@ demo_matrix <- polymod[country == "United Kingdom"] |>
 demo_matrix |> symmetrise(survey_pop = align_ages(custom_pop, demo_matrix))
 ```
 
-For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). `align_ages()` coarsens its 1-year bands to the matrix's age groups:
+For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). Relabel its 1-year bands to age groups with `limits_to_agegroups()` and `align_ages()` coarsens them to the matrix's age groups:
 
 ```{r eval=requireNamespace("wpp2024", quietly = TRUE), message=FALSE, warning=FALSE}
 data("popAge1dt", package = "wpp2024")
 uk_pop_raw <- popAge1dt[name == "United Kingdom" & year == 2020,
-  .(lower.age.limit = age, population = pop * 1000)
+  .(age = limits_to_agegroups(age, notation = "brackets"), population = pop * 1000)
 ]
 demo_matrix |> symmetrise(survey_pop = align_ages(uk_pop_raw, demo_matrix))
 ```
@@ -173,6 +173,7 @@ uk_pop <- data.frame(
   lower.age.limit = c(0, 1, 5, 15),
   population = c(750000, 3200000, 7500000, 56000000)
 )
+uk_pop$age <- limits_to_agegroups(uk_pop$lower.age.limit, notation = "brackets")
 ```
 
 
@@ -208,7 +209,7 @@ $$c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}$$
 
 ```{r message=FALSE, warning=FALSE}
 de_pop <- data.frame(
-  lower.age.limit = c(0, 60),
+  age = limits_to_agegroups(c(0, 60), notation = "brackets"),
   population = c(67000000, 16000000)
 )
 

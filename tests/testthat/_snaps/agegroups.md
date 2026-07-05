@@ -6,9 +6,9 @@
 # rebin_ages throws warnings or errors
 
     Code
-      rebin_ages(3)
+      socialmixr:::rebin_ages_numeric(3)
     Condition
-      Error in `rebin_ages()`:
+      Error in `socialmixr:::rebin_ages_numeric()`:
       ! Expecting `pop` to be a data.frame with columns `lower.age.limit` and `population`.
 
 # wpp_age warns when historical year is unavailable
