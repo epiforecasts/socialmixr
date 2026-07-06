@@ -548,7 +548,8 @@ test_that("age-specific weight changes multi-year age groups", {
     sum(matrix_unweighted$matrix[1, ]),
     sum(matrix_weighted$matrix[1, ])
   ) # manual calculation
-  expect_identical(matrix_unweighted$matrix[2, ], matrix_weighted$matrix[2, ])
+  ## age-weighting leaves group 2 unchanged up to floating-point rounding
+  expect_equal(matrix_unweighted$matrix[2, ], matrix_weighted$matrix[2, ])
 })
 
 test_that("age-specific weight unchanged for single year groups", {
