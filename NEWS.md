@@ -1,5 +1,12 @@
 # socialmixr (development version)
 
+* Interpolating population data to age groups finer than the data itself is
+  deprecated. `contact_matrix()` (when it adjusts demographic data to the
+  requested age groups) and `pop_age()` still do it but now warn, and it will
+  error in a future release. Supply population data at least as fine as the
+  requested age groups. The new `rebin_ages()` and `align_ages()` never
+  interpolate: they error on finer requests.
+
 * `pop_age()` is deprecated in favour of `rebin_ages()` and warns; it will
   be removed in a future release (#328).
 

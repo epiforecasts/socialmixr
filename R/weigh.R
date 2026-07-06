@@ -394,6 +394,14 @@ weigh_population <- function(participants, target, ...) {
   }
 
   survey_pop_full <- data.table(target)
+  if (!"upper.age.limit" %in% colnames(survey_pop_full)) {
+    age_breaks <- agegroups_to_limits(participants$age.group)
+    survey_pop_full <- add_survey_upper_age_limit(
+      survey = survey_pop_full,
+      age_breaks = age_breaks
+    )
+  }
+  survey_pop_full <- survey_pop_reference(survey_pop_full, ...)
 
   participants <- weight_by_age(participants, survey_pop_full)
   participants

@@ -657,6 +657,20 @@ add_survey_upper_age_limit <- function(survey, age_breaks) {
 }
 
 #' @autoglobal
+survey_pop_reference <- function(survey_pop, ...) {
+  data.table(
+    rebin_ages_numeric(
+      survey_pop,
+      seq(
+        min(survey_pop$lower.age.limit),
+        max(survey_pop$upper.age.limit)
+      ),
+      ...
+    )
+  )
+}
+
+#' @autoglobal
 adjust_survey_age_groups <- function(survey_pop, part_age_group_present, ...) {
   survey_pop_max <- max(survey_pop$upper.age.limit)
   survey_pop <- data.table(

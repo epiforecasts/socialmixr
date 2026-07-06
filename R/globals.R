@@ -86,6 +86,9 @@ utils::globalVariables(c(
   "creator", # <.list_surveys>
   "identifier.2", # <.list_surveys>
   ".idx", # <joint_population_vector>
+  "..original.lower.age.limit", # <rebin_ages_numeric>
+  "..segment", # <rebin_ages_numeric>
+  "..upper.age.limit", # <rebin_ages_numeric>
   "population", # <align_ages>
   "part_id", # <[.contact_survey>
   "population", # <survey_country_population>
