@@ -129,7 +129,10 @@ For recent UN World Population Prospects data, the `wpp2024` package is availabl
 ```{r eval=requireNamespace("wpp2024", quietly = TRUE), message=FALSE, warning=FALSE}
 data("popAge1dt", package = "wpp2024")
 uk_pop <- popAge1dt[name == "United Kingdom" & year == 2020,
-  .(age = limits_to_agegroups(age, notation = "brackets"), population = pop * 1000)
+  .(
+    age = limits_to_agegroups(age, notation = "brackets"),
+    population = pop * 1000
+  )
 ]
 head(uk_pop)
 ```

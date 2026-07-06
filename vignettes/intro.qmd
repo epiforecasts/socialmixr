@@ -161,7 +161,10 @@ For recent UN World Population Prospects data, the `wpp2024` package is availabl
 ```{r eval=requireNamespace("wpp2024", quietly = TRUE), message=FALSE, warning=FALSE}
 data("popAge1dt", package = "wpp2024")
 uk_pop_raw <- popAge1dt[name == "United Kingdom" & year == 2020,
-  .(age = limits_to_agegroups(age, notation = "brackets"), population = pop * 1000)
+  .(
+    age = limits_to_agegroups(age, notation = "brackets"),
+    population = pop * 1000
+  )
 ]
 demo_matrix |> symmetrise(survey_pop = align_ages(uk_pop_raw, demo_matrix))
 ```

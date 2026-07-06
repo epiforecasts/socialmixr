@@ -402,6 +402,10 @@ contact_matrix <- function(
   }
 
   if (weigh_age) {
+    interpolated_survey_pop$age <- limits_to_agegroups(
+      interpolated_survey_pop$lower.age.limit,
+      notation = "brackets"
+    )
     survey <- weigh_by_age(survey, interpolated_survey_pop, ...)
   }
 
