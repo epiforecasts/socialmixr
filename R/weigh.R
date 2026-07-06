@@ -47,17 +47,16 @@
 #'
 #' @section `weigh_by_age()`:
 #'
-#' Convenience wrapper for age post-stratification. The main thing it
-#' adds over a raw [weigh()] call is **interpolation**: the reference
-#' `pop` is expanded to single-year ages internally, so it can be
-#' supplied at any age resolution (e.g. 5-year bands).
+#' Convenience wrapper for age post-stratification. Participants are binned
+#' into the reference population's own age bands (whatever resolution `pop`
+#' is supplied at) and, for each band \eqn{b}, the weight becomes
 #'
-#' For each single-year age \eqn{a} the weight then becomes
+#' \deqn{w_b = \frac{P_b / P}{N_b / N},}
 #'
-#' \deqn{w_a = \frac{P_a / P}{N_a / N},}
-#'
-#' where \eqn{P_a} is the target population at age \eqn{a}, \eqn{P} the
-#' total, and \eqn{N_a}, \eqn{N} the corresponding sample counts.
+#' where \eqn{P_b} is the target population in band \eqn{b}, \eqn{P} the
+#' total, and \eqn{N_b}, \eqn{N} the corresponding sample counts. No
+#' interpolation is performed, so the weighting resolution is that of the
+#' supplied reference population.
 #'
 #' `survey` must already have been processed by [assign_age_groups()] so
 #' that a `part_age` column is available for the join.
@@ -70,7 +69,7 @@
 #'   `target`.
 #' @param pop a data frame with columns `age` (age-group labels) and
 #'   `population` (used by [weigh_by_age()]).
-#' @param ... further arguments passed on for age interpolation.
+#' @param ... ignored.
 #' @returns the survey object with updated participant weights
 #'
 #' @examples
@@ -205,14 +204,6 @@ weigh_by_age <- function(survey, pop, ...) {
 
   survey_pop_full <- data.table(pop)
   survey_pop_full[, lower.age.limit := agegroups_to_limits(age)]
-  if (!"upper.age.limit" %in% colnames(survey_pop_full)) {
-    age_breaks <- agegroups_to_limits(participants$age.group)
-    survey_pop_full <- add_survey_upper_age_limit(
-      survey = survey_pop_full,
-      age_breaks = age_breaks
-    )
-  }
-  survey_pop_full <- survey_pop_reference(survey_pop_full, ...)
 
   survey$participants <- weight_by_age(participants, survey_pop_full)
   survey
@@ -403,14 +394,6 @@ weigh_population <- function(participants, target, ...) {
   }
 
   survey_pop_full <- data.table(target)
-  if (!"upper.age.limit" %in% colnames(survey_pop_full)) {
-    age_breaks <- agegroups_to_limits(participants$age.group)
-    survey_pop_full <- add_survey_upper_age_limit(
-      survey = survey_pop_full,
-      age_breaks = age_breaks
-    )
-  }
-  survey_pop_full <- survey_pop_reference(survey_pop_full, ...)
 
   participants <- weight_by_age(participants, survey_pop_full)
   participants

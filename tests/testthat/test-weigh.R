@@ -197,32 +197,24 @@ test_that("weigh_by_dayofweek() warns and is a no-op without dayofweek", {
   expect_identical(out$participants, before)
 })
 
-test_that("weigh_by_age() matches old internal weight_by_age()", {
+test_that("weigh_by_age() post-stratifies to the reference bands", {
   uk_pop <- data.frame(
-    age = limits_to_agegroups(0:99, notation = "brackets"),
-    population = rep(500000L, 100)
+    age = limits_to_agegroups(c(0, 18), notation = "brackets"),
+    population = c(2e7, 5e7)
   )
 
   result <- weigh_by_age(polymod_grouped, uk_pop)
 
-  ref <- copy(polymod_grouped)
-  ref$participants[, weight := 1]
-  survey_pop <- data.table(
-    lower.age.limit = 0:99,
-    population = rep(500000L, 100)
-  )
-  survey_pop <- add_survey_upper_age_limit(
-    survey = survey_pop,
-    age_breaks = c(0, 5, 15)
-  )
-  survey_pop_full <- survey_pop_reference(survey_pop)
-  ref$participants <- weight_by_age(ref$participants, survey_pop_full)
+  ## the weighted age distribution should match the target population's,
+  ## at the resolution of the reference bands (no interpolation)
+  p <- result$participants
+  p[, band := reduce_agegroups(part_age, c(0, 18))]
+  weighted <- p[, sum(weight), by = band]
+  data.table::setorder(weighted, band)
+  weighted_share <- weighted$V1 / sum(weighted$V1)
+  target_share <- uk_pop$population / sum(uk_pop$population)
 
-  expect_equal(
-    result$participants$weight,
-    ref$participants$weight,
-    tolerance = 1e-10
-  )
+  expect_equal(weighted_share, target_share, tolerance = 1e-8)
 })
 
 test_that("weigh_by_age() errors when pop is missing required columns", {

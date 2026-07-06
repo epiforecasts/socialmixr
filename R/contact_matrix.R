@@ -379,10 +379,13 @@ contact_matrix <- function(
       age_breaks = part.age.group.present
     )
 
-    ## interpolate population to single-year ages once for downstream
-    ## age weighting (before `survey_pop` is overwritten below)
+    ## capture the population reference for age weighting, before `survey_pop`
+    ## is overwritten below
     if (weigh_age) {
-      interpolated_survey_pop <- survey_pop_reference(survey_pop, ...)
+      weigh_pop <- data.table(survey_pop)
+      weigh_pop[,
+        age := limits_to_agegroups(lower.age.limit, notation = "brackets")
+      ]
     }
 
     ## adjust age groups by interpolating, in case they don't match between
@@ -402,11 +405,7 @@ contact_matrix <- function(
   }
 
   if (weigh_age) {
-    interpolated_survey_pop$age <- limits_to_agegroups(
-      interpolated_survey_pop$lower.age.limit,
-      notation = "brackets"
-    )
-    survey <- weigh_by_age(survey, interpolated_survey_pop, ...)
+    survey <- weigh_by_age(survey, weigh_pop, ...)
   }
 
   if (length(weights) > 0) {

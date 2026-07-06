@@ -657,20 +657,6 @@ add_survey_upper_age_limit <- function(survey, age_breaks) {
 }
 
 #' @autoglobal
-survey_pop_reference <- function(survey_pop, ...) {
-  data.table(
-    rebin_ages_numeric(
-      survey_pop,
-      seq(
-        min(survey_pop$lower.age.limit),
-        max(survey_pop$upper.age.limit)
-      ),
-      ...
-    )
-  )
-}
-
-#' @autoglobal
 adjust_survey_age_groups <- function(survey_pop, part_age_group_present, ...) {
   survey_pop_max <- max(survey_pop$upper.age.limit)
   survey_pop <- data.table(
@@ -728,40 +714,37 @@ weight_by_day_of_week <- function(
 
 #' @autoglobal
 weight_by_age <- function(participants, survey_pop_full) {
-  # get number and proportion of participants by age
-  participants[, age.count := .N, by = part_age]
-  participants[, age.proportion := age.count / .N]
+  # Post-stratify by age at the reference population's native bands: bin each
+  # participant into a reference band and match the band's sample share to its
+  # target share. No interpolation to single-year ages.
+  ref_limits <- sort(survey_pop_full$lower.age.limit)
+  n_part <- nrow(participants)
 
-  # get reference population by age (absolute and proportional)
-  part_age_all <- range(unique(participants[, part_age]))
-  survey_pop_detail <- data.table(rebin_ages_numeric(
-    survey_pop_full,
-    seq(part_age_all[1], part_age_all[2] + 1)
-  ))
-  names(survey_pop_detail) <- c("part_age", "population.count")
-  survey_pop_detail[,
-    population.proportion := population.count / sum(population.count)
+  participants[, age.band := reduce_agegroups(part_age, ref_limits)]
+  if (anyNA(participants$age.band)) {
+    cli::cli_abort(
+      "The reference {.arg pop} does not cover all participant ages."
+    )
+  }
+
+  # sample proportion of participants in each band
+  participants[, age.proportion := .N / n_part, by = age.band]
+
+  # target proportion from the reference population, matched by band
+  population.proportion <-
+    survey_pop_full$population / sum(survey_pop_full$population)
+  participants[,
+    population.proportion := population.proportion[
+      match(age.band, survey_pop_full$lower.age.limit)
+    ]
   ]
 
-  # merge reference and survey population data
-  participants <- merge(
-    participants,
-    survey_pop_detail,
-    by = "part_age"
-  )
+  participants[, weight := weight * population.proportion / age.proportion]
 
-  # calculate age-specific weights
-  participants[, weight.age := population.proportion / age.proportion]
-
-  # merge 'weight.age' into 'weight'
-  participants[, weight := weight * weight.age]
-
-  ## Remove the additional columns
-  participants[, age.count := NULL]
-  participants[, age.proportion := NULL]
-  participants[, population.count := NULL]
-  participants[, population.proportion := NULL]
-  participants[, weight.age := NULL]
+  participants[,
+    c("age.band", "age.proportion", "population.proportion") := NULL
+  ]
+  participants
 }
 
 #' @autoglobal
