@@ -732,28 +732,37 @@ weight_by_age <- function(participants, survey_pop_full) {
   # participant into a reference band and match the band's sample share to its
   # target share. No interpolation to single-year ages.
   ref_limits <- sort(survey_pop_full$lower.age.limit)
-  n_part <- nrow(participants)
 
   participants[, age.band := reduce_agegroups(part_age, ref_limits)]
-  if (anyNA(participants$age.band)) {
+
+  # participants with a known age below the reference's lowest band cannot be
+  # weighted; participants with a missing age are skipped (they keep their
+  # existing weight)
+  if (any(!is.na(participants$part_age) & is.na(participants$age.band))) {
     cli::cli_abort(
       "The reference {.arg pop} does not cover all participant ages."
     )
   }
+  weighted <- !is.na(participants$age.band)
+  n_weighted <- sum(weighted)
 
-  # sample proportion of participants in each band
-  participants[, age.proportion := .N / n_part, by = age.band]
+  # sample proportion of (age-known) participants in each band
+  participants[weighted, age.proportion := .N / n_weighted, by = age.band]
 
   # target proportion from the reference population, matched by band
   population.proportion <-
     survey_pop_full$population / sum(survey_pop_full$population)
-  participants[,
+  participants[
+    weighted,
     population.proportion := population.proportion[
       match(age.band, survey_pop_full$lower.age.limit)
     ]
   ]
 
-  participants[, weight := weight * population.proportion / age.proportion]
+  participants[
+    weighted,
+    weight := weight * population.proportion / age.proportion
+  ]
 
   participants[,
     c("age.band", "age.proportion", "population.proportion") := NULL

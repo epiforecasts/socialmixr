@@ -217,6 +217,19 @@ test_that("weigh_by_age() post-stratifies to the reference bands", {
   expect_equal(weighted_share, target_share, tolerance = 1e-8)
 })
 
+test_that("weigh_by_age() skips participants with a missing age", {
+  survey <- polymod_grouped
+  survey$participants <- data.table::copy(survey$participants)
+  survey$participants[1, part_age := NA]
+  uk_pop <- data.frame(
+    age = limits_to_agegroups(c(0, 18), notation = "brackets"),
+    population = c(2e7, 5e7)
+  )
+  ## the missing-age participant is skipped (keeps weight 1), not an error
+  result <- weigh_by_age(survey, uk_pop)
+  expect_identical(result$participants$weight[1], 1)
+})
+
 test_that("weigh_by_age() errors when pop is missing required columns", {
   bad <- data.frame(age = limits_to_agegroups(0:9, notation = "brackets"))
   expect_error(weigh_by_age(polymod_grouped, bad), "population")
