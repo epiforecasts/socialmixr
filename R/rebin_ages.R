@@ -2,10 +2,10 @@
 #'
 #' @description
 #' Internal numeric coarsener operating on `lower.age.limit` columns: rebins a
-#' population table to the age groups defined by `age_limits`, summing
-#' populations when coarser groups are requested and linearly interpolating
-#' between groups when finer ones are requested than are available. Wrapped by
-#' [rebin_ages()] and used by [pop_age()] and the internal weighting helpers.
+#' population table to the coarser age groups defined by `age_limits`, summing
+#' populations into each group. Errors if `age_limits` are finer than the
+#' population data, since splitting a band would require assuming a within-band
+#' age distribution. Wrapped by [rebin_ages()] and used by [pop_age()].
 #'
 #' @return data frame of age-specific population data
 #' @importFrom data.table data.table setkeyv
@@ -48,49 +48,19 @@ rebin_ages_numeric <- function(
 
   age_limits <- sort(age_limits)
   max_age <- max(pop[, pop_age_column, with = FALSE])
-  missing_ages <- setdiff(
+  finer_limits <- setdiff(
     age_limits[age_limits <= max_age],
     pop[[pop_age_column]]
   )
-  if (length(missing_ages) > 0) {
-    cli::cli_warn(
-      c(
-        "Not all age groups represented in population data (5-year age band).",
-        # nolint start
-        "i" = "Linearly estimating age group sizes from the 5-year bands."
-        # nolint end
-      )
-    )
-    ..original.upper.age.limit <- NULL
-    pop <- pop[,
-      ..original.upper.age.limit := c(pop[[pop_age_column]][-1], NA)
-    ]
-    pop <- pop[, ..original.lower.age.limit := get(pop_age_column)]
-    all_ages <- data.frame(age_limits[
-      age_limits <= max(pop[[pop_age_column]])
-    ])
-    colnames(all_ages) <- pop_age_column
-    pop <- merge(pop, all_ages, all = TRUE, by = pop_age_column)
-    pop <- pop[, ..segment := cumsum(!is.na(..original.lower.age.limit))]
-    pop <- pop[,
-      ..original.lower.age.limit := ..original.lower.age.limit[1],
-      by = ..segment
-    ]
-    pop <- pop[,
-      ..original.upper.age.limit := ..original.upper.age.limit[1],
-      by = ..segment
-    ]
-    pop <- pop[, paste(pop_column) := get(pop_column)[1], by = ..segment]
-    pop <- pop[, ..upper.age.limit := c(pop[[pop_age_column]][-1], NA)]
-    pop[
-      !is.na(..original.upper.age.limit),
-      paste(pop_column) := round(
-        get(pop_column) *
-          (..upper.age.limit - get(pop_age_column)) /
-          (..original.upper.age.limit - ..original.lower.age.limit)
-      )
-    ]
-    pop <- pop[, c(pop_age_column, pop_column), with = FALSE]
+  if (length(finer_limits) > 0) {
+    cli::cli_abort(c(
+      "{.arg age_limits} requests finer age groups than the population data
+       provides.",
+      i = "{cli::qty(finer_limits)}Age limit{?s} {.val {finer_limits}}
+           fall{?s} inside the population's age bands; {.fn rebin_ages} only
+           coarsens (aggregates) and does not split bands. Supply population
+           data at a finer resolution, or use coarser {.arg age_limits}."
+    ))
   }
 
   pop <- pop[get(pop_age_column) >= min(age_limits)]
@@ -107,19 +77,19 @@ rebin_ages_numeric <- function(
 #' Rebin a population table to a set of age groups
 #'
 #' @description
-#' Rebins a population table to the age groups defined by `age_limits`, summing
-#' populations when coarser groups are requested and linearly interpolating
-#' when finer ones are requested than are available. Operates on an `age`
-#' column of age-group labels (e.g. from [limits_to_agegroups()] or
-#' [assign_age_groups()]) and returns the same form.
+#' Rebins a population table to the coarser age groups defined by `age_limits`,
+#' summing populations into each group. Errors if `age_limits` are finer than
+#' the population data, since splitting a band would require assuming a
+#' within-band age distribution. Operates on an `age` column of age-group labels
+#' (e.g. from [limits_to_agegroups()] or [assign_age_groups()]) and returns the
+#' same form.
 #'
 #' To align a population to a contact matrix's groupings for the post-processing
 #' functions, use [align_ages()] instead.
 #'
 #' @param pop a data frame with an `age` column of age-group labels and a
 #'   `population` column
-#' @param age_limits lower age limits of the age groups to rebin to; if `NULL`
-#'   (default), the population is returned unchanged
+#' @param age_limits lower age limits of the (coarser) age groups to rebin to
 #' @returns a data frame with an `age` column of age-group labels and a
 #'   `population` column
 #'
@@ -130,12 +100,10 @@ rebin_ages_numeric <- function(
 #' )
 #' # rebin into 10-year age groups
 #' rebin_ages(it_pop, age_limits = seq(0, 100, by = 10))
-#' # interpolates when finer groups are requested than available
-#' rebin_ages(it_pop, age_limits = c(0, 18, 40, 65))
 #'
 #' @export
 #' @autoglobal
-rebin_ages <- function(pop, age_limits = NULL) {
+rebin_ages <- function(pop, age_limits) {
   if (!is.data.frame(pop) || !all(hasName(pop, c("age", "population")))) {
     cli::cli_abort(
       "Expecting {.arg pop} to be a data.frame with columns {.arg age} and \\
@@ -143,11 +111,11 @@ rebin_ages <- function(pop, age_limits = NULL) {
     )
   }
 
-  if (is.null(age_limits)) {
-    return(pop)
-  }
-
-  if (!is.numeric(age_limits) || !is.null(dim(age_limits))) {
+  if (
+    missing(age_limits) ||
+      !is.numeric(age_limits) ||
+      !is.null(dim(age_limits))
+  ) {
     cli::cli_abort(c(
       "{.arg age_limits} must be a numeric vector of age limits.",
       i = "To align a population to a contact matrix, use {.fn align_ages}."
@@ -179,10 +147,10 @@ rebin_ages <- function(pop, age_limits = NULL) {
 #' [symmetrise()], [split_matrix()] and [per_capita()] expect.
 #'
 #' The age grouping is rebinned to the matrix's age groups (via [rebin_ages()],
-#' summing for coarser bands and interpolating for finer) within each
-#' combination of the other groupings. Categorical groupings are aggregated to
-#' the matrix's levels by exact name; interpolation is undefined for them, so a
-#' level not present in the matrix is an error.
+#' summing) within each combination of the other groupings; the population must
+#' be at least as fine as the matrix's age groups, otherwise [rebin_ages()]
+#' errors. Categorical groupings are aggregated to the matrix's levels by exact
+#' name; a level not present in the matrix is an error.
 #'
 #' @param pop a data frame with a `population` column and one column per
 #'   grouping: an `age` column of age-group labels for the age grouping, and a

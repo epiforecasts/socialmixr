@@ -4,25 +4,25 @@
 \alias{rebin_ages}
 \title{Rebin a population table to a set of age groups}
 \usage{
-rebin_ages(pop, age_limits = NULL)
+rebin_ages(pop, age_limits)
 }
 \arguments{
 \item{pop}{a data frame with an \code{age} column of age-group labels and a
 \code{population} column}
 
-\item{age_limits}{lower age limits of the age groups to rebin to; if \code{NULL}
-(default), the population is returned unchanged}
+\item{age_limits}{lower age limits of the (coarser) age groups to rebin to}
 }
 \value{
 a data frame with an \code{age} column of age-group labels and a
 \code{population} column
 }
 \description{
-Rebins a population table to the age groups defined by \code{age_limits}, summing
-populations when coarser groups are requested and linearly interpolating
-when finer ones are requested than are available. Operates on an \code{age}
-column of age-group labels (e.g. from \code{\link[=limits_to_agegroups]{limits_to_agegroups()}} or
-\code{\link[=assign_age_groups]{assign_age_groups()}}) and returns the same form.
+Rebins a population table to the coarser age groups defined by \code{age_limits},
+summing populations into each group. Errors if \code{age_limits} are finer than
+the population data, since splitting a band would require assuming a
+within-band age distribution. Operates on an \code{age} column of age-group labels
+(e.g. from \code{\link[=limits_to_agegroups]{limits_to_agegroups()}} or \code{\link[=assign_age_groups]{assign_age_groups()}}) and returns the
+same form.
 
 To align a population to a contact matrix's groupings for the post-processing
 functions, use \code{\link[=align_ages]{align_ages()}} instead.
@@ -34,7 +34,5 @@ it_pop <- data.frame(
 )
 # rebin into 10-year age groups
 rebin_ages(it_pop, age_limits = seq(0, 100, by = 10))
-# interpolates when finer groups are requested than available
-rebin_ages(it_pop, age_limits = c(0, 18, 40, 65))
 
 }

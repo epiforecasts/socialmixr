@@ -30,9 +30,9 @@ data frame of age-specific population data
 }
 \description{
 Internal numeric coarsener operating on \code{lower.age.limit} columns: rebins a
-population table to the age groups defined by \code{age_limits}, summing
-populations when coarser groups are requested and linearly interpolating
-between groups when finer ones are requested than are available. Wrapped by
-\code{\link[=rebin_ages]{rebin_ages()}} and used by \code{\link[=pop_age]{pop_age()}} and the internal weighting helpers.
+population table to the coarser age groups defined by \code{age_limits}, summing
+populations into each group. Errors if \code{age_limits} are finer than the
+population data, since splitting a band would require assuming a within-band
+age distribution. Wrapped by \code{\link[=rebin_ages]{rebin_ages()}} and used by \code{\link[=pop_age]{pop_age()}}.
 }
 \keyword{internal}

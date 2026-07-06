@@ -24,10 +24,10 @@ Aligns a population table to the groupings of a contact matrix produced by
 \code{\link[=symmetrise]{symmetrise()}}, \code{\link[=split_matrix]{split_matrix()}} and \code{\link[=per_capita]{per_capita()}} expect.
 
 The age grouping is rebinned to the matrix's age groups (via \code{\link[=rebin_ages]{rebin_ages()}},
-summing for coarser bands and interpolating for finer) within each
-combination of the other groupings. Categorical groupings are aggregated to
-the matrix's levels by exact name; interpolation is undefined for them, so a
-level not present in the matrix is an error.
+summing) within each combination of the other groupings; the population must
+be at least as fine as the matrix's age groups, otherwise \code{\link[=rebin_ages]{rebin_ages()}}
+errors. Categorical groupings are aggregated to the matrix's levels by exact
+name; a level not present in the matrix is an error.
 }
 \examples{
 data(polymod)
