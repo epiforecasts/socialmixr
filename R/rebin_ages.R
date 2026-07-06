@@ -166,7 +166,8 @@ rebin_ages <- function(pop, age_limits = NULL) {
     age = as.character(
       limits_to_agegroups(rebinned$lower.age.limit, notation = "brackets")
     ),
-    population = rebinned$population
+    population = rebinned$population,
+    stringsAsFactors = FALSE
   )
 }
 

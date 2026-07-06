@@ -33,7 +33,10 @@
 #'   (\(s) s[country == "United Kingdom"])() |>
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix()
-#' uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+#' uk_pop <- data.frame(
+#'   age = limits_to_agegroups(0:80, notation = "brackets"),
+#'   population = rep(1e5, 81)
+#' )
 #' result |> symmetrise(survey_pop = align_ages(uk_pop, result))
 #'
 #' @export
@@ -204,7 +207,10 @@ check_part_cnt_dims_match <- function(matrix, k, op) {
 #'   (\(s) s[country == "United Kingdom"])() |>
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix()
-#' uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+#' uk_pop <- data.frame(
+#'   age = limits_to_agegroups(0:80, notation = "brackets"),
+#'   population = rep(1e5, 81)
+#' )
 #' result |> split_matrix(survey_pop = align_ages(uk_pop, result))
 #'
 #' @export
@@ -269,7 +275,10 @@ split_matrix <- function(x, survey_pop) {
 #'   (\(s) s[country == "United Kingdom"])() |>
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix()
-#' uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+#' uk_pop <- data.frame(
+#'   age = limits_to_agegroups(0:80, notation = "brackets"),
+#'   population = rep(1e5, 81)
+#' )
 #' result |> per_capita(survey_pop = align_ages(uk_pop, result))
 #'
 #' @export

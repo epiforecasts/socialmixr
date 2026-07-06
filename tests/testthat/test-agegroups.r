@@ -1,3 +1,6 @@
+## rebin_ages_numeric() is an internal helper; alias it for the tests below
+rebin_ages_numeric <- socialmixr:::rebin_ages_numeric # nolint: undesirable_operator_linter
+
 test_that("age groups can be created and manipulated", {
   ages <- seq_len(50)
   age_limits <- c(0, 5, 10)
@@ -28,7 +31,7 @@ test_that("rebin_ages doesn't change total population size", {
   skip_if_not_installed("wpp2017")
   ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
 
-  ages_it_2015_10 <- socialmixr:::rebin_ages_numeric(
+  ages_it_2015_10 <- rebin_ages_numeric(
     ages_it_2015,
     age_limits = seq(0, 100, by = 10)
   )
@@ -41,7 +44,7 @@ test_that("rebin_ages doesn't change total population size", {
   # Even with interpolation
   # nolint start: implicit_assignment_linter
   expect_warning(
-    ages_it_2015_cat <- socialmixr:::rebin_ages_numeric(
+    ages_it_2015_cat <- rebin_ages_numeric(
       ages_it_2015,
       age_limits = c(0, 18, 40, 65)
     ),
@@ -51,7 +54,7 @@ test_that("rebin_ages doesn't change total population size", {
 
   expect_snapshot_warning(
     cran = FALSE,
-    socialmixr:::rebin_ages_numeric(ages_it_2015, age_limits = c(0, 18, 40, 65))
+    rebin_ages_numeric(ages_it_2015, age_limits = c(0, 18, 40, 65))
   )
 
   expect_identical(
@@ -65,11 +68,11 @@ test_that("rebin_ages returns data unchanged when age_limits is NULL", {
   ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
 
   # Calling without age_limits should return identical data
-  result <- socialmixr:::rebin_ages_numeric(ages_it_2015)
+  result <- rebin_ages_numeric(ages_it_2015)
   expect_identical(result, ages_it_2015)
 
   # Explicitly passing NULL should also work
-  result_null <- socialmixr:::rebin_ages_numeric(
+  result_null <- rebin_ages_numeric(
     ages_it_2015,
     age_limits = NULL
   )
@@ -77,7 +80,7 @@ test_that("rebin_ages returns data unchanged when age_limits is NULL", {
 
   # Data.table input should also be returned unchanged
   ages_dt <- data.table::as.data.table(ages_it_2015)
-  result_dt <- socialmixr:::rebin_ages_numeric(ages_dt)
+  result_dt <- rebin_ages_numeric(ages_dt)
   expect_identical(result_dt, ages_dt)
 })
 
@@ -91,7 +94,7 @@ test_that("rebin_ages works with custom column names and interpolation", {
   # Test with interpolation (age_limits not matching existing groups)
   # nolint start: implicit_assignment_linter
   result <- suppressWarnings(
-    socialmixr:::rebin_ages_numeric(
+    rebin_ages_numeric(
       pop_data,
       age_limits = c(0, 8, 15),
       pop_age_column = "age_lower",
@@ -110,9 +113,9 @@ test_that("rebin_ages throws warnings or errors", {
   expect_snapshot(
     error = TRUE,
     cran = FALSE,
-    socialmixr:::rebin_ages_numeric(3)
+    rebin_ages_numeric(3)
   )
-  expect_error(socialmixr:::rebin_ages_numeric(3), "to be a data.frame")
+  expect_error(rebin_ages_numeric(3), "to be a data.frame")
 })
 
 test_that("pop_age() is deprecated in favour of rebin_ages()", {
@@ -126,7 +129,7 @@ test_that("pop_age() is deprecated in favour of rebin_ages()", {
   ## age_limits are forwarded (not just the NULL passthrough)
   expect_identical(
     pop_age(pop_data, age_limits = c(0, 5)),
-    socialmixr:::rebin_ages_numeric(pop_data, age_limits = c(0, 5))
+    rebin_ages_numeric(pop_data, age_limits = c(0, 5))
   )
 
   ## custom column names are forwarded too
@@ -138,7 +141,7 @@ test_that("pop_age() is deprecated in favour of rebin_ages()", {
       pop_age_column = "age_lower",
       pop_column = "pop"
     ),
-    socialmixr:::rebin_ages_numeric(
+    rebin_ages_numeric(
       custom,
       age_limits = c(0, 5),
       pop_age_column = "age_lower",
