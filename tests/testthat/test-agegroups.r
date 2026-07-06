@@ -52,6 +52,17 @@ test_that("rebin_ages errors when finer age groups are requested", {
   )
 })
 
+test_that("rebin_ages does not flag limits below the population's range", {
+  ## a limit below the lowest band creates an empty low group, not a split
+  pop <- data.frame(
+    age = limits_to_agegroups(c(20, 30, 40), notation = "brackets"),
+    population = c(1e6, 1e6, 1e6)
+  )
+  out <- rebin_ages(pop, age_limits = c(0, 20, 40))
+  expect_setequal(out$age, c("[20,40)", "[40,Inf)"))
+  expect_identical(out$population[out$age == "[20,40)"], 2e6)
+})
+
 test_that("rebin_ages errors on bad input", {
   expect_snapshot(
     error = TRUE,

@@ -49,8 +49,11 @@ rebin_ages_numeric <- function(
 
   age_limits <- sort(age_limits)
   max_age <- max(pop[, pop_age_column, with = FALSE])
+  min_age <- min(pop[, pop_age_column, with = FALSE])
+  ## a limit only splits a band if it falls strictly within the population's
+  ## range; limits below the lowest band just create an empty low group
   finer_limits <- setdiff(
-    age_limits[age_limits <= max_age],
+    age_limits[age_limits >= min_age & age_limits <= max_age],
     pop[[pop_age_column]]
   )
   if (length(finer_limits) > 0) {
@@ -154,7 +157,10 @@ rebin_ages <- function(pop, age_limits) {
   ## brackets -> lower.age.limit; coarsen only (error if finer requested)
   pop_limits <- agegroups_to_limits(pop$age)
   age_limits <- sort(age_limits)
-  finer <- setdiff(age_limits[age_limits <= max(pop_limits)], pop_limits)
+  finer <- setdiff(
+    age_limits[age_limits >= min(pop_limits) & age_limits <= max(pop_limits)],
+    pop_limits
+  )
   if (length(finer) > 0) {
     cli::cli_abort(c(
       "{.arg age_limits} requests finer age groups than the population data
