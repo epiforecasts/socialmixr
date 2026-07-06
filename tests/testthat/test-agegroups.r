@@ -1,6 +1,3 @@
-## rebin_ages_numeric() is an internal helper; alias it for the tests below
-rebin_ages_numeric <- socialmixr:::rebin_ages_numeric # nolint: undesirable_operator_linter
-
 test_that("age groups can be created and manipulated", {
   ages <- seq_len(50)
   age_limits <- c(0, 5, 10)
@@ -27,95 +24,44 @@ test_that("age groups are ordered factors", {
   expect_s3_class(age_groups, "factor")
 })
 
-test_that("rebin_ages doesn't change total population size", {
+test_that("rebin_ages coarsens without changing total population", {
   skip_if_not_installed("wpp2017")
   ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
-
-  ages_it_2015_10 <- rebin_ages_numeric(
-    ages_it_2015,
-    age_limits = seq(0, 100, by = 10)
-  )
-
-  expect_identical(
-    sum(ages_it_2015$population),
-    sum(ages_it_2015_10$population)
-  )
-
-  # Even with interpolation
-  # nolint start: implicit_assignment_linter
-  expect_warning(
-    ages_it_2015_cat <- rebin_ages_numeric(
-      ages_it_2015,
-      age_limits = c(0, 18, 40, 65)
+  pop <- data.frame(
+    age = limits_to_agegroups(
+      ages_it_2015$lower.age.limit,
+      notation = "brackets"
     ),
-    "Linearly estimating"
-  )
-  # nolint end
-
-  expect_snapshot_warning(
-    cran = FALSE,
-    rebin_ages_numeric(ages_it_2015, age_limits = c(0, 18, 40, 65))
+    population = ages_it_2015$population
   )
 
-  expect_identical(
-    sum(ages_it_2015$population),
-    sum(ages_it_2015_cat$population)
+  coarser <- rebin_ages(pop, age_limits = seq(0, 100, by = 10))
+
+  expect_identical(sum(pop$population), sum(coarser$population))
+  expect_lt(nrow(coarser), nrow(pop))
+})
+
+test_that("rebin_ages errors when finer age groups are requested", {
+  pop <- data.frame(
+    age = limits_to_agegroups(seq(0, 20, by = 5), notation = "brackets"),
+    population = rep(1000, 5)
+  )
+  expect_error(
+    rebin_ages(pop, age_limits = c(0, 8, 15)),
+    "finer age groups"
   )
 })
 
-test_that("rebin_ages returns data unchanged when age_limits is NULL", {
-  skip_if_not_installed("wpp2017")
-  ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
-
-  # Calling without age_limits should return identical data
-  result <- rebin_ages_numeric(ages_it_2015)
-  expect_identical(result, ages_it_2015)
-
-  # Explicitly passing NULL should also work
-  result_null <- rebin_ages_numeric(
-    ages_it_2015,
-    age_limits = NULL
-  )
-  expect_identical(result_null, ages_it_2015)
-
-  # Data.table input should also be returned unchanged
-  ages_dt <- data.table::as.data.table(ages_it_2015)
-  result_dt <- rebin_ages_numeric(ages_dt)
-  expect_identical(result_dt, ages_dt)
-})
-
-test_that("rebin_ages works with custom column names and interpolation", {
-  # Create test data with non-standard column names
-  pop_data <- data.frame(
-    age_lower = c(0, 5, 10, 15, 20),
-    pop_count = c(1000, 1200, 1100, 900, 800)
-  )
-
-  # Test with interpolation (age_limits not matching existing groups)
-  # nolint start: implicit_assignment_linter
-  result <- suppressWarnings(
-    rebin_ages_numeric(
-      pop_data,
-      age_limits = c(0, 8, 15),
-      pop_age_column = "age_lower",
-      pop_column = "pop_count"
-    )
-  )
-  # nolint end
-
-  expect_named(result, c("age_lower", "pop_count"))
-  expect_identical(result$age_lower, c(0, 8, 15))
-  # Total population should be preserved
-  expect_identical(sum(result$pop_count), sum(pop_data$pop_count))
-})
-
-test_that("rebin_ages throws warnings or errors", {
+test_that("rebin_ages errors on bad input", {
   expect_snapshot(
     error = TRUE,
     cran = FALSE,
-    rebin_ages_numeric(3)
+    rebin_ages(3)
   )
-  expect_error(rebin_ages_numeric(3), "to be a data.frame")
+  expect_error(rebin_ages(3), "to be a data.frame")
+  ## age_limits is required
+  pop <- data.frame(age = "[0,5)", population = 1, stringsAsFactors = FALSE)
+  expect_error(rebin_ages(pop), "numeric vector of age limits")
 })
 
 test_that("pop_age() is deprecated in favour of rebin_ages()", {
@@ -126,28 +72,21 @@ test_that("pop_age() is deprecated in favour of rebin_ages()", {
   lifecycle::expect_deprecated(pop_age(pop_data))
   withr::local_options(lifecycle_verbosity = "quiet")
 
-  ## age_limits are forwarded (not just the NULL passthrough)
-  expect_identical(
-    pop_age(pop_data, age_limits = c(0, 5)),
-    rebin_ages_numeric(pop_data, age_limits = c(0, 5))
-  )
+  ## age_limits are forwarded and coarsen the population
+  coarsened <- pop_age(pop_data, age_limits = c(0, 5))
+  expect_identical(coarsened$lower.age.limit, c(0, 5))
+  expect_identical(coarsened$population, c(1e6, 7e6))
 
   ## custom column names are forwarded too
   custom <- data.frame(age_lower = c(0, 5, 15), pop = c(1e6, 5e6, 2e6))
-  expect_identical(
-    pop_age(
-      custom,
-      age_limits = c(0, 5),
-      pop_age_column = "age_lower",
-      pop_column = "pop"
-    ),
-    rebin_ages_numeric(
-      custom,
-      age_limits = c(0, 5),
-      pop_age_column = "age_lower",
-      pop_column = "pop"
-    )
+  custom_out <- pop_age(
+    custom,
+    age_limits = c(0, 5),
+    pop_age_column = "age_lower",
+    pop_column = "pop"
   )
+  expect_identical(custom_out$age_lower, c(0, 5))
+  expect_identical(custom_out$pop, c(1e6, 7e6))
 })
 
 test_that("wpp_age warns when historical year is unavailable", {

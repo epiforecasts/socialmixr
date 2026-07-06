@@ -122,9 +122,9 @@ From these matrices, derived quantities can be obtained, for example the mean ac
 
 Obtaining symmetric contact matrices, splitting out their components (see below) and population-based participant weights require information about the underlying demographic composition of the survey population.
 
-The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) need population data. In practice you supply a population table with an `age` column of age-group labels (relabel raw `lower.age.limit` bands with `limits_to_agegroups()`), a `population` column, and a column per other grouping, then align it to a computed matrix with `align_ages()`. `align_ages()` aggregates each grouping to the matrix's levels (interpolating the age grouping where needed) and returns the `data.frame` the post-processing functions expect.
+The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) need population data. In practice you supply a population table with an `age` column of age-group labels, a `population` column, and a column per other grouping, then align it to a computed matrix with `align_ages()`. `align_ages()` aggregates each grouping to the matrix's levels (coarsening the age grouping where needed) and returns the `data.frame` the post-processing functions expect.
 
-For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). It comes as 1-year bands; relabel them to age groups with `limits_to_agegroups()` and `align_ages()` coarsens them to the matrix's age groups:
+For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). Relabel its 1-year bands to age groups with `limits_to_agegroups()` and then coarsen them to the matrix's age groups using `align_ages()`:
 
 ```{r eval=requireNamespace("wpp2024", quietly = TRUE), message=FALSE, warning=FALSE}
 data("popAge1dt", package = "wpp2024")
@@ -258,7 +258,7 @@ polymod[country == "United Kingdom"] |>
   compute_matrix()
 ```
 
-`weigh_by_dayofweek()` assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). `weigh_by_age()` post-stratifies against a target population: it interpolates `uk_pop` to single-year ages with `rebin_ages()` and multiplies in the ratio of target to observed age share.
+`weigh_by_dayofweek()` assigns weekday participants a total weight of 5 and weekend participants a total weight of 2 (the weekly 5/2 split). `weigh_by_age()` post-stratifies against a target population: it bins participants into `uk_pop`'s age bands and multiplies in the ratio of target to observed age share within each band.
 
 For arbitrary discrete joins, `weigh()` itself takes a two-column data frame whose key column matches `by` — e.g. pooling participants across countries by a target share:
 
