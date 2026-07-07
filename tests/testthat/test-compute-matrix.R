@@ -24,7 +24,11 @@ test_that("asymmetric age limits give a non-square contact matrix", {
   expect_error(
     symmetrise(
       m,
-      survey_pop = data.frame(age = "x", population = 1, stringsAsFactors = FALSE)
+      survey_pop = data.frame(
+        age = "x",
+        population = 1,
+        stringsAsFactors = FALSE
+      )
     ),
     "participant and contact"
   )
