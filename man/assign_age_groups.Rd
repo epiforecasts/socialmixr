@@ -31,7 +31,13 @@ treated as missing}
 are given as a range (in columns named "..._est_min" and "..._est_max") but
 not exactly (in a column named "..._exact") will have their age set to the
 mid-point of the range; if set to "sample", the age will be sampled from
-the range; if set to "missing", age ranges will be treated as missing}
+the range; if set to "missing", age ranges will be treated as missing. May
+also be a distribution data.frame from \code{\link[=contact_age_distribution]{contact_age_distribution()}}, in
+which case ranged ages are sampled from that distribution restricted to
+each contact's range. If the distribution is grouped (a \code{part_age_group}
+column, from \code{contact_age_distribution(survey, by = ...)}), each contact is
+sampled from its participant's age-group block, preserving assortativity;
+groups with no coverage fall back to the pooled distribution then uniform.}
 
 \item{missing_participant_age}{if set to "remove" (default), participants
 without age information are removed; if set to "keep", participants with

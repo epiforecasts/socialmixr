@@ -118,12 +118,22 @@ impute_ages <- function(
       )
     ]
     if (length(rows_to_impute) > 0) {
+      groups <- if (
+        "part_age_group" %in%
+          colnames(estimate) &&
+          "part_age_group" %in% colnames(data)
+      ) {
+        data[["part_age_group"]][rows_to_impute]
+      } else {
+        NULL
+      }
       data[
         rows_to_impute,
         (age_col) := sample_from_age_distribution(
           get(min_col),
           get(max_col),
-          estimate
+          estimate,
+          groups
         )
       ]
     }
@@ -135,26 +145,46 @@ impute_ages <- function(
 #' Sample ages from a distribution within `[min, max]` bands
 #' @param mins integer vector of lower bounds
 #' @param maxs integer vector of upper bounds
-#' @param distribution data.frame with `age` and `proportion` columns
+#' @param distribution data.frame with `age` and `proportion` columns, and
+#'   optionally a `part_age_group` column for a grouped distribution
+#' @param groups optional vector of participant age groups, one per contact,
+#'   used to pick the block of a grouped distribution
 #' @returns integer vector of sampled ages
 #' @keywords internal
-sample_from_age_distribution <- function(mins, maxs, distribution) {
+sample_from_age_distribution <- function(
+  mins,
+  maxs,
+  distribution,
+  groups = NULL
+) {
   n <- length(mins)
   result <- integer(n)
+  grouped <- !is.null(groups) && "part_age_group" %in% colnames(distribution)
+  # marginal (pooled) distribution, used when a participant group has no
+  # coverage in a contact's range
+  pooled <- if (grouped) {
+    marginal_age_distribution(distribution)
+  } else {
+    distribution
+  }
+
   fell_back <- FALSE
   for (i in seq_len(n)) {
-    lo <- mins[i]
-    hi <- maxs[i]
-    sub_dist <- distribution[distribution$age >= lo & distribution$age <= hi, ]
-    if (nrow(sub_dist) == 0 || sum(sub_dist$proportion) == 0) {
-      fell_back <- TRUE
-      # Upper bound inclusive: runif() excludes its upper bound, so use hi + 1
-      result[i] <- as.integer(runif(1, lo, hi + 1))
-    } else if (nrow(sub_dist) == 1) {
-      result[i] <- sub_dist$age
-    } else {
-      result[i] <- sample(sub_dist$age, size = 1, prob = sub_dist$proportion)
+    sub_dist <- NULL
+    if (grouped && !is.na(groups[i])) {
+      g <- distribution[
+        distribution$part_age_group == groups[i] &
+          distribution$age >= mins[i] &
+          distribution$age <= maxs[i],
+      ]
+      if (nrow(g) > 0 && sum(g$proportion) > 0) sub_dist <- g
     }
+    if (is.null(sub_dist)) {
+      sub_dist <- pooled[pooled$age >= mins[i] & pooled$age <= maxs[i], ]
+    }
+    drawn <- draw_age_in_range(sub_dist, mins[i], maxs[i])
+    result[i] <- drawn$age
+    if (drawn$fell_back) fell_back <- TRUE
   }
   if (fell_back) {
     cli::cli_warn(
@@ -163,6 +193,41 @@ sample_from_age_distribution <- function(mins, maxs, distribution) {
     )
   }
   result
+}
+
+#' Pooled (marginal) age distribution from a grouped one
+#' @param distribution grouped distribution with `age` and `proportion`
+#' @returns a data.frame with `age` and `proportion` summing to 1
+#' @keywords internal
+#' @autoglobal
+marginal_age_distribution <- function(distribution) {
+  dist_dt <- data.table::as.data.table(distribution)
+  pooled <- dist_dt[, list(proportion = sum(proportion)), by = age]
+  pooled[, proportion := proportion / sum(proportion)]
+  as.data.frame(pooled)
+}
+
+#' Draw one age from a sub-distribution within `[lo, hi]`, or uniformly
+#' @param sub_dist data.frame with `age` and `proportion` (may be empty)
+#' @param lo,hi inclusive integer bounds
+#' @returns list with `age` (integer) and `fell_back` (logical)
+#' @keywords internal
+draw_age_in_range <- function(sub_dist, lo, hi) {
+  if (nrow(sub_dist) == 0 || sum(sub_dist$proportion) == 0) {
+    # Upper bound inclusive: runif() excludes its upper bound, so use hi + 1
+    return(list(age = as.integer(runif(1, lo, hi + 1)), fell_back = TRUE))
+  }
+  if (nrow(sub_dist) == 1) {
+    return(list(age = as.integer(sub_dist$age), fell_back = FALSE))
+  }
+  list(
+    age = as.integer(sample(
+      sub_dist$age,
+      size = 1,
+      prob = sub_dist$proportion
+    )),
+    fell_back = FALSE
+  )
 }
 
 #' Impute participant ages

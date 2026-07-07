@@ -74,6 +74,48 @@ test_that("contact_age_distribution() rejects non-finite ages", {
   expect_error(contact_age_distribution(bad), "finite")
 })
 
+test_that("contact_age_distribution(by=) returns a grouped distribution", {
+  dist <- contact_age_distribution(polymod, by = c(0, 18, 65))
+  expect_true(all(c("part_age_group", "age", "proportion") %in% names(dist)))
+  expect_setequal(
+    unique(dist$part_age_group),
+    c("[0,18)", "[18,65)", "[65,Inf)")
+  )
+  ## proportions sum to 1 within each participant age group
+  sums <- tapply(dist$proportion, dist$part_age_group, sum)
+  expect_true(all(abs(sums - 1) < 1e-10))
+})
+
+test_that("a grouped distribution conditions imputation on participant age", {
+  grouped <- contact_age_distribution(polymod, by = c(0, 18, 65))
+  ## a young and an old participant, each with wide-range (missing exact)
+  ## contacts spanning the whole age range
+  s <- polymod
+  s$participants <- data.table::data.table(
+    part_id = 1:2,
+    part_age_exact = c(8L, 72L)
+  )
+  s$contacts <- data.table::data.table(
+    part_id = rep(1:2, each = 500),
+    cnt_age_exact = NA_integer_,
+    cnt_age_est_min = 0L,
+    cnt_age_est_max = 80L
+  )
+  set.seed(1)
+  res <- assign_age_groups(
+    s,
+    age_limits = c(0, 18, 65),
+    estimated_contact_age = grouped
+  )
+  cc <- data.table::as.data.table(res$contacts)
+  ## the young participant's contacts are imputed younger than the old one's;
+  ## a pooled distribution would impute the same mean for both
+  expect_lt(
+    mean(cc[part_id == 1]$cnt_age, na.rm = TRUE),
+    mean(cc[part_id == 2]$cnt_age, na.rm = TRUE)
+  )
+})
+
 ## Distribution-based imputation -----------------------------------------------
 
 test_that("assign_age_groups() accepts a distribution for contact age", {

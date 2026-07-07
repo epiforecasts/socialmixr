@@ -18,7 +18,13 @@
 #'   are given as a range (in columns named "..._est_min" and "..._est_max") but
 #'   not exactly (in a column named "..._exact") will have their age set to the
 #'   mid-point of the range; if set to "sample", the age will be sampled from
-#'   the range; if set to "missing", age ranges will be treated as missing
+#'   the range; if set to "missing", age ranges will be treated as missing. May
+#'   also be a distribution data.frame from [contact_age_distribution()], in
+#'   which case ranged ages are sampled from that distribution restricted to
+#'   each contact's range. If the distribution is grouped (a `part_age_group`
+#'   column, from `contact_age_distribution(survey, by = ...)`), each contact is
+#'   sampled from its participant's age-group block, preserving assortativity;
+#'   groups with no coverage fall back to the pooled distribution then uniform.
 #' @param missing_participant_age if set to "remove" (default), participants
 #'   without age information are removed; if set to "keep", participants with
 #'   missing age are kept and treated as a separate age group
@@ -94,10 +100,27 @@ assign_age_groups <- function(
   )
 
   ## Impute contact ages from ranges ------------------------------------------
+  ## When a grouped distribution is supplied, tag each contact with its
+  ## participant's age group so the imputation can condition on it.
+  contact_grouped <- is.data.frame(estimated_contact_age) &&
+    "part_age_group" %in% colnames(estimated_contact_age)
+  if (contact_grouped) {
+    cad_by <- sort(agegroups_to_limits(
+      unique(estimated_contact_age$part_age_group)
+    ))
+    cad_labels <- as.character(
+      limits_to_agegroups(cad_by, notation = "brackets")
+    )
+    pg <- participant_age_groups(survey$participants, cad_by, cad_labels)
+    survey$contacts[pg, on = "part_id", part_age_group := i.part_age_group]
+  }
   survey$contacts <- impute_contact_ages(
     contacts = survey$contacts,
     estimate = estimated_contact_age
   )
+  if (contact_grouped && "part_age_group" %in% colnames(survey$contacts)) {
+    survey$contacts[, part_age_group := NULL]
+  }
 
   # define age limits if not given
   age_limits <- age_limits %||% get_age_limits(survey)

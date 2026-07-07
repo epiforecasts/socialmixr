@@ -1,5 +1,14 @@
 # socialmixr (development version)
 
+* `contact_age_distribution()` gains a `by` argument: given a vector of age
+  limits it returns the contact-age distribution within each participant age
+  group (adding a `part_age_group` column). Passed to `assign_age_groups()` as
+  `estimated_contact_age`, this conditions each contact's imputed age on its
+  participant's age group, preserving assortativity that a single pooled
+  distribution washes out. The distribution is empirical and unsmoothed; groups
+  with no coverage fall back to the pooled distribution, then to uniform
+  sampling (#339).
+
 * Interpolating population data to age groups finer than the data itself is
   deprecated. `contact_matrix()` (when it adjusts demographic data to the
   requested age groups) and `pop_age()` still do it but now warn, and it will

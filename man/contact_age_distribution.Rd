@@ -4,26 +4,46 @@
 \alias{contact_age_distribution}
 \title{Extract the empirical age distribution of contacts from a survey}
 \usage{
-contact_age_distribution(survey)
+contact_age_distribution(survey, by = NULL)
 }
 \arguments{
 \item{survey}{a \code{\link[=survey]{survey()}} object}
+
+\item{by}{optional numeric vector of lower age limits. If given, the
+distribution is computed within each participant age group defined by these
+limits (using participants' and contacts' exact ages) and the result gains
+a \code{part_age_group} column of age-group labels.}
 }
 \value{
-a data.frame with columns \code{age} (integer) and \code{proportion} (numeric,
-summing to 1)
+a data.frame with columns \code{age} (integer) and \code{proportion} (numeric).
+\code{proportion} sums to 1 overall, or to 1 within each \code{part_age_group} when
+\code{by} is given.
 }
 \description{
-Returns a data.frame of (age, proportion) pairs representing how
-contact ages are distributed in the survey. This can be passed to
-\code{\link[=assign_age_groups]{assign_age_groups()}} as \code{estimated_contact_age} to impute ages
-from ranges using this distribution rather than uniform sampling.
+Returns the empirical distribution of contact ages in the survey as a
+data.frame of \verb{(age, proportion)} pairs. Pass it to \code{\link[=assign_age_groups]{assign_age_groups()}} as
+\code{estimated_contact_age} to impute missing or ranged contact ages by sampling
+from this distribution rather than uniformly.
+
+With \code{by} set to a vector of age limits, the distribution is computed
+separately for each participant age group (one block per group, keyed by a
+\code{part_age_group} column). Passed to \code{\link[=assign_age_groups]{assign_age_groups()}}, this conditions
+each contact's imputed age on its participant's age group, so assortativity
+(people mostly mixing within their own age group) is preserved rather than
+washed out by a single pooled distribution.
+
+This is a purely empirical distribution: participant groups with few observed
+exact contact ages give noisy blocks, and no smoothing or partial pooling is
+applied. For assortativity estimated with uncertainty, model the contact ages
+downstream rather than relying on this imputation.
 }
 \examples{
 data(polymod)
 dist <- contact_age_distribution(polymod)
 head(dist)
-plot(dist$age, dist$proportion, type = "h",
-     xlab = "Age", ylab = "Proportion")
+
+# conditioned on the participant's age group
+grouped <- contact_age_distribution(polymod, by = c(0, 5, 15, 65))
+head(grouped)
 
 }

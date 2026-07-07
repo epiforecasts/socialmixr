@@ -4,14 +4,18 @@
 \alias{sample_from_age_distribution}
 \title{Sample ages from a distribution within \verb{[min, max]} bands}
 \usage{
-sample_from_age_distribution(mins, maxs, distribution)
+sample_from_age_distribution(mins, maxs, distribution, groups = NULL)
 }
 \arguments{
 \item{mins}{integer vector of lower bounds}
 
 \item{maxs}{integer vector of upper bounds}
 
-\item{distribution}{data.frame with \code{age} and \code{proportion} columns}
+\item{distribution}{data.frame with \code{age} and \code{proportion} columns, and
+optionally a \code{part_age_group} column for a grouped distribution}
+
+\item{groups}{optional vector of participant age groups, one per contact,
+used to pick the block of a grouped distribution}
 }
 \value{
 integer vector of sampled ages
