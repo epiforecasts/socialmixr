@@ -339,7 +339,10 @@ test_that("split_matrix() errors on a multi-grouping matrix", {
 ## regroup ---------------------------------------------------------------------
 
 test_that("align_ages() aggregates a raw age population to the matrix groups", {
-  raw <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+  raw <- data.frame(
+    age = limits_to_agegroups(0:80, notation = "brackets"),
+    population = rep(1e5, 81)
+  )
   sp <- align_ages(raw, result_base)
   expect_named(sp, c("age", "population"))
   expect_setequal(sp$age, c("[0,5)", "[5,15)", "[15,Inf)"))
@@ -352,7 +355,7 @@ test_that("align_ages() aggregates a raw age population to the matrix groups", {
 
 test_that("align_ages() handles multiple groupings", {
   raw <- expand.grid(
-    lower.age.limit = 0:80,
+    age = as.character(limits_to_agegroups(0:80, notation = "brackets")),
     gender = c("F", "M"),
     stringsAsFactors = FALSE
   )
@@ -365,7 +368,7 @@ test_that("align_ages() handles multiple groupings", {
 
 test_that("align_ages() errors on a categorical level not in the matrix", {
   raw <- expand.grid(
-    lower.age.limit = 0:80,
+    age = as.character(limits_to_agegroups(0:80, notation = "brackets")),
     gender = c("F", "M", "X"),
     stringsAsFactors = FALSE
   )
@@ -376,12 +379,15 @@ test_that("align_ages() errors on a categorical level not in the matrix", {
 test_that("align_ages() errors on missing required columns", {
   expect_error(
     align_ages(data.frame(population = 1), result_base),
-    "lower.age.limit"
+    "age"
   )
 })
 
 test_that("rebin_ages() rejects a contact_matrix and points to align_ages()", {
-  raw <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+  raw <- data.frame(
+    age = limits_to_agegroups(0:80, notation = "brackets"),
+    population = rep(1e5, 81)
+  )
   expect_error(rebin_ages(raw, result_base), "align_ages")
   expect_error(rebin_ages(raw, "not numeric"), "numeric vector of age limits")
   ## a raw numeric matrix is numeric but has a dim - also rejected

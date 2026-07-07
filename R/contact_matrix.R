@@ -14,7 +14,10 @@
 #'   when `symmetric`, `split`, `per_capita`, `weigh_age`, or
 #'   `return_demography` is `TRUE`; supply an explicit data frame
 #'   (e.g. constructed from the `wpp2024` package or another source)
-#'   instead.
+#'   instead. If the population is coarser than the requested age groups it
+#'   is linearly interpolated to finer groups, but this is deprecated (it
+#'   warns and will error in a future release); supply population at least as
+#'   fine as `age_limits`.
 #' @param age_limits lower limits of the age groups over which to
 #'   construct the matrix. If NULL (default), age limits are
 #'   inferred from participant and contact ages.
@@ -379,10 +382,13 @@ contact_matrix <- function(
       age_breaks = part.age.group.present
     )
 
-    ## interpolate population to single-year ages once for downstream
-    ## age weighting (before `survey_pop` is overwritten below)
+    ## interpolate the population to single-year ages for age weighting, before
+    ## `survey_pop` is overwritten below (this interpolation is deprecated)
     if (weigh_age) {
-      interpolated_survey_pop <- survey_pop_reference(survey_pop, ...)
+      weigh_pop <- survey_pop_reference(survey_pop, ...)
+      weigh_pop[,
+        age := limits_to_agegroups(lower.age.limit, notation = "brackets")
+      ]
     }
 
     ## adjust age groups by interpolating, in case they don't match between
@@ -402,7 +408,7 @@ contact_matrix <- function(
   }
 
   if (weigh_age) {
-    survey <- weigh_by_age(survey, interpolated_survey_pop, ...)
+    survey <- weigh_by_age(survey, weigh_pop, ...)
   }
 
   if (length(weights) > 0) {

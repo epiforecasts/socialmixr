@@ -1,8 +1,11 @@
 # socialmixr (development version)
 
-* `rebin_ages()` now checks that `age_limits` is numeric and errors clearly
-  (pointing to `align_ages()`) instead of failing deep inside with an
-  obscure message when handed, for example, a `contact_matrix`.
+* Interpolating population data to age groups finer than the data itself is
+  deprecated. `contact_matrix()` (when it adjusts demographic data to the
+  requested age groups) and `pop_age()` still do it but now warn, and it will
+  error in a future release. Supply population data at least as fine as the
+  requested age groups. The new `rebin_ages()` and `align_ages()` never
+  interpolate: they error on finer requests.
 
 * `pop_age()` is deprecated in favour of `rebin_ages()` and warns; it will
   be removed in a future release (#328).
@@ -26,17 +29,21 @@
   additionally requires the participant- and contact-side dims to share the
   same levels, otherwise reciprocity is undefined and it aborts (#319).
 
-* New `rebin_ages()` rebins a population table to a set of age limits
-  (summing for coarser bands, interpolating for finer). This is the renamed,
-  public form of the old `pop_age()` numeric coarsener.
+* New `rebin_ages()` rebins a population table to a coarser set of age groups
+  by summing. It operates on an `age` column of age-group labels (as produced
+  by `limits_to_agegroups()` or `assign_age_groups()`) and returns the same
+  form, so it composes directly with the post-processing functions. It only
+  coarsens: requesting age groups finer than the population data is an error,
+  since splitting a band would require assuming a within-band age distribution.
 
-* New `align_ages()` aligns a raw population table to a contact matrix's
+* New `align_ages()` aligns a population table to a contact matrix's
   groupings, returning the `survey_pop` data frame that `symmetrise()`,
-  `split_matrix()` and `per_capita()` expect. Supply population with a
-  `lower.age.limit` column for age (at any resolution) plus a column per
-  other grouping; `align_ages()` rebins age to the matrix's age groups within
-  each combination of the other groupings (via `rebin_ages()`) and aggregates
-  categorical groupings by exact name. A typical workflow is
+  `split_matrix()` and `per_capita()` expect. Supply population with an `age`
+  column of age-group label, plus a column per other grouping; `align_ages()`
+  coarsens age to the matrix's age groups within each combination of the other
+  groupings (via `rebin_ages()`) and aggregates categorical groupings by exact
+  name. The population must be at least as fine as the matrix's age groups. A
+  typical workflow is
   `result |> symmetrise(survey_pop = align_ages(population, result))` (#319).
 
 * The `contact_matrix` S3 object now carries a `groupings` field — the
@@ -55,9 +62,11 @@
   natural. The previous silent dispatch on a population data frame
   (a `target` data frame with `lower.age.limit`/`population` and no
   column matching `by`) is soft-deprecated; use the new `weigh_by_age()`
-  for the same effect with an explicit name. New `weigh_by_dayofweek()`
-  is a thin wrapper around the existing 5/2 split. `weigh()`'s named
-  vector and `groups` paths are unchanged (#314).
+  for the same effect with an explicit name. `weigh_by_age()` takes a
+  reference population with an `age` column of age-group labels and a
+  `population` column. New `weigh_by_dayofweek()` is a thin wrapper around
+  the existing 5/2 split. `weigh()`'s named vector and `groups` paths are
+  unchanged (#314).
 
 * Advance deprecation cycle (#312). `wpp_age()`, `wpp_countries()`, and
   `survey_country_population()` are deprecated (warn) — all three are

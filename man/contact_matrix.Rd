@@ -62,7 +62,10 @@ or a character vector of country names triggers the
 when \code{symmetric}, \code{split}, \code{per_capita}, \code{weigh_age}, or
 \code{return_demography} is \code{TRUE}; supply an explicit data frame
 (e.g. constructed from the \code{wpp2024} package or another source)
-instead.}
+instead. If the population is coarser than the requested age groups it
+is linearly interpolated to finer groups, but this is deprecated (it
+warns and will error in a future release); supply population at least as
+fine as \code{age_limits}.}
 
 \item{age_limits}{lower limits of the age groups over which to
 construct the matrix. If NULL (default), age limits are

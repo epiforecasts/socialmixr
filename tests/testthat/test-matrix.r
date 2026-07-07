@@ -270,7 +270,7 @@ test_that("warning is thrown if country has no survey population", {
 test_that("check() is defunct", {
   expect_error(
     check(x = polymod2),
-    regexp = "0\\.5\\.0",
+    regexp = "0[.]5[.]0",
     class = "lifecycle_error_deprecated"
   )
 })
@@ -548,7 +548,10 @@ test_that("age-specific weight changes multi-year age groups", {
     sum(matrix_unweighted$matrix[1, ]),
     sum(matrix_weighted$matrix[1, ])
   ) # manual calculation
-  expect_identical(matrix_unweighted$matrix[2, ], matrix_weighted$matrix[2, ])
+  ## age-weighting leaves group 2 unchanged up to floating-point rounding
+  # nolint start: expect_identical_linter
+  expect_equal(matrix_unweighted$matrix[2, ], matrix_weighted$matrix[2, ])
+  # nolint end
 })
 
 test_that("age-specific weight unchanged for single year groups", {
@@ -955,7 +958,7 @@ test_that("participants with missing contact age are handled", {
       age_limits = 0,
       missing_contact_age = "sample"
     ),
-    regexp = "0\\.5\\.0",
+    regexp = "0[.]5[.]0",
     class = "lifecycle_error_deprecated"
   )
 })
@@ -1150,7 +1153,7 @@ test_that("contacts below age limits excluded regardless of setting", {
       age_limits = c(10, 50),
       missing_contact_age = "sample"
     ),
-    regexp = "0\\.5\\.0",
+    regexp = "0[.]5[.]0",
     class = "lifecycle_error_deprecated"
   )
   expect_identical(
@@ -1228,10 +1231,10 @@ test_that("contact_matrix warns for multiple observations per participant", {
 })
 
 test_that("deprecated dotted argument names are now defunct", {
-  # contact_matrix()
+  # contact_matrix() dotted args are defunct
   expect_error(
     contact_matrix(polymod, age.limits = c(0, 18)),
-    regexp = "0\\.5\\.0",
+    regexp = "0[.]5[.]0",
     class = "lifecycle_error_deprecated"
   )
   expect_error(
@@ -1247,7 +1250,7 @@ test_that("deprecated dotted argument names are now defunct", {
     class = "lifecycle_error_deprecated"
   )
 
-  # as_contact_survey()
+  # as_contact_survey() dotted args are defunct
   survey_list <- list(
     participants = polymod$participants,
     contacts = polymod$contacts,

@@ -23,10 +23,10 @@ weigh_by_age(survey, pop, ...)
 with an unnamed numeric \code{target} vector); must be the same length as
 \code{target}.}
 
-\item{...}{further arguments passed on for age interpolation.}
+\item{...}{ignored.}
 
-\item{pop}{a data frame with columns \code{lower.age.limit} and \code{population}
-(used by \code{\link[=weigh_by_age]{weigh_by_age()}}).}
+\item{pop}{a data frame with columns \code{age} (age-group labels) and
+\code{population} (used by \code{\link[=weigh_by_age]{weigh_by_age()}}).}
 }
 \value{
 the survey object with updated participant weights
@@ -84,17 +84,16 @@ Equivalent to:
 \section{\code{weigh_by_age()}}{
 
 
-Convenience wrapper for age post-stratification. The main thing it
-adds over a raw \code{\link[=weigh]{weigh()}} call is \strong{interpolation}: the reference
-\code{pop} is expanded to single-year ages internally, so it can be
-supplied at any age resolution (e.g. 5-year bands).
+Convenience wrapper for age post-stratification. Participants are binned
+into the reference population's own age bands (whatever resolution \code{pop}
+is supplied at) and, for each band \eqn{b}, the weight becomes
 
-For each single-year age \eqn{a} the weight then becomes
+\deqn{w_b = \frac{P_b / P}{N_b / N},}
 
-\deqn{w_a = \frac{P_a / P}{N_a / N},}
-
-where \eqn{P_a} is the target population at age \eqn{a}, \eqn{P} the
-total, and \eqn{N_a}, \eqn{N} the corresponding sample counts.
+where \eqn{P_b} is the target population in band \eqn{b}, \eqn{P} the
+total, and \eqn{N_b}, \eqn{N} the corresponding sample counts. No
+interpolation is performed, so the weighting resolution is that of the
+supplied reference population.
 
 \code{survey} must already have been processed by \code{\link[=assign_age_groups]{assign_age_groups()}} so
 that a \code{part_age} column is available for the join.
@@ -145,7 +144,7 @@ uk |> weigh("agecat", target = c(child = 0.25, adult = 0.75))
 
 # ── age post-stratification ──────────────────────────────────────
 uk_pop <- data.frame(
-  lower.age.limit = c(0, 5, 15, 65),
+  age = limits_to_agegroups(c(0, 5, 15, 65), notation = "brackets"),
   population = c(3500000, 6000000, 40000000, 10000000)
 )
 uk |> weigh_by_age(uk_pop)

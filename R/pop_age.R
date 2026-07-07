@@ -8,7 +8,7 @@
 #' matrix's age groups, use [align_ages()].
 #'
 #' @return data frame of age-specific population data
-#' @inheritParams rebin_ages
+#' @inheritParams rebin_ages_numeric
 #' @param age.limits,pop.age.column,pop.column
 #'   `r lifecycle::badge("deprecated")` Use the underscore
 #'   versions (e.g., `age_limits`) instead.
@@ -51,7 +51,7 @@ pop_age <- function(
     "pop_age"
   )
 
-  rebin_ages(
+  rebin_ages_numeric(
     pop = pop,
     age_limits = age_limits,
     pop_age_column = pop_age_column,

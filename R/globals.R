@@ -38,12 +38,9 @@ utils::globalVariables(c(
   "dayofweek", # <weight_by_day_of_week>
   "weight", # <weight_by_day_of_week>
   "is.weekday", # <weight_by_day_of_week>
-  "age.count", # <weight_by_age>
+  "age.band", # <weight_by_age>
   "part_age", # <weight_by_age>
   "age.proportion", # <weight_by_age>
-  "population.proportion", # <weight_by_age>
-  "population.count", # <weight_by_age>
-  "weight.age", # <weight_by_age>
   "weight", # <weight_by_age>
   "weight", # <weigh_by_user_defined>
   "weight", # <normalise_weights>
@@ -73,9 +70,10 @@ utils::globalVariables(c(
   "is.weekday", # <return_participant_weights>
   "proportion", # <return_participant_weights>
   "participants", # <return_participant_weights>
+  "age", # <contact_matrix>
+  "lower.age.limit", # <contact_matrix>
   "weight", # <contact_matrix>
   "cnt_age", # <contact_matrix>
-  "lower.age.limit", # <contact_matrix>
   "age.group", # <contact_matrix>
   "population", # <contact_matrix>
   "proportion", # <contact_matrix>
@@ -88,16 +86,16 @@ utils::globalVariables(c(
   "creator", # <.list_surveys>
   "identifier.2", # <.list_surveys>
   ".idx", # <joint_population_vector>
-  "..original.lower.age.limit", # <rebin_ages>
-  "..segment", # <rebin_ages>
-  "..upper.age.limit", # <rebin_ages>
-  "age", # <align_ages>
-  "lower.age.limit", # <align_ages>
+  "..original.lower.age.limit", # <rebin_ages_numeric>
+  "..segment", # <rebin_ages_numeric>
+  "..upper.age.limit", # <rebin_ages_numeric>
   "population", # <align_ages>
   "part_id", # <[.contact_survey>
   "population", # <survey_country_population>
   "weight", # <weigh>
   "weight", # <weigh_by_age>
+  "lower.age.limit", # <weigh_by_age>
+  "age", # <weigh_by_age>
   "weight", # <weigh_direct>
   "weight", # <weigh_join>
   "weight", # <weigh_grouped>

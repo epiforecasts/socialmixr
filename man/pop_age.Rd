@@ -16,18 +16,15 @@ pop_age(
 )
 }
 \arguments{
-\item{pop}{a data frame with columns indicating lower age
-limits and population sizes (see \code{pop_age_column} and
-\code{pop_column})}
+\item{pop}{a data frame with lower-age-limit and population columns (see
+\code{pop_age_column} and \code{pop_column})}
 
 \item{age_limits}{lower age limits of age groups to extract; if \code{NULL}
 (default), the population data is returned unchanged}
 
-\item{pop_age_column}{column in the \code{pop} data frame indicating
-the lower age group limit}
+\item{pop_age_column}{column in \code{pop} indicating the lower age group limit}
 
-\item{pop_column}{column in the \code{pop} data frame indicating
-the population size}
+\item{pop_column}{column in \code{pop} indicating the population size}
 
 \item{...}{ignored}
 
