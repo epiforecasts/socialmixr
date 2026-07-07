@@ -42,12 +42,12 @@ weigh_by_age(survey, pop, ...)
 
 - ...:
 
-  further arguments passed on for age interpolation.
+  ignored.
 
 - pop:
 
-  a data frame with columns `lower.age.limit` and `population` (used by
-  `weigh_by_age()`).
+  a data frame with columns `age` (age-group labels) and `population`
+  (used by `weigh_by_age()`).
 
 ## Value
 
@@ -92,17 +92,16 @@ Equivalent to:
 
 ## `weigh_by_age()`
 
-Convenience wrapper for age post-stratification. The main thing it adds
-over a raw `weigh()` call is **interpolation**: the reference `pop` is
-expanded to single-year ages internally, so it can be supplied at any
-age resolution (e.g. 5-year bands).
+Convenience wrapper for age post-stratification. Participants are binned
+into the reference population's own age bands (whatever resolution `pop`
+is supplied at) and, for each band \\b\\, the weight becomes
 
-For each single-year age \\a\\ the weight then becomes
+\$\$w_b = \frac{P_b / P}{N_b / N},\$\$
 
-\$\$w_a = \frac{P_a / P}{N_a / N},\$\$
-
-where \\P_a\\ is the target population at age \\a\\, \\P\\ the total,
-and \\N_a\\, \\N\\ the corresponding sample counts.
+where \\P_b\\ is the target population in band \\b\\, \\P\\ the total,
+and \\N_b\\, \\N\\ the corresponding sample counts. No interpolation is
+performed, so the weighting resolution is that of the supplied reference
+population.
 
 `survey` must already have been processed by
 [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
@@ -1501,144 +1500,142 @@ uk |> weigh("agecat", target = c(child = 0.25, adult = 0.75))
 
 # ── age post-stratification ──────────────────────────────────────
 uk_pop <- data.frame(
-  lower.age.limit = c(0, 5, 15, 65),
+  age = limits_to_agegroups(c(0, 5, 15, 65), notation = "brackets"),
   population = c(3500000, 6000000, 40000000, 10000000)
 )
 uk |> weigh_by_age(uk_pop)
-#> Warning: Not all age groups represented in population data (5-year age band).
-#> ℹ Linearly estimating age group sizes from the 5-year bands.
 #> $participants
-#> Key: <part_age>
-#>      part_age lower.age.limit      hh_id part_id part_gender part_occupation
-#>         <int>           <num>     <char>   <int>      <char>           <int>
-#>   1:        0               0 Mo08HH4536    4536           F               6
-#>   2:        0               0 Mo08HH4538    4538           F               6
-#>   3:        0               0 Mo08HH4540    4540           F               6
-#>   4:        0               0 Mo08HH4541    4541           F               6
-#>   5:        0               0 Mo08HH4542    4542           F               5
-#>  ---                                                                        
-#> 964:       65              15 Mo08HH5410    5410           M               3
-#> 965:       65              15 Mo08HH5413    5413           F               3
-#> 966:       65              15 Mo08HH5421    5421           F               3
-#> 967:       65              15 Mo08HH5503    5503           M               1
-#> 968:       65              15 Mo08HH5512    5512           F               3
-#>      part_occupation_detail part_education part_education_length
-#>                       <int>          <int>                 <int>
-#>   1:                      2              4                    13
-#>   2:                      2              4                    13
-#>   3:                      1              6                    18
-#>   4:                      1              6                    18
-#>   5:                      4              4                    13
-#>  ---                                                            
-#> 964:                     NA              4                    13
-#> 965:                     NA              4                    13
-#> 966:                     NA              4                    13
-#> 967:                      1              5                    16
-#> 968:                     NA              4                    13
-#>      participant_school_year participant_nationality child_care
-#>                        <int>                  <char>     <char>
-#>   1:                      NA                      UK          N
-#>   2:                      NA                      UK          N
-#>   3:                      NA                      UK          N
-#>   4:                      NA                      UK          N
-#>   5:                      NA                      UK          Y
-#>  ---                                                           
-#> 964:                      NA                      UK           
-#> 965:                      NA                      UK           
-#> 966:                      NA                      UK           
-#> 967:                      NA                      UK           
-#> 968:                      NA                      UK           
-#>      child_care_detail child_relationship child_nationality problems diary_how
-#>                  <int>              <int>            <char>   <char>     <int>
-#>   1:                NA                  1                UK                 NA
-#>   2:                NA                  1                UK                 NA
-#>   3:                NA                  1                UK                 NA
-#>   4:                NA                  1                UK                 NA
-#>   5:                NA                  1                UK                 NA
-#>  ---                                                                          
-#> 964:                NA                 NA                                   NA
-#> 965:                NA                 NA                                   NA
-#> 966:                NA                 NA                                   NA
-#> 967:                NA                 NA                                   NA
-#> 968:                NA                 NA                                   NA
-#>      diary_missed_unsp diary_missed_skin diary_missed_noskin  sday_id  type
-#>                  <int>             <int>               <int>    <int> <int>
-#>   1:                 4                 1                   4 20060424     3
-#>   2:                 1                 1                   1 20060421     3
-#>   3:                 1                 1                   1 20060422     3
-#>   4:                 1                 1                   1 20060422     3
-#>   5:                 1                 1                   1 20060422     3
-#>  ---                                                                       
-#> 964:                 1                 1                   1 20060424     1
-#> 965:                 1                 1                   1 20060502     1
-#> 966:                 1                 1                   1 20060429     1
-#> 967:                 1                 1                   1 20060503     1
-#> 968:                 1                 1                   1 20060430     1
-#>        day month  year dayofweek hh_age_1 hh_age_2 hh_age_3 hh_age_4 hh_age_5
-#>      <int> <int> <int>     <int>    <int>    <int>    <int>    <int>    <int>
-#>   1:    24     4  2006         1       30        0       37       39       NA
-#>   2:    21     4  2006         5        0        5        6        8       29
-#>   3:    22     4  2006         6        0       43       47       NA       NA
-#>   4:    22     4  2006         6        0       35       37       NA       NA
-#>   5:    22     4  2006         6        0       10        7       30       29
-#>  ---                                                                         
-#> 964:    24     4  2006         1       65       NA       NA       NA       NA
-#> 965:     2     5  2006         2       63       65       NA       NA       NA
-#> 966:    29     4  2006         6       65       NA       NA       NA       NA
-#> 967:     3     5  2006         3       65       NA       NA       NA       NA
-#> 968:    30     4  2006         0        7       35       65       NA       NA
-#>      hh_age_6 hh_age_7 hh_age_8 hh_age_9 hh_age_10 hh_age_11 hh_age_12
-#>         <int>    <int>    <int>    <int>     <int>     <int>     <int>
-#>   1:       NA       NA       NA       NA        NA        NA        NA
-#>   2:       36       NA       NA       NA        NA        NA        NA
-#>   3:       NA       NA       NA       NA        NA        NA        NA
-#>   4:       NA       NA       NA       NA        NA        NA        NA
-#>   5:       NA       NA       NA       NA        NA        NA        NA
-#>  ---                                                                  
-#> 964:       NA       NA       NA       NA        NA        NA        NA
-#> 965:       NA       NA       NA       NA        NA        NA        NA
-#> 966:       NA       NA       NA       NA        NA        NA        NA
-#> 967:       NA       NA       NA       NA        NA        NA        NA
-#> 968:       NA       NA       NA       NA        NA        NA        NA
-#>      hh_age_13 hh_age_14 hh_age_15 hh_age_16 hh_age_17 hh_age_18 hh_age_19
-#>          <int>     <int>     <int>    <lgcl>    <lgcl>    <lgcl>    <lgcl>
-#>   1:        NA        NA        NA        NA        NA        NA        NA
-#>   2:        NA        NA        NA        NA        NA        NA        NA
-#>   3:        NA        NA        NA        NA        NA        NA        NA
-#>   4:        NA        NA        NA        NA        NA        NA        NA
-#>   5:        NA        NA        NA        NA        NA        NA        NA
-#>  ---                                                                      
-#> 964:        NA        NA        NA        NA        NA        NA        NA
-#> 965:        NA        NA        NA        NA        NA        NA        NA
-#> 966:        NA        NA        NA        NA        NA        NA        NA
-#> 967:        NA        NA        NA        NA        NA        NA        NA
-#> 968:        NA        NA        NA        NA        NA        NA        NA
-#>      hh_age_20 class_size        country hh_size part_age_exact age.group
-#>         <lgcl>      <int>         <fctr>   <int>          <int>    <fctr>
-#>   1:        NA         NA United Kingdom       4              0     [0,5)
-#>   2:        NA         NA United Kingdom       6              0     [0,5)
-#>   3:        NA         NA United Kingdom       3              0     [0,5)
-#>   4:        NA         NA United Kingdom       3              0     [0,5)
-#>   5:        NA         NA United Kingdom       5              0     [0,5)
-#>  ---                                                                     
-#> 964:        NA         NA United Kingdom       1             65  [15,Inf)
-#> 965:        NA         NA United Kingdom       2             65  [15,Inf)
-#> 966:        NA         NA United Kingdom       1             65  [15,Inf)
-#> 967:        NA         NA United Kingdom       1             65  [15,Inf)
-#> 968:        NA         NA United Kingdom       3             65  [15,Inf)
-#>      upper.age.limit agecat     weight
-#>                <num> <char>      <num>
-#>   1:               5  child  0.7929412
-#>   2:               5  child  0.7929412
-#>   3:               5  child  0.7929412
-#>   4:               5  child  0.7929412
-#>   5:               5  child  0.7929412
-#>  ---                                  
-#> 964:              80  adult 13.0704590
-#> 965:              80  adult 13.0704590
-#> 966:              80  adult 13.0704590
-#> 967:              80  adult 13.0704590
-#> 968:              80  adult 13.0704590
+#> Key: <lower.age.limit>
+#>       lower.age.limit      hh_id part_id part_gender part_occupation
+#>                 <num>     <char>   <int>      <char>           <int>
+#>    1:               0 Mo08HH4520    4520           F               5
+#>    2:               0 Mo08HH4521    4521           M               5
+#>    3:               0 Mo08HH4522    4522           M               5
+#>    4:               0 Mo08HH4525    4525           F               5
+#>    5:               0 Mo08HH4526    4526           M               6
+#>   ---                                                               
+#> 1007:              15 Mo08HH5518    5518           M              NA
+#> 1008:              15 Mo08HH5519    5519           F              NA
+#> 1009:              15 Mo08HH5520    5520           F              NA
+#> 1010:              15 Mo08HH5521    5521           F               4
+#> 1011:              15 Mo08HH5522    5522           M              NA
+#>       part_occupation_detail part_education part_education_length
+#>                        <int>          <int>                 <int>
+#>    1:                      4              4                    13
+#>    2:                      3              4                    13
+#>    3:                      1              4                    13
+#>    4:                     NA              4                    13
+#>    5:                     NA              4                    13
+#>   ---                                                            
+#> 1007:                     NA              4                    13
+#> 1008:                     NA              4                    13
+#> 1009:                     NA              4                    13
+#> 1010:                     NA              5                    16
+#> 1011:                     NA              4                    13
+#>       participant_school_year participant_nationality child_care
+#>                         <int>                  <char>     <char>
+#>    1:                      NA                      UK          Y
+#>    2:                      NA                      UK          Y
+#>    3:                      NA                      UK          Y
+#>    4:                      NA                      UK          Y
+#>    5:                      NA                      UK          N
+#>   ---                                                           
+#> 1007:                      NA                      OT           
+#> 1008:                      NA                      OT           
+#> 1009:                      NA                      OT           
+#> 1010:                      NA                      UK           
+#> 1011:                      NA                      OT           
+#>       child_care_detail child_relationship child_nationality problems diary_how
+#>                   <int>              <int>            <char>   <char>     <int>
+#>    1:                NA                  1                UK                 NA
+#>    2:                NA                  2                UK                 NA
+#>    3:                NA                  1                UK                 NA
+#>    4:                NA                  1                UK                 NA
+#>    5:                NA                  1                UK                 NA
+#>   ---                                                                          
+#> 1007:                NA                 NA                                   NA
+#> 1008:                NA                 NA                                   NA
+#> 1009:                NA                 NA                                   NA
+#> 1010:                NA                 NA                                   NA
+#> 1011:                NA                 NA                                   NA
+#>       diary_missed_unsp diary_missed_skin diary_missed_noskin  sday_id  type
+#>                   <int>             <int>               <int>    <int> <int>
+#>    1:                 1                 1                   1 20060422     3
+#>    2:                 1                 1                   1 20060422     3
+#>    3:                 1                 1                   1 20060422     3
+#>    4:                 1                 1                   1 20060421     3
+#>    5:                 1                 1                   1 20060421     3
+#>   ---                                                                       
+#> 1007:                 1                 1                   1 20060512     1
+#> 1008:                 1                 1                   1 20060512     1
+#> 1009:                 1                 1                   1 20060512     1
+#> 1010:                 1                 1                   1 20060512     1
+#> 1011:                 1                 1                   1 20060512     1
+#>         day month  year dayofweek hh_age_1 hh_age_2 hh_age_3 hh_age_4 hh_age_5
+#>       <int> <int> <int>     <int>    <int>    <int>    <int>    <int>    <int>
+#>    1:    22     4  2006         6        3       33       NA       NA       NA
+#>    2:    22     4  2006         6        1        2       25       30       NA
+#>    3:    22     4  2006         6        4       31       31       NA       NA
+#>    4:    21     4  2006         5        4        7       33       NA       NA
+#>    5:    21     4  2006         5        2       18       46       48       NA
+#>   ---                                                                         
+#> 1007:    12     5  2006         5       43       50       NA       NA       NA
+#> 1008:    12     5  2006         5       57       64       NA       NA       NA
+#> 1009:    12     5  2006         5       19       27       52       55       NA
+#> 1010:    12     5  2006         5        0        3       34       40       NA
+#> 1011:    12     5  2006         5       35       39       NA       NA       NA
+#>       hh_age_6 hh_age_7 hh_age_8 hh_age_9 hh_age_10 hh_age_11 hh_age_12
+#>          <int>    <int>    <int>    <int>     <int>     <int>     <int>
+#>    1:       NA       NA       NA       NA        NA        NA        NA
+#>    2:       NA       NA       NA       NA        NA        NA        NA
+#>    3:       NA       NA       NA       NA        NA        NA        NA
+#>    4:       NA       NA       NA       NA        NA        NA        NA
+#>    5:       NA       NA       NA       NA        NA        NA        NA
+#>   ---                                                                  
+#> 1007:       NA       NA       NA       NA        NA        NA        NA
+#> 1008:       NA       NA       NA       NA        NA        NA        NA
+#> 1009:       NA       NA       NA       NA        NA        NA        NA
+#> 1010:       NA       NA       NA       NA        NA        NA        NA
+#> 1011:       NA       NA       NA       NA        NA        NA        NA
+#>       hh_age_13 hh_age_14 hh_age_15 hh_age_16 hh_age_17 hh_age_18 hh_age_19
+#>           <int>     <int>     <int>    <lgcl>    <lgcl>    <lgcl>    <lgcl>
+#>    1:        NA        NA        NA        NA        NA        NA        NA
+#>    2:        NA        NA        NA        NA        NA        NA        NA
+#>    3:        NA        NA        NA        NA        NA        NA        NA
+#>    4:        NA        NA        NA        NA        NA        NA        NA
+#>    5:        NA        NA        NA        NA        NA        NA        NA
+#>   ---                                                                      
+#> 1007:        NA        NA        NA        NA        NA        NA        NA
+#> 1008:        NA        NA        NA        NA        NA        NA        NA
+#> 1009:        NA        NA        NA        NA        NA        NA        NA
+#> 1010:        NA        NA        NA        NA        NA        NA        NA
+#> 1011:        NA        NA        NA        NA        NA        NA        NA
+#>       hh_age_20 class_size        country hh_size part_age_exact part_age
+#>          <lgcl>      <int>         <fctr>   <int>          <int>    <int>
+#>    1:        NA         NA United Kingdom       2              3        3
+#>    2:        NA         NA United Kingdom       4              2        2
+#>    3:        NA         NA United Kingdom       3              4        4
+#>    4:        NA         NA United Kingdom       3              4        4
+#>    5:        NA         NA United Kingdom       4              2        2
+#>   ---                                                                    
+#> 1007:        NA         NA United Kingdom       2             50       50
+#> 1008:        NA         NA United Kingdom       2             57       57
+#> 1009:        NA         NA United Kingdom       4             52       52
+#> 1010:        NA         NA United Kingdom       4             34       34
+#> 1011:        NA         NA United Kingdom       2             39       39
+#>       age.group upper.age.limit agecat    weight
+#>          <fctr>           <num> <char>     <num>
+#>    1:     [0,5)               5  child 0.6260062
+#>    2:     [0,5)               5  child 0.6260062
+#>    3:     [0,5)               5  child 0.6260062
+#>    4:     [0,5)               5  child 0.6260062
+#>    5:     [0,5)               5  child 0.6260062
+#>   ---                                           
+#> 1007:  [15,Inf)              80  adult 1.0360730
+#> 1008:  [15,Inf)              80  adult 1.0360730
+#> 1009:  [15,Inf)              80  adult 1.0360730
+#> 1010:  [15,Inf)              80  adult 1.0360730
+#> 1011:  [15,Inf)              80  adult 1.0360730
 #> 
 #> $contacts
 #>        cont_id part_id cnt_age_exact cnt_age_est_min cnt_age_est_max cnt_gender

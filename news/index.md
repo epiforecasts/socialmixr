@@ -2,12 +2,18 @@
 
 ## socialmixr (development version)
 
-- [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
-  now checks that `age_limits` is numeric and errors clearly (pointing
-  to
-  [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md))
-  instead of failing deep inside with an obscure message when handed,
-  for example, a `contact_matrix`.
+- Interpolating population data to age groups finer than the data itself
+  is deprecated.
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  (when it adjusts demographic data to the requested age groups) and
+  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+  still do it but now warn, and it will error in a future release.
+  Supply population data at least as fine as the requested age groups.
+  The new
+  [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+  and
+  [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
+  never interpolate: they error on finer requests.
 
 - [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
   is deprecated in favour of
@@ -45,28 +51,34 @@
 
 - New
   [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
-  rebins a population table to a set of age limits (summing for coarser
-  bands, interpolating for finer). This is the renamed, public form of
-  the old
-  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
-  numeric coarsener.
+  rebins a population table to a coarser set of age groups by summing.
+  It operates on an `age` column of age-group labels (as produced by
+  [`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md)
+  or
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md))
+  and returns the same form, so it composes directly with the
+  post-processing functions. It only coarsens: requesting age groups
+  finer than the population data is an error, since splitting a band
+  would require assuming a within-band age distribution.
 
 - New
   [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
-  aligns a raw population table to a contact matrix’s groupings,
-  returning the `survey_pop` data frame that
+  aligns a population table to a contact matrix’s groupings, returning
+  the `survey_pop` data frame that
   [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
   [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
   and
   [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md)
-  expect. Supply population with a `lower.age.limit` column for age (at
-  any resolution) plus a column per other grouping;
+  expect. Supply population with an `age` column of age-group label,
+  plus a column per other grouping;
   [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
-  rebins age to the matrix’s age groups within each combination of the
+  coarsens age to the matrix’s age groups within each combination of the
   other groupings (via
   [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md))
-  and aggregates categorical groupings by exact name. A typical workflow
-  is `result |> symmetrise(survey_pop = align_ages(population, result))`
+  and aggregates categorical groupings by exact name. The population
+  must be at least as fine as the matrix’s age groups. A typical
+  workflow is
+  `result |> symmetrise(survey_pop = align_ages(population, result))`
   ([\#319](https://github.com/epiforecasts/socialmixr/issues/319)).
 
 - The `contact_matrix` S3 object now carries a `groupings` field — the
@@ -91,7 +103,10 @@
   frame with `lower.age.limit`/`population` and no column matching `by`)
   is soft-deprecated; use the new
   [`weigh_by_age()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
-  for the same effect with an explicit name. New
+  for the same effect with an explicit name.
+  [`weigh_by_age()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  takes a reference population with an `age` column of age-group labels
+  and a `population` column. New
   [`weigh_by_dayofweek()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
   is a thin wrapper around the existing 5/2 split.
   [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)’s

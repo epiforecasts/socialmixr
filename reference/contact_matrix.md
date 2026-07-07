@@ -70,7 +70,11 @@ contact_matrix(
   [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md)
   when `symmetric`, `split`, `per_capita`, `weigh_age`, or
   `return_demography` is `TRUE`; supply an explicit data frame (e.g.
-  constructed from the `wpp2024` package or another source) instead.
+  constructed from the `wpp2024` package or another source) instead. If
+  the population is coarser than the requested age groups it is linearly
+  interpolated to finer groups, but this is deprecated (it warns and
+  will error in a future release); supply population at least as fine as
+  `age_limits`.
 
 - age_limits:
 

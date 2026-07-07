@@ -27,8 +27,8 @@ pop_age(
 
 - pop:
 
-  a data frame with columns indicating lower age limits and population
-  sizes (see `pop_age_column` and `pop_column`)
+  a data frame with lower-age-limit and population columns (see
+  `pop_age_column` and `pop_column`)
 
 - age_limits:
 
@@ -37,11 +37,11 @@ pop_age(
 
 - pop_age_column:
 
-  column in the `pop` data frame indicating the lower age group limit
+  column in `pop` indicating the lower age group limit
 
 - pop_column:
 
-  column in the `pop` data frame indicating the population size
+  column in `pop` indicating the population size
 
 - ...:
 

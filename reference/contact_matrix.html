@@ -111,7 +111,10 @@ or a character vector of country names triggers the
 when <code>symmetric</code>, <code>split</code>, <code>per_capita</code>, <code>weigh_age</code>, or
 <code>return_demography</code> is <code>TRUE</code>; supply an explicit data frame
 (e.g. constructed from the <code>wpp2024</code> package or another source)
-instead.</p></dd>
+instead. If the population is coarser than the requested age groups it
+is linearly interpolated to finer groups, but this is deprecated (it
+warns and will error in a future release); supply population at least as
+fine as <code>age_limits</code>.</p></dd>
 
 
 <dt id="arg-age-limits">age_limits<a class="anchor" aria-label="anchor" href="#arg-age-limits"></a></dt>

@@ -1,7 +1,7 @@
 # Align a population table to a contact matrix's grouping levels
 
-Aligns a raw population table to the groupings of a contact matrix
-produced by
+Aligns a population table to the groupings of a contact matrix produced
+by
 [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md),
 returning the `survey_pop` data frame that
 [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
@@ -12,10 +12,11 @@ expect.
 
 The age grouping is rebinned to the matrix's age groups (via
 [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md),
-summing for coarser bands and interpolating for finer) within each
-combination of the other groupings. Categorical groupings are aggregated
-to the matrix's levels by exact name; interpolation is undefined for
-them, so a level not present in the matrix is an error.
+summing) within each combination of the other groupings; the population
+must be at least as fine as the matrix's age groups, otherwise
+[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+errors. Categorical groupings are aggregated to the matrix's levels by
+exact name; a level not present in the matrix is an error.
 
 ## Usage
 
@@ -28,8 +29,8 @@ align_ages(pop, x)
 - pop:
 
   a data frame with a `population` column and one column per grouping:
-  `lower.age.limit` for the age grouping, and a column named after each
-  categorical grouping holding its levels.
+  an `age` column of age-group labels for the age grouping, and a column
+  named after each categorical grouping holding its levels.
 
 - x:
 
@@ -50,7 +51,10 @@ result <- polymod |>
   (\(s) s[country == "United Kingdom"])() |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
   compute_matrix()
-uk_pop <- data.frame(lower.age.limit = 0:80, population = rep(1e5, 81))
+uk_pop <- data.frame(
+  age = limits_to_agegroups(0:80, notation = "brackets"),
+  population = rep(1e5, 81)
+)
 result |> symmetrise(survey_pop = align_ages(uk_pop, result))
 #> 
 #> ── Contact matrix (3 age groups) ──

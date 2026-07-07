@@ -95,12 +95,12 @@ with an unnamed numeric <code>target</code> vector); must be the same length as
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>further arguments passed on for age interpolation.</p></dd>
+<dd><p>ignored.</p></dd>
 
 
 <dt id="arg-pop">pop<a class="anchor" aria-label="anchor" href="#arg-pop"></a></dt>
-<dd><p>a data frame with columns <code>lower.age.limit</code> and <code>population</code>
-(used by <code>weigh_by_age()</code>).</p></dd>
+<dd><p>a data frame with columns <code>age</code> (age-group labels) and
+<code>population</code> (used by <code>weigh_by_age()</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -149,14 +149,14 @@ The <code>dayofweek</code> column is taken to use 0 = Sunday through 6 = Saturda
 
 
 
-<p>Convenience wrapper for age post-stratification. The main thing it
-adds over a raw <code>weigh()</code> call is <strong>interpolation</strong>: the reference
-<code>pop</code> is expanded to single-year ages internally, so it can be
-supplied at any age resolution (e.g. 5-year bands).</p>
-<p>For each single-year age \(a\) the weight then becomes</p>
-<p>$$w_a = \frac{P_a / P}{N_a / N},$$</p>
-<p>where \(P_a\) is the target population at age \(a\), \(P\) the
-total, and \(N_a\), \(N\) the corresponding sample counts.</p>
+<p>Convenience wrapper for age post-stratification. Participants are binned
+into the reference population's own age bands (whatever resolution <code>pop</code>
+is supplied at) and, for each band \(b\), the weight becomes</p>
+<p>$$w_b = \frac{P_b / P}{N_b / N},$$</p>
+<p>where \(P_b\) is the target population in band \(b\), \(P\) the
+total, and \(N_b\), \(N\) the corresponding sample counts. No
+interpolation is performed, so the weighting resolution is that of the
+supplied reference population.</p>
 <p><code>survey</code> must already have been processed by <code><a href="assign_age_groups.html">assign_age_groups()</a></code> so
 that a <code>part_age</code> column is available for the join.</p>
     </div>
@@ -1553,144 +1553,142 @@ that a <code>part_age</code> column is available for the join.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ── age post-stratification ──────────────────────────────────────</span></span></span>
 <span class="r-in"><span><span class="va">uk_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  lower.age.limit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">15</span>, <span class="fl">65</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  age <span class="op">=</span> <span class="fu"><a href="limits_to_agegroups.html">limits_to_agegroups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">15</span>, <span class="fl">65</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3500000</span>, <span class="fl">6000000</span>, <span class="fl">40000000</span>, <span class="fl">10000000</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">uk</span> <span class="op">|&gt;</span> <span class="fu">weigh_by_age</span><span class="op">(</span><span class="va">uk_pop</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Not all age groups represented in population data (5-year age band).</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Linearly estimating age group sizes from the 5-year bands.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $participants</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Key: &lt;part_age&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      part_age lower.age.limit      hh_id part_id part_gender part_occupation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;int&gt;           &lt;num&gt;     &lt;char&gt;   &lt;int&gt;      &lt;char&gt;           &lt;int&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:        0               0 Mo08HH4536    4536           F               6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:        0               0 Mo08HH4538    4538           F               6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:        0               0 Mo08HH4540    4540           F               6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:        0               0 Mo08HH4541    4541           F               6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:        0               0 Mo08HH4542    4542           F               5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 964:       65              15 Mo08HH5410    5410           M               3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 965:       65              15 Mo08HH5413    5413           F               3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 966:       65              15 Mo08HH5421    5421           F               3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 967:       65              15 Mo08HH5503    5503           M               1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 968:       65              15 Mo08HH5512    5512           F               3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      part_occupation_detail part_education part_education_length</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;int&gt;          &lt;int&gt;                 &lt;int&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:                      2              4                    13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:                      2              4                    13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:                      1              6                    18</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:                      1              6                    18</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:                      4              4                    13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 964:                     NA              4                    13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 965:                     NA              4                    13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 966:                     NA              4                    13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 967:                      1              5                    16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 968:                     NA              4                    13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      participant_school_year participant_nationality child_care</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        &lt;int&gt;                  &lt;char&gt;     &lt;char&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:                      NA                      UK          N</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:                      NA                      UK          N</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:                      NA                      UK          N</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:                      NA                      UK          N</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:                      NA                      UK          Y</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 964:                      NA                      UK           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 965:                      NA                      UK           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 966:                      NA                      UK           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 967:                      NA                      UK           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 968:                      NA                      UK           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      child_care_detail child_relationship child_nationality problems diary_how</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  &lt;int&gt;              &lt;int&gt;            &lt;char&gt;   &lt;char&gt;     &lt;int&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:                NA                  1                UK                 NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:                NA                  1                UK                 NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:                NA                  1                UK                 NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:                NA                  1                UK                 NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:                NA                  1                UK                 NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 964:                NA                 NA                                   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 965:                NA                 NA                                   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 966:                NA                 NA                                   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 967:                NA                 NA                                   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 968:                NA                 NA                                   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      diary_missed_unsp diary_missed_skin diary_missed_noskin  sday_id  type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  &lt;int&gt;             &lt;int&gt;               &lt;int&gt;    &lt;int&gt; &lt;int&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:                 4                 1                   4 20060424     3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:                 1                 1                   1 20060421     3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:                 1                 1                   1 20060422     3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:                 1                 1                   1 20060422     3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:                 1                 1                   1 20060422     3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 964:                 1                 1                   1 20060424     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 965:                 1                 1                   1 20060502     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 966:                 1                 1                   1 20060429     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 967:                 1                 1                   1 20060503     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 968:                 1                 1                   1 20060430     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        day month  year dayofweek hh_age_1 hh_age_2 hh_age_3 hh_age_4 hh_age_5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:    24     4  2006         1       30        0       37       39       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:    21     4  2006         5        0        5        6        8       29</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:    22     4  2006         6        0       43       47       NA       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:    22     4  2006         6        0       35       37       NA       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:    22     4  2006         6        0       10        7       30       29</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 964:    24     4  2006         1       65       NA       NA       NA       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 965:     2     5  2006         2       63       65       NA       NA       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 966:    29     4  2006         6       65       NA       NA       NA       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 967:     3     5  2006         3       65       NA       NA       NA       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 968:    30     4  2006         0        7       35       65       NA       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      hh_age_6 hh_age_7 hh_age_8 hh_age_9 hh_age_10 hh_age_11 hh_age_12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:       NA       NA       NA       NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:       36       NA       NA       NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:       NA       NA       NA       NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:       NA       NA       NA       NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:       NA       NA       NA       NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 964:       NA       NA       NA       NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 965:       NA       NA       NA       NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 966:       NA       NA       NA       NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 967:       NA       NA       NA       NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 968:       NA       NA       NA       NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      hh_age_13 hh_age_14 hh_age_15 hh_age_16 hh_age_17 hh_age_18 hh_age_19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;int&gt;     &lt;int&gt;     &lt;int&gt;    &lt;lgcl&gt;    &lt;lgcl&gt;    &lt;lgcl&gt;    &lt;lgcl&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:        NA        NA        NA        NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:        NA        NA        NA        NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:        NA        NA        NA        NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:        NA        NA        NA        NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:        NA        NA        NA        NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 964:        NA        NA        NA        NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 965:        NA        NA        NA        NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 966:        NA        NA        NA        NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 967:        NA        NA        NA        NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 968:        NA        NA        NA        NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      hh_age_20 class_size        country hh_size part_age_exact age.group</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;lgcl&gt;      &lt;int&gt;         &lt;fctr&gt;   &lt;int&gt;          &lt;int&gt;    &lt;fctr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:        NA         NA United Kingdom       4              0     [0,5)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:        NA         NA United Kingdom       6              0     [0,5)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:        NA         NA United Kingdom       3              0     [0,5)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:        NA         NA United Kingdom       3              0     [0,5)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:        NA         NA United Kingdom       5              0     [0,5)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 964:        NA         NA United Kingdom       1             65  [15,Inf)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 965:        NA         NA United Kingdom       2             65  [15,Inf)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 966:        NA         NA United Kingdom       1             65  [15,Inf)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 967:        NA         NA United Kingdom       1             65  [15,Inf)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 968:        NA         NA United Kingdom       3             65  [15,Inf)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      upper.age.limit agecat     weight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                &lt;num&gt; &lt;char&gt;      &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:               5  child  0.7929412</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:               5  child  0.7929412</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:               5  child  0.7929412</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:               5  child  0.7929412</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:               5  child  0.7929412</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 964:              80  adult 13.0704590</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 965:              80  adult 13.0704590</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 966:              80  adult 13.0704590</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 967:              80  adult 13.0704590</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 968:              80  adult 13.0704590</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Key: &lt;lower.age.limit&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       lower.age.limit      hh_id part_id part_gender part_occupation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;num&gt;     &lt;char&gt;   &lt;int&gt;      &lt;char&gt;           &lt;int&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:               0 Mo08HH4520    4520           F               5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:               0 Mo08HH4521    4521           M               5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:               0 Mo08HH4522    4522           M               5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:               0 Mo08HH4525    4525           F               5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:               0 Mo08HH4526    4526           M               6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1007:              15 Mo08HH5518    5518           M              NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1008:              15 Mo08HH5519    5519           F              NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1009:              15 Mo08HH5520    5520           F              NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1010:              15 Mo08HH5521    5521           F               4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1011:              15 Mo08HH5522    5522           M              NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       part_occupation_detail part_education part_education_length</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        &lt;int&gt;          &lt;int&gt;                 &lt;int&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:                      4              4                    13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:                      3              4                    13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:                      1              4                    13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:                     NA              4                    13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:                     NA              4                    13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1007:                     NA              4                    13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1008:                     NA              4                    13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1009:                     NA              4                    13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1010:                     NA              5                    16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1011:                     NA              4                    13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       participant_school_year participant_nationality child_care</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;int&gt;                  &lt;char&gt;     &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:                      NA                      UK          Y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:                      NA                      UK          Y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:                      NA                      UK          Y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:                      NA                      UK          Y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:                      NA                      UK          N</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1007:                      NA                      OT           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1008:                      NA                      OT           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1009:                      NA                      OT           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1010:                      NA                      UK           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1011:                      NA                      OT           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       child_care_detail child_relationship child_nationality problems diary_how</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;int&gt;              &lt;int&gt;            &lt;char&gt;   &lt;char&gt;     &lt;int&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:                NA                  1                UK                 NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:                NA                  2                UK                 NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:                NA                  1                UK                 NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:                NA                  1                UK                 NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:                NA                  1                UK                 NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1007:                NA                 NA                                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1008:                NA                 NA                                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1009:                NA                 NA                                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1010:                NA                 NA                                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1011:                NA                 NA                                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       diary_missed_unsp diary_missed_skin diary_missed_noskin  sday_id  type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;int&gt;             &lt;int&gt;               &lt;int&gt;    &lt;int&gt; &lt;int&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:                 1                 1                   1 20060422     3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:                 1                 1                   1 20060422     3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:                 1                 1                   1 20060422     3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:                 1                 1                   1 20060421     3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:                 1                 1                   1 20060421     3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1007:                 1                 1                   1 20060512     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1008:                 1                 1                   1 20060512     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1009:                 1                 1                   1 20060512     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1010:                 1                 1                   1 20060512     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1011:                 1                 1                   1 20060512     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         day month  year dayofweek hh_age_1 hh_age_2 hh_age_3 hh_age_4 hh_age_5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:    22     4  2006         6        3       33       NA       NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:    22     4  2006         6        1        2       25       30       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:    22     4  2006         6        4       31       31       NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:    21     4  2006         5        4        7       33       NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:    21     4  2006         5        2       18       46       48       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1007:    12     5  2006         5       43       50       NA       NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1008:    12     5  2006         5       57       64       NA       NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1009:    12     5  2006         5       19       27       52       55       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1010:    12     5  2006         5        0        3       34       40       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1011:    12     5  2006         5       35       39       NA       NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       hh_age_6 hh_age_7 hh_age_8 hh_age_9 hh_age_10 hh_age_11 hh_age_12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:       NA       NA       NA       NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:       NA       NA       NA       NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:       NA       NA       NA       NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:       NA       NA       NA       NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:       NA       NA       NA       NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1007:       NA       NA       NA       NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1008:       NA       NA       NA       NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1009:       NA       NA       NA       NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1010:       NA       NA       NA       NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1011:       NA       NA       NA       NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       hh_age_13 hh_age_14 hh_age_15 hh_age_16 hh_age_17 hh_age_18 hh_age_19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;int&gt;     &lt;int&gt;     &lt;int&gt;    &lt;lgcl&gt;    &lt;lgcl&gt;    &lt;lgcl&gt;    &lt;lgcl&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:        NA        NA        NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:        NA        NA        NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:        NA        NA        NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:        NA        NA        NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:        NA        NA        NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1007:        NA        NA        NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1008:        NA        NA        NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1009:        NA        NA        NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1010:        NA        NA        NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1011:        NA        NA        NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       hh_age_20 class_size        country hh_size part_age_exact part_age</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;lgcl&gt;      &lt;int&gt;         &lt;fctr&gt;   &lt;int&gt;          &lt;int&gt;    &lt;int&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:        NA         NA United Kingdom       2              3        3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:        NA         NA United Kingdom       4              2        2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:        NA         NA United Kingdom       3              4        4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:        NA         NA United Kingdom       3              4        4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:        NA         NA United Kingdom       4              2        2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1007:        NA         NA United Kingdom       2             50       50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1008:        NA         NA United Kingdom       2             57       57</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1009:        NA         NA United Kingdom       4             52       52</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1010:        NA         NA United Kingdom       4             34       34</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1011:        NA         NA United Kingdom       2             39       39</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       age.group upper.age.limit agecat    weight</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;fctr&gt;           &lt;num&gt; &lt;char&gt;     &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:     [0,5)               5  child 0.6260062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:     [0,5)               5  child 0.6260062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:     [0,5)               5  child 0.6260062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:     [0,5)               5  child 0.6260062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:     [0,5)               5  child 0.6260062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1007:  [15,Inf)              80  adult 1.0360730</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1008:  [15,Inf)              80  adult 1.0360730</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1009:  [15,Inf)              80  adult 1.0360730</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1010:  [15,Inf)              80  adult 1.0360730</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1011:  [15,Inf)              80  adult 1.0360730</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $contacts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        cont_id part_id cnt_age_exact cnt_age_est_min cnt_age_est_max cnt_gender</span>

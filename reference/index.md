@@ -67,7 +67,7 @@
   Social contact data from 8 European countries
 
 - [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
-  : Rebin a population table to a set of age limits
+  : Rebin a population table to a set of age groups
 
 - [`reduce_agegroups()`](https://epiforecasts.io/socialmixr/reference/reduce_agegroups.md)
   : Reduce the number of age groups given a broader set of limits

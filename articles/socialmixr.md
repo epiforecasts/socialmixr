@@ -383,36 +383,40 @@ The post-processing functions
 ([`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
 [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md),
 [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md))
-need population data. In practice you supply a raw population table (any
-age resolution, with a `lower.age.limit` column for age and a column per
-other grouping) and align it to a computed matrix with
+need population data. In practice you supply a population table with an
+`age` column of age-group labels, a `population` column, and a column
+per other grouping, then align it to a computed matrix with
 [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md).
 [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
-aggregates each grouping to the matrix’s levels (interpolating the age
+aggregates each grouping to the matrix’s levels (coarsening the age
 grouping where needed) and returns the `data.frame` the post-processing
 functions expect.
 
 For recent UN World Population Prospects data, the `wpp2024` package is
-available from GitHub (`remotes::install_github("PPgp/wpp2024")`). It
-comes as 1-year `lower.age.limit` bands, which
-[`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
-coarsens to the matrix’s age groups:
+available from GitHub (`remotes::install_github("PPgp/wpp2024")`).
+Relabel its 1-year bands to age groups with
+[`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md)
+and then coarsen them to the matrix’s age groups using
+[`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md):
 
 ``` r
 
 data("popAge1dt", package = "wpp2024")
 uk_pop <- popAge1dt[name == "United Kingdom" & year == 2020,
-  .(lower.age.limit = age, population = pop * 1000)
+  .(
+    age = limits_to_agegroups(age, notation = "brackets"),
+    population = pop * 1000
+  )
 ]
 head(uk_pop)
-#>    lower.age.limit population
-#>              <int>      <num>
-#> 1:               0     703192
-#> 2:               1     732072
-#> 3:               2     762303
-#> 4:               3     787284
-#> 5:               4     812300
-#> 6:               5     814132
+#>      age population
+#>    <ord>      <num>
+#> 1: [0,1)     703192
+#> 2: [1,2)     732072
+#> 3: [2,3)     762303
+#> 4: [3,4)     787284
+#> 5: [4,5)     812300
+#> 6: [5,6)     814132
 ```
 
 Any comparable data frame will work, e.g. constructed by hand:
@@ -420,7 +424,7 @@ Any comparable data frame will work, e.g. constructed by hand:
 ``` r
 
 custom_pop <- data.frame(
-  lower.age.limit = c(0, 18, 60),
+  age = limits_to_agegroups(c(0, 18, 60), notation = "brackets"),
   population = c(12000000, 35000000, 20000000)
 )
 ```
@@ -432,10 +436,9 @@ functions:
 ``` r
 
 uk_pop <- data.frame(
-  lower.age.limit = c(0, 1, 5, 15),
+  age = limits_to_agegroups(c(0, 1, 5, 15), notation = "brackets"),
   population = c(750000, 3200000, 7500000, 56000000)
 )
-uk_pop$age <- limits_to_agegroups(uk_pop$lower.age.limit, notation = "brackets")
 ```
 
 ## Symmetric contact matrices
@@ -508,7 +511,7 @@ c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}
 ``` r
 
 de_pop <- data.frame(
-  lower.age.limit = c(0, 60),
+  age = limits_to_agegroups(c(0, 60), notation = "brackets"),
   population = c(67000000, 16000000)
 )
 
@@ -665,19 +668,18 @@ polymod[country == "United Kingdom"] |>
   compute_matrix()
 #>           contact.age.group
 #> age.group    [0,18)  [18,60)  [60,Inf)
-#>   [0,18)   11.72388 5.092404 0.2908445
-#>   [18,60)        NA       NA        NA
-#>   [60,Inf)       NA       NA        NA
+#>   [0,18)   8.049331 5.385310 0.4762882
+#>   [18,60)  2.232067 7.912283 1.0510450
+#>   [60,Inf) 1.111170 5.459199 1.9143601
 ```
 
 [`weigh_by_dayofweek()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
 assigns weekday participants a total weight of 5 and weekend
 participants a total weight of 2 (the weekly 5/2 split).
 [`weigh_by_age()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
-post-stratifies against a target population: it interpolates `uk_pop` to
-single-year ages with
-[`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
-and multiplies in the ratio of target to observed age share.
+post-stratifies against a target population: it bins participants into
+`uk_pop`’s age bands and multiplies in the ratio of target to observed
+age share within each band.
 
 For arbitrary discrete joins,
 [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
@@ -737,10 +739,10 @@ polymod[country == "United Kingdom"] |>
   weigh_by_age(uk_pop) |>
   compute_matrix(weight_threshold = 3)
 #>           contact.age.group
-#> age.group   [0,18)  [18,60)  [60,Inf)
-#>   [0,18)   10.2339 5.102618 0.3610971
-#>   [18,60)       NA       NA        NA
-#>   [60,Inf)      NA       NA        NA
+#> age.group    [0,18)  [18,60)  [60,Inf)
+#>   [0,18)   8.049331 5.385310 0.4762882
+#>   [18,60)  2.232067 7.912283 1.0510450
+#>   [60,Inf) 1.111170 5.459199 1.9143601
 ```
 
 ### Numerical example

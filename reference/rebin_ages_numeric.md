@@ -1,14 +1,16 @@
-# Regroup population data into a set of age limits (numeric)
+# Rebin population data to a set of age limits (numeric)
 
-Internal numeric coarsener: regroups a population table into the age
-groups defined by `age_limits`, summing populations when coarser groups
-are requested and linearly interpolating between groups when finer ones
-are requested than are available. Operates on `lower.age.limit` columns;
-used by
+Internal numeric coarsener operating on `lower.age.limit` columns:
+rebins a population table to the age groups defined by `age_limits`,
+summing when coarser. Requesting age groups finer than the population
+data is deprecated: it warns and linearly interpolates, and will error
+in a future release. Wrapped by
 [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
-(per grouping stratum),
+(which errors on finer requests) and used by
 [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
-and the internal weighting helpers.
+and
+[`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)'s
+population adjustment.
 
 ## Usage
 
@@ -26,8 +28,8 @@ rebin_ages_numeric(
 
 - pop:
 
-  a data frame with columns indicating lower age limits and population
-  sizes (see `pop_age_column` and `pop_column`)
+  a data frame with lower-age-limit and population columns (see
+  `pop_age_column` and `pop_column`)
 
 - age_limits:
 
@@ -36,11 +38,11 @@ rebin_ages_numeric(
 
 - pop_age_column:
 
-  column in the `pop` data frame indicating the lower age group limit
+  column in `pop` indicating the lower age group limit
 
 - pop_column:
 
-  column in the `pop` data frame indicating the population size
+  column in `pop` indicating the population size
 
 - ...:
 
