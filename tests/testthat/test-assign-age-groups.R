@@ -46,6 +46,29 @@ test_that("assign_age_groups() appropriately changes age.group factor", {
   )
 })
 
+test_that("contact_age_limits bins contacts into their own groups", {
+  ## default: contacts mirror participant groups
+  sym <- assign_age_groups(polymod, age_limits = c(0, 5, 15))
+  expect_identical(
+    levels(sym$contacts$contact.age.group),
+    levels(sym$participants$age.group)
+  )
+  ## asymmetric: contacts get their own (finer) groups
+  asym <- assign_age_groups(
+    polymod,
+    age_limits = c(0, 18, 65),
+    contact_age_limits = c(0, 10, 20, 40, 60, 80)
+  )
+  expect_identical(
+    levels(asym$participants$age.group),
+    c("[0,18)", "[18,65)", "[65,Inf)")
+  )
+  expect_identical(
+    levels(asym$contacts$contact.age.group),
+    c("[0,10)", "[10,20)", "[20,40)", "[40,60)", "[60,80)", "[80,Inf)")
+  )
+})
+
 ## contact_age_distribution() -------------------------------------------------
 
 test_that("contact_age_distribution() returns a valid distribution", {

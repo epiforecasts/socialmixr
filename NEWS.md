@@ -1,5 +1,13 @@
 # socialmixr (development version)
 
+* `assign_age_groups()` gains a `contact_age_limits` argument to bin contact
+  ages into different groups from participants, producing an asymmetric
+  `age.group` / `contact.age.group` contact matrix (e.g. coarse participant
+  groups with finer contact ages). It defaults to `NULL`, meaning contacts
+  mirror the participant groups exactly as before. Asymmetric matrices are
+  contact matrices only: `symmetrise()`, `split_matrix()` and `per_capita()`
+  require reciprocity and so need matching participant and contact groups.
+
 * Interpolating population data to age groups finer than the data itself is
   deprecated. `contact_matrix()` (when it adjusts demographic data to the
   requested age groups) and `pop_age()` still do it but now warn, and it will

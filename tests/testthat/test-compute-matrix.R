@@ -11,6 +11,25 @@ test_that("compute_matrix() produces a basic contact matrix", {
   expect_identical(ncol(result$matrix), 3L)
 })
 
+test_that("asymmetric age limits give a non-square contact matrix", {
+  asym <- assign_age_groups(
+    polymod,
+    age_limits = c(0, 18, 65),
+    contact_age_limits = c(0, 10, 20, 40, 60, 80)
+  )
+  m <- suppressWarnings(compute_matrix(asym))
+  expect_identical(dim(m$matrix), c(3L, 6L))
+  expect_identical(rownames(m$matrix), c("[0,18)", "[18,65)", "[65,Inf)"))
+  ## symmetrise requires reciprocity, so it errors on a non-square matrix
+  expect_error(
+    symmetrise(
+      m,
+      survey_pop = data.frame(age = "x", population = 1, stringsAsFactors = FALSE)
+    ),
+    "participant and contact"
+  )
+})
+
 test_that("compute_matrix() counts works", {
   result <- compute_matrix(polymod_uk_grouped, counts = TRUE)
   result_mean <- compute_matrix(polymod_uk_grouped, counts = FALSE)
