@@ -9,6 +9,7 @@ from ranges, handles missing values, and assigns age groups.
 assign_age_groups(
   survey,
   age_limits = NULL,
+  contact_age_limits = NULL,
   estimated_participant_age = c("mean", "sample", "missing"),
   estimated_contact_age = c("mean", "sample", "missing"),
   missing_participant_age = c("remove", "keep"),
@@ -28,6 +29,20 @@ assign_age_groups(
   lower limits of the age groups over which to construct the matrix.
   Defaults to NULL. If NULL, age limits are inferred from participant
   and contact ages.
+
+- contact_age_limits:
+
+  lower limits of the age groups to bin *contact* ages into. Defaults to
+  NULL, meaning contacts use the same groups as participants (a square
+  matrix). Set it to bin contacts into different groups (e.g. finer),
+  producing an asymmetric `age.group` / `contact.age.group` matrix. Such
+  matrices are contact matrices only:
+  [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
+  and
+  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md)
+  require reciprocity and so need the participant and contact groups to
+  match.
 
 - estimated_participant_age:
 

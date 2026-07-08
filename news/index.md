@@ -2,6 +2,20 @@
 
 ## socialmixr (development version)
 
+- [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
+  gains a `contact_age_limits` argument to bin contact ages into
+  different groups from participants, producing an asymmetric
+  `age.group` / `contact.age.group` contact matrix (e.g. coarse
+  participant groups with finer contact ages). It defaults to `NULL`,
+  meaning contacts mirror the participant groups exactly as before.
+  Asymmetric matrices are contact matrices only:
+  [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
+  and
+  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md)
+  require reciprocity and so need matching participant and contact
+  groups.
+
 - Interpolating population data to age groups finer than the data itself
   is deprecated.
   [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)

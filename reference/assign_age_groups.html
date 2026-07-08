@@ -50,6 +50,7 @@ ranges, handles missing values, and assigns age groups.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">assign_age_groups</span><span class="op">(</span></span>
 <span>  <span class="va">survey</span>,</span>
 <span>  age_limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  contact_age_limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  estimated_participant_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sample"</span>, <span class="st">"missing"</span><span class="op">)</span>,</span>
 <span>  estimated_contact_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sample"</span>, <span class="st">"missing"</span><span class="op">)</span>,</span>
 <span>  missing_participant_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"remove"</span>, <span class="st">"keep"</span><span class="op">)</span>,</span>
@@ -69,6 +70,16 @@ ranges, handles missing values, and assigns age groups.</p>
 <dd><p>lower limits of the age groups over which to construct
 the matrix. Defaults to NULL. If NULL, age limits are inferred from
 participant and contact ages.</p></dd>
+
+
+<dt id="arg-contact-age-limits">contact_age_limits<a class="anchor" aria-label="anchor" href="#arg-contact-age-limits"></a></dt>
+<dd><p>lower limits of the age groups to bin <em>contact</em>
+ages into. Defaults to NULL, meaning contacts use the same groups as
+participants (a square matrix). Set it to bin contacts into different
+groups (e.g. finer), producing an asymmetric <code>age.group</code> /
+<code>contact.age.group</code> matrix. Such matrices are contact matrices only:
+<code><a href="symmetrise.html">symmetrise()</a></code>, <code><a href="split_matrix.html">split_matrix()</a></code> and <code><a href="per_capita.html">per_capita()</a></code> require reciprocity
+and so need the participant and contact groups to match.</p></dd>
 
 
 <dt id="arg-estimated-participant-age">estimated_participant_age<a class="anchor" aria-label="anchor" href="#arg-estimated-participant-age"></a></dt>
@@ -532,7 +543,7 @@ entirely missing.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>
