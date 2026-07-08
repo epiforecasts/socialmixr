@@ -69,6 +69,23 @@ test_that("contact_age_limits bins contacts into their own groups", {
   )
 })
 
+test_that("a contact older than any participant lands in the top group", {
+  ## the terminal break is derived from the maximum participant age, so a
+  ## contact older than that must still be assigned to the open-ended top group
+  s <- polymod
+  s$participants <- data.table::data.table(part_id = 1L, part_age_exact = 40L)
+  s$contacts <- data.table::data.table(part_id = 1L, cnt_age_exact = 90L)
+  res <- assign_age_groups(
+    s,
+    age_limits = c(0, 18, 65),
+    contact_age_limits = c(0, 20, 80)
+  )
+  expect_identical(
+    as.character(res$contacts$contact.age.group),
+    "[80,Inf)"
+  )
+})
+
 ## contact_age_distribution() -------------------------------------------------
 
 test_that("contact_age_distribution() returns a valid distribution", {
