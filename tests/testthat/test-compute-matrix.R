@@ -17,21 +17,15 @@ test_that("asymmetric age limits give a non-square contact matrix", {
     age_limits = c(0, 18, 65),
     contact_age_limits = c(0, 10, 20, 40, 60, 80)
   )
-  m <- suppressWarnings(compute_matrix(asym))
+  m <- compute_matrix(asym)
   expect_identical(dim(m$matrix), c(3L, 6L))
   expect_identical(rownames(m$matrix), c("[0,18)", "[18,65)", "[65,Inf)"))
-  ## symmetrise requires reciprocity, so it errors on a non-square matrix
-  expect_error(
-    symmetrise(
-      m,
-      survey_pop = data.frame(
-        age = "x",
-        population = 1,
-        stringsAsFactors = FALSE
-      )
-    ),
-    "participant and contact"
-  )
+  ## symmetrise / split_matrix / per_capita need reciprocity, so each errors
+  ## on a non-square matrix
+  pop <- data.frame(age = "x", population = 1, stringsAsFactors = FALSE)
+  expect_error(symmetrise(m, survey_pop = pop), "participant and contact")
+  expect_error(split_matrix(m, survey_pop = pop), "participant and contact")
+  expect_error(per_capita(m, survey_pop = pop), "participant and contact")
 })
 
 test_that("compute_matrix() counts works", {
