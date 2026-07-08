@@ -143,25 +143,15 @@ assign_age_groups <- function(
     age_limits = age_limits
   )
 
-  ## assign contact age groups (their own limits when asymmetric) -------------
-  ## in the symmetric case, reuse the participant labels: these follow the
-  ## age-group breaks adjusted to the survey's age range, which can differ from
-  ## the raw limits. compare by value so equal limits of different types (e.g.
-  ## integer vs double) still take the symmetric path.
+  ## assign contact age groups from their own limits (equal to the participant
+  ## limits unless contact_age_limits was given, giving an asymmetric matrix)
   max_age <- max_participant_age(survey$participants)
-  if (isTRUE(all.equal(as.double(contact_age_limits), as.double(age_limits)))) {
-    contact_breaks <- create_age_breaks(age_limits, max_age)
-    contact_labels <- age_group_labels(survey$participants)
-  } else {
-    contact_breaks <- create_age_breaks(contact_age_limits, max_age)
-    contact_labels <- as.character(
-      limits_to_agegroups(contact_age_limits, notation = "brackets")
-    )
-  }
   survey$contacts <- add_contact_age_groups(
     contacts = survey$contacts,
-    age_breaks = contact_breaks,
-    age_groups = contact_labels
+    age_breaks = create_age_breaks(contact_age_limits, max_age),
+    age_groups = as.character(
+      limits_to_agegroups(contact_age_limits, notation = "brackets")
+    )
   )
 
   survey
