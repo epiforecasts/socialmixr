@@ -1,5 +1,14 @@
 # socialmixr (development version)
 
+* New `sample_contact_ages()` re-imputes contacts whose age is only known as a
+  range by sampling from the empirical contact-age distribution *within the
+  reporting participant's age group*, rather than from the pooled distribution.
+  This preserves the age-assortativity (a stronger matrix diagonal) that pooled
+  or uniform imputation flattens. Use it after `assign_age_groups()` and before
+  `compute_matrix()`. It conditions on the participant's age group only; richer
+  conditioning or propagating the imputation uncertainty is a modelling task
+  (#326).
+
 * Interpolating population data to age groups finer than the data itself is
   deprecated. `contact_matrix()` (when it adjusts demographic data to the
   requested age groups) and `pop_age()` still do it but now warn, and it will

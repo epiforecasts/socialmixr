@@ -11,6 +11,8 @@ utils::globalVariables(c(
   "age", # <contact_age_distribution>
   "proportion", # <contact_age_distribution>
   "N", # <contact_age_distribution>
+  "proportion", # <marginal_age_distribution>
+  "age", # <marginal_age_distribution>
   "cnt_age", # <drop_ages_below_age_limit>
   "cnt_age", # <drop_missing_contact_ages>
   "part_age_exact", # <max_participant_age>
@@ -90,6 +92,15 @@ utils::globalVariables(c(
   "..segment", # <rebin_ages_numeric>
   "..upper.age.limit", # <rebin_ages_numeric>
   "population", # <align_ages>
+  "part_id", # <sample_contact_ages>
+  "age.group", # <sample_contact_ages>
+  "cnt_age_exact", # <sample_contact_ages>
+  "part_age_group", # <sample_contact_ages>
+  "age", # <sample_contact_ages>
+  "proportion", # <sample_contact_ages>
+  "N", # <sample_contact_ages>
+  "cnt_age", # <sample_contact_ages>
+  "contact.age.group", # <sample_contact_ages>
   "part_id", # <[.contact_survey>
   "population", # <survey_country_population>
   "weight", # <weigh>

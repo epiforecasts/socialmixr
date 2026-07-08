@@ -4,19 +4,24 @@
 \alias{sample_from_age_distribution}
 \title{Sample ages from a distribution within \verb{[min, max]} bands}
 \usage{
-sample_from_age_distribution(mins, maxs, distribution)
+sample_from_age_distribution(mins, maxs, distribution, groups = NULL)
 }
 \arguments{
-\item{mins}{integer vector of lower bounds}
+\item{mins, maxs}{integer vectors of inclusive lower/upper bounds}
 
-\item{maxs}{integer vector of upper bounds}
+\item{distribution}{data.frame with \code{age} and \code{proportion}, optionally a
+\code{part_age_group} column for a grouped distribution}
 
-\item{distribution}{data.frame with \code{age} and \code{proportion} columns}
+\item{groups}{optional vector of participant age groups, one per band}
 }
 \value{
 integer vector of sampled ages
 }
 \description{
-Sample ages from a distribution within \verb{[min, max]} bands
+Draws an integer age for each \verb{[min, max]} band. With a grouped
+\code{distribution} (a \code{part_age_group} column) and matching \code{groups}, each draw
+comes from that participant group's block, restricted to the band; empty
+group/band combinations fall back to the pooled distribution, then uniform.
+Without \code{groups} it samples from the (pooled) distribution.
 }
 \keyword{internal}
