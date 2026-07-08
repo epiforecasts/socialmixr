@@ -229,6 +229,8 @@ split_matrix <- function(x, survey_pop) {
     )
   }
 
+  check_part_cnt_dims_match(x$matrix, 1L, op = "split_matrix")
+
   if (na_in_weighted_matrix(x$matrix)) {
     cli::cli_abort(
       c(

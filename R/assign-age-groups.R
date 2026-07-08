@@ -8,6 +8,13 @@
 #' @param age_limits lower limits of the age groups over which to construct
 #'   the matrix. Defaults to NULL. If NULL, age limits are inferred from
 #'   participant and contact ages.
+#' @param contact_age_limits lower limits of the age groups to bin *contact*
+#'   ages into. Defaults to NULL, meaning contacts use the same groups as
+#'   participants (a square matrix). Set it to bin contacts into different
+#'   groups (e.g. finer), producing an asymmetric `age.group` /
+#'   `contact.age.group` matrix. Such matrices are contact matrices only:
+#'   `symmetrise()`, `split_matrix()` and `per_capita()` require reciprocity
+#'   and so need the participant and contact groups to match.
 #' @param estimated_participant_age if set to "mean" (default), people whose
 #'   ages are given as a range (in columns named "..._est_min" and
 #'   "..._est_max") but not exactly (in a column named "..._exact") will have
@@ -45,6 +52,7 @@
 assign_age_groups <- function(
   survey,
   age_limits = NULL,
+  contact_age_limits = NULL,
   estimated_participant_age = c("mean", "sample", "missing"),
   estimated_contact_age = c("mean", "sample", "missing"),
   missing_participant_age = c("remove", "keep"),
@@ -52,6 +60,7 @@ assign_age_groups <- function(
 ) {
   check_if_contact_survey(survey)
   check_age_limits_increasing(age_limits)
+  check_age_limits_increasing(contact_age_limits)
   estimated_participant_age <- rlang::arg_match(estimated_participant_age)
   if (is.data.frame(estimated_contact_age)) {
     estimated_contact_age <- validate_age_distribution(estimated_contact_age)
@@ -101,6 +110,7 @@ assign_age_groups <- function(
 
   # define age limits if not given
   age_limits <- age_limits %||% get_age_limits(survey)
+  contact_age_limits <- contact_age_limits %||% age_limits
 
   ## Process participant ages: handle missing data ----------------------------
   survey$participants <- drop_invalid_ages(
@@ -113,7 +123,7 @@ assign_age_groups <- function(
   # remove contact ages below the age limit, before dealing with missing ages
   survey$contacts <- drop_ages_below_age_limit(
     data = survey$contacts,
-    age_limits = age_limits
+    age_limits = contact_age_limits
   )
 
   survey$participants <- drop_invalid_contact_ages(
@@ -133,12 +143,15 @@ assign_age_groups <- function(
     age_limits = age_limits
   )
 
-  ## assign contact age groups based on participant age groups ----------------
+  ## assign contact age groups from their own limits (equal to the participant
+  ## limits unless contact_age_limits was given, giving an asymmetric matrix)
   max_age <- max_participant_age(survey$participants)
   survey$contacts <- add_contact_age_groups(
     contacts = survey$contacts,
-    age_breaks = create_age_breaks(age_limits, max_age),
-    age_groups = age_group_labels(survey$participants)
+    age_breaks = create_age_breaks(contact_age_limits, max_age),
+    age_groups = as.character(
+      limits_to_agegroups(contact_age_limits, notation = "brackets")
+    )
   )
 
   survey
