@@ -76,9 +76,12 @@ sample_contact_ages <- function(survey, min_n) {
   }
   contacts <- convert_factor_to_integer(contacts, needed)
 
-  # participant age group for each contact
+  # participant age group for each contact; one row per participant so a
+  # longitudinal survey (repeat part_id, possibly differing age.group) does not
+  # duplicate contacts in the join
   pg <- unique(
-    survey$participants[, list(part_id, part_age_group = age.group)]
+    survey$participants[, list(part_id, part_age_group = age.group)],
+    by = "part_id"
   )
   contacts <- merge(contacts, pg, by = "part_id", all.x = TRUE, sort = FALSE)
 
