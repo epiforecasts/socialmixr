@@ -4,16 +4,21 @@
 \alias{sample_contact_ages}
 \title{Resample ranged contact ages conditional on the participant's age group}
 \usage{
-sample_contact_ages(survey, min_n)
+sample_contact_ages(survey, min_n, by = "age")
 }
 \arguments{
 \item{survey}{a \code{\link[=survey]{survey()}} object that has been processed by
 \code{\link[=assign_age_groups]{assign_age_groups()}}}
 
-\item{min_n}{minimum number of exactly-known contact ages a participant age
+\item{min_n}{minimum number of exactly-known contact ages a participant
 group must have for its own contact-age distribution to be used; groups
 with fewer are imputed from the pooled distribution. Required, with no
 default because no value is universally justifiable (see Details).}
+
+\item{by}{participant strata to condition on, in the same form as the \code{by}
+argument of \code{\link[=compute_matrix]{compute_matrix()}}: \code{"age"} (the default) uses the participant
+age group; a stem \code{"<name>"} uses the \verb{part_<name>} column; combine them,
+e.g. \code{c("age", "gender")}, to condition jointly.}
 }
 \value{
 the survey, with ranged contact ages resampled and
@@ -28,9 +33,11 @@ pooled contact-age distribution. Both flatten age-assortativity, because a
 population-wide mix rather than towards other children.
 
 \code{sample_contact_ages()} re-imputes those contacts by sampling from the
-empirical contact-age distribution \emph{within the reporting participant's age
+empirical contact-age distribution \emph{within the reporting participant's
 group}, strengthening the matrix diagonal. It estimates that conditional
-distribution from the contacts whose ages are exactly known.
+distribution from the contacts whose ages are exactly known. By default the
+group is the participant's age group; use \code{by} to condition on further
+participant strata (e.g. \code{by = c("age", "gender")}).
 }
 \details{
 A group-specific distribution is only worth using when the group has enough
@@ -44,9 +51,12 @@ no coverage falls back further to uniform sampling. \code{min_n} is a crude
 stand-in for the shrinkage a partial-pooling model would apply — if many
 groups fall back, that is the signal to model the imputation instead.
 
-This conditions on the participant's age group only. Imputation that also
-accounts for other covariates (gender, setting, ...) or propagates the
-uncertainty of the imputed ages is a modelling task, out of scope here.
+\code{by} conditions the imputation on whichever participant strata you are
+analysing, so it stays consistent with the matrix you build. Adding strata
+thins the cells, but the \code{min_n} fallback handles that transparently rather
+than silently biasing. What it does \strong{not} do is propagate the uncertainty
+of the imputed ages, or shrink sparse cells more gently than the crude
+\code{min_n} cut-off — both are modelling tasks, out of scope here.
 
 Run it after \code{\link[=assign_age_groups]{assign_age_groups()}} and before \code{\link[=compute_matrix]{compute_matrix()}}:
 

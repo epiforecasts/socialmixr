@@ -47,6 +47,44 @@ test_that("sample_contact_ages() conditions imputation on participant age", {
   )
 })
 
+test_that("by conditions imputation on the given participant strata", {
+  ## 4 participants, all aged 40 but M/M/F/F; males' contacts are aged 10,
+  ## females' aged 60. Conditioning on gender must send a male's ranged contact
+  ## young and a female's old, even though they share an age group.
+  s <- polymod
+  s$participants <- data.table::data.table(
+    part_id = 1:4,
+    part_age_exact = 40L,
+    part_gender = c("M", "M", "F", "F")
+  )
+  s$contacts <- data.table::data.table(
+    part_id = c(1L, 2L, 3L, 4L, 1L, 3L),
+    cnt_age_exact = c(10L, 10L, 60L, 60L, NA, NA),
+    cnt_age_est_min = c(NA, NA, NA, NA, 0L, 0L),
+    cnt_age_est_max = c(NA, NA, NA, NA, 80L, 80L)
+  )
+  g <- assign_age_groups(s, age_limits = c(0, 18, 65))
+  set.seed(1)
+  cc <- data.table::as.data.table(
+    sample_contact_ages(g, min_n = 1, by = c("age", "gender"))$contacts
+  )
+  male <- cc[
+    part_id == 1 & is.na(cnt_age_exact) & cnt_age_est_max == 80
+  ]$cnt_age
+  female <- cc[
+    part_id == 3 & is.na(cnt_age_exact) & cnt_age_est_max == 80
+  ]$cnt_age
+  expect_lt(male, female)
+})
+
+test_that("by errors when a grouping column is missing", {
+  g <- assign_age_groups(polymod, age_limits = c(0, 5, 15))
+  expect_error(
+    sample_contact_ages(g, min_n = 20, by = c("age", "nope")),
+    "part_nope"
+  )
+})
+
 test_that("sample_contact_ages() falls back to pooled for thin groups", {
   g <- assign_age_groups(polymod, age_limits = c(0, 5, 15))
   ## an impossibly high threshold makes every group too thin to use
