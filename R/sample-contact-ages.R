@@ -9,11 +9,9 @@
 #' population-wide mix rather than towards other children.
 #'
 #' `sample_contact_ages()` re-imputes those contacts by sampling from the
-#' empirical contact-age distribution *within the reporting participant's
+#' empirical contact-age distribution *within the reporting participant's age
 #' group*, strengthening the matrix diagonal. It estimates that conditional
-#' distribution from the contacts whose ages are exactly known. By default the
-#' group is the participant's age group; use `by` to condition on further
-#' participant strata (e.g. `by = c("age", "gender")`).
+#' distribution from the contacts whose ages are exactly known.
 #'
 #' @details
 #' A group-specific distribution is only worth using when the group has enough
@@ -27,12 +25,9 @@
 #' stand-in for the shrinkage a partial-pooling model would apply — if many
 #' groups fall back, that is the signal to model the imputation instead.
 #'
-#' `by` conditions the imputation on whichever participant strata you are
-#' analysing, so it stays consistent with the matrix you build. Adding strata
-#' thins the cells, but the `min_n` fallback handles that transparently rather
-#' than silently biasing. What it does **not** do is propagate the uncertainty
-#' of the imputed ages, or shrink sparse cells more gently than the crude
-#' `min_n` cut-off — both are modelling tasks, out of scope here.
+#' This conditions on the participant's age group only. Imputation that also
+#' accounts for other covariates (gender, setting, ...) or propagates the
+#' uncertainty of the imputed ages is a modelling task, out of scope here.
 #'
 #' Run it after [assign_age_groups()] and before [compute_matrix()]:
 #' ```r
@@ -44,19 +39,15 @@
 #'
 #' @param survey a [survey()] object that has been processed by
 #'   [assign_age_groups()]
-#' @param min_n minimum number of exactly-known contact ages a participant
+#' @param min_n minimum number of exactly-known contact ages a participant age
 #'   group must have for its own contact-age distribution to be used; groups
 #'   with fewer are imputed from the pooled distribution. Required, with no
 #'   default because no value is universally justifiable (see Details).
-#' @param by participant strata to condition on, in the same form as the `by`
-#'   argument of [compute_matrix()]: `"age"` (the default) uses the participant
-#'   age group; a stem `"<name>"` uses the `part_<name>` column; combine them,
-#'   e.g. `c("age", "gender")`, to condition jointly.
 #' @returns the survey, with ranged contact ages resampled and
 #'   `contact.age.group` updated for the resampled contacts
 #' @export
 #' @autoglobal
-sample_contact_ages <- function(survey, min_n, by = "age") {
+sample_contact_ages <- function(survey, min_n) {
   check_if_contact_survey(survey)
   if (missing(min_n)) {
     cli::cli_abort(c(
@@ -77,17 +68,6 @@ sample_contact_ages <- function(survey, min_n, by = "age") {
     )
   }
 
-  # the participant-side column of each grouping in `by` defines the strata to
-  # condition on (age.group for "age", part_<name> for other groupings)
-  strata_cols <- vapply(resolve_groupings(by), `[[`, character(1), "part")
-  missing_cols <- setdiff(strata_cols, colnames(survey$participants))
-  if (length(missing_cols) > 0L) {
-    cli::cli_abort(
-      "{.arg by} needs participant column{?s} {.val {missing_cols}} on the \\
-       survey."
-    )
-  }
-
   contacts <- data.table::copy(survey$contacts)
   needed <- c("cnt_age_exact", "cnt_age_est_min", "cnt_age_est_max", "cnt_age")
   if (!all(needed %in% colnames(contacts))) {
@@ -96,17 +76,13 @@ sample_contact_ages <- function(survey, min_n, by = "age") {
   }
   contacts <- convert_factor_to_integer(contacts, needed)
 
-  # composite participant stratum for each contact; one row per participant so a
-  # longitudinal survey (repeat part_id) does not duplicate contacts in the join
-  strata_vals <- lapply(
-    strata_cols,
-    function(cl) as.character(survey$participants[[cl]])
+  # participant age group for each contact; one row per participant so a
+  # longitudinal survey (repeat part_id, possibly differing age.group) does not
+  # duplicate contacts in the join
+  pg <- unique(
+    survey$participants[, list(part_id, part_age_group = age.group)],
+    by = "part_id"
   )
-  pg <- data.table::data.table(
-    part_id = survey$participants$part_id,
-    part_age_group = do.call(paste, c(strata_vals, sep = "\r"))
-  )
-  pg <- unique(pg, by = "part_id")
   contacts <- merge(contacts, pg, by = "part_id", all.x = TRUE, sort = FALSE)
 
   # age-group labels/limits, used to re-bin the resampled ages
@@ -149,7 +125,7 @@ sample_contact_ages <- function(survey, min_n, by = "age") {
     if (any(pooled_out)) {
       cli::cli_warn(
         "Imputed {sum(pooled_out)} contact{?s} from the pooled distribution: \\
-         their participant group had fewer than {min_n} known contact ages."
+         their participant age group had fewer than {min_n} known contact ages."
       )
     }
     # keep resampled ages within the analysis's age range

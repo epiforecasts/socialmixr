@@ -94,6 +94,8 @@ utils::globalVariables(c(
   "..segment", # <rebin_ages_numeric>
   "..upper.age.limit", # <rebin_ages_numeric>
   "population", # <align_ages>
+  "part_id", # <sample_contact_ages>
+  "age.group", # <sample_contact_ages>
   "cnt_age_exact", # <sample_contact_ages>
   "part_age_group", # <sample_contact_ages>
   "age", # <sample_contact_ages>

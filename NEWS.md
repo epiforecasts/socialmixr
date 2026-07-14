@@ -7,11 +7,9 @@
   or uniform imputation flattens. It takes a required `min_n`: participant age
   groups with fewer than that many known contact ages fall back to the pooled
   distribution (no default, since no threshold is universally justifiable). Use
-  it after `assign_age_groups()` and before `compute_matrix()`. By default it
-  conditions on the participant's age group; pass `by` (e.g.
-  `c("age", "gender")`, in the same form as `compute_matrix()`) to condition on
-  further participant strata. It does not propagate the imputation uncertainty,
-  which is a modelling task (#326).
+  it after `assign_age_groups()` and before `compute_matrix()`. It conditions on
+  the participant's age group only; richer conditioning or propagating the
+  imputation uncertainty is a modelling task (#326).
 
 * `assign_age_groups()` gains a `contact_age_limits` argument to bin contact
   ages into different groups from participants, producing an asymmetric
