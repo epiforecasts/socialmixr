@@ -97,8 +97,9 @@ sample_contact_ages <- function(survey, min_n) {
   ]
   counts <- known[, .N, by = list(part_age_group, age)]
   counts[, proportion := N / sum(N), by = part_age_group]
+  # keep the per-cell count N so the pooled fallback can be size-weighted
   distribution <- as.data.frame(
-    counts[, list(part_age_group, age, proportion)]
+    counts[, list(part_age_group, age, N, proportion)]
   )
 
   # groups with too few known contact ages fall back to the pooled distribution

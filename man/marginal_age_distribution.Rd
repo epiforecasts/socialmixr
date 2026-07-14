@@ -7,7 +7,8 @@
 marginal_age_distribution(distribution)
 }
 \arguments{
-\item{distribution}{grouped distribution with \code{age} and \code{proportion}}
+\item{distribution}{grouped distribution with \code{age}, \code{proportion} and a
+per-cell count \code{N}}
 }
 \value{
 a data.frame with \code{age} and \code{proportion} summing to 1

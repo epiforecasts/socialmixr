@@ -190,15 +190,19 @@ sample_from_age_distribution <- function(
 }
 
 #' Pooled (marginal) age distribution from a grouped one
-#' @param distribution grouped distribution with `age` and `proportion`
+#' @param distribution grouped distribution with `age`, `proportion` and a
+#'   per-cell count `N`
 #' @returns a data.frame with `age` and `proportion` summing to 1
 #' @keywords internal
 #' @autoglobal
 marginal_age_distribution <- function(distribution) {
   dist_dt <- data.table::as.data.table(distribution)
-  pooled <- dist_dt[, list(proportion = sum(proportion)), by = age]
-  pooled[, proportion := proportion / sum(proportion)]
-  as.data.frame(pooled)
+  # size-weighted: weight each group by its contact count. Summing the
+  # per-group proportions instead would weight every group equally and so
+  # over-represent small groups in the pooled distribution.
+  pooled <- dist_dt[, list(count = sum(N)), by = age]
+  pooled[, proportion := count / sum(count)]
+  as.data.frame(pooled[, list(age, proportion)])
 }
 
 #' Draw one age from a sub-distribution within `[lo, hi]`, or uniformly
