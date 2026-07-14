@@ -119,11 +119,9 @@ sample_contact_ages <- function(survey, min_n) {
     pooled_out <- is.na(groups) | groups %in% thin_groups
     groups[pooled_out] <- NA_character_
     if (any(pooled_out)) {
-      n_back <- sum(pooled_out)
       cli::cli_warn(
-        "{n_back} contact{?s} whose participant age group has fewer than \\
-         {min_n} known contact age{?s} {?was/were} imputed from the pooled \\
-         distribution."
+        "Imputed {sum(pooled_out)} contact{?s} from the pooled distribution: \\
+         their participant age group had fewer than {min_n} known contact ages."
       )
     }
     # keep resampled ages within the analysis's age range
