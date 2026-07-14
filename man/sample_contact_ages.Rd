@@ -4,11 +4,16 @@
 \alias{sample_contact_ages}
 \title{Resample ranged contact ages conditional on the participant's age group}
 \usage{
-sample_contact_ages(survey)
+sample_contact_ages(survey, min_n)
 }
 \arguments{
 \item{survey}{a \code{\link[=survey]{survey()}} object that has been processed by
 \code{\link[=assign_age_groups]{assign_age_groups()}}}
+
+\item{min_n}{minimum number of exactly-known contact ages a participant age
+group must have for its own contact-age distribution to be used; groups
+with fewer are imputed from the pooled distribution. Required, with no
+default because no value is universally justifiable (see Details).}
 }
 \value{
 the survey, with ranged contact ages resampled and
@@ -25,19 +30,29 @@ population-wide mix rather than towards other children.
 \code{sample_contact_ages()} re-imputes those contacts by sampling from the
 empirical contact-age distribution \emph{within the reporting participant's age
 group}, strengthening the matrix diagonal. It estimates that conditional
-distribution from the contacts whose ages are exactly known; a participant
-group or range with no coverage falls back to the pooled distribution, then
-to uniform sampling.
+distribution from the contacts whose ages are exactly known.
+}
+\details{
+A group-specific distribution is only worth using when the group has enough
+exactly-known contact ages to estimate it; a handful of contacts gives a
+noisy distribution that can bias the result more than pooling would. There is
+no universally correct threshold, so \code{min_n} is \strong{required} and has no
+default: it is the number of known contact ages below which you would rather
+trust the pooled distribution than a sparse group-specific one. Groups below
+\code{min_n} fall back to the pooled distribution (with a warning); a range with
+no coverage falls back further to uniform sampling. \code{min_n} is a crude
+stand-in for the shrinkage a partial-pooling model would apply — if many
+groups fall back, that is the signal to model the imputation instead.
+
+This conditions on the participant's age group only. Imputation that also
+accounts for other covariates (gender, setting, ...) or propagates the
+uncertainty of the imputed ages is a modelling task, out of scope here.
 
 Run it after \code{\link[=assign_age_groups]{assign_age_groups()}} and before \code{\link[=compute_matrix]{compute_matrix()}}:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{polymod |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
-  sample_contact_ages() |>
+  sample_contact_ages(min_n = 20) |>
   compute_matrix()
 }\if{html}{\out{</div>}}
-
-This conditions on the participant's age group only. Imputation that also
-accounts for other covariates (gender, setting, ...) or propagates the
-uncertainty of the imputed ages is a modelling task, out of scope here.
 }

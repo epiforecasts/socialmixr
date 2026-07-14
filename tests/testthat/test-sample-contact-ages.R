@@ -1,11 +1,18 @@
+test_that("sample_contact_ages() requires a valid min_n", {
+  g <- assign_age_groups(polymod, age_limits = c(0, 5, 15))
+  expect_error(sample_contact_ages(g), "required")
+  expect_error(sample_contact_ages(g, min_n = 0), "positive integer")
+  expect_error(sample_contact_ages(g, min_n = 2.5), "positive integer")
+})
+
 test_that("sample_contact_ages() requires assign_age_groups() first", {
-  expect_error(sample_contact_ages(polymod), "assign_age_groups")
+  expect_error(sample_contact_ages(polymod, min_n = 20), "assign_age_groups")
 })
 
 test_that("sample_contact_ages() keeps a valid grouped survey", {
   res <- polymod |>
     assign_age_groups(age_limits = c(0, 5, 15)) |>
-    sample_contact_ages()
+    sample_contact_ages(min_n = 20)
   expect_true("contact.age.group" %in% names(res$contacts))
   ## every contact with a resolved age still has a valid age group
   cc <- res$contacts
@@ -30,7 +37,7 @@ test_that("sample_contact_ages() conditions imputation on participant age", {
   set.seed(1)
   res <- s |>
     assign_age_groups(age_limits = c(0, 18, 65)) |>
-    sample_contact_ages()
+    sample_contact_ages(min_n = 1)
   cc <- data.table::as.data.table(res$contacts)
   wide_rows <- cc[is.na(cnt_age_exact) & cnt_age_est_max == 80]
   ## the young participant's contacts are imputed younger than the old one's
@@ -38,4 +45,10 @@ test_that("sample_contact_ages() conditions imputation on participant age", {
     mean(wide_rows[part_id == young]$cnt_age),
     mean(wide_rows[part_id == old]$cnt_age)
   )
+})
+
+test_that("sample_contact_ages() falls back to pooled for thin groups", {
+  g <- assign_age_groups(polymod, age_limits = c(0, 5, 15))
+  ## an impossibly high threshold makes every group too thin to use
+  expect_warning(sample_contact_ages(g, min_n = 1e6), "pooled")
 })

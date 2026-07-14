@@ -4,10 +4,12 @@
   range by sampling from the empirical contact-age distribution *within the
   reporting participant's age group*, rather than from the pooled distribution.
   This preserves the age-assortativity (a stronger matrix diagonal) that pooled
-  or uniform imputation flattens. Use it after `assign_age_groups()` and before
-  `compute_matrix()`. It conditions on the participant's age group only; richer
-  conditioning or propagating the imputation uncertainty is a modelling task
-  (#326).
+  or uniform imputation flattens. It takes a required `min_n`: participant age
+  groups with fewer than that many known contact ages fall back to the pooled
+  distribution (no default, since no threshold is universally justifiable). Use
+  it after `assign_age_groups()` and before `compute_matrix()`. It conditions on
+  the participant's age group only; richer conditioning or propagating the
+  imputation uncertainty is a modelling task (#326).
 
 * `assign_age_groups()` gains a `contact_age_limits` argument to bin contact
   ages into different groups from participants, producing an asymmetric

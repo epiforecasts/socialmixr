@@ -99,6 +99,7 @@ utils::globalVariables(c(
   "age", # <sample_contact_ages>
   "proportion", # <sample_contact_ages>
   "N", # <sample_contact_ages>
+  "n_known", # <sample_contact_ages>
   "cnt_age", # <sample_contact_ages>
   "contact.age.group", # <sample_contact_ages>
   "part_id", # <[.contact_survey>
