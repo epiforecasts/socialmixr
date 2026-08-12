@@ -24,7 +24,7 @@ new_contact_matrix <- function(
     checkmate::check_matrix(matrix),
     checkmate::check_array(matrix)
   )
-  checkmate::assert_data_frame(participants)
+  assert_data_frame(participants)
   result <- list(
     matrix = matrix,
     participants = participants,

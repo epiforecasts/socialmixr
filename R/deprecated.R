@@ -175,7 +175,7 @@ download_survey <- function(survey, dir = NULL, sleep = 1) {
     title = parsed_cite$name,
     bibtype = "Misc",
     author = parsed_cite$author$name,
-    year = data.table::year(parsed_cite$datePublished)
+    year = year(parsed_cite$datePublished)
   )
   if ("version" %in% names(parsed_cite)) {
     reference[["note"]] <- paste("Version", parsed_cite$version)

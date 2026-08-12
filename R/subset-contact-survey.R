@@ -25,8 +25,8 @@ assemble_survey <- function(x, participants, contacts) {
 #' @keywords internal
 copy_survey <- function(survey) {
   result <- survey
-  result$participants <- data.table::copy(survey$participants)
-  result$contacts <- data.table::copy(survey$contacts)
+  result$participants <- copy(survey$participants)
+  result$contacts <- copy(survey$contacts)
   result
 }
 
