@@ -7,7 +7,6 @@
 assign_age_groups(
   survey,
   age_limits = NULL,
-  contact_age_limits = NULL,
   estimated_participant_age = c("mean", "sample", "missing"),
   estimated_contact_age = c("mean", "sample", "missing"),
   missing_participant_age = c("remove", "keep"),
@@ -20,14 +19,6 @@ assign_age_groups(
 \item{age_limits}{lower limits of the age groups over which to construct
 the matrix. Defaults to NULL. If NULL, age limits are inferred from
 participant and contact ages.}
-
-\item{contact_age_limits}{lower limits of the age groups to bin \emph{contact}
-ages into. Defaults to NULL, meaning contacts use the same groups as
-participants (a square matrix). Set it to bin contacts into different
-groups (e.g. finer), producing an asymmetric \code{age.group} /
-\code{contact.age.group} matrix. Such matrices are contact matrices only:
-\code{symmetrise()}, \code{split_matrix()} and \code{per_capita()} require reciprocity
-and so need the participant and contact groups to match.}
 
 \item{estimated_participant_age}{if set to "mean" (default), people whose
 ages are given as a range (in columns named "..._est_min" and
