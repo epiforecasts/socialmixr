@@ -397,7 +397,9 @@ get_citation <- function(x) {
   )
   if (is.null(survey$reference)) {
     name <- survey$name
-    if (is.null(name)) name <- "survey"
+    if (is.null(name)) {
+      name <- "survey"
+    }
     cli::cli_abort("No citation defined for {name}.")
   }
 
