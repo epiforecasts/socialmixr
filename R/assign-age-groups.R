@@ -100,7 +100,7 @@ assign_age_groups <- function(
   )
 
   # define age limits if not given
-  age_limits <- age_limits %||% get_age_limits(survey) # nolint: backport_linter.
+  age_limits <- age_limits %||% get_age_limits(survey) # nolint
 
   ## Process participant ages: handle missing data ----------------------------
   survey$participants <- drop_invalid_ages(
