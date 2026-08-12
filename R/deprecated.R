@@ -376,7 +376,6 @@ survey_countries <- function(survey, country.column = "country", ...) {
 #' @param x a character vector of surveys to cite
 #' @return Always errors.
 #' @importFrom utils bibentry
-#' @importFrom rlang %||%
 #' @examples
 #' # we recommend using the contactsurveys package for get_citation()
 #' \dontrun{
@@ -397,7 +396,9 @@ get_citation <- function(x) {
     get_survey(x)
   )
   if (is.null(survey$reference)) {
-    cli::cli_abort("No citation defined for {survey$name %||% 'survey'}.")
+    name <- survey$name
+    if (is.null(name)) name <- "survey"
+    cli::cli_abort("No citation defined for {name}.")
   }
 
   ref <- c(
