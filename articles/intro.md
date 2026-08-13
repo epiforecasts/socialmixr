@@ -5,8 +5,8 @@ package to derive social mixing matrices from survey data. These are
 particularly useful for age-structured [infectious disease
 models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease).
 For background on age-specific mixing matrices and what data inform
-them, see, for example, the paper on POLYMOD by
-\[@mossong_social_2008\].
+them, see, for example, the paper on POLYMOD by ([Mossong et al.
+2008](#ref-mossong_social_2008)).
 
 ## The pipeline workflow
 
@@ -223,11 +223,11 @@ m <- suppressWarnings(
 mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
 #>           contact.age.group
-#> age.group       [0,1)     [1,5)    [5,15)  [15,Inf)
-#>   [0,1)    0.58423077 1.3047436  2.979103  9.594744
-#>   [1,5)    0.25012070 3.5245706  3.084648 11.166573
-#>   [5,15)   0.06233364 1.2533956 15.960806 13.271888
-#>   [15,Inf) 0.04138036 0.7467305  2.570182 18.977018
+#> age.group       [0,1)     [1,5)    [5,15) [15,Inf)
+#>   [0,1)    1.30398947 1.4258297  1.846906 11.72089
+#>   [1,5)    0.13173131 4.6898800  3.341587 10.39424
+#>   [5,15)   0.04434131 0.8375279 17.007592 12.22266
+#>   [15,Inf) 0.04174892 0.6605197  2.530109 19.52119
 ```
 
 ## Demography
@@ -524,8 +524,8 @@ w_{i} = w_{\textrm{age}} * w_{\textrm{day.of.week}}
 If the social contact analysis is based on stratification by splitting
 the population into non-overlapping groups, it requires the weights to
 be standardised so that the weighted totals within mutually exclusive
-cells equal the known population totals
-\[@kolenikov_post-stratification_2016\].
+cells equal the known population totals ([Kolenikov
+2016](#ref-kolenikov_post-stratification_2016)).
 [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
 applies this post-stratification normalisation within age groups.
 
@@ -850,3 +850,21 @@ matrix_plot(mr, color.palette = gray.colors)
 ![](intro_files/figure-html/unnamed-chunk-40-2.png)
 
 ## References
+
+Hens, Niel, Girma Minalu Ayele, Nele Goeyvaerts, et al. 2009.
+“Estimating the Impact of School Closure on Social Mixing Behaviour and
+the Transmission of Close Contact Infections in Eight European
+Countries.” *BMC Infectious Diseases* 9 (1): 1–12.
+<https://doi.org/10.1186/1471-2334-9-187>.
+
+Kolenikov, Stas. 2016. “Post-Stratification or Non-Response Adjustment?”
+*Survey Practice* 9 (3): 2809. <https://doi.org/10.29115/SP-2016-0014>.
+
+Mossong, Joël, Niel Hens, Mark Jit, et al. 2008. “Social Contacts and
+Mixing Patterns Relevant to the Spread of Infectious Diseases.” *PLOS
+Medicine* 5 (3): e74. <https://doi.org/10.1371/journal.pmed.0050074>.
+
+Willem, Lander, Kim Van Kerckhove, Dennis L. Chao, Niel Hens, and
+Philippe Beutels. 2012. “A Nice Day for an Infection? Weather Conditions
+and Social Contact Patterns Relevant to Influenza Transmission.” *PLOS
+ONE* 7 (11): e48695. <https://doi.org/10.1371/journal.pone.0048695>.
