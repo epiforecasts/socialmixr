@@ -127,7 +127,7 @@ test_that("as.matrix() errors on rank > 2", {
 
 test_that("plot() errors on rank > 2", {
   res <- compute_matrix(polymod_uk_grouped, by = c("age", "gender"))
-  expect_error(plot(res), "rank-2") # nolint
+  expect_error(plot(res), "rank-2")
 })
 
 test_that("pipeline with dayofweek weighting is close to contact_matrix()", {

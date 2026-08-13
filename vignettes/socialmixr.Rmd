@@ -19,7 +19,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-data.table::setDTthreads(1)
 ```
 
 [socialmixr](https://github.com/epiforecasts/socialmixr) is an `R` package to derive social mixing matrices from survey data. These are particularly useful for age-structured [infectious disease models](https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease). For background on age-specific mixing matrices and what data inform them, see, for example, the paper on POLYMOD by [@mossong_social_2008].
@@ -29,8 +28,10 @@ data.table::setDTthreads(1)
 This vignette uses the POLYMOD survey data which is included in socialmixr, and ggplot2 for plotting. To download other surveys from the [Social contact data](https://zenodo.org/communities/social_contact_data) community on Zenodo, use the [contactsurveys](https://cran.r-project.org/package=contactsurveys) package.
 
 ```{r}
+library(data.table)
 library(socialmixr)
 library(ggplot2)
+setDTthreads(1)
 data(polymod)
 ```
 

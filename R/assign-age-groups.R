@@ -34,7 +34,6 @@
 #' @returns
 #' The survey object with processed age data.
 #'
-#' @importFrom rlang %||%
 #' @export
 #' @autoglobal
 #' @examples
@@ -100,7 +99,9 @@ assign_age_groups <- function(
   )
 
   # define age limits if not given
-  age_limits <- age_limits %||% get_age_limits(survey) # nolint
+  if (is.null(age_limits)) {
+    age_limits <- get_age_limits(survey)
+  }
 
   ## Process participant ages: handle missing data ----------------------------
   survey$participants <- drop_invalid_ages(

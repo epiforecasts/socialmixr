@@ -110,9 +110,8 @@
 #' @return a contact matrix, and the underlying demography of the
 #'   surveyed population
 #' @importFrom stats xtabs runif median
-#' @importFrom utils data globalVariables
+#' @importFrom utils data
 #' @importFrom countrycode countrycode
-#' @importFrom rlang %||%
 #' @import data.table
 #' @export
 #' @autoglobal
