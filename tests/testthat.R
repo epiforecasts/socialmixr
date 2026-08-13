@@ -1,7 +1,6 @@
-# nolint start
 library(testthat)
-library(socialmixr)
-# nolint end
+library(socialmixr) # nolint: unused_import_linter.
+library(data.table)
 
-data.table::setDTthreads(1)
+setDTthreads(1)
 test_check("socialmixr")

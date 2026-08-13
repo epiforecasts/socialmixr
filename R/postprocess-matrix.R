@@ -126,10 +126,10 @@ joint_population_vector <- function(survey_pop, matrix, groupings) {
     expand.grid,
     c(part_levels, list(stringsAsFactors = FALSE, KEEP.OUT.ATTRS = FALSE))
   )
-  combos <- data.table::as.data.table(combos)
+  combos <- as.data.table(combos)
   combos[, .idx := .I]
 
-  pop <- data.table::as.data.table(survey_pop)[,
+  pop <- as.data.table(survey_pop)[,
     c(group_names, "population"),
     with = FALSE
   ]
@@ -144,7 +144,7 @@ joint_population_vector <- function(survey_pop, matrix, groupings) {
   }
 
   joined <- merge(combos, pop, by = group_names, all.x = TRUE, sort = FALSE)
-  data.table::setorder(joined, .idx)
+  setorder(joined, .idx)
   if (anyNA(joined$population)) {
     msg <- "{.arg survey_pop} is missing population entries for some \\
             grouping combinations of the matrix."
