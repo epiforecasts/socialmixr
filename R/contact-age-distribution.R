@@ -19,7 +19,7 @@
 #' @autoglobal
 contact_age_distribution <- function(survey) {
   check_if_contact_survey(survey)
-  contacts <- data.table::copy(survey$contacts)
+  contacts <- copy(survey$contacts)
 
   # Use exact ages only to avoid including previously imputed values
   age_col <- if ("cnt_age_exact" %in% colnames(contacts)) {
@@ -49,7 +49,7 @@ contact_age_distribution <- function(survey) {
   }
   ages <- as.integer(ages)
 
-  counts <- data.table::data.table(age = ages)[, .N, by = age]
+  counts <- data.table(age = ages)[, .N, by = age]
   counts[, proportion := N / sum(N)]
   counts <- counts[order(age)]
   data.frame(age = counts$age, proportion = counts$proportion)

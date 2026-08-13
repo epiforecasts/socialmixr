@@ -252,7 +252,7 @@ align_ages <- function(pop, x) {
     )
   }
 
-  pop_dt <- data.table::as.data.table(pop)
+  pop_dt <- as.data.table(pop)
 
   for (nm in cat_names) {
     extra <- setdiff(unique(as.character(pop_dt[[nm]])), target_levels[[nm]])
@@ -279,7 +279,7 @@ align_ages <- function(pop, x) {
         .SDcols = c("age", "population")
       ]
     } else {
-      out <- data.table::as.data.table(rebin_one(pop_dt))
+      out <- as.data.table(rebin_one(pop_dt))
     }
   } else {
     out <- pop_dt[, list(population = sum(population)), by = cat_names]

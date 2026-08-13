@@ -19,7 +19,6 @@
 #' country information is available from either the survey or countries
 #' argument.
 #'
-#' @importFrom rlang %||%
 #' @autoglobal
 #' @examples
 #' if (requireNamespace("wpp2017", quietly = TRUE)) {
@@ -40,7 +39,10 @@ survey_country_population <- function(survey, countries = NULL) {
   )
   check_if_contact_survey(survey)
   participants <- survey$participants
-  survey_country_name <- countries %||% unique(participants$country)
+  survey_country_name <- countries
+  if (is.null(countries)) {
+    survey_country_name <- unique(participants$country)
+  }
   survey_country_name <- as.character(stats::na.omit(survey_country_name))
   if (is.null(survey_country_name) || length(survey_country_name) == 0) {
     cli::cli_abort(
