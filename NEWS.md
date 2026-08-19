@@ -1,5 +1,11 @@
 # socialmixr (development version)
 
+* Exported function names now spell "age groups" consistently as `age_groups`
+  (snake_case), matching `assign_age_groups()`. `reduce_agegroups()`,
+  `limits_to_agegroups()` and `agegroups_to_limits()` are renamed to
+  `reduce_age_groups()`, `limits_to_age_groups()` and `age_groups_to_limits()`;
+  the old names remain as deprecated aliases that warn (#331).
+
 * Interpolating population data to age groups finer than the data itself is
   deprecated. `contact_matrix()` (when it adjusts demographic data to the
   requested age groups) and `pop_age()` still do it but now warn, and it will

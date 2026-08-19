@@ -334,7 +334,7 @@ contact_matrix <- function(
   )
 
   ## recover resolved age_limits from the assigned age groups ------------------
-  age_limits <- agegroups_to_limits(survey$participants$age.group)
+  age_limits <- age_groups_to_limits(survey$participants$age.group)
 
   ## ---------------------------------------------------------------------------
   ## if split, symmetric, or age weights are requested, get demographic data
@@ -386,7 +386,7 @@ contact_matrix <- function(
     if (weigh_age) {
       weigh_pop <- survey_pop_reference(survey_pop, ...)
       weigh_pop[,
-        age := limits_to_agegroups(lower.age.limit, notation = "brackets")
+        age := limits_to_age_groups(lower.age.limit, notation = "brackets")
       ]
     }
 

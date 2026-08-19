@@ -1,16 +1,16 @@
 test_that("age groups can be created and manipulated", {
   ages <- seq_len(50)
   age_limits <- c(0, 5, 10)
-  groups <- reduce_agegroups(ages, age_limits)
+  groups <- reduce_age_groups(ages, age_limits)
   expect_identical(unique(groups), age_limits)
-  expect_warning(limits_to_agegroups(groups), "default")
+  expect_warning(limits_to_age_groups(groups), "default")
   age_groups <-
     expect_identical(
-      as.character(unique(limits_to_agegroups(groups, notation = "brackets"))),
+      as.character(unique(limits_to_age_groups(groups, notation = "brackets"))),
       c("[0,5)", "[5,10)", "[10,Inf)")
     )
   expect_identical(
-    as.character(unique(limits_to_agegroups(groups, notation = "dashes"))),
+    as.character(unique(limits_to_age_groups(groups, notation = "dashes"))),
     c("0-4", "5-9", "10+")
   )
 })
@@ -18,8 +18,8 @@ test_that("age groups can be created and manipulated", {
 test_that("age groups are ordered factors", {
   ages <- seq_len(50)
   age_limits <- c(0, 5, 10)
-  groups <- reduce_agegroups(ages, age_limits)
-  age_groups <- limits_to_agegroups(groups, notation = "dashes")
+  groups <- reduce_age_groups(ages, age_limits)
+  age_groups <- limits_to_age_groups(groups, notation = "dashes")
   expect_s3_class(age_groups, "ordered")
   expect_s3_class(age_groups, "factor")
 })
@@ -28,7 +28,7 @@ test_that("rebin_ages coarsens without changing total population", {
   skip_if_not_installed("wpp2017")
   ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
   pop <- data.frame(
-    age = limits_to_agegroups(
+    age = limits_to_age_groups(
       ages_it_2015$lower.age.limit,
       notation = "brackets"
     ),
@@ -43,7 +43,7 @@ test_that("rebin_ages coarsens without changing total population", {
 
 test_that("rebin_ages errors when finer age groups are requested", {
   pop <- data.frame(
-    age = limits_to_agegroups(seq(0, 20, by = 5), notation = "brackets"),
+    age = limits_to_age_groups(seq(0, 20, by = 5), notation = "brackets"),
     population = rep(1000, 5)
   )
   expect_error(
@@ -55,7 +55,7 @@ test_that("rebin_ages errors when finer age groups are requested", {
 test_that("rebin_ages does not flag limits below the population's range", {
   ## a limit below the lowest band creates an empty low group, not a split
   pop <- data.frame(
-    age = limits_to_agegroups(c(20, 30, 40), notation = "brackets"),
+    age = limits_to_age_groups(c(20, 30, 40), notation = "brackets"),
     population = c(1e6, 1e6, 1e6)
   )
   out <- rebin_ages(pop, age_limits = c(0, 20, 40))
@@ -110,28 +110,50 @@ test_that("wpp_age warns when historical year is unavailable", {
   )
 })
 
-test_that("agegroups_to_limits round-trips (brackets)", {
+test_that("age_groups_to_limits round-trips (brackets)", {
   limits <- c(0, 5, 10)
-  groups <- limits_to_agegroups(limits, notation = "brackets")
-  result <- agegroups_to_limits(groups)
+  groups <- limits_to_age_groups(limits, notation = "brackets")
+  result <- age_groups_to_limits(groups)
   expect_identical(result, limits)
 })
 
-test_that("agegroups_to_limits round-trips with limits_to_agegroups (dashes)", {
+test_that("age_groups_to_limits round-trips (dashes)", {
   limits <- c(0, 5, 10)
-  groups <- limits_to_agegroups(limits, notation = "dashes")
-  result <- agegroups_to_limits(groups)
+  groups <- limits_to_age_groups(limits, notation = "dashes")
+  result <- age_groups_to_limits(groups)
   expect_identical(result, limits)
 })
 
-test_that("agegroups_to_limits works with character input", {
+test_that("age_groups_to_limits works with character input", {
   groups <- c("[0,5)", "[5,10)", "10+")
-  result <- agegroups_to_limits(groups)
+  result <- age_groups_to_limits(groups)
   expect_identical(result, c(0, 5, 10))
 })
 
-test_that("agegroups_to_limits works with single age group", {
+test_that("age_groups_to_limits works with single age group", {
   groups <- factor("0+", levels = "0+", ordered = TRUE)
-  result <- agegroups_to_limits(groups)
+  result <- age_groups_to_limits(groups)
   expect_identical(result, 0)
+})
+
+test_that("agegroups spellings are deprecated in favour of age_groups", {
+  lifecycle::expect_deprecated(reduce_agegroups(seq_len(10), c(0, 5)))
+  lifecycle::expect_deprecated(limits_to_agegroups(c(0, 5, 10)))
+  lifecycle::expect_deprecated(agegroups_to_limits(c("[0,5)", "[5,Inf)")))
+
+  ## old names delegate to the new ones
+  withr::local_options(lifecycle_verbosity = "quiet")
+  brackets <- limits_to_age_groups(c(0, 5, 10), notation = "brackets")
+  expect_identical(
+    reduce_agegroups(seq_len(10), c(0, 5)),
+    reduce_age_groups(seq_len(10), c(0, 5))
+  )
+  expect_identical(
+    limits_to_agegroups(c(0, 5, 10), notation = "brackets"),
+    brackets
+  )
+  expect_identical(
+    agegroups_to_limits(brackets),
+    age_groups_to_limits(brackets)
+  )
 })

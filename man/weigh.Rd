@@ -144,7 +144,7 @@ uk |> weigh("agecat", target = c(child = 0.25, adult = 0.75))
 
 # ── age post-stratification ──────────────────────────────────────
 uk_pop <- data.frame(
-  age = limits_to_agegroups(c(0, 5, 15, 65), notation = "brackets"),
+  age = limits_to_age_groups(c(0, 5, 15, 65), notation = "brackets"),
   population = c(3500000, 6000000, 40000000, 10000000)
 )
 uk |> weigh_by_age(uk_pop)

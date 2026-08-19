@@ -125,13 +125,13 @@ Obtaining symmetric contact matrices, splitting out their components (see below)
 
 The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) need population data. In practice you supply a population table with an `age` column of age-group labels, a `population` column, and a column per other grouping, then align it to a computed matrix with `align_ages()`. `align_ages()` aggregates each grouping to the matrix's levels (coarsening the age grouping where needed) and returns the `data.frame` the post-processing functions expect.
 
-For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). Relabel its 1-year bands to age groups with `limits_to_agegroups()` and then coarsen them to the matrix's age groups using `align_ages()`:
+For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). Relabel its 1-year bands to age groups with `limits_to_age_groups()` and then coarsen them to the matrix's age groups using `align_ages()`:
 
 ```{r eval=requireNamespace("wpp2024", quietly = TRUE), message=FALSE, warning=FALSE}
 data("popAge1dt", package = "wpp2024")
 uk_pop <- popAge1dt[name == "United Kingdom" & year == 2020,
   .(
-    age = limits_to_agegroups(age, notation = "brackets"),
+    age = limits_to_age_groups(age, notation = "brackets"),
     population = pop * 1000
   )
 ]
@@ -142,7 +142,7 @@ Any comparable data frame will work, e.g. constructed by hand:
 
 ```{r}
 custom_pop <- data.frame(
-  age = limits_to_agegroups(c(0, 18, 60), notation = "brackets"),
+  age = limits_to_age_groups(c(0, 18, 60), notation = "brackets"),
   population = c(12000000, 35000000, 20000000)
 )
 ```
@@ -151,7 +151,7 @@ For the rest of this vignette we use a small constructed `uk_pop` for the United
 
 ```{r}
 uk_pop <- data.frame(
-  age = limits_to_agegroups(c(0, 1, 5, 15), notation = "brackets"),
+  age = limits_to_age_groups(c(0, 1, 5, 15), notation = "brackets"),
   population = c(750000, 3200000, 7500000, 56000000)
 )
 ```
@@ -187,7 +187,7 @@ $$c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}$$
 
 ```{r message=FALSE, warning=FALSE}
 de_pop <- data.frame(
-  age = limits_to_agegroups(c(0, 60), notation = "brackets"),
+  age = limits_to_age_groups(c(0, 60), notation = "brackets"),
   population = c(67000000, 16000000)
 )
 
