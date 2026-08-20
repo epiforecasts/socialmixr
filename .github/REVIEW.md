@@ -2,16 +2,9 @@
 
 How to review code changes to this package, and what is worth reporting.
 
-This runs on **your** account, with whatever model and tool you use. It is
-committed to the repo so that anyone contributing — maintainer or not — can get
-the same review before a human looks at the PR, and so that the standards are
-versioned rather than living in one person's setup. It costs the repo nothing.
-
-Ask your assistant to follow this file. Arguments can be given in prose
-("review PR 359", "review what changed since abc1234", "post the findings") or
-as the flags named below, whichever your tool prefers. If you review here often,
-wiring this file to a `/review` command in your own configuration is worth the
-two minutes.
+Arguments can be given in prose ("review PR 359", "review what changed since
+abc1234", "post the findings") or as the flags named below, whichever your tool
+prefers.
 
 ## What to review
 
