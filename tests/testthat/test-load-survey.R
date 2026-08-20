@@ -159,3 +159,10 @@ test_that("longitudinal files are not deferred when contacts share the key", {
   expect_identical(result$observation_key, "wave")
   expect_false("dayofweek" %in% colnames(result$surveys$contact))
 })
+
+test_that("load_survey() errors clearly on empty input", {
+  # A failed download leaves a NULL entry; base file.exists(NULL) would
+  # otherwise raise an opaque "invalid 'file' argument"
+  expect_error(load_survey(NULL), "No files to load")
+  expect_error(load_survey(character(0)), "No files to load")
+})
