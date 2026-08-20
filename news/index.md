@@ -2,6 +2,11 @@
 
 ## socialmixr (development version)
 
+- [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
+  now errors clearly when given no files (e.g. an empty vector or `NULL`
+  from a failed download) instead of raising an opaque
+  `invalid 'file' argument`.
+
 - Interpolating population data to age groups finer than the data itself
   is deprecated.
   [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
