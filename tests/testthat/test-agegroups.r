@@ -138,7 +138,9 @@ test_that("age_groups_to_limits works with single age group", {
 
 test_that("agegroups spellings are deprecated in favour of age_groups", {
   lifecycle::expect_deprecated(reduce_agegroups(seq_len(10), c(0, 5)))
-  lifecycle::expect_deprecated(limits_to_agegroups(c(0, 5, 10)))
+  lifecycle::expect_deprecated(
+    limits_to_agegroups(c(0, 5, 10), notation = "brackets")
+  )
   lifecycle::expect_deprecated(agegroups_to_limits(c("[0,5)", "[5,Inf)")))
 
   ## old names delegate to the new ones
