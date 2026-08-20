@@ -2,19 +2,19 @@
 
 How to review code changes to this package, and what is worth reporting.
 
-Arguments can be given in prose ("review PR 359", "review what changed since
-abc1234", "post the findings") or as the flags named below, whichever your tool
-prefers.
+Say what you want reviewed in whatever form your tool takes — "review PR 359",
+"review what changed since abc1234", "post the findings on the PR".
 
 ## What to review
 
-Take a PR number and flags from the arguments. Then pick the diff:
+Work out what to look at from what you were asked:
 
-- **A PR number** (e.g. `/review 357`) — `gh pr diff <PR>`.
-- **`--since <sha>`** — only the commits made on this branch since `<sha>`:
-  `git log --no-merges --format=%H <sha>..HEAD`, read each with `git show`. Use
-  this on a re-review so you look at what changed rather than the whole PR again.
-- **No argument** — the working diff against the default branch.
+- **A PR** — `gh pr diff <PR>`.
+- **Only what changed since a given commit** — the commits made on this branch
+  since it: `git log --no-merges --format=%H <sha>..HEAD`, read each with
+  `git show`. This is what you want on a re-review, so you look at what changed
+  rather than the whole PR again.
+- **Nothing specified** — the working diff against the default branch.
 
 On a re-review, also read the inline comments already on the PR
 (`gh api repos/{owner}/{repo}/pulls/<PR>/comments`). Never repeat a point that is
@@ -78,11 +78,11 @@ By default, **report findings in the terminal** — file, line, and what is wron
 Do not post anything to GitHub. Someone running this on their own contribution
 should be able to fix things quietly before anyone sees the PR.
 
-With **`--post`**, and only with it, post each finding as an inline comment on
-the line it concerns, via `gh api repos/{owner}/{repo}/pulls/<PR>/comments` with
-`path`, `line`, `side: RIGHT`, and `commit_id` set to the PR head. Post no
-summary comment and no "looks good" comment in either mode; silence is how a
-clean review is reported.
+**Only if you were asked to post them**, put each finding on the line it
+concerns as an inline comment — `gh api repos/{owner}/{repo}/pulls/<PR>/comments`
+with `path`, `line`, `side: RIGHT`, and `commit_id` set to the PR head. Post no
+summary comment and no "looks good" comment either way; silence is how a clean
+review is reported.
 
 Anchor every finding to a line, including one about the change as a whole —
 attach it where the missing work would belong.
