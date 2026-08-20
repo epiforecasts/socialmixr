@@ -2,29 +2,7 @@
 
 ## socialmixr (development version)
 
-- [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
-  now errors clearly when given no files (e.g. an empty vector or `NULL`
-  from a failed download) instead of raising an opaque
-  `invalid 'file' argument`.
-
-- Interpolating population data to age groups finer than the data itself
-  is deprecated.
-  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-  (when it adjusts demographic data to the requested age groups) and
-  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
-  still do it but now warn, and it will error in a future release.
-  Supply population data at least as fine as the requested age groups.
-  The new
-  [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
-  and
-  [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
-  never interpolate: they error on finer requests.
-
-- [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
-  is deprecated in favour of
-  [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
-  and warns; it will be removed in a future release
-  ([\#328](https://github.com/epiforecasts/socialmixr/issues/328)).
+### New features
 
 - [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
   gains a `by` argument that accepts any combination of
@@ -118,6 +96,27 @@
   named vector and `groups` paths are unchanged
   ([\#314](https://github.com/epiforecasts/socialmixr/issues/314)).
 
+### Deprecations
+
+- Interpolating population data to age groups finer than the data itself
+  is deprecated.
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  (when it adjusts demographic data to the requested age groups) and
+  [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+  still do it but now warn, and it will error in a future release.
+  Supply population data at least as fine as the requested age groups.
+  The new
+  [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+  and
+  [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
+  never interpolate: they error on finer requests.
+
+- [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
+  is deprecated in favour of
+  [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+  and warns; it will be removed in a future release
+  ([\#328](https://github.com/epiforecasts/socialmixr/issues/328)).
+
 - Advance deprecation cycle
   ([\#312](https://github.com/epiforecasts/socialmixr/issues/312)).
   [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md),
@@ -158,6 +157,21 @@
   [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md)
   and [`check()`](https://epiforecasts.io/socialmixr/reference/check.md)
   deprecation messages have been corrected.
+
+### Bug fixes
+
+- [`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md)
+  now errors clearly when given no files (e.g. an empty vector or `NULL`
+  from a failed download) instead of raising an opaque
+  `invalid 'file' argument`.
+
+### Internal
+
+- Removed the air formatter: `air.toml`, the `style.yaml`
+  format-suggestion workflow, and the VS Code formatter settings. lintr
+  continues to run on changed files, and `indentation_linter` is
+  re-enabled (with a hanging-indent style) to keep linting indentation
+  now that air no longer handles it.
 
 ## socialmixr 0.6.0
 
