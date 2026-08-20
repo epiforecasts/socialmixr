@@ -117,7 +117,7 @@
 #'
 #' # ── age post-stratification ──────────────────────────────────────
 #' uk_pop <- data.frame(
-#'   age = limits_to_agegroups(c(0, 5, 15, 65), notation = "brackets"),
+#'   age = limits_to_age_groups(c(0, 5, 15, 65), notation = "brackets"),
 #'   population = c(3500000, 6000000, 40000000, 10000000)
 #' )
 #' uk |> weigh_by_age(uk_pop)
@@ -203,7 +203,7 @@ weigh_by_age <- function(survey, pop, ...) {
   }
 
   survey_pop_full <- data.table(pop)
-  survey_pop_full[, lower.age.limit := agegroups_to_limits(age)]
+  survey_pop_full[, lower.age.limit := age_groups_to_limits(age)]
 
   survey$participants <- weight_by_age(participants, survey_pop_full)
   survey
@@ -395,7 +395,7 @@ weigh_population <- function(participants, target, ...) {
 
   survey_pop_full <- data.table(target)
   if (!"upper.age.limit" %in% colnames(survey_pop_full)) {
-    age_breaks <- agegroups_to_limits(participants$age.group)
+    age_breaks <- age_groups_to_limits(participants$age.group)
     survey_pop_full <- add_survey_upper_age_limit(
       survey = survey_pop_full,
       age_breaks = age_breaks

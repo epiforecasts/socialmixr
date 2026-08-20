@@ -97,7 +97,7 @@ rebin_ages_numeric <- function(
 
   pop <- pop[get(pop_age_column) >= min(age_limits)]
   pop <- pop[,
-    paste(pop_age_column) := reduce_agegroups(get(pop_age_column), age_limits)
+    paste(pop_age_column) := reduce_age_groups(get(pop_age_column), age_limits)
   ]
   pop <- pop[, list(..population = sum(get(pop_column))), by = pop_age_column]
   setnames(pop, "..population", pop_column)
@@ -113,7 +113,7 @@ rebin_ages_numeric <- function(
 #' summing populations into each group. Errors if `age_limits` are finer than
 #' the population data, since splitting a band would require assuming a
 #' within-band age distribution. Operates on an `age` column of age-group labels
-#' (e.g. from [limits_to_agegroups()] or [assign_age_groups()]) and returns the
+#' (e.g. from [limits_to_age_groups()] or [assign_age_groups()]) and returns the
 #' same form.
 #'
 #' To align a population to a contact matrix's groupings for the post-processing
@@ -127,7 +127,7 @@ rebin_ages_numeric <- function(
 #'
 #' @examples
 #' it_pop <- data.frame(
-#'   age = limits_to_agegroups(seq(0, 80, by = 5), notation = "brackets"),
+#'   age = limits_to_age_groups(seq(0, 80, by = 5), notation = "brackets"),
 #'   population = c(rep(2.5e6, 4), rep(3.5e6, 4), rep(5e6, 6), 5e6, 7e6, 4e6)
 #' )
 #' # rebin into 10-year age groups
@@ -155,7 +155,7 @@ rebin_ages <- function(pop, age_limits) {
   }
 
   ## brackets -> lower.age.limit; coarsen only (error if finer requested)
-  pop_limits <- agegroups_to_limits(pop$age)
+  pop_limits <- age_groups_to_limits(pop$age)
   age_limits <- sort(age_limits)
   finer <- setdiff(
     age_limits[age_limits >= min(pop_limits) & age_limits <= max(pop_limits)],
@@ -176,7 +176,7 @@ rebin_ages <- function(pop, age_limits) {
   )
   data.frame(
     age = as.character(
-      limits_to_agegroups(rebinned$lower.age.limit, notation = "brackets")
+      limits_to_age_groups(rebinned$lower.age.limit, notation = "brackets")
     ),
     population = rebinned$population,
     stringsAsFactors = FALSE
@@ -211,7 +211,7 @@ rebin_ages <- function(pop, age_limits) {
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
 #'   compute_matrix()
 #' uk_pop <- data.frame(
-#'   age = limits_to_agegroups(0:80, notation = "brackets"),
+#'   age = limits_to_age_groups(0:80, notation = "brackets"),
 #'   population = rep(1e5, 81)
 #' )
 #' result |> symmetrise(survey_pop = align_ages(uk_pop, result))
@@ -265,7 +265,7 @@ align_ages <- function(pop, x) {
   }
 
   if (any(is_age)) {
-    age_limits <- agegroups_to_limits(target_levels[["age"]])
+    age_limits <- age_groups_to_limits(target_levels[["age"]])
     rebin_one <- function(sub) {
       rebin_ages(
         data.frame(age = sub$age, population = sub$population),

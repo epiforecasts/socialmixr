@@ -23,7 +23,7 @@
 
 * New `rebin_ages()` rebins a population table to a coarser set of age groups
   by summing. It operates on an `age` column of age-group labels (as produced
-  by `limits_to_agegroups()` or `assign_age_groups()`) and returns the same
+  by `limits_to_age_groups()` or `assign_age_groups()`) and returns the same
   form, so it composes directly with the post-processing functions. It only
   coarsens: requesting age groups finer than the population data is an error,
   since splitting a band would require assuming a within-band age distribution.
@@ -61,6 +61,12 @@
   unchanged (#314).
 
 ## Deprecations
+
+* Exported function names now spell "age groups" consistently as `age_groups`
+  (snake_case), matching `assign_age_groups()`. `reduce_agegroups()`,
+  `limits_to_agegroups()` and `agegroups_to_limits()` are renamed to
+  `reduce_age_groups()`, `limits_to_age_groups()` and `age_groups_to_limits()`;
+  the old names remain as deprecated aliases that warn (#331).
 
 * Interpolating population data to age groups finer than the data itself is
   deprecated. `contact_matrix()` (when it adjusts demographic data to the

@@ -439,7 +439,7 @@ adjust_ppt_age_group_breaks <- function(
   max_age <- max_participant_age(participants)
 
   participants[,
-    lower.age.limit := reduce_agegroups(
+    lower.age.limit := reduce_age_groups(
       x = part_age,
       limits = age_limits
     )
@@ -733,7 +733,7 @@ weight_by_age <- function(participants, survey_pop_full) {
   # target share. No interpolation to single-year ages.
   ref_limits <- sort(survey_pop_full$lower.age.limit)
 
-  participants[, age.band := reduce_agegroups(part_age, ref_limits)]
+  participants[, age.band := reduce_age_groups(part_age, ref_limits)]
 
   # participants with a known age below the reference's lowest band cannot be
   # weighted; participants with a missing age are skipped (they keep their
