@@ -1,5 +1,9 @@
 # socialmixr (development version)
 
+* `load_survey()` now errors clearly when given no files (e.g. an empty vector
+  or `NULL` from a failed download) instead of raising an opaque
+  `invalid 'file' argument`.
+
 * Interpolating population data to age groups finer than the data itself is
   deprecated. `contact_matrix()` (when it adjusts demographic data to the
   requested age groups) and `pop_age()` still do it but now warn, and it will
