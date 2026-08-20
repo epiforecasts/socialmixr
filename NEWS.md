@@ -1,18 +1,6 @@
 # socialmixr (development version)
 
-* `load_survey()` now errors clearly when given no files (e.g. an empty vector
-  or `NULL` from a failed download) instead of raising an opaque
-  `invalid 'file' argument`.
-
-* Interpolating population data to age groups finer than the data itself is
-  deprecated. `contact_matrix()` (when it adjusts demographic data to the
-  requested age groups) and `pop_age()` still do it but now warn, and it will
-  error in a future release. Supply population data at least as fine as the
-  requested age groups. The new `rebin_ages()` and `align_ages()` never
-  interpolate: they error on finer requests.
-
-* `pop_age()` is deprecated in favour of `rebin_ages()` and warns; it will
-  be removed in a future release (#328).
+## New features
 
 * `compute_matrix()` gains a `by` argument that accepts any combination of
   participant/contact groupings, not just age. Each entry is either the
@@ -72,6 +60,18 @@
   the existing 5/2 split. `weigh()`'s named vector and `groups` paths are
   unchanged (#314).
 
+## Deprecations
+
+* Interpolating population data to age groups finer than the data itself is
+  deprecated. `contact_matrix()` (when it adjusts demographic data to the
+  requested age groups) and `pop_age()` still do it but now warn, and it will
+  error in a future release. Supply population data at least as fine as the
+  requested age groups. The new `rebin_ages()` and `align_ages()` never
+  interpolate: they error on finer requests.
+
+* `pop_age()` is deprecated in favour of `rebin_ages()` and warns; it will
+  be removed in a future release (#328).
+
 * Advance deprecation cycle (#312). `wpp_age()`, `wpp_countries()`, and
   `survey_country_population()` are deprecated (warn) — all three are
   thin layers over `wpp2017`, which is on its way out. Construct a
@@ -91,6 +91,19 @@
   `missing_contact_age = "sample"` option on `assign_age_groups()` and
   `contact_matrix()`. Bogus `"1.0.0"` versions on the `survey()` and
   `check()` deprecation messages have been corrected.
+
+## Bug fixes
+
+* `load_survey()` now errors clearly when given no files (e.g. an empty vector
+  or `NULL` from a failed download) instead of raising an opaque
+  `invalid 'file' argument`.
+
+## Internal
+
+* Removed the air formatter: `air.toml`, the `style.yaml` format-suggestion
+  workflow, and the VS Code formatter settings. lintr continues to run on
+  changed files, and `indentation_linter` is re-enabled (with a hanging-indent
+  style) to keep linting indentation now that air no longer handles it.
 
 # socialmixr 0.6.0
 
