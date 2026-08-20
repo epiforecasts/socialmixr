@@ -17,7 +17,6 @@ cran-comments.md
 ^README.Rmd$
 ^[\.]?air\.toml$
 ^\.vscode$
-^\.coderabbit\.yaml$
 ^\.claude$
 ^CLAUDE\.md$
 ^CLAUDE\.local\.md$
