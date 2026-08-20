@@ -5,7 +5,7 @@ linters: linters_with_tags(
     implicit_integer_linter = NULL,
     todo_comment_linter = NULL,
     function_argument_linter = NULL,
-    indentation_linter = NULL, # left off with air; re-enable to lint indentation
+    indentation_linter = indentation_linter(hanging_indent_style = "never"),
     backport_linter("4.1.0")
   )
 
