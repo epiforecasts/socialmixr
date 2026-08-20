@@ -87,8 +87,19 @@
 <div class="section level2">
 <h2 id="reporting">Reporting<a class="anchor" aria-label="anchor" href="#reporting"></a></h2>
 <p>By default, <strong>report findings in the terminal</strong> — file, line, and what is wrong. Do not post anything to GitHub. Someone running this on their own contribution should be able to fix things quietly before anyone sees the PR.</p>
-<p><strong>Only if you were asked to post them</strong>, put each finding on the line it concerns as an inline comment — <code>gh api repos/{owner}/{repo}/pulls/&lt;PR&gt;/comments</code> with <code>path</code>, <code>line</code>, <code>side: RIGHT</code>, and <code>commit_id</code> set to the PR head. Post no summary comment and no “looks good” comment either way; silence is how a clean review is reported.</p>
+<p><strong>Only if you were asked to post them</strong>, put each finding on the line it concerns as an inline comment — <code>gh api repos/{owner}/{repo}/pulls/&lt;PR&gt;/comments</code> with <code>path</code>, <code>line</code>, <code>side: RIGHT</code>, and <code>commit_id</code> set to the PR head. For a finding that spans several lines, add <code>start_line</code> and <code>start_side: RIGHT</code> to anchor the whole range. Post no summary comment and no “looks good” comment either way; silence is how a clean review is reported.</p>
 <p>Anchor every finding to a line, including one about the change as a whole — attach it where the missing work would belong.</p>
+<div class="section level3">
+<h3 id="suggest-the-edit-where-you-can">Suggest the edit where you can<a class="anchor" aria-label="anchor" href="#suggest-the-edit-where-you-can"></a></h3>
+<p>When you are posting inline (see above) and the fix is mechanical and you are confident of the exact replacement, put it in a suggestion block rather than describing it:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>Empty input gives <span class="st">`</span><span class="at">1:0</span><span class="st">`</span>, which iterates twice.</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="st">```</span><span class="at">suggestion</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="at">  for (i in seq_len(nrow(x))) {</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="st">```</span></span></code></pre></div>
+<p>GitHub renders that with a button that commits it, so a correct finding costs one click instead of a round trip. The block must contain the complete replacement for the commented lines, indentation included — it is applied verbatim.</p>
+<p>Use prose instead when the fix is a judgement call, when there is more than one reasonable way to address it, or when the change spans lines you have not commented on. Guessing at a suggestion in those cases produces something that looks authoritative and applies cleanly while being wrong, which is worse than saying what the problem is and leaving the fix to the author.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="trust">Trust<a class="anchor" aria-label="anchor" href="#trust"></a></h2>
