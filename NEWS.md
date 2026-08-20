@@ -23,7 +23,7 @@
 
 * New `rebin_ages()` rebins a population table to a coarser set of age groups
   by summing. It operates on an `age` column of age-group labels (as produced
-  by `limits_to_agegroups()` or `assign_age_groups()`) and returns the same
+  by `limits_to_age_groups()` or `assign_age_groups()`) and returns the same
   form, so it composes directly with the post-processing functions. It only
   coarsens: requesting age groups finer than the population data is an error,
   since splitting a band would require assuming a within-band age distribution.
