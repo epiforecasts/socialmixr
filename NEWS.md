@@ -1,5 +1,10 @@
 # socialmixr (development version)
 
+* Removed the air formatter: `air.toml`, the `style.yaml` format-suggestion
+  workflow, and the VS Code formatter settings. lintr continues to run on
+  changed files; `indentation_linter` stays disabled, and can be re-enabled in
+  `.lintr` if indentation should be linted again.
+
 * Interpolating population data to age groups finer than the data itself is
   deprecated. `contact_matrix()` (when it adjusts demographic data to the
   requested age groups) and `pop_age()` still do it but now warn, and it will
