@@ -82,6 +82,15 @@ check_missing_countries <- function(
 }
 
 check_files_exist <- function(files, call = rlang::caller_env()) {
+  if (length(files) == 0) {
+    cli::cli_abort(
+      c(
+        "No files to load.",
+        i = "The survey download may have failed, leaving no files to read."
+      ),
+      call = call
+    )
+  }
   exist <- file.exists(files)
   files_missing <- files[!exist]
   if (length(files_missing) > 0) {
