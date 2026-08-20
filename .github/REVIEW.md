@@ -80,12 +80,35 @@ should be able to fix things quietly before anyone sees the PR.
 
 **Only if you were asked to post them**, put each finding on the line it
 concerns as an inline comment — `gh api repos/{owner}/{repo}/pulls/<PR>/comments`
-with `path`, `line`, `side: RIGHT`, and `commit_id` set to the PR head. Post no
-summary comment and no "looks good" comment either way; silence is how a clean
-review is reported.
+with `path`, `line`, `side: RIGHT`, and `commit_id` set to the PR head. For a
+finding that spans several lines, add `start_line` and `start_side: RIGHT` to
+anchor the whole range. Post no summary comment and no "looks good" comment
+either way; silence is how a clean review is reported.
 
 Anchor every finding to a line, including one about the change as a whole —
 attach it where the missing work would belong.
+
+### Suggest the edit where you can
+
+When you are posting inline (see above) and the fix is mechanical and you are
+confident of the exact replacement, put it in a suggestion block rather than
+describing it:
+
+    Empty input gives `1:0`, which iterates twice.
+
+    ```suggestion
+      for (i in seq_len(nrow(x))) {
+    ```
+
+GitHub renders that with a button that commits it, so a correct finding costs one
+click instead of a round trip. The block must contain the complete replacement
+for the commented lines, indentation included — it is applied verbatim.
+
+Use prose instead when the fix is a judgement call, when there is more than one
+reasonable way to address it, or when the change spans lines you have not
+commented on. Guessing at a suggestion in those cases produces something that
+looks authoritative and applies cleanly while being wrong, which is worse than
+saying what the problem is and leaving the fix to the author.
 
 ## Trust
 
