@@ -92,7 +92,9 @@ limits_to_agegroups <- function(
   notation = c("dashes", "brackets")
 ) {
   lifecycle::deprecate_warn(
-    "0.7.0", "limits_to_agegroups()", "limits_to_age_groups()"
+    "0.7.0",
+    "limits_to_agegroups()",
+    "limits_to_age_groups()"
   )
   if (missing(notation)) {
     limits_to_age_groups(x, limits)
@@ -114,7 +116,9 @@ limits_to_agegroups <- function(
 #' @export
 agegroups_to_limits <- function(x) {
   lifecycle::deprecate_warn(
-    "0.7.0", "agegroups_to_limits()", "age_groups_to_limits()"
+    "0.7.0",
+    "agegroups_to_limits()",
+    "age_groups_to_limits()"
   )
   age_groups_to_limits(x)
 }

@@ -28,7 +28,9 @@ reduce_age_groups <- function(x, limits) {
 #' @export
 reduce_agegroups <- function(x, limits) {
   lifecycle::deprecate_warn(
-    "0.7.0", "reduce_agegroups()", "reduce_age_groups()"
+    "0.7.0",
+    "reduce_agegroups()",
+    "reduce_age_groups()"
   )
   reduce_age_groups(x, limits)
 }
