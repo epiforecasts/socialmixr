@@ -12,7 +12,7 @@ pop <- data.frame(
   population = c(3500000, 6000000, 50000000)
 )
 pop_grouped <- data.frame(
-  age = limits_to_agegroups(age_limits, notation = "brackets"),
+  age = limits_to_age_groups(age_limits, notation = "brackets"),
   population = pop$population
 )
 
@@ -144,7 +144,7 @@ test_that("symmetrise() errors when survey_pop is not a data frame", {
 
 test_that("symmetrise() points to align_ages() on age resolution mismatch", {
   finer <- data.frame(
-    age = limits_to_agegroups(c(0, 5, 10, 15), notation = "brackets"),
+    age = limits_to_age_groups(c(0, 5, 10, 15), notation = "brackets"),
     population = c(1e6, 2e6, 3e6, 4e6)
   )
   expect_error(
@@ -340,7 +340,7 @@ test_that("split_matrix() errors on a multi-grouping matrix", {
 
 test_that("align_ages() aggregates a raw age population to the matrix groups", {
   raw <- data.frame(
-    age = limits_to_agegroups(0:80, notation = "brackets"),
+    age = limits_to_age_groups(0:80, notation = "brackets"),
     population = rep(1e5, 81)
   )
   sp <- align_ages(raw, result_base)
@@ -355,7 +355,7 @@ test_that("align_ages() aggregates a raw age population to the matrix groups", {
 
 test_that("align_ages() handles multiple groupings", {
   raw <- expand.grid(
-    age = as.character(limits_to_agegroups(0:80, notation = "brackets")),
+    age = as.character(limits_to_age_groups(0:80, notation = "brackets")),
     gender = c("F", "M"),
     stringsAsFactors = FALSE
   )
@@ -368,7 +368,7 @@ test_that("align_ages() handles multiple groupings", {
 
 test_that("align_ages() errors on a categorical level not in the matrix", {
   raw <- expand.grid(
-    age = as.character(limits_to_agegroups(0:80, notation = "brackets")),
+    age = as.character(limits_to_age_groups(0:80, notation = "brackets")),
     gender = c("F", "M", "X"),
     stringsAsFactors = FALSE
   )
@@ -385,7 +385,7 @@ test_that("align_ages() errors on missing required columns", {
 
 test_that("rebin_ages() rejects a contact_matrix and points to align_ages()", {
   raw <- data.frame(
-    age = limits_to_agegroups(0:80, notation = "brackets"),
+    age = limits_to_age_groups(0:80, notation = "brackets"),
     population = rep(1e5, 81)
   )
   expect_error(rebin_ages(raw, result_base), "align_ages")

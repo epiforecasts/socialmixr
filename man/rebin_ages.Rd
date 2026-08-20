@@ -21,7 +21,7 @@ Rebins a population table to the coarser age groups defined by \code{age_limits}
 summing populations into each group. Errors if \code{age_limits} are finer than
 the population data, since splitting a band would require assuming a
 within-band age distribution. Operates on an \code{age} column of age-group labels
-(e.g. from \code{\link[=limits_to_agegroups]{limits_to_agegroups()}} or \code{\link[=assign_age_groups]{assign_age_groups()}}) and returns the
+(e.g. from \code{\link[=limits_to_age_groups]{limits_to_age_groups()}} or \code{\link[=assign_age_groups]{assign_age_groups()}}) and returns the
 same form.
 
 To align a population to a contact matrix's groupings for the post-processing
@@ -29,7 +29,7 @@ functions, use \code{\link[=align_ages]{align_ages()}} instead.
 }
 \examples{
 it_pop <- data.frame(
-  age = limits_to_agegroups(seq(0, 80, by = 5), notation = "brackets"),
+  age = limits_to_age_groups(seq(0, 80, by = 5), notation = "brackets"),
   population = c(rep(2.5e6, 4), rep(3.5e6, 4), rep(5e6, 6), 5e6, 7e6, 4e6)
 )
 # rebin into 10-year age groups

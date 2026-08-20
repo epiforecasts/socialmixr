@@ -45,7 +45,7 @@ test_that("as.matrix() extracts the matrix element", {
 ## Class preservation through postprocess --------------------------------------
 
 pop <- data.frame(
-  age = limits_to_agegroups(c(0, 5, 15), notation = "brackets"),
+  age = limits_to_age_groups(c(0, 5, 15), notation = "brackets"),
   population = c(3500000, 6000000, 50000000)
 )
 

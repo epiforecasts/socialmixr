@@ -199,7 +199,7 @@ test_that("weigh_by_dayofweek() warns and is a no-op without dayofweek", {
 
 test_that("weigh_by_age() post-stratifies to the reference bands", {
   uk_pop <- data.frame(
-    age = limits_to_agegroups(c(0, 18), notation = "brackets"),
+    age = limits_to_age_groups(c(0, 18), notation = "brackets"),
     population = c(2e7, 5e7)
   )
 
@@ -208,7 +208,7 @@ test_that("weigh_by_age() post-stratifies to the reference bands", {
   ## the weighted age distribution should match the target population's,
   ## at the resolution of the reference bands (no interpolation)
   p <- result$participants
-  p[, band := reduce_agegroups(part_age, c(0, 18))]
+  p[, band := reduce_age_groups(part_age, c(0, 18))]
   weighted <- p[, sum(weight), by = band]
   data.table::setorder(weighted, band)
   weighted_share <- weighted$V1 / sum(weighted$V1)
@@ -222,7 +222,7 @@ test_that("weigh_by_age() skips participants with a missing age", {
   survey$participants <- data.table::copy(survey$participants)
   survey$participants[1, part_age := NA]
   uk_pop <- data.frame(
-    age = limits_to_agegroups(c(0, 18), notation = "brackets"),
+    age = limits_to_age_groups(c(0, 18), notation = "brackets"),
     population = c(2e7, 5e7)
   )
   ## the missing-age participant is skipped (keeps weight 1), not an error
@@ -231,7 +231,7 @@ test_that("weigh_by_age() skips participants with a missing age", {
 })
 
 test_that("weigh_by_age() errors when pop is missing required columns", {
-  bad <- data.frame(age = limits_to_agegroups(0:9, notation = "brackets"))
+  bad <- data.frame(age = limits_to_age_groups(0:9, notation = "brackets"))
   expect_error(weigh_by_age(polymod_grouped, bad), "population")
 })
 
@@ -241,7 +241,7 @@ test_that("weigh_by_age() errors when part_age missing", {
   survey <- polymod[country == "Italy"]
   survey$participants <- copy(survey$participants)
   uk_pop <- data.frame(
-    age = limits_to_agegroups(0:99, notation = "brackets"),
+    age = limits_to_age_groups(0:99, notation = "brackets"),
     population = rep(500000L, 100)
   )
   expect_error(weigh_by_age(survey, uk_pop), "assign_age_groups")
