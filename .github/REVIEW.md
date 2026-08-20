@@ -89,8 +89,9 @@ attach it where the missing work would belong.
 
 ### Suggest the edit where you can
 
-When the fix is mechanical and you are confident of the exact replacement, put it
-in a suggestion block rather than describing it:
+When you are posting inline (see above) and the fix is mechanical and you are
+confident of the exact replacement, put it in a suggestion block rather than
+describing it:
 
     Empty input gives `1:0`, which iterates twice.
 
