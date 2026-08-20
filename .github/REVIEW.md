@@ -80,9 +80,10 @@ should be able to fix things quietly before anyone sees the PR.
 
 **Only if you were asked to post them**, put each finding on the line it
 concerns as an inline comment — `gh api repos/{owner}/{repo}/pulls/<PR>/comments`
-with `path`, `line`, `side: RIGHT`, and `commit_id` set to the PR head. Post no
-summary comment and no "looks good" comment either way; silence is how a clean
-review is reported.
+with `path`, `line`, `side: RIGHT`, and `commit_id` set to the PR head. For a
+finding that spans several lines, add `start_line` and `start_side: RIGHT` to
+anchor the whole range. Post no summary comment and no "looks good" comment
+either way; silence is how a clean review is reported.
 
 Anchor every finding to a line, including one about the change as a whole —
 attach it where the missing work would belong.
