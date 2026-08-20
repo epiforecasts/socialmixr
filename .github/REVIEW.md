@@ -7,10 +7,11 @@ committed to the repo so that anyone contributing — maintainer or not — can 
 the same review before a human looks at the PR, and so that the standards are
 versioned rather than living in one person's setup. It costs the repo nothing.
 
-**Claude Code**: `/review [PR] [--post] [--since <sha>]` runs this.
-**Codex, Cursor, or anything else**: ask your assistant to follow this file, and
-pass the same arguments in prose ("review PR 359", "review what changed since
-abc1234").
+Ask your assistant to follow this file. Arguments can be given in prose
+("review PR 359", "review what changed since abc1234", "post the findings") or
+as the flags named below, whichever your tool prefers. If you review here often,
+wiring this file to a `/review` command in your own configuration is worth the
+two minutes.
 
 ## What to review
 
