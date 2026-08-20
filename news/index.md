@@ -36,7 +36,7 @@
   [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
   rebins a population table to a coarser set of age groups by summing.
   It operates on an `age` column of age-group labels (as produced by
-  [`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md)
+  [`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md)
   or
   [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md))
   and returns the same form, so it composes directly with the
@@ -97,6 +97,21 @@
   ([\#314](https://github.com/epiforecasts/socialmixr/issues/314)).
 
 ### Deprecations
+
+- Exported function names now spell “age groups” consistently as
+  `age_groups` (snake_case), matching
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md).
+  [`reduce_agegroups()`](https://epiforecasts.io/socialmixr/reference/reduce_agegroups.md),
+  [`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md)
+  and
+  [`agegroups_to_limits()`](https://epiforecasts.io/socialmixr/reference/agegroups_to_limits.md)
+  are renamed to
+  [`reduce_age_groups()`](https://epiforecasts.io/socialmixr/reference/reduce_age_groups.md),
+  [`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md)
+  and
+  [`age_groups_to_limits()`](https://epiforecasts.io/socialmixr/reference/age_groups_to_limits.md);
+  the old names remain as deprecated aliases that warn
+  ([\#331](https://github.com/epiforecasts/socialmixr/issues/331)).
 
 - Interpolating population data to age groups finer than the data itself
   is deprecated.

@@ -402,7 +402,7 @@ functions expect.
 For recent UN World Population Prospects data, the `wpp2024` package is
 available from GitHub (`remotes::install_github("PPgp/wpp2024")`).
 Relabel its 1-year bands to age groups with
-[`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md)
+[`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md)
 and then coarsen them to the matrix’s age groups using
 [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md):
 
@@ -411,7 +411,7 @@ and then coarsen them to the matrix’s age groups using
 data("popAge1dt", package = "wpp2024")
 uk_pop <- popAge1dt[name == "United Kingdom" & year == 2020,
   .(
-    age = limits_to_agegroups(age, notation = "brackets"),
+    age = limits_to_age_groups(age, notation = "brackets"),
     population = pop * 1000
   )
 ]
@@ -431,7 +431,7 @@ Any comparable data frame will work, e.g. constructed by hand:
 ``` r
 
 custom_pop <- data.frame(
-  age = limits_to_agegroups(c(0, 18, 60), notation = "brackets"),
+  age = limits_to_age_groups(c(0, 18, 60), notation = "brackets"),
   population = c(12000000, 35000000, 20000000)
 )
 ```
@@ -443,7 +443,7 @@ functions:
 ``` r
 
 uk_pop <- data.frame(
-  age = limits_to_agegroups(c(0, 1, 5, 15), notation = "brackets"),
+  age = limits_to_age_groups(c(0, 1, 5, 15), notation = "brackets"),
   population = c(750000, 3200000, 7500000, 56000000)
 )
 ```
@@ -518,7 +518,7 @@ c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}
 ``` r
 
 de_pop <- data.frame(
-  age = limits_to_agegroups(c(0, 60), notation = "brackets"),
+  age = limits_to_age_groups(c(0, 60), notation = "brackets"),
   population = c(67000000, 16000000)
 )
 

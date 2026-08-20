@@ -5,7 +5,7 @@ Rebins a population table to the coarser age groups defined by
 `age_limits` are finer than the population data, since splitting a band
 would require assuming a within-band age distribution. Operates on an
 `age` column of age-group labels (e.g. from
-[`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md)
+[`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md)
 or
 [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md))
 and returns the same form.
@@ -41,7 +41,7 @@ column
 
 ``` r
 it_pop <- data.frame(
-  age = limits_to_agegroups(seq(0, 80, by = 5), notation = "brackets"),
+  age = limits_to_age_groups(seq(0, 80, by = 5), notation = "brackets"),
   population = c(rep(2.5e6, 4), rep(3.5e6, 4), rep(5e6, 6), 5e6, 7e6, 4e6)
 )
 # rebin into 10-year age groups

@@ -3,14 +3,14 @@
 summing populations into each group. Errors if age_limits are finer than
 the population data, since splitting a band would require assuming a
 within-band age distribution. Operates on an age column of age-group labels
-(e.g. from limits_to_agegroups() or assign_age_groups()) and returns the
+(e.g. from limits_to_age_groups() or assign_age_groups()) and returns the
 same form.
 To align a population to a contact matrix's groupings for the post-processing
 functions, use align_ages() instead."><meta property="og:description" content="Rebins a population table to the coarser age groups defined by age_limits,
 summing populations into each group. Errors if age_limits are finer than
 the population data, since splitting a band would require assuming a
 within-band age distribution. Operates on an age column of age-group labels
-(e.g. from limits_to_agegroups() or assign_age_groups()) and returns the
+(e.g. from limits_to_age_groups() or assign_age_groups()) and returns the
 same form.
 To align a population to a contact matrix's groupings for the post-processing
 functions, use align_ages() instead."></head><body>
@@ -57,7 +57,7 @@ functions, use align_ages() instead."></head><body>
 summing populations into each group. Errors if <code>age_limits</code> are finer than
 the population data, since splitting a band would require assuming a
 within-band age distribution. Operates on an <code>age</code> column of age-group labels
-(e.g. from <code><a href="limits_to_agegroups.html">limits_to_agegroups()</a></code> or <code><a href="assign_age_groups.html">assign_age_groups()</a></code>) and returns the
+(e.g. from <code><a href="limits_to_age_groups.html">limits_to_age_groups()</a></code> or <code><a href="assign_age_groups.html">assign_age_groups()</a></code>) and returns the
 same form.</p>
 <p>To align a population to a contact matrix's groupings for the post-processing
 functions, use <code><a href="align_ages.html">align_ages()</a></code> instead.</p>
@@ -90,7 +90,7 @@ functions, use <code><a href="align_ages.html">align_ages()</a></code> instead.<
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">it_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  age <span class="op">=</span> <span class="fu"><a href="limits_to_agegroups.html">limits_to_agegroups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span>, by <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  age <span class="op">=</span> <span class="fu"><a href="limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span>, by <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2.5e6</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">3.5e6</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">5e6</span>, <span class="fl">6</span><span class="op">)</span>, <span class="fl">5e6</span>, <span class="fl">7e6</span>, <span class="fl">4e6</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># rebin into 10-year age groups</span></span></span>

@@ -2,7 +2,7 @@
 
 ## All functions
 
-- [`agegroups_to_limits()`](https://epiforecasts.io/socialmixr/reference/agegroups_to_limits.md)
+- [`age_groups_to_limits()`](https://epiforecasts.io/socialmixr/reference/age_groups_to_limits.md)
   : Convert age groups to lower age limits
 
 - [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
@@ -47,7 +47,7 @@
 - [`is_doi()`](https://epiforecasts.io/socialmixr/reference/is_doi.md) :
   Checks if a character string is a DOI
 
-- [`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md)
+- [`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md)
   : Convert lower age limits to age groups.
 
 - [`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md)
@@ -69,7 +69,7 @@
 - [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
   : Rebin a population table to a set of age groups
 
-- [`reduce_agegroups()`](https://epiforecasts.io/socialmixr/reference/reduce_agegroups.md)
+- [`reduce_age_groups()`](https://epiforecasts.io/socialmixr/reference/reduce_age_groups.md)
   : Reduce the number of age groups given a broader set of limits
 
 - [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)

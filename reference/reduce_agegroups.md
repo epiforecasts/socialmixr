@@ -1,6 +1,10 @@
-# Reduce the number of age groups given a broader set of limits
+# Reduce the number of age groups (deprecated)
 
-Operates on lower limits
+**\[deprecated\]**
+
+`reduce_agegroups()` was renamed to
+[`reduce_age_groups()`](https://epiforecasts.io/socialmixr/reference/reduce_age_groups.md)
+for naming consistency.
 
 ## Usage
 
@@ -21,10 +25,3 @@ reduce_agegroups(x, limits)
 ## Value
 
 vector with the new age groups
-
-## Examples
-
-``` r
-reduce_agegroups(seq_len(20), c(0, 5, 10))
-#>  [1]  0  0  0  0  5  5  5  5  5 10 10 10 10 10 10 10 10 10 10 10
-```

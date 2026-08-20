@@ -1,6 +1,10 @@
-# Convert lower age limits to age groups.
+# Convert lower age limits to age groups (deprecated)
 
-Mostly used for plot labelling
+**\[deprecated\]**
+
+`limits_to_agegroups()` was renamed to
+[`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md)
+for naming consistency.
 
 ## Usage
 
@@ -30,15 +34,3 @@ limits_to_agegroups(
 ## Value
 
 Age groups as specified in `notation`
-
-## Examples
-
-``` r
-limits_to_agegroups(c(0, 5, 10))
-#> Warning: In the next version of socialmixr, `notation` will default to "brackets",
-#> instead of "dashes".
-#> ℹ Prevent this using `notation = "dashes"` in the call to
-#>   `limits_to_agegroups()`.
-#> [1] 0-4 5-9 10+
-#> Levels: 0-4 < 5-9 < 10+
-```

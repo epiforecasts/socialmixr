@@ -13,6 +13,7 @@
 <url><loc>https://epiforecasts.io/socialmixr/news/index.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/abort_if_missing.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/add_age.html</loc></url>
+<url><loc>https://epiforecasts.io/socialmixr/reference/age_groups_to_limits.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/agegroups_to_limits.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/align_ages.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/as_contact_survey.html</loc></url>
@@ -44,6 +45,7 @@
 <url><loc>https://epiforecasts.io/socialmixr/reference/is_contact_matrix.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/is_doi.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/joint_population_vector.html</loc></url>
+<url><loc>https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/list_surveys.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/load_survey.html</loc></url>
@@ -60,6 +62,7 @@
 <url><loc>https://epiforecasts.io/socialmixr/reference/pop_age.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/rebin_ages.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/rebin_ages_numeric.html</loc></url>
+<url><loc>https://epiforecasts.io/socialmixr/reference/reduce_age_groups.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/reduce_agegroups.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/resolve_groupings.html</loc></url>
 <url><loc>https://epiforecasts.io/socialmixr/reference/resolve_one_grouping.html</loc></url>

@@ -230,11 +230,11 @@
 <span><span class="va">mr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">m</span><span class="op">[</span><span class="st">"matrix"</span>, <span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
-<span><span class="co">#&gt; age.group       [0,1)     [1,5)    [5,15)  [15,Inf)</span></span>
-<span><span class="co">#&gt;   [0,1)    0.19509804 1.2733613  2.754538  9.557955</span></span>
-<span><span class="co">#&gt;   [1,5)    0.13829979 3.5109549  2.688134 11.037005</span></span>
-<span><span class="co">#&gt;   [5,15)   0.02843573 1.1376759 16.469213 12.177137</span></span>
-<span><span class="co">#&gt;   [15,Inf) 0.05256075 0.7090378  2.447359 19.410890</span></span></code></pre></div>
+<span><span class="co">#&gt; age.group       [0,1)     [1,5)    [5,15) [15,Inf)</span></span>
+<span><span class="co">#&gt;   [0,1)    0.98888889 1.6152778  2.932540 12.73730</span></span>
+<span><span class="co">#&gt;   [1,5)    0.20620485 3.0426981  2.470315 10.36346</span></span>
+<span><span class="co">#&gt;   [5,15)   0.04723481 0.8980804 15.453853 12.70035</span></span>
+<span><span class="co">#&gt;   [15,Inf) 0.07142393 0.6818424  2.356168 19.10526</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
 </h2>
@@ -246,7 +246,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">custom_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_agegroups.html">limits_to_agegroups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
+<span>  age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
 <span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12000000</span>, <span class="fl">35000000</span>, <span class="fl">20000000</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">demo_matrix</span> <span class="op">&lt;-</span> <span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
@@ -259,13 +259,13 @@
 <span><span class="co">#&gt;   [18,60)  2.022794 7.931429 2.084481</span></span>
 <span><span class="co">#&gt;   [60,Inf) 0.699982 3.647842 1.918033</span></span></code></pre></div>
 </div>
-<p>For recent UN World Population Prospects data, the <code>wpp2024</code> package is available from GitHub (<code>remotes::install_github("PPgp/wpp2024")</code>). Relabel its 1-year bands to age groups with <code><a href="../reference/limits_to_agegroups.html">limits_to_agegroups()</a></code> and then coarsen them to the matrix’s age groups using <code><a href="../reference/align_ages.html">align_ages()</a></code>:</p>
+<p>For recent UN World Population Prospects data, the <code>wpp2024</code> package is available from GitHub (<code>remotes::install_github("PPgp/wpp2024")</code>). Relabel its 1-year bands to age groups with <code><a href="../reference/limits_to_age_groups.html">limits_to_age_groups()</a></code> and then coarsen them to the matrix’s age groups using <code><a href="../reference/align_ages.html">align_ages()</a></code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"popAge1dt"</span>, package <span class="op">=</span> <span class="st">"wpp2024"</span><span class="op">)</span></span>
 <span><span class="va">uk_pop_raw</span> <span class="op">&lt;-</span> <span class="va">popAge1dt</span><span class="op">[</span><span class="va">name</span> <span class="op">==</span> <span class="st">"United Kingdom"</span> <span class="op">&amp;</span> <span class="va">year</span> <span class="op">==</span> <span class="fl">2020</span>,</span>
 <span>  <span class="fu">.</span><span class="op">(</span></span>
-<span>    age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_agegroups.html">limits_to_agegroups</a></span><span class="op">(</span><span class="va">age</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
+<span>    age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="va">age</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
 <span>    population <span class="op">=</span> <span class="va">pop</span> <span class="op">*</span> <span class="fl">1000</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">]</span></span>
@@ -280,7 +280,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">uk_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_agegroups.html">limits_to_agegroups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
+<span>  age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
 <span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">750000</span>, <span class="fl">3200000</span>, <span class="fl">7500000</span>, <span class="fl">56000000</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -324,7 +324,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">de_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_agegroups.html">limits_to_agegroups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">60</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
+<span>  age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">60</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
 <span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">67000000</span>, <span class="fl">16000000</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>

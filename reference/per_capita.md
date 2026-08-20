@@ -51,7 +51,7 @@ result <- polymod |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
   compute_matrix()
 uk_pop <- data.frame(
-  age = limits_to_agegroups(0:80, notation = "brackets"),
+  age = limits_to_age_groups(0:80, notation = "brackets"),
   population = rep(1e5, 81)
 )
 result |> per_capita(survey_pop = align_ages(uk_pop, result))

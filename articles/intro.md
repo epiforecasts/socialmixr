@@ -223,11 +223,11 @@ m <- suppressWarnings(
 mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
 #>           contact.age.group
-#> age.group       [0,1)     [1,5)    [5,15)  [15,Inf)
-#>   [0,1)    0.19509804 1.2733613  2.754538  9.557955
-#>   [1,5)    0.13829979 3.5109549  2.688134 11.037005
-#>   [5,15)   0.02843573 1.1376759 16.469213 12.177137
-#>   [15,Inf) 0.05256075 0.7090378  2.447359 19.410890
+#> age.group       [0,1)     [1,5)    [5,15) [15,Inf)
+#>   [0,1)    0.98888889 1.6152778  2.932540 12.73730
+#>   [1,5)    0.20620485 3.0426981  2.470315 10.36346
+#>   [5,15)   0.04723481 0.8980804 15.453853 12.70035
+#>   [15,Inf) 0.07142393 0.6818424  2.356168 19.10526
 ```
 
 ## Demography
@@ -258,7 +258,7 @@ to the relevant post-processing step:
 ``` r
 
 custom_pop <- data.frame(
-  age = limits_to_agegroups(c(0, 18, 60), notation = "brackets"),
+  age = limits_to_age_groups(c(0, 18, 60), notation = "brackets"),
   population = c(12000000, 35000000, 20000000)
 )
 demo_matrix <- polymod[country == "United Kingdom"] |>
@@ -275,7 +275,7 @@ demo_matrix |> symmetrise(survey_pop = align_ages(custom_pop, demo_matrix))
 For recent UN World Population Prospects data, the `wpp2024` package is
 available from GitHub (`remotes::install_github("PPgp/wpp2024")`).
 Relabel its 1-year bands to age groups with
-[`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md)
+[`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md)
 and then coarsen them to the matrix’s age groups using
 [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md):
 
@@ -284,7 +284,7 @@ and then coarsen them to the matrix’s age groups using
 data("popAge1dt", package = "wpp2024")
 uk_pop_raw <- popAge1dt[name == "United Kingdom" & year == 2020,
   .(
-    age = limits_to_agegroups(age, notation = "brackets"),
+    age = limits_to_age_groups(age, notation = "brackets"),
     population = pop * 1000
   )
 ]
@@ -302,7 +302,7 @@ United Kingdom, sufficient to illustrate the post-processing functions:
 ``` r
 
 uk_pop <- data.frame(
-  age = limits_to_agegroups(c(0, 1, 5, 15), notation = "brackets"),
+  age = limits_to_age_groups(c(0, 1, 5, 15), notation = "brackets"),
   population = c(750000, 3200000, 7500000, 56000000)
 )
 ```
@@ -386,7 +386,7 @@ c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}
 ``` r
 
 de_pop <- data.frame(
-  age = limits_to_agegroups(c(0, 60), notation = "brackets"),
+  age = limits_to_age_groups(c(0, 60), notation = "brackets"),
   population = c(67000000, 16000000)
 )
 
