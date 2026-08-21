@@ -120,14 +120,17 @@ test_that("compute_matrix() accepts explicit c(part = , cnt = )", {
   expect_identical(res_stem$matrix, res_explicit$matrix)
 })
 
-test_that("as.matrix() errors on rank > 2", {
+test_that("as.matrix() flattens a rank > 2 matrix", {
   res <- compute_matrix(polymod_uk_grouped, by = c("age", "gender"))
-  expect_error(as.matrix(res), "rank-2")
+  expect_identical(as.matrix(res), flatten(res))
+  expect_length(dim(as.matrix(res)), 2L)
 })
 
-test_that("plot() errors on rank > 2", {
+test_that("plot() works on a rank > 2 matrix", {
   res <- compute_matrix(polymod_uk_grouped, by = c("age", "gender"))
-  expect_error(plot(res), "rank-2")
+  pdf(file = NULL)
+  expect_no_error(plot(res))
+  dev.off()
 })
 
 test_that("pipeline with dayofweek weighting is close to contact_matrix()", {
