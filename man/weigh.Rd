@@ -104,11 +104,11 @@ data(polymod)
 uk <- polymod[country == "United Kingdom"] |>
   assign_age_groups(age_limits = c(0, 5, 15))
 
-# ── target = NULL ────────────────────────────────────────────────
+# --- target = NULL ---
 # Multiply an existing numeric column directly into the weight:
 uk |> weigh("hh_size")
 
-# ── data-frame target (discrete join) ────────────────────────────
+# --- data-frame target (discrete join) ---
 # The key column of `target` must match `by`. Each participant
 # has its weight multiplied by the matching value column.
 age_target <- data.frame(
@@ -127,7 +127,7 @@ polymod |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
   weigh("country", target = country_target)
 
-# ── unnamed vector + groups (total-weight semantics) ─────────────
+# --- unnamed vector + groups (total-weight semantics) ---
 # Each `target[g]` is the *total* weight assigned to participants in
 # `groups[[g]]`. Here weekdays together carry weight 5, weekend days
 # together carry weight 2:
@@ -136,13 +136,13 @@ uk |> weigh("dayofweek", target = c(5, 2), groups = list(1:5, c(0, 6)))
 # The same is available as the convenience:
 uk |> weigh_by_dayofweek()
 
-# ── named vector ─────────────────────────────────────────────────
+# --- named vector ---
 # `names(target)` are matched against `by` values; each value is the
 # total weight for participants with that key.
 uk$participants[, agecat := ifelse(part_age < 18, "child", "adult")]
 uk |> weigh("agecat", target = c(child = 0.25, adult = 0.75))
 
-# ── age post-stratification ──────────────────────────────────────
+# --- age post-stratification ---
 uk_pop <- data.frame(
   age = limits_to_age_groups(c(0, 5, 15, 65), notation = "brackets"),
   population = c(3500000, 6000000, 40000000, 10000000)
