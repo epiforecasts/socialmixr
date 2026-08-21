@@ -146,20 +146,22 @@ matrix_plot <- function(
     yaxt = "n"
   )
 
-  # add axis labels
-  plt_ticks <- seq(0, 1, length = nrow(mij))
+  # image() maps rows to x and columns to y; label each axis by its own
+  # dimension, as the matrix need not be square.
+  x_ticks <- seq(0, 1, length = nrow(mij))
+  y_ticks <- seq(0, 1, length = ncol(mij))
   axis(
     2,
-    at = plt_ticks,
-    labels = c(colnames(mij)),
+    at = y_ticks,
+    labels = colnames(mij),
     cex.axis = cex.axis,
     tick = FALSE,
     las = 1
   )
   axis(
     1,
-    at = plt_ticks,
-    labels = c(colnames(mij)),
+    at = x_ticks,
+    labels = rownames(mij),
     cex.axis = cex.axis,
     tick = FALSE
   )
@@ -173,8 +175,8 @@ matrix_plot <- function(
       mij <- format(mij, digits = num.digits)
     }
 
-    # get grid centers and add values
-    e_grid <- expand.grid(plt_ticks, plt_ticks)
+    # rows vary fastest, matching the column-major order of `mij`
+    e_grid <- expand.grid(x_ticks, y_ticks)
     text(e_grid, labels = mij, cex = cex.text)
   }
 
