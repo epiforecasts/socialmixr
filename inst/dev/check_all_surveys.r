@@ -15,9 +15,17 @@ cli_h1("Loaded {length(survey_files)} survey files")
 ## any problem
 safe_check <- safely(\(files) load_survey(files))
 
-## check all surveys
+## check all surveys; a download failure arrives from dl_all_surveys.r as a
+## string of class "download_error" and is reported as such rather than being
+## fed to load_survey()
 cli_h1("Checking all surveys...")
-checks <- map(survey_files, safe_check)
+checks <- map(survey_files, function(files) {
+  if (inherits(files, "download_error")) {
+    list(result = NULL, error = simpleError(paste("download failed:", files)))
+  } else {
+    safe_check(files)
+  }
+})
 
 errors <- map(checks, "error")
 no_error <- map_lgl(errors, is.null)
