@@ -30,11 +30,12 @@ pop_age <- function(
 
   ## Handle deprecated arguments
   if (lifecycle::is_present(age.limits)) {
-    lifecycle::deprecate_stop(
+    lifecycle::deprecate_warn(
       "0.5.0",
       "pop_age(age.limits)",
       "pop_age(age_limits)"
     )
+    age_limits <- age.limits
   }
   pop_age_column <- deprecate_arg(
     pop.age.column,
