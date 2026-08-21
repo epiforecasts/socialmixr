@@ -1,0 +1,110 @@
+---
+title: "Contact matrices across more than one grouping"
+author: "Sebastian Funk"
+institute: https://epiforecasts.io
+date: "`r Sys.Date()`"
+bibliography: socialmixr.bib
+link-citations: true
+---
+
+```{r setup, include = FALSE}
+library(knitr)
+library(socialmixr)
+library(data.table)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+setDTthreads(1)
+```
+
+Most of the time a contact matrix is indexed by age alone: rows and columns are age groups, and each cell is a mean number of contacts. But contact surveys record more than age, and mixing usually depends on those other variables too. Men and women mix differently, and so do people in different settings. `compute_matrix()` can build a matrix over any combination of groupings, and the post-processing functions carry those groupings through. This vignette covers the two-dimensional case; the same recipes extend to three or more.
+
+The idea, and the flattened representation used below, follow @manna_generalized_2024.
+
+# Building a two-way matrix
+
+Start from the usual pipeline, but hand `compute_matrix()` a `by` argument naming the groupings you want. Here we cross age with the participant's gender.
+
+The gender column in POLYMOD carries a few blank entries on the contact side, so we drop those first. A matrix can only be built over levels that are actually recorded, and `symmetrise()` later on will need the two sides to share them.
+
+```{r}
+data(polymod)
+
+uk <- polymod[country == "United Kingdom"]
+uk$participants <- uk$participants[part_gender %in% c("F", "M")]
+uk$contacts <- uk$contacts[cnt_gender %in% c("F", "M")]
+
+result <- uk |>
+  assign_age_groups(age_limits = c(0, 20, 40, 60)) |>
+  compute_matrix(by = c("age", "gender"))
+```
+
+With two groupings the result is no longer a plain matrix. Its `matrix` element is a four-dimensional array: the first two axes index the participant (age, then gender), the last two index the contact.
+
+```{r}
+dim(result$matrix)
+```
+
+Four age groups and two genders give a `4 x 2` block on each side. The `groupings` field records what produced those axes, and you can read it back:
+
+```{r}
+result$groupings
+```
+
+# The flattened view
+
+A four-dimensional array is awkward to read and to plot. `flatten()` collapses it to the two-dimensional form of @manna_generalized_2024: a single `T x T` matrix whose rows and columns run over every combination of grouping levels, labelled with a colon.
+
+```{r}
+flatten(result)
+```
+
+For a plain age-only matrix `flatten()` returns it unchanged, so you can reach for it whenever you want the 2-D picture and not worry about how many groupings went in.
+
+`as.matrix()` gives you the same thing, and `plot()` draws it as a heatmap:
+
+```{r, fig.width = 6, fig.height = 6}
+plot(result)
+```
+
+The eight rows and eight columns are the age and gender strata; the block structure shows, for instance, how within-gender contacts compare to across-gender ones.
+
+# Post-processing across groupings
+
+`symmetrise()` and `per_capita()` need to know the population behind each stratum. With one grouping that was a population by age; with several it is a population by every combination. `align_ages()` builds it for you from a table that has an `age` column plus a column for each other grouping.
+
+```{r}
+population <- expand.grid(
+  age = limits_to_age_groups(0:90, notation = "brackets"),
+  gender = c("F", "M"),
+  stringsAsFactors = FALSE
+)
+population$population <- round(1e5 * exp(-(0:90) / 60))
+
+survey_pop <- align_ages(population, result)
+survey_pop
+```
+
+`align_ages()` coarsens the age column to the matrix's age groups and matches the other groupings by name, so the result is exactly the `survey_pop` the post-processing functions expect. From here they behave as they do for a single grouping:
+
+```{r}
+symmetric <- symmetrise(result, survey_pop = survey_pop)
+per_capita_rates <- per_capita(result, survey_pop = survey_pop)
+```
+
+`symmetrise()` enforces reciprocity across the full set of strata, so it insists the participant and contact sides carry the same levels. That is why we tidied the gender column at the start.
+
+# Choosing the groupings
+
+Each entry in `by` names a grouping. `"age"` picks up the columns `assign_age_groups()` writes. A bare name such as `"gender"` resolves to the survey's `part_gender` and `cnt_gender` columns. When the two sides are named differently, give the pair explicitly:
+
+```{r, eval = FALSE}
+uk |>
+  assign_age_groups(age_limits = c(0, 20, 40, 60)) |>
+  compute_matrix(by = list("age", c(part = "part_gender", cnt = "cnt_gender")))
+```
+
+Any number of groupings works the same way; the array simply gains two axes for each, and `flatten()`, `plot()`, `as.matrix()`, `symmetrise()` and `per_capita()` carry them through. `split_matrix()` is the exception: its decomposition into mean, normalisation and assortativity is defined for age-only matrices, so it still expects a single grouping.
+
+# References

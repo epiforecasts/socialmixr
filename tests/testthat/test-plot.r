@@ -17,6 +17,17 @@ test_that("contact matrix per capita can be plotted", {
   dev.off()
 })
 
+test_that("matrix_plot handles a non-square matrix", {
+  m <- matrix(
+    1:6,
+    nrow = 2,
+    dimnames = list(c("a", "b"), c("x", "y", "z"))
+  )
+  pdf(file = NULL)
+  expect_no_error(matrix_plot(m))
+  dev.off()
+})
+
 test_that("contact matrix can be plotted with different color palette", {
   pdf(file = NULL)
   expect_no_error(matrix_plot(dta$matrix, color.palette = rainbow))

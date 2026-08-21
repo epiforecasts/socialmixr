@@ -83,28 +83,12 @@ print.contact_matrix <- function(x, ...) {
 
 #' @export
 plot.contact_matrix <- function(x, ...) {
-  if (length(dim(x$matrix)) > 2L) {
-    cli::cli_abort(c(
-      "Plotting is currently only supported for single-grouping \\
-       (rank-2) matrices.",
-      i = "Slice {.code x$matrix} to a 2D matrix and pass that to \\
-           {.fn matrix_plot} directly."
-    ))
-  }
-  matrix_plot(x$matrix, ...)
+  matrix_plot(flatten(x), ...)
 }
 
 #' @export
 as.matrix.contact_matrix <- function(x, ...) {
-  if (length(dim(x$matrix)) > 2L) {
-    cli::cli_abort(c(
-      "{.fn as.matrix} is only defined for single-grouping \\
-       (rank-2) contact matrices.",
-      i = "Call {.fn flatten} on this object to get the T x T flattened \\
-           form (Manna et al.'s generalised contact matrix)."
-    ))
-  }
-  x$matrix
+  flatten(x)
 }
 
 #' Flatten a multi-grouping contact matrix to its `T x T` form

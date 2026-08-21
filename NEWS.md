@@ -48,6 +48,15 @@
   colon-joined dim labels (e.g. `"[0,5):F"`). For single-grouping
   matrices it returns the matrix unchanged (#319).
 
+* `plot()` and `as.matrix()` now work on multi-grouping contact matrices,
+  operating on the flattened `T x T` view. `matrix_plot()` no longer
+  assumes a square matrix, so non-square flattened matrices plot correctly
+  (#321).
+
+* New vignette, *Contact matrices across more than one grouping*, with
+  recipes for building, flattening, plotting and post-processing matrices
+  over several groupings (#322).
+
 * `weigh()` gains a new canonical target shape: a two-column data frame
   whose key column matches `by` is joined and multiplied into `weight`.
   This makes recipes like `weigh(survey, "country", target = ...)`
