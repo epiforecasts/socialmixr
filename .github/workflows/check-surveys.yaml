@@ -10,14 +10,6 @@ on:
       - '.github/workflows/check-surveys.yaml'
       - 'R/**'
       - 'inst/**'
-  pull_request:
-    branches:
-      - main
-      - master
-    paths:
-      - '.github/workflows/check-surveys.yaml'
-      - 'R/**'
-      - 'inst/**'
   schedule:
     - cron: '0 6 1 * *'  # Run monthly on the 1st at 06:00 UTC
   workflow_dispatch:
