@@ -125,10 +125,10 @@ Obtaining symmetric contact matrices, splitting out their components (see below)
 
 The post-processing functions (`symmetrise()`, `split_matrix()`, `per_capita()`) need population data. In practice you supply a population table with an `age` column of age-group labels, a `population` column, and a column per other grouping, then align it to a computed matrix with `align_ages()`. `align_ages()` aggregates each grouping to the matrix's levels (coarsening the age grouping where needed) and returns the `data.frame` the post-processing functions expect.
 
-For recent UN World Population Prospects data, the `wpp2024` package (GitHub: `PPgp/wpp2024`) provides `popAge1dt`, a table of one-year population bands. Load it from that package, filter to the country and year you need, relabel the ages with `limits_to_age_groups()`, and coarsen to the matrix's age groups with `align_ages()`. To keep this vignette self-contained we use a small stand-in with the same columns:
+For recent UN World Population Prospects data, the [`wpp2024`](https://github.com/PPgp/wpp2024) package (`remotes::install_github("PPgp/wpp2024")`) provides `popAge1dt`, a table of one-year population bands. Load it from that package, filter to the country and year you need, relabel the ages with `limits_to_age_groups()`, and coarsen to the matrix's age groups with `align_ages()`. Here we use a small mock-up with the same columns:
 
 ```{r}
-# stand-in for wpp2024's popAge1dt (one-year bands; population in thousands)
+# mock-up of wpp2024's popAge1dt (one-year bands; population in thousands)
 popAge1dt <- data.frame(
   name = "United Kingdom", year = 2020L,
   age = 0:90, pop = round(1000 * exp(-(0:90) / 60))
