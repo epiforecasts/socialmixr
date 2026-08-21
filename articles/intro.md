@@ -224,10 +224,10 @@ mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
 #>           contact.age.group
 #> age.group       [0,1)     [1,5)    [5,15) [15,Inf)
-#>   [0,1)    0.51442308 1.7274267  2.481548 11.20124
-#>   [1,5)    0.24547726 3.4559521  2.671891 10.10208
-#>   [5,15)   0.05039353 0.9475189 15.845017 12.47798
-#>   [15,Inf) 0.06272726 0.6967015  2.847986 19.43410
+#>   [0,1)    0.13126538 1.6854081  2.524510 10.04807
+#>   [1,5)    0.20012778 3.9422875  2.985864 10.73866
+#>   [5,15)   0.07722065 1.1241877 15.646568 13.04623
+#>   [15,Inf) 0.07711009 0.6760454  2.734496 19.19844
 ```
 
 ## Demography
@@ -287,7 +287,8 @@ Here we use a small mock-up with the same columns:
 # mock-up of wpp2024's popAge1dt (one-year bands; population in thousands)
 popAge1dt <- data.frame(
   name = "United Kingdom", year = 2020L,
-  age = 0:90, pop = round(1000 * exp(-(0:90) / 60))
+  age = 0:90, pop = round(1000 * exp(-(0:90) / 60)),
+  stringsAsFactors = FALSE
 )
 rows <- popAge1dt$name == "United Kingdom" & popAge1dt$year == 2020
 uk_pop_raw <- data.frame(

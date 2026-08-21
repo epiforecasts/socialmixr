@@ -232,10 +232,10 @@
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group       [0,1)     [1,5)    [5,15) [15,Inf)</span></span>
-<span><span class="co">#&gt;   [0,1)    0.51442308 1.7274267  2.481548 11.20124</span></span>
-<span><span class="co">#&gt;   [1,5)    0.24547726 3.4559521  2.671891 10.10208</span></span>
-<span><span class="co">#&gt;   [5,15)   0.05039353 0.9475189 15.845017 12.47798</span></span>
-<span><span class="co">#&gt;   [15,Inf) 0.06272726 0.6967015  2.847986 19.43410</span></span></code></pre></div>
+<span><span class="co">#&gt;   [0,1)    0.13126538 1.6854081  2.524510 10.04807</span></span>
+<span><span class="co">#&gt;   [1,5)    0.20012778 3.9422875  2.985864 10.73866</span></span>
+<span><span class="co">#&gt;   [5,15)   0.07722065 1.1241877 15.646568 13.04623</span></span>
+<span><span class="co">#&gt;   [15,Inf) 0.07711009 0.6760454  2.734496 19.19844</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
 </h2>
@@ -266,7 +266,8 @@
 <code class="sourceCode R"><span><span class="co"># mock-up of wpp2024's popAge1dt (one-year bands; population in thousands)</span></span>
 <span><span class="va">popAge1dt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="st">"United Kingdom"</span>, year <span class="op">=</span> <span class="fl">2020L</span>,</span>
-<span>  age <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">90</span>, pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">1000</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">90</span><span class="op">)</span> <span class="op">/</span> <span class="fl">60</span><span class="op">)</span><span class="op">)</span></span>
+<span>  age <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">90</span>, pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">1000</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">90</span><span class="op">)</span> <span class="op">/</span> <span class="fl">60</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">rows</span> <span class="op">&lt;-</span> <span class="va">popAge1dt</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">"United Kingdom"</span> <span class="op">&amp;</span> <span class="va">popAge1dt</span><span class="op">$</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2020</span></span>
 <span><span class="va">uk_pop_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
