@@ -399,31 +399,36 @@ aggregates each grouping to the matrix’s levels (coarsening the age
 grouping where needed) and returns the `data.frame` the post-processing
 functions expect.
 
-For recent UN World Population Prospects data, the `wpp2024` package is
-available from GitHub (`remotes::install_github("PPgp/wpp2024")`).
-Relabel its 1-year bands to age groups with
-[`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md)
-and then coarsen them to the matrix’s age groups using
-[`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md):
+For recent UN World Population Prospects data, the
+[`wpp2024`](https://github.com/PPgp/wpp2024) package
+(`remotes::install_github("PPgp/wpp2024")`) provides `popAge1dt`, a
+table of one-year population bands. Load it from that package, filter to
+the country and year you need, relabel the ages with
+[`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md),
+and coarsen to the matrix’s age groups with
+[`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md).
+Here we use a small mock-up with the same columns:
 
 ``` r
 
-data("popAge1dt", package = "wpp2024")
-uk_pop <- popAge1dt[name == "United Kingdom" & year == 2020,
-  .(
-    age = limits_to_age_groups(age, notation = "brackets"),
-    population = pop * 1000
-  )
-]
+# mock-up of wpp2024's popAge1dt (one-year bands; population in thousands)
+popAge1dt <- data.frame(
+  name = "United Kingdom", year = 2020L,
+  age = 0:90, pop = round(1000 * exp(-(0:90) / 60))
+)
+rows <- popAge1dt$name == "United Kingdom" & popAge1dt$year == 2020
+uk_pop <- data.frame(
+  age = limits_to_age_groups(popAge1dt$age[rows], notation = "brackets"),
+  population = popAge1dt$pop[rows] * 1000
+)
 head(uk_pop)
-#>      age population
-#>    <ord>      <num>
-#> 1: [0,1)     703192
-#> 2: [1,2)     732072
-#> 3: [2,3)     762303
-#> 4: [3,4)     787284
-#> 5: [4,5)     812300
-#> 6: [5,6)     814132
+#>     age population
+#> 1 [0,1)    1000000
+#> 2 [1,2)     983000
+#> 3 [2,3)     967000
+#> 4 [3,4)     951000
+#> 5 [4,5)     936000
+#> 6 [5,6)     920000
 ```
 
 Any comparable data frame will work, e.g. constructed by hand:

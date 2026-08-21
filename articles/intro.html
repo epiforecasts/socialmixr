@@ -231,11 +231,11 @@
 <span><span class="va">mr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">m</span><span class="op">[</span><span class="st">"matrix"</span>, <span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
-<span><span class="co">#&gt; age.group      [0,1)     [1,5)    [5,15) [15,Inf)</span></span>
-<span><span class="co">#&gt;   [0,1)    1.5633585 1.3511111  2.195737 12.45685</span></span>
-<span><span class="co">#&gt;   [1,5)    0.1547148 3.4714355  2.799806 10.66169</span></span>
-<span><span class="co">#&gt;   [5,15)   0.0248520 1.0289153 18.421028 12.47461</span></span>
-<span><span class="co">#&gt;   [15,Inf) 0.0582149 0.7121352  2.506184 19.07875</span></span></code></pre></div>
+<span><span class="co">#&gt; age.group       [0,1)     [1,5)    [5,15) [15,Inf)</span></span>
+<span><span class="co">#&gt;   [0,1)    0.51442308 1.7274267  2.481548 11.20124</span></span>
+<span><span class="co">#&gt;   [1,5)    0.24547726 3.4559521  2.671891 10.10208</span></span>
+<span><span class="co">#&gt;   [5,15)   0.05039353 0.9475189 15.845017 12.47798</span></span>
+<span><span class="co">#&gt;   [15,Inf) 0.06272726 0.6967015  2.847986 19.43410</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
 </h2>
@@ -260,22 +260,31 @@
 <span><span class="co">#&gt;   [18,60)  2.022794 7.931429 2.084481</span></span>
 <span><span class="co">#&gt;   [60,Inf) 0.699982 3.647842 1.918033</span></span></code></pre></div>
 </div>
-<p>For recent UN World Population Prospects data, the <code>wpp2024</code> package is available from GitHub (<code>remotes::install_github("PPgp/wpp2024")</code>). Relabel its 1-year bands to age groups with <code><a href="../reference/limits_to_age_groups.html">limits_to_age_groups()</a></code> and then coarsen them to the matrix’s age groups using <code><a href="../reference/align_ages.html">align_ages()</a></code>:</p>
+<p>For recent UN World Population Prospects data, the <a href="https://github.com/PPgp/wpp2024" class="external-link"><code>wpp2024</code></a> package (<code>remotes::install_github("PPgp/wpp2024")</code>) provides <code>popAge1dt</code>, a table of one-year population bands. Load it from that package, relabel the ages with <code><a href="../reference/limits_to_age_groups.html">limits_to_age_groups()</a></code>, and coarsen to the matrix’s age groups with <code><a href="../reference/align_ages.html">align_ages()</a></code>. Here we use a small mock-up with the same columns:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"popAge1dt"</span>, package <span class="op">=</span> <span class="st">"wpp2024"</span><span class="op">)</span></span>
-<span><span class="va">uk_pop_raw</span> <span class="op">&lt;-</span> <span class="va">popAge1dt</span><span class="op">[</span><span class="va">name</span> <span class="op">==</span> <span class="st">"United Kingdom"</span> <span class="op">&amp;</span> <span class="va">year</span> <span class="op">==</span> <span class="fl">2020</span>,</span>
-<span>  <span class="fu">.</span><span class="op">(</span></span>
-<span>    age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="va">age</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
-<span>    population <span class="op">=</span> <span class="va">pop</span> <span class="op">*</span> <span class="fl">1000</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="co"># mock-up of wpp2024's popAge1dt (one-year bands; population in thousands)</span></span>
+<span><span class="va">popAge1dt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  name <span class="op">=</span> <span class="st">"United Kingdom"</span>, year <span class="op">=</span> <span class="fl">2020L</span>,</span>
+<span>  age <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">90</span>, pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">1000</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">90</span><span class="op">)</span> <span class="op">/</span> <span class="fl">60</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">rows</span> <span class="op">&lt;-</span> <span class="va">popAge1dt</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">"United Kingdom"</span> <span class="op">&amp;</span> <span class="va">popAge1dt</span><span class="op">$</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2020</span></span>
+<span><span class="va">uk_pop_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="va">popAge1dt</span><span class="op">$</span><span class="va">age</span><span class="op">[</span><span class="va">rows</span><span class="op">]</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
+<span>  population <span class="op">=</span> <span class="va">popAge1dt</span><span class="op">$</span><span class="va">pop</span><span class="op">[</span><span class="va">rows</span><span class="op">]</span> <span class="op">*</span> <span class="fl">1000</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">demo_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/symmetrise.html">symmetrise</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/align_ages.html">align_ages</a></span><span class="op">(</span><span class="va">uk_pop_raw</span>, <span class="va">demo_matrix</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── Contact matrix (3 age groups) ──</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Ages: "[0,18)", "[18,60)", and "[60,Inf)"</span></span>
+<span><span class="co">#&gt; Participants: 1011</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group     [0,18)  [18,60)  [60,Inf)</span></span>
-<span><span class="co">#&gt;   [0,18)   7.8131868 5.490727 0.8787841</span></span>
-<span><span class="co">#&gt;   [18,60)  2.1528265 7.931429 1.7516352</span></span>
-<span><span class="co">#&gt;   [60,Inf) 0.7665599 3.896982 1.9180328</span></span></code></pre></div>
+<span><span class="co">#&gt;   [0,18)   7.8131868 4.249158 0.5614763</span></span>
+<span><span class="co">#&gt;   [18,60)  2.9526608 7.931429 1.6113638</span></span>
+<span><span class="co">#&gt;   [60,Inf) 0.9800678 4.047693 1.9180328</span></span></code></pre></div>
 </div>
 <p>For the rest of this section we use a small constructed <code>uk_pop</code> for the United Kingdom, sufficient to illustrate the post-processing functions:</p>
 <div class="cell">

@@ -446,29 +446,32 @@ column per other grouping, then align it to a computed matrix with
 grouping to the matrix’s levels (coarsening the age grouping where
 needed) and returns the <code>data.frame</code> the post-processing
 functions expect.</p>
-<p>For recent UN World Population Prospects data, the
-<code>wpp2024</code> package is available from GitHub
-(<code>remotes::install_github("PPgp/wpp2024")</code>). Relabel its
-1-year bands to age groups with <code><a href="../reference/limits_to_age_groups.html">limits_to_age_groups()</a></code> and
-then coarsen them to the matrix’s age groups using
-<code><a href="../reference/align_ages.html">align_ages()</a></code>:</p>
+<p>For recent UN World Population Prospects data, the <a href="https://github.com/PPgp/wpp2024" class="external-link"><code>wpp2024</code></a> package
+(<code>remotes::install_github("PPgp/wpp2024")</code>) provides
+<code>popAge1dt</code>, a table of one-year population bands. Load it
+from that package, filter to the country and year you need, relabel the
+ages with <code><a href="../reference/limits_to_age_groups.html">limits_to_age_groups()</a></code>, and coarsen to the
+matrix’s age groups with <code><a href="../reference/align_ages.html">align_ages()</a></code>. Here we use a small
+mock-up with the same columns:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"popAge1dt"</span>, package <span class="op">=</span> <span class="st">"wpp2024"</span><span class="op">)</span></span>
-<span><span class="va">uk_pop</span> <span class="op">&lt;-</span> <span class="va">popAge1dt</span><span class="op">[</span><span class="va">name</span> <span class="op">==</span> <span class="st">"United Kingdom"</span> <span class="op">&amp;</span> <span class="va">year</span> <span class="op">==</span> <span class="fl">2020</span>,</span>
-<span>  <span class="fu">.</span><span class="op">(</span></span>
-<span>    age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="va">age</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
-<span>    population <span class="op">=</span> <span class="va">pop</span> <span class="op">*</span> <span class="fl">1000</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="co"># mock-up of wpp2024's popAge1dt (one-year bands; population in thousands)</span></span>
+<span><span class="va">popAge1dt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  name <span class="op">=</span> <span class="st">"United Kingdom"</span>, year <span class="op">=</span> <span class="fl">2020L</span>,</span>
+<span>  age <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">90</span>, pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">1000</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">90</span><span class="op">)</span> <span class="op">/</span> <span class="fl">60</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">rows</span> <span class="op">&lt;-</span> <span class="va">popAge1dt</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">"United Kingdom"</span> <span class="op">&amp;</span> <span class="va">popAge1dt</span><span class="op">$</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2020</span></span>
+<span><span class="va">uk_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="va">popAge1dt</span><span class="op">$</span><span class="va">age</span><span class="op">[</span><span class="va">rows</span><span class="op">]</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
+<span>  population <span class="op">=</span> <span class="va">popAge1dt</span><span class="op">$</span><span class="va">pop</span><span class="op">[</span><span class="va">rows</span><span class="op">]</span> <span class="op">*</span> <span class="fl">1000</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">uk_pop</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      age population</span></span>
-<span><span class="co">#&gt;    &lt;ord&gt;      &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: [0,1)     703192</span></span>
-<span><span class="co">#&gt; 2: [1,2)     732072</span></span>
-<span><span class="co">#&gt; 3: [2,3)     762303</span></span>
-<span><span class="co">#&gt; 4: [3,4)     787284</span></span>
-<span><span class="co">#&gt; 5: [4,5)     812300</span></span>
-<span><span class="co">#&gt; 6: [5,6)     814132</span></span></code></pre></div>
+<span><span class="co">#&gt;     age population</span></span>
+<span><span class="co">#&gt; 1 [0,1)    1000000</span></span>
+<span><span class="co">#&gt; 2 [1,2)     983000</span></span>
+<span><span class="co">#&gt; 3 [2,3)     967000</span></span>
+<span><span class="co">#&gt; 4 [3,4)     951000</span></span>
+<span><span class="co">#&gt; 5 [4,5)     936000</span></span>
+<span><span class="co">#&gt; 6 [5,6)     920000</span></span></code></pre></div>
 <p>Any comparable data frame will work, e.g. constructed by hand:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">custom_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>

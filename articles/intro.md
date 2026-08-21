@@ -223,11 +223,11 @@ m <- suppressWarnings(
 mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
 #>           contact.age.group
-#> age.group      [0,1)     [1,5)    [5,15) [15,Inf)
-#>   [0,1)    1.5633585 1.3511111  2.195737 12.45685
-#>   [1,5)    0.1547148 3.4714355  2.799806 10.66169
-#>   [5,15)   0.0248520 1.0289153 18.421028 12.47461
-#>   [15,Inf) 0.0582149 0.7121352  2.506184 19.07875
+#> age.group       [0,1)     [1,5)    [5,15) [15,Inf)
+#>   [0,1)    0.51442308 1.7274267  2.481548 11.20124
+#>   [1,5)    0.24547726 3.4559521  2.671891 10.10208
+#>   [5,15)   0.05039353 0.9475189 15.845017 12.47798
+#>   [15,Inf) 0.06272726 0.6967015  2.847986 19.43410
 ```
 
 ## Demography
@@ -272,28 +272,40 @@ demo_matrix |> symmetrise(survey_pop = align_ages(custom_pop, demo_matrix))
 #>   [60,Inf) 0.699982 3.647842 1.918033
 ```
 
-For recent UN World Population Prospects data, the `wpp2024` package is
-available from GitHub (`remotes::install_github("PPgp/wpp2024")`).
-Relabel its 1-year bands to age groups with
-[`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md)
-and then coarsen them to the matrix’s age groups using
-[`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md):
+For recent UN World Population Prospects data, the
+[`wpp2024`](https://github.com/PPgp/wpp2024) package
+(`remotes::install_github("PPgp/wpp2024")`) provides `popAge1dt`, a
+table of one-year population bands. Load it from that package, relabel
+the ages with
+[`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md),
+and coarsen to the matrix’s age groups with
+[`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md).
+Here we use a small mock-up with the same columns:
 
 ``` r
 
-data("popAge1dt", package = "wpp2024")
-uk_pop_raw <- popAge1dt[name == "United Kingdom" & year == 2020,
-  .(
-    age = limits_to_age_groups(age, notation = "brackets"),
-    population = pop * 1000
-  )
-]
+# mock-up of wpp2024's popAge1dt (one-year bands; population in thousands)
+popAge1dt <- data.frame(
+  name = "United Kingdom", year = 2020L,
+  age = 0:90, pop = round(1000 * exp(-(0:90) / 60))
+)
+rows <- popAge1dt$name == "United Kingdom" & popAge1dt$year == 2020
+uk_pop_raw <- data.frame(
+  age = limits_to_age_groups(popAge1dt$age[rows], notation = "brackets"),
+  population = popAge1dt$pop[rows] * 1000
+)
 demo_matrix |> symmetrise(survey_pop = align_ages(uk_pop_raw, demo_matrix))
+#> 
+#> ── Contact matrix (3 age groups) ──
+#> 
+#> Ages: "[0,18)", "[18,60)", and "[60,Inf)"
+#> Participants: 1011
+#> 
 #>           contact.age.group
 #> age.group     [0,18)  [18,60)  [60,Inf)
-#>   [0,18)   7.8131868 5.490727 0.8787841
-#>   [18,60)  2.1528265 7.931429 1.7516352
-#>   [60,Inf) 0.7665599 3.896982 1.9180328
+#>   [0,18)   7.8131868 4.249158 0.5614763
+#>   [18,60)  2.9526608 7.931429 1.6113638
+#>   [60,Inf) 0.9800678 4.047693 1.9180328
 ```
 
 For the rest of this section we use a small constructed `uk_pop` for the
