@@ -78,6 +78,20 @@
   matrix unchanged
   ([\#319](https://github.com/epiforecasts/socialmixr/issues/319)).
 
+- [`plot()`](https://rdrr.io/r/graphics/plot.default.html) and
+  [`as.matrix()`](https://rdrr.io/r/base/matrix.html) now work on
+  multi-grouping contact matrices, operating on the flattened `T x T`
+  view.
+  [`matrix_plot()`](https://epiforecasts.io/socialmixr/reference/matrix_plot.md)
+  no longer assumes a square matrix, so non-square flattened matrices
+  plot correctly
+  ([\#321](https://github.com/epiforecasts/socialmixr/issues/321)).
+
+- New vignette, *Contact matrices across more than one grouping*, with
+  recipes for building, flattening, plotting and post-processing
+  matrices over several groupings
+  ([\#322](https://github.com/epiforecasts/socialmixr/issues/322)).
+
 - [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
   gains a new canonical target shape: a two-column data frame whose key
   column matches `by` is joined and multiplied into `weight`. This makes

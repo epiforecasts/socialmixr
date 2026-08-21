@@ -223,11 +223,11 @@ m <- suppressWarnings(
 mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
 #>           contact.age.group
-#> age.group       [0,1)     [1,5)    [5,15) [15,Inf)
-#>   [0,1)    1.14450980 1.3688235  1.735621 10.35771
-#>   [1,5)    0.17734415 4.0241307  2.745708 10.98158
-#>   [5,15)   0.02673519 1.0230572 15.475976 12.57010
-#>   [15,Inf) 0.06842847 0.7564709  2.690826 19.00327
+#> age.group      [0,1)     [1,5)    [5,15) [15,Inf)
+#>   [0,1)    1.5633585 1.3511111  2.195737 12.45685
+#>   [1,5)    0.1547148 3.4714355  2.799806 10.66169
+#>   [5,15)   0.0248520 1.0289153 18.421028 12.47461
+#>   [15,Inf) 0.0582149 0.7121352  2.506184 19.07875
 ```
 
 ## Demography
@@ -859,6 +859,11 @@ Countries.” *BMC Infectious Diseases* 9 (1): 1–12.
 
 Kolenikov, Stas. 2016. “Post-Stratification or Non-Response Adjustment?”
 *Survey Practice* 9 (3): 2809. <https://doi.org/10.29115/SP-2016-0014>.
+
+Manna, Adriana, Lorenzo Dall’Amico, Michele Tizzoni, Márton Karsai, and
+Nicola Perra. 2024. “Generalized Contact Matrices Allow Integrating
+Socioeconomic Variables into Epidemic Models.” *Science Advances* 10
+(41): eadk4606. <https://doi.org/10.1126/sciadv.adk4606>.
 
 Mossong, Joël, Niel Hens, Mark Jit, et al. 2008. “Social Contacts and
 Mixing Patterns Relevant to the Spread of Infectious Diseases.” *PLOS

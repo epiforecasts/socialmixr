@@ -992,6 +992,11 @@ Countries.” *BMC Infectious Diseases* 9 (1): 1–12.
 Kolenikov, Stas. 2016. “Post-Stratification or Non-Response Adjustment?”
 *Survey Practice* 9 (3): 2809. <https://doi.org/10.29115/SP-2016-0014>.
 
+Manna, Adriana, Lorenzo Dall’Amico, Michele Tizzoni, Márton Karsai, and
+Nicola Perra. 2024. “Generalized Contact Matrices Allow Integrating
+Socioeconomic Variables into Epidemic Models.” *Science Advances* 10
+(41): eadk4606. <https://doi.org/10.1126/sciadv.adk4606>.
+
 Mossong, Joël, Niel Hens, Mark Jit, et al. 2008. “Social Contacts and
 Mixing Patterns Relevant to the Spread of Infectious Diseases.” *PLOS
 Medicine* 5 (3): e74. <https://doi.org/10.1371/journal.pmed.0050074>.

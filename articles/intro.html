@@ -37,6 +37,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/intro.html">The socialmixr package</a></li>
+    <li><a class="dropdown-item" href="../articles/multidimensional.html">Contact matrices across more than one grouping</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -230,11 +231,11 @@
 <span><span class="va">mr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">m</span><span class="op">[</span><span class="st">"matrix"</span>, <span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
-<span><span class="co">#&gt; age.group       [0,1)     [1,5)    [5,15) [15,Inf)</span></span>
-<span><span class="co">#&gt;   [0,1)    1.14450980 1.3688235  1.735621 10.35771</span></span>
-<span><span class="co">#&gt;   [1,5)    0.17734415 4.0241307  2.745708 10.98158</span></span>
-<span><span class="co">#&gt;   [5,15)   0.02673519 1.0230572 15.475976 12.57010</span></span>
-<span><span class="co">#&gt;   [15,Inf) 0.06842847 0.7564709  2.690826 19.00327</span></span></code></pre></div>
+<span><span class="co">#&gt; age.group      [0,1)     [1,5)    [5,15) [15,Inf)</span></span>
+<span><span class="co">#&gt;   [0,1)    1.5633585 1.3511111  2.195737 12.45685</span></span>
+<span><span class="co">#&gt;   [1,5)    0.1547148 3.4714355  2.799806 10.66169</span></span>
+<span><span class="co">#&gt;   [5,15)   0.0248520 1.0289153 18.421028 12.47461</span></span>
+<span><span class="co">#&gt;   [15,Inf) 0.0582149 0.7121352  2.506184 19.07875</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
 </h2>
@@ -1191,6 +1192,9 @@ Hens, Niel, Girma Minalu Ayele, Nele Goeyvaerts, et al. 2009. <span>“Estimatin
 </div>
 <div id="ref-kolenikov_post-stratification_2016" class="csl-entry" role="listitem">
 Kolenikov, Stas. 2016. <span>“Post-Stratification or Non-Response Adjustment?”</span> <em>Survey Practice</em> 9 (3): 2809. <a href="https://doi.org/10.29115/SP-2016-0014" class="external-link">https://doi.org/10.29115/SP-2016-0014</a>.
+</div>
+<div id="ref-manna_generalized_2024" class="csl-entry" role="listitem">
+Manna, Adriana, Lorenzo Dall’Amico, Michele Tizzoni, Márton Karsai, and Nicola Perra. 2024. <span>“Generalized Contact Matrices Allow Integrating Socioeconomic Variables into Epidemic Models.”</span> <em>Science Advances</em> 10 (41): eadk4606. <a href="https://doi.org/10.1126/sciadv.adk4606" class="external-link">https://doi.org/10.1126/sciadv.adk4606</a>.
 </div>
 <div id="ref-mossong_social_2008" class="csl-entry" role="listitem">
 Mossong, Joël, Niel Hens, Mark Jit, et al. 2008. <span>“Social Contacts and Mixing Patterns Relevant to the Spread of Infectious Diseases.”</span> <em><span>PLOS</span> Medicine</em> 5 (3): e74. <a href="https://doi.org/10.1371/journal.pmed.0050074" class="external-link">https://doi.org/10.1371/journal.pmed.0050074</a>.
