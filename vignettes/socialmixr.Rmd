@@ -131,7 +131,8 @@ For recent UN World Population Prospects data, the [`wpp2024`](https://github.co
 # mock-up of wpp2024's popAge1dt (one-year bands; population in thousands)
 popAge1dt <- data.frame(
   name = "United Kingdom", year = 2020L,
-  age = 0:90, pop = round(1000 * exp(-(0:90) / 60))
+  age = 0:90, pop = round(1000 * exp(-(0:90) / 60)),
+  stringsAsFactors = FALSE
 )
 rows <- popAge1dt$name == "United Kingdom" & popAge1dt$year == 2020
 uk_pop <- data.frame(
