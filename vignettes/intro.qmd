@@ -159,16 +159,19 @@ demo_matrix <- polymod[country == "United Kingdom"] |>
 demo_matrix |> symmetrise(survey_pop = align_ages(custom_pop, demo_matrix))
 ```
 
-For recent UN World Population Prospects data, the `wpp2024` package is available from GitHub (`remotes::install_github("PPgp/wpp2024")`). Relabel its 1-year bands to age groups with `limits_to_age_groups()` and then coarsen them to the matrix's age groups using `align_ages()`:
+For recent UN World Population Prospects data, the `wpp2024` package (GitHub: `PPgp/wpp2024`) provides `popAge1dt`, a table of one-year population bands. Load it from that package, relabel the ages with `limits_to_age_groups()`, and coarsen to the matrix's age groups with `align_ages()`. To keep this section self-contained we use a small stand-in with the same columns:
 
-```{r eval=requireNamespace("wpp2024", quietly = TRUE), message=FALSE, warning=FALSE}
-data("popAge1dt", package = "wpp2024")
-uk_pop_raw <- popAge1dt[name == "United Kingdom" & year == 2020,
-  .(
-    age = limits_to_age_groups(age, notation = "brackets"),
-    population = pop * 1000
-  )
-]
+```{r}
+# stand-in for wpp2024's popAge1dt (one-year bands; population in thousands)
+popAge1dt <- data.frame(
+  name = "United Kingdom", year = 2020L,
+  age = 0:90, pop = round(1000 * exp(-(0:90) / 60))
+)
+rows <- popAge1dt$name == "United Kingdom" & popAge1dt$year == 2020
+uk_pop_raw <- data.frame(
+  age = limits_to_age_groups(popAge1dt$age[rows], notation = "brackets"),
+  population = popAge1dt$pop[rows] * 1000
+)
 demo_matrix |> symmetrise(survey_pop = align_ages(uk_pop_raw, demo_matrix))
 ```
 
