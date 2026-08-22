@@ -168,7 +168,7 @@ that a <code>part_age</code> column is available for the join.</p>
 <span class="r-in"><span><span class="va">uk</span> <span class="op">&lt;-</span> <span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># ── target = NULL ────────────────────────────────────────────────</span></span></span>
+<span class="r-in"><span><span class="co"># --- target = NULL ---</span></span></span>
 <span class="r-in"><span><span class="co"># Multiply an existing numeric column directly into the weight:</span></span></span>
 <span class="r-in"><span><span class="va">uk</span> <span class="op">|&gt;</span> <span class="fu">weigh</span><span class="op">(</span><span class="st">"hh_size"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $participants</span>
@@ -374,7 +374,7 @@ that a <code>part_age</code> column is available for the join.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "contact_survey"</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># ── data-frame target (discrete join) ────────────────────────────</span></span></span>
+<span class="r-in"><span><span class="co"># --- data-frame target (discrete join) ---</span></span></span>
 <span class="r-in"><span><span class="co"># The key column of `target` must match `by`. Each participant</span></span></span>
 <span class="r-in"><span><span class="co"># has its weight multiplied by the matching value column.</span></span></span>
 <span class="r-in"><span><span class="va">age_target</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
@@ -800,7 +800,7 @@ that a <code>part_age</code> column is available for the join.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "contact_survey"</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># ── unnamed vector + groups (total-weight semantics) ─────────────</span></span></span>
+<span class="r-in"><span><span class="co"># --- unnamed vector + groups (total-weight semantics) ---</span></span></span>
 <span class="r-in"><span><span class="co"># Each `target[g]` is the *total* weight assigned to participants in</span></span></span>
 <span class="r-in"><span><span class="co"># `groups[[g]]`. Here weekdays together carry weight 5, weekend days</span></span></span>
 <span class="r-in"><span><span class="co"># together carry weight 2:</span></span></span>
@@ -1213,7 +1213,7 @@ that a <code>part_age</code> column is available for the join.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "contact_survey"</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># ── named vector ─────────────────────────────────────────────────</span></span></span>
+<span class="r-in"><span><span class="co"># --- named vector ---</span></span></span>
 <span class="r-in"><span><span class="co"># `names(target)` are matched against `by` values; each value is the</span></span></span>
 <span class="r-in"><span><span class="co"># total weight for participants with that key.</span></span></span>
 <span class="r-in"><span><span class="va">uk</span><span class="op">$</span><span class="va">participants</span><span class="op">[</span>, <span class="va">agecat</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">part_age</span> <span class="op">&lt;</span> <span class="fl">18</span>, <span class="st">"child"</span>, <span class="st">"adult"</span><span class="op">)</span><span class="op">]</span></span></span>
@@ -1552,7 +1552,7 @@ that a <code>part_age</code> column is available for the join.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "contact_survey"</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># ── age post-stratification ──────────────────────────────────────</span></span></span>
+<span class="r-in"><span><span class="co"># --- age post-stratification ---</span></span></span>
 <span class="r-in"><span><span class="va">uk_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  age <span class="op">=</span> <span class="fu"><a href="limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">15</span>, <span class="fl">65</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3500000</span>, <span class="fl">6000000</span>, <span class="fl">40000000</span>, <span class="fl">10000000</span><span class="op">)</span></span></span>
