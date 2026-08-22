@@ -36,6 +36,6 @@ deprecate_arg(old_arg, new_arg, old_name, new_name, fn_name, version = "0.5.0")
 
 ## Value
 
-`new_arg`. Aborts via
-[`lifecycle::deprecate_stop()`](https://lifecycle.r-lib.org/reference/deprecate_soft.html)
-if `old_arg` is supplied.
+`new_arg`, or `old_arg` if it is supplied, in which case a deprecation
+warning is issued via
+[`lifecycle::deprecate_warn()`](https://lifecycle.r-lib.org/reference/deprecate_soft.html).

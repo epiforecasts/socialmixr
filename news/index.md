@@ -171,17 +171,19 @@
   [`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md),
   [`survey_countries()`](https://epiforecasts.io/socialmixr/reference/survey_countries.md),
   [`get_citation()`](https://epiforecasts.io/socialmixr/reference/get_citation.md),
-  the dotted argument names (`age.limits`, `survey.pop`,
+  and the `missing_contact_age = "sample"` option on
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
+  and
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md).
+  The dotted argument names (`age.limits`, `survey.pop`,
   `country.column`, etc.) on
   [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md),
   [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md),
   [`clean()`](https://epiforecasts.io/socialmixr/reference/clean.md),
   and
-  [`as_contact_survey()`](https://epiforecasts.io/socialmixr/reference/as_contact_survey.md),
-  and the `missing_contact_age = "sample"` option on
-  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
-  and
-  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md).
+  [`as_contact_survey()`](https://epiforecasts.io/socialmixr/reference/as_contact_survey.md)
+  remain deprecated and warn, rather than becoming defunct, so
+  downstream packages still using them keep working while they migrate.
   Bogus `"1.0.0"` versions on the
   [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md)
   and [`check()`](https://epiforecasts.io/socialmixr/reference/check.md)
