@@ -16,6 +16,7 @@
 #' are used.
 #'
 #' @return data frame of age-specific population data
+#' @import wpp2017
 #' @importFrom data.table dcast melt fread
 #' @importFrom countrycode countrycode
 #' @param countries countries, will return all if not given

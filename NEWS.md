@@ -96,9 +96,10 @@
   lookup in `contact_matrix()` (when `survey_pop` is not given but
   `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography`
   is set) keeps the warning introduced in 0.6.0 with a sharper "will
-  error in a future release" message. The `wpp2017` package moves from
-  `Imports` to `Suggests`. The following are now defunct
-  (`deprecate_stop`): `survey()`, `check()`, `get_survey()`,
+  error in a future release" message. `wpp2017` remains in `Imports` for
+  now, so this lookup keeps working; it will move to `Suggests` in a later
+  release once reverse dependencies have migrated. The following are now
+  defunct (`deprecate_stop`): `survey()`, `check()`, `get_survey()`,
   `download_survey()`, `list_surveys()`, `survey_countries()`,
   `get_citation()`, and the `missing_contact_age = "sample"` option on
   `assign_age_groups()` and `contact_matrix()`. The dotted argument names
