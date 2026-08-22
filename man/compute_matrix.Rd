@@ -49,6 +49,7 @@ first, then of the contact. Dim names carry the levels of each grouping.
 }
 
 \examples{
+\dontshow{data.table::setDTthreads(1L)}
 data(polymod)
 
 # Single-grouping (age) — default

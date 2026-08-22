@@ -1,3 +1,10 @@
+# Resubmission
+
+This is a resubmission. The previous submission was flagged at incoming
+pre-test for a NOTE on Debian: the `compute_matrix()` example used more CPU
+time than elapsed time (a multithreading artefact from data.table). The
+example now runs data.table single-threaded, so CPU and elapsed time match.
+
 # Submission
 
 This is a minor release (0.7.0) adding support for contact matrices across

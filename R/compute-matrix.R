@@ -35,6 +35,7 @@
 #'   combination)
 #'
 #' @examples
+#' \dontshow{data.table::setDTthreads(1L)}
 #' data(polymod)
 #'
 #' # Single-grouping (age) — default
