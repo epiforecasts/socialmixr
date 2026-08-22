@@ -100,12 +100,14 @@
   `Imports` to `Suggests`. The following are now defunct
   (`deprecate_stop`): `survey()`, `check()`, `get_survey()`,
   `download_survey()`, `list_surveys()`, `survey_countries()`,
-  `get_citation()`, the dotted argument names (`age.limits`,
-  `survey.pop`, `country.column`, etc.) on `contact_matrix()`,
-  `pop_age()`, `clean()`, and `as_contact_survey()`, and the
-  `missing_contact_age = "sample"` option on `assign_age_groups()` and
-  `contact_matrix()`. Bogus `"1.0.0"` versions on the `survey()` and
-  `check()` deprecation messages have been corrected.
+  `get_citation()`, and the `missing_contact_age = "sample"` option on
+  `assign_age_groups()` and `contact_matrix()`. The dotted argument names
+  (`age.limits`, `survey.pop`, `country.column`, etc.) on
+  `contact_matrix()`, `pop_age()`, `clean()`, and `as_contact_survey()`
+  remain deprecated and warn, rather than becoming defunct, so downstream
+  packages still using them keep working while they migrate. Bogus
+  `"1.0.0"` versions on the `survey()` and `check()` deprecation messages
+  have been corrected.
 
 ## Bug fixes
 
