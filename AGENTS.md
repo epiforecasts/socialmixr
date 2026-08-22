@@ -5,4 +5,6 @@
   it is tool-neutral.
 
 - **Reviewing a change** — what to look for, and what is not worth
-  reporting: read `.github/REVIEW.md`.
+  reporting: read the org review spec, `REVIEW.md` in the
+  [`epiforecasts/.github`](https://github.com/epiforecasts/.github)
+  repository.
