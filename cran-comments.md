@@ -1,10 +1,11 @@
-# Resubmission
+# Submission
 
-This is a resubmission of `socialmixr` 0.6.0. The previous submission
-caused failures in two reverse dependencies; this version keeps the
-relevant dependency in place and instead deprecates the affected code
-path so downstream packages can migrate before it is removed. All four
-reverse dependencies now check cleanly (see below).
+This is a minor release (0.7.0) adding support for contact matrices across
+more than one grouping, new age-rebinning helpers, and related changes. It
+also deprecates a few older code paths (the dotted argument names, `pop_age()`,
+and the implicit population lookup in `contact_matrix()`). These continue to
+work with a deprecation warning, so reverse dependencies keep passing and can
+migrate before anything is removed.
 
 # Test environments
 
