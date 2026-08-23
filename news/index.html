@@ -35,11 +35,11 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/epiforecasts/socialmixr/blob/v0.7.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.7.0" id="socialmixr-070">socialmixr 0.7.0<a class="anchor" aria-label="anchor" href="#socialmixr-070"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.7.0" id="socialmixr-070">socialmixr 0.7.0<a class="anchor" aria-label="anchor" href="#socialmixr-070"></a></h2><p class="text-muted">CRAN release: 2026-08-22</p>
 <div class="section level3">
 <h3 id="new-features-0-7-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-7-0"></a></h3>
 <ul><li><p><code><a href="../reference/compute_matrix.html">compute_matrix()</a></code> gains a <code>by</code> argument that accepts any combination of participant/contact groupings, not just age. Each entry is either the string <code>"age"</code> (matching the columns produced by <code><a href="../reference/assign_age_groups.html">assign_age_groups()</a></code>), a stem <code>"&lt;name&gt;"</code> (resolving to <code>part_&lt;name&gt;</code> and <code>cnt_&lt;name&gt;</code>), or an explicit <code>c(part = "X", cnt = "Y")</code> override. The result is a rank-<code>2K</code> array where the first <code>K</code> axes index participants and the last <code>K</code> index contacts. The default <code>by = "age"</code> reproduces the single-grouping behaviour of previous releases. <code><a href="../reference/split_matrix.html">split_matrix()</a></code> currently still requires a single-grouping matrix (<a href="https://github.com/epiforecasts/socialmixr/issues/143" class="external-link">#143</a>).</p></li>

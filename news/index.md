@@ -2,6 +2,8 @@
 
 ## socialmixr 0.7.0
 
+CRAN release: 2026-08-22
+
 ### New features
 
 - [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
