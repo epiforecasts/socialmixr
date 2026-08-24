@@ -56,7 +56,7 @@ hexagon <- function(scale = 1) {
   paste0("M", paste(sprintf("%.2f,%.2f", x, y), collapse = "L"), "Z")
 }
 
-side <- 780
+side <- 730
 gap <- 5
 cell <- side / n
 x0 <- cx - side / 2
