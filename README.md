@@ -14,8 +14,7 @@ coverage](https://codecov.io/gh/epiforecasts/socialmixr/graph/badge.svg)](https:
 package to derive social mixing matrices from survey data.
 
 socialmixr estimates matrices **empirically**, directly from the survey
-data, with uncertainty coming from resampling (bootstrapping)
-participants. Smoothing or otherwise modelling the contact surface, and
+data. Smoothing or otherwise modelling the contact surface, and
 synthesising matrices for populations without survey data, are out of
 scope. For projected (synthetic) matrices covering countries without
 their own survey, see
