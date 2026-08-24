@@ -1,5 +1,5 @@
 
-# Social mixing matrices for infectious disease modelling in R
+# Social mixing matrices for infectious disease modelling in R <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
 
