@@ -1,5 +1,8 @@
 # socialmixr (development version)
 
+* The package now has a logo, showing the POLYMOD contact matrix for the
+  United Kingdom in five-year age groups.
+
 # socialmixr 0.7.0
 
 ## New features

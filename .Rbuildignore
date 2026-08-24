@@ -20,3 +20,4 @@ cran-comments.md
 ^CLAUDE\.md$
 ^CLAUDE\.local\.md$
 ^AGENTS\.md$
+^data-raw$
