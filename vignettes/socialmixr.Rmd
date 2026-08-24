@@ -85,6 +85,10 @@ polymod[country %in% c("United Kingdom", "Germany")]
 
 When participants are filtered, contacts are automatically pruned to matching participants. If this subsetting is not done, the different sub-surveys contained in a dataset are combined as if they were a single sample (i.e., not applying any population-weighting by country or other correction).
 
+## A note on truncated surveys
+
+Some diaries limit how many contacts a participant can list individually. In POLYMOD, the recorded number of contacts is right-censored at around 29 in some countries (for example the United Kingdom and Finland), and Belgium, Germany, Finland and the Netherlands asked participants to estimate their professional contacts rather than list each one ([Mossong et al. 2008](https://doi.org/10.1371/journal.pmed.0050074)). socialmixr computes matrices from the contacts as recorded, so for these surveys the counts for high-contact participants are under-estimates. Correcting for this properly means modelling the censoring, which is out of scope; if you need to account for it, adjust the contact data before passing it to the pipeline.
+
 # Bootstrapping
 
 To get an idea of the uncertainty in the contact matrices, participants can be resampled with replacement. A short helper replicates participant (and matching contact) rows for each occurrence of a resampled ID, so that duplicates are preserved:
