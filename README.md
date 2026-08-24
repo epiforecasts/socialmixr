@@ -13,6 +13,14 @@ coverage](https://codecov.io/gh/epiforecasts/socialmixr/graph/badge.svg)](https:
 [socialmixr](https://github.com/epiforecasts/socialmixr) is an `R`
 package to derive social mixing matrices from survey data.
 
+socialmixr estimates matrices **empirically**, directly from the survey
+data, with uncertainty coming from resampling (bootstrapping)
+participants. Smoothing or otherwise modelling the contact surface, and
+synthesising matrices for populations without survey data, are out of
+scope. For projected (synthetic) matrices covering countries without
+their own survey, see
+[contactdata](https://github.com/socialcontactdata/contactdata).
+
 # Installation
 
 The package can be installed using
@@ -56,9 +64,7 @@ vignette](https://epiforecasts.io/socialmixr/articles/socialmixr.html).
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-
 <!-- prettier-ignore-start -->
-
 <!-- markdownlint-disable -->
 
 All contributions to this project are gratefully acknowledged using the
@@ -113,7 +119,5 @@ specification. Contributions of any kind are welcome!
 <a href="https://github.com/epiforecasts/socialmixr/issues?q=is%3Aissue+commenter%3Acoderabbitai">coderabbitai</a>
 
 <!-- markdownlint-enable -->
-
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
