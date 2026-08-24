@@ -335,6 +335,20 @@ sub-surveys contained in a dataset are combined as if they were a single
 sample (i.e., not applying any population-weighting by country or other
 correction).
 
+### A note on truncated surveys
+
+Some diaries limit how many contacts a participant can list
+individually. In POLYMOD, the recorded number of contacts is
+right-censored at a diary limit that varies by country (around 29 in the
+United Kingdom, for example), and Belgium, Germany, Finland and the
+Netherlands asked participants to estimate their professional contacts
+rather than list each one ([Mossong et al.
+2008](#ref-mossong_social_2008)). socialmixr computes matrices from the
+contacts as recorded, so for these surveys the counts for high-contact
+participants are under-estimates. Correcting for this properly means
+modelling the censoring, which is out of scope; if you need to account
+for it, adjust the contact data before passing it to the pipeline.
+
 ## Bootstrapping
 
 To get an idea of the uncertainty in the contact matrices, participants
