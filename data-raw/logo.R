@@ -31,8 +31,8 @@ result <- polymod[country == "United Kingdom"] |>
   compute_matrix()
 ## symmetrise() warns that the sub-populations differ widely in size, because
 ## the open-ended 70+ band holds about twice as many people as a five-year one.
-## The adjustment lands on the two oldest columns, which stay below 1.2
-## contacts and so at the dark end of the capped scale below.
+## Its warning is about quantitative artefacts in the oldest ages, which a logo
+## can live with; symmetrisation leaves the diagonal untouched either way.
 mat <- symmetrise(result, survey_pop = align_ages(uk_pop, result))$matrix
 n <- nrow(mat)
 
