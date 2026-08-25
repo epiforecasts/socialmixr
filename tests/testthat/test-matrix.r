@@ -981,7 +981,7 @@ test_that("participants with missing contact age are handled", {
 test_that("user-defined reference populations with open age groups", {
   suppressWarnings({
     survey.pop <- data.frame(
-      lower.age.limit = c(0, 4, 15),
+      lower.age.limit = c(0, 18, 60),
       population = c(4e6, 1e5, 6e6)
     )
 
@@ -1270,8 +1270,9 @@ test_that("deprecated dotted argument names warn but still work", {
   )
 
   fake_pop <- data.frame(lower.age.limit = c(0, 5), population = c(1e6, 5e6))
-  lifecycle::expect_deprecated(
-    pop_age(fake_pop, age.limits = c(0, 18, 65))
+  expect_error(
+    pop_age(fake_pop, age.limits = c(0, 18, 65)),
+    class = "lifecycle_error_deprecated"
   )
 
   # as_contact_survey() dotted args

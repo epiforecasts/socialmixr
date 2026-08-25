@@ -57,42 +57,12 @@ rebin_ages_numeric <- function(
     pop[[pop_age_column]]
   )
   if (length(finer_limits) > 0) {
-    lifecycle::deprecate_warn(
+    lifecycle::deprecate_stop(
       "0.7.0",
       I("Interpolating population data to age groups finer than the data"),
       details = "Supply population at least as fine as the requested age
-                 groups; interpolation will error in a future release."
+                 groups."
     )
-    ..original.upper.age.limit <- NULL
-    pop <- pop[,
-      ..original.upper.age.limit := c(pop[[pop_age_column]][-1], NA)
-    ]
-    pop <- pop[, ..original.lower.age.limit := get(pop_age_column)]
-    all_ages <- data.frame(age_limits[
-      age_limits <= max(pop[[pop_age_column]])
-    ])
-    colnames(all_ages) <- pop_age_column
-    pop <- merge(pop, all_ages, all = TRUE, by = pop_age_column)
-    pop <- pop[, ..segment := cumsum(!is.na(..original.lower.age.limit))]
-    pop <- pop[,
-      ..original.lower.age.limit := ..original.lower.age.limit[1],
-      by = ..segment
-    ]
-    pop <- pop[,
-      ..original.upper.age.limit := ..original.upper.age.limit[1],
-      by = ..segment
-    ]
-    pop <- pop[, paste(pop_column) := get(pop_column)[1], by = ..segment]
-    pop <- pop[, ..upper.age.limit := c(pop[[pop_age_column]][-1], NA)]
-    pop[
-      !is.na(..original.upper.age.limit),
-      paste(pop_column) := round(
-        get(pop_column) *
-          (..upper.age.limit - get(pop_age_column)) /
-          (..original.upper.age.limit - ..original.lower.age.limit)
-      )
-    ]
-    pop <- pop[, c(pop_age_column, pop_column), with = FALSE]
   }
 
   pop <- pop[get(pop_age_column) >= min(age_limits)]

@@ -71,29 +71,19 @@ test_that("rebin_ages errors on bad input", {
   expect_error(rebin_ages(pop), "numeric vector of age limits")
 })
 
-test_that("pop_age() is deprecated in favour of rebin_ages()", {
+test_that("pop_age() is defunct in favour of rebin_ages()", {
   pop_data <- data.frame(
     lower.age.limit = c(0, 5, 15),
     population = c(1e6, 5e6, 2e6)
   )
-  lifecycle::expect_deprecated(pop_age(pop_data))
-  withr::local_options(lifecycle_verbosity = "quiet")
-
-  ## age_limits are forwarded and coarsen the population
-  coarsened <- pop_age(pop_data, age_limits = c(0, 5))
-  expect_identical(coarsened$lower.age.limit, c(0, 5))
-  expect_identical(coarsened$population, c(1e6, 7e6))
-
-  ## custom column names are forwarded too
-  custom <- data.frame(age_lower = c(0, 5, 15), pop = c(1e6, 5e6, 2e6))
-  custom_out <- pop_age(
-    custom,
-    age_limits = c(0, 5),
-    pop_age_column = "age_lower",
-    pop_column = "pop"
+  expect_error(
+    pop_age(pop_data),
+    class = "lifecycle_error_deprecated"
   )
-  expect_identical(custom_out$age_lower, c(0, 5))
-  expect_identical(custom_out$pop, c(1e6, 7e6))
+  expect_error(
+    pop_age(pop_data, age_limits = c(0, 5)),
+    class = "lifecycle_error_deprecated"
+  )
 })
 
 test_that("wpp_age() is defunct", {
@@ -129,26 +119,17 @@ test_that("age_groups_to_limits works with single age group", {
   expect_identical(result, 0)
 })
 
-test_that("agegroups spellings are deprecated in favour of age_groups", {
-  lifecycle::expect_deprecated(reduce_agegroups(seq_len(10), c(0, 5)))
-  lifecycle::expect_deprecated(
-    limits_to_agegroups(c(0, 5, 10), notation = "brackets")
-  )
-  lifecycle::expect_deprecated(agegroups_to_limits(c("[0,5)", "[5,Inf)")))
-
-  ## old names delegate to the new ones
-  withr::local_options(lifecycle_verbosity = "quiet")
-  brackets <- limits_to_age_groups(c(0, 5, 10), notation = "brackets")
-  expect_identical(
+test_that("agegroups spellings are defunct in favour of age_groups", {
+  expect_error(
     reduce_agegroups(seq_len(10), c(0, 5)),
-    reduce_age_groups(seq_len(10), c(0, 5))
+    class = "lifecycle_error_deprecated"
   )
-  expect_identical(
+  expect_error(
     limits_to_agegroups(c(0, 5, 10), notation = "brackets"),
-    brackets
+    class = "lifecycle_error_deprecated"
   )
-  expect_identical(
-    agegroups_to_limits(brackets),
-    age_groups_to_limits(brackets)
+  expect_error(
+    agegroups_to_limits(c("[0,5)", "[5,Inf)")),
+    class = "lifecycle_error_deprecated"
   )
 })

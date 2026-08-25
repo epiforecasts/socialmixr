@@ -148,7 +148,7 @@ weigh <- function(survey, by, target = NULL, groups = NULL, ...) {
     if (by %in% colnames(target)) {
       weigh_join_warn_groups(participants, by, target, groups)
     } else {
-      weigh_population_deprecated(participants, target, ...)
+      weigh_population_defunct(participants, target, ...)
     }
   } else if (!is.numeric(target)) {
     cli_abort_unknown_target()
@@ -237,8 +237,8 @@ weigh_named_warn_groups <- function(participants, by, target, groups) {
   weigh_named(participants, by, target)
 }
 
-weigh_population_deprecated <- function(participants, target, ...) {
-  lifecycle::deprecate_warn(
+weigh_population_defunct <- function(participants, target, ...) {
+  lifecycle::deprecate_stop(
     when = "0.7.0",
     what = I(
       "Passing a population data frame (with `lower.age.limit` and \\
@@ -252,7 +252,6 @@ weigh_population_deprecated <- function(participants, target, ...) {
       )
     )
   )
-  weigh_population(participants, target, ...)
 }
 
 #' @autoglobal

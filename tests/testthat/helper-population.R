@@ -11,8 +11,11 @@ test_population <- function() {
     4655093, 3989175, 3615150, 3902231, 3126452, 2710063, 2352113, 1964744,
     1480606, 757996, 324245, 74738, 8553
   )
+  ## pad beyond the oldest band so that tests asking for single-year groups
+  ## up to very high ages are aggregating, not interpolating
+  oldest <- length(five_year) * 5L
   data.frame(
-    lower.age.limit = seq(0L, length(five_year) * 5L - 1L),
-    population = rep(five_year, each = 5) / 5
+    lower.age.limit = seq(0L, 120L),
+    population = c(rep(five_year, each = 5) / 5, rep(0, 121L - oldest))
   )
 }
