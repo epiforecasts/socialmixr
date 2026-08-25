@@ -7,11 +7,11 @@
 survey_countries(survey, country.column = "country", ...)
 }
 \arguments{
-\item{survey}{a DOI or url to get the survey from, or a \code{\link[=survey]{survey()}} object.}
+\item{survey}{a DOI or url to get the survey from, or a survey object}
 
 \item{country.column}{column in the survey indicating the country}
 
-\item{...}{further arguments for \code{\link[=get_survey]{get_survey()}}}
+\item{...}{currently unused}
 }
 \value{
 Always errors.
@@ -24,11 +24,6 @@ Always errors.
 and \code{\link[=load_survey]{load_survey()}} and then explore the country column yourself.
 }
 \examples{
-\dontrun{
-data(polymod)
-survey_countries(polymod)
-}
-## --> we now recommend
 \dontrun{
 doi_peru <- "10.5281/zenodo.1095664" # nolint
 # download the data with the contactsurveys package

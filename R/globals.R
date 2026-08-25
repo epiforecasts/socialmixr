@@ -78,13 +78,6 @@ utils::globalVariables(c(
   "population", # <contact_matrix>
   "proportion", # <contact_matrix>
   "participants", # <contact_matrix>
-  "file_name", # <download_survey>
-  "common_doi", # <.list_surveys>
-  "doi.nb", # <.list_surveys>
-  "identifier.1", # <.list_surveys>
-  "title", # <.list_surveys>
-  "creator", # <.list_surveys>
-  "identifier.2", # <.list_surveys>
   ".idx", # <joint_population_vector>
   "..original.lower.age.limit", # <rebin_ages_numeric>
   "..segment", # <rebin_ages_numeric>
