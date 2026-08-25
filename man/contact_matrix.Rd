@@ -56,13 +56,13 @@ given as country names or 2-letter (ISO Alpha-2) country
 codes.}
 
 \item{survey_pop}{survey population -- a data frame with columns
-\code{lower.age.limit} and \code{population}. Passing \code{NULL} (the default)
-or a character vector of country names triggers the
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} implicit lookup via \code{\link[=wpp_age]{wpp_age()}}
-when \code{symmetric}, \code{split}, \code{per_capita}, \code{weigh_age}, or
-\code{return_demography} is \code{TRUE}; supply an explicit data frame
-(e.g. constructed from the \code{wpp2024} package or another source)
-instead. If the population is coarser than the requested age groups it
+\code{lower.age.limit} and \code{population}. Required when \code{symmetric}, \code{split},
+\code{per_capita}, \code{weigh_age}, or \code{return_demography} is \code{TRUE}, unless the
+survey covers a single population with no country information, in which
+case the participants themselves are used. Passing a character vector of
+country names is \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}; construct the data frame
+yourself (e.g. from the \code{wpp2024} package or another source).
+If the population is coarser than the requested age groups it
 is linearly interpolated to finer groups, but this is deprecated (it
 warns and will error in a future release); supply population at least as
 fine as \code{age_limits}.}

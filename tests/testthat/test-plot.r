@@ -2,6 +2,10 @@ dta <- contact_matrix(
   polymod,
   countries = "United Kingdom",
   age_limits = c(0, 18, 65),
+  survey_pop = data.frame(
+    lower.age.limit = c(0, 18, 65),
+    population = c(1.3e7, 4e7, 1e7)
+  ),
   per_capita = TRUE
 )
 

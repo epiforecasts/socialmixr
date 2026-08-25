@@ -25,14 +25,10 @@ test_that("age groups are ordered factors", {
 })
 
 test_that("rebin_ages coarsens without changing total population", {
-  skip_if_not_installed("wpp2017")
-  ages_it_2015 <- suppressWarnings(wpp_age("Italy", 2015))
+  five_year_limits <- seq(0, 100, by = 5)
   pop <- data.frame(
-    age = limits_to_age_groups(
-      ages_it_2015$lower.age.limit,
-      notation = "brackets"
-    ),
-    population = ages_it_2015$population
+    age = limits_to_age_groups(five_year_limits, notation = "brackets"),
+    population = seq_along(five_year_limits) * 1e5
   )
 
   coarser <- rebin_ages(pop, age_limits = seq(0, 100, by = 10))
@@ -100,13 +96,10 @@ test_that("pop_age() is deprecated in favour of rebin_ages()", {
   expect_identical(custom_out$pop, c(1e6, 7e6))
 })
 
-test_that("wpp_age warns when historical year is unavailable", {
-  skip_if_not_installed("wpp2017")
-  withr::local_options(lifecycle_verbosity = "quiet")
-  expect_warning(wpp_age("Germany", 2011), "Don't have population data")
-  expect_snapshot_warning(
-    cran = FALSE,
-    wpp_age("Germany", 2011)
+test_that("wpp_age() is defunct", {
+  expect_error(
+    wpp_age("Germany", 2011),
+    class = "lifecycle_error_deprecated"
   )
 })
 

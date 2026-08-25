@@ -66,13 +66,20 @@ options <-
     test2 = list(
       survey = polymod2,
       age_limits = c(0, 5),
+      survey_pop = data.frame(
+        lower.age.limit = c(0, 5),
+        population = c(3e6, 5e7)
+      ),
       weights = "added_weight",
       symmetric = TRUE,
       sample_participants = TRUE
     ),
     test3 = list(
       survey = polymod,
-      survey_pop = "Australia",
+      survey_pop = data.frame(
+        lower.age.limit = c(0, 5, 10),
+        population = c(3e6, 3e6, 5e7)
+      ),
       countries = "GB",
       split = TRUE,
       filter = c(cnt_home = 1),
@@ -175,7 +182,8 @@ test_that("warning is thrown if missing data exist", {
       survey = polymod,
       missing_contact_age = "keep",
       symmetric = TRUE,
-      age_limits = c(0, 5, 15)
+      age_limits = c(0, 5, 15),
+      survey_pop = test_population()
     )
   )
   expect_warning(
@@ -183,14 +191,16 @@ test_that("warning is thrown if missing data exist", {
       survey = polymod,
       missing_contact_age = "keep",
       symmetric = TRUE,
-      age_limits = c(0, 5, 15)
+      age_limits = c(0, 5, 15),
+      survey_pop = test_population()
     ),
     "missing.contact.age"
   )
   warning <- capture_warnings(contact_matrix(
     survey = polymod,
     missing_participant_age = "keep",
-    split = TRUE
+    split = TRUE,
+    survey_pop = test_population()
   ))
   expect_true(any(grepl(
     "missing.participant.age|missing_participant_age",
@@ -231,39 +241,16 @@ test_that("error if no participants after selecting the country", {
   )
 })
 
-test_that("warning if population needed but no 'year' column", {
-  expect_snapshot_warning(
-    contact_matrix(
-      survey = polymod3,
-      symmetric = TRUE,
-      age_limits = c(0, 5, 15)
-    )
-  )
-  expect_warning(
-    contact_matrix(
-      survey = polymod3,
-      symmetric = TRUE,
-      age_limits = c(0, 5, 15)
-    ),
-    "No information on \"year\" found"
-  )
-})
-
 test_that("warning if day of week weigh requested but not present", {
   expect_snapshot_warning(
     contact_matrix(survey = polymod3, weigh_dayofweek = TRUE)
   )
 })
 
-test_that("warning is thrown if country has no survey population", {
-  expect_snapshot(
-    error = TRUE,
-    cran = FALSE,
-    contact_matrix(survey = polymod5, symmetric = TRUE)
-  )
+test_that("population is no longer looked up from the survey countries", {
   expect_error(
     contact_matrix(survey = polymod5, symmetric = TRUE),
-    "not find population data"
+    class = "lifecycle_error_deprecated"
   )
 })
 
@@ -280,14 +267,16 @@ test_that("good suggestions are made", {
     contact_matrix(
       survey = polymod8,
       symmetric = TRUE,
-      age_limits = c(0, 5, 15)
+      age_limits = c(0, 5, 15),
+      survey_pop = test_population()
     )
   )
   expect_warning(
     contact_matrix(
       survey = polymod8,
       symmetric = TRUE,
-      age_limits = c(0, 5, 15)
+      age_limits = c(0, 5, 15),
+      survey_pop = test_population()
     ),
     "adjusting the age limits"
   )
@@ -296,7 +285,8 @@ test_that("good suggestions are made", {
       survey = polymod,
       symmetric = TRUE,
       age_limits = c(0, 5, 15),
-      missing_participant_age = "keep"
+      missing_participant_age = "keep",
+      survey_pop = test_population()
     )
   )
   expect_warning(
@@ -304,7 +294,8 @@ test_that("good suggestions are made", {
       survey = polymod,
       symmetric = TRUE,
       age_limits = c(0, 5, 15),
-      missing_participant_age = "keep"
+      missing_participant_age = "keep",
+      survey_pop = test_population()
     ),
     "setting 'missing.participant.age"
   )
@@ -314,7 +305,8 @@ test_that("good suggestions are made", {
       symmetric = TRUE,
       age_limits = c(0, 5, 15),
       missing_participant_age = "keep",
-      missing_contact_age = "keep"
+      missing_contact_age = "keep",
+      survey_pop = test_population()
     )
   )
   expect_warning(
@@ -323,7 +315,8 @@ test_that("good suggestions are made", {
       symmetric = TRUE,
       age_limits = c(0, 5, 15),
       missing_participant_age = "keep",
-      missing_contact_age = "keep"
+      missing_contact_age = "keep",
+      survey_pop = test_population()
     ),
     "and 'missing.contact.age"
   )
@@ -335,7 +328,8 @@ test_that("nonsensical operations are warned about", {
       survey = polymod,
       counts = TRUE,
       split = TRUE,
-      age_limits = c(0, 5)
+      age_limits = c(0, 5),
+      survey_pop = test_population()
     )
   )
   expect_snapshot(
@@ -344,7 +338,8 @@ test_that("nonsensical operations are warned about", {
       survey = polymod,
       counts = TRUE,
       symmetric = TRUE,
-      age_limits = c(0, 5)
+      age_limits = c(0, 5),
+      survey_pop = test_population()
     )
   )
   expect_snapshot_warning(
@@ -353,7 +348,8 @@ test_that("nonsensical operations are warned about", {
       survey = polymod,
       split = TRUE,
       age_limits = c(0, 5, 15),
-      missing_participant_age = "keep"
+      missing_participant_age = "keep",
+      survey_pop = test_population()
     )
   )
   expect_warning(
@@ -361,7 +357,8 @@ test_that("nonsensical operations are warned about", {
       survey = polymod,
       split = TRUE,
       age_limits = c(0, 5, 15),
-      missing_participant_age = "keep"
+      missing_participant_age = "keep",
+      survey_pop = test_population()
     ),
     "does not work with missing data"
   )
@@ -540,7 +537,8 @@ test_that("age-specific weight changes multi-year age groups", {
       polymod11,
       age_limits = c(0, 3),
       weigh_age = TRUE,
-      symmetric = FALSE
+      symmetric = FALSE,
+      survey_pop = test_population()
     )
   })
 
@@ -569,7 +567,8 @@ test_that("age-specific weight unchanged for single year groups", {
         survey = polymod,
         countries = "Poland",
         age_limits = 1:110,
-        weigh_age = TRUE
+        weigh_age = TRUE,
+        survey_pop = test_population()
       )$matrix
     ),
     tolerance = 1e-15
@@ -595,7 +594,8 @@ test_that("Demography age groups are subset of participant age groups", {
   cm <- suppressWarnings(contact_matrix(
     polymod,
     age_limits = c(0, 18, 50, 100),
-    symmetric = TRUE
+    symmetric = TRUE,
+    survey_pop = test_population()
   ))
 
   # All demography age groups should be present in participant age groups
@@ -636,7 +636,8 @@ test_that("The return.demography overrules other parameters", {
       contact_matrix(
         survey = polymod,
         age_limits = c(0, 18),
-        symmetric = TRUE
+        symmetric = TRUE,
+        survey_pop = test_population()
       )$demography,
       "list"
     )
@@ -644,7 +645,8 @@ test_that("The return.demography overrules other parameters", {
       contact_matrix(
         survey = polymod,
         age_limits = c(0, 18),
-        weigh_age = TRUE
+        weigh_age = TRUE,
+        survey_pop = test_population()
       )$demography,
       "list"
     )
@@ -652,7 +654,8 @@ test_that("The return.demography overrules other parameters", {
       contact_matrix(
         survey = polymod,
         age_limits = c(0, 18),
-        split = TRUE
+        split = TRUE,
+        survey_pop = test_population()
       )$demography,
       "list"
     )
@@ -663,7 +666,8 @@ test_that("The return.demography overrules other parameters", {
         survey = polymod,
         age_limits = c(0, 18),
         symmetric = FALSE,
-        return_demography = TRUE
+        return_demography = TRUE,
+        survey_pop = test_population()
       )$demography,
       "list"
     )
@@ -672,7 +676,8 @@ test_that("The return.demography overrules other parameters", {
         survey = polymod,
         age_limits = c(0, 18),
         weigh_age = FALSE,
-        return_demography = TRUE
+        return_demography = TRUE,
+        survey_pop = test_population()
       )$demography,
       "list"
     )
@@ -681,7 +686,8 @@ test_that("The return.demography overrules other parameters", {
         survey = polymod,
         age_limits = c(0, 18),
         split = FALSE,
-        return_demography = TRUE
+        return_demography = TRUE,
+        survey_pop = test_population()
       )$demography,
       "list"
     )
@@ -692,7 +698,8 @@ test_that("The return.demography overrules other parameters", {
         survey = polymod,
         age_limits = c(0, 18),
         symmetric = TRUE,
-        return_demography = FALSE
+        return_demography = FALSE,
+        survey_pop = test_population()
       )$demography
     )
     expect_null(
@@ -700,7 +707,8 @@ test_that("The return.demography overrules other parameters", {
         survey = polymod,
         age_limits = c(0, 18),
         weigh_age = TRUE,
-        return_demography = FALSE
+        return_demography = FALSE,
+        survey_pop = test_population()
       )$demography
     )
     expect_null(
@@ -708,7 +716,8 @@ test_that("The return.demography overrules other parameters", {
         survey = polymod,
         age_limits = c(0, 18),
         split = TRUE,
-        return_demography = FALSE
+        return_demography = FALSE,
+        survey_pop = test_population()
       )$demography
     )
   })
@@ -792,14 +801,16 @@ test_that("The participant weights add up to the sample size", {
       survey = polymod,
       age_limits = c(0, 18),
       return_part_weights = TRUE,
-      weigh_age = TRUE
+      weigh_age = TRUE,
+      survey_pop = test_population()
     )$participants.weights
     weights.both <- contact_matrix(
       survey = polymod,
       age_limits = c(0, 18),
       return_part_weights = TRUE,
       weigh_age = TRUE,
-      weigh_dayofweek = TRUE
+      weigh_dayofweek = TRUE,
+      survey_pop = test_population()
     )$participants.weights
 
     expect_equal(
@@ -826,7 +837,8 @@ test_that("The weights with threshold", {
       return_part_weights = TRUE,
       weigh_age = TRUE,
       weigh_dayofweek = TRUE,
-      weight_threshold = NA
+      weight_threshold = NA,
+      survey_pop = test_population()
     )$participants.weights
     weights.threshold3 <- contact_matrix(
       survey = polymod,
@@ -834,7 +846,8 @@ test_that("The weights with threshold", {
       return_part_weights = TRUE,
       weigh_age = TRUE,
       weigh_dayofweek = TRUE,
-      weight_threshold = 3
+      weight_threshold = 3,
+      survey_pop = test_population()
     )$participants.weights
     weights.threshold50 <- contact_matrix(
       survey = polymod,
@@ -842,7 +855,8 @@ test_that("The weights with threshold", {
       return_part_weights = TRUE,
       weigh_age = TRUE,
       weigh_dayofweek = TRUE,
-      weight_threshold = 50
+      weight_threshold = 50,
+      survey_pop = test_population()
     )$participants.weights
 
     # make sure they add up to the sample size
@@ -1031,7 +1045,8 @@ test_that("The absence of reference population info is going well", {
         contact_matrix(
           polymod_nocountry,
           age_limits = c(0, 18, 60),
-          symmetric = TRUE # to make sure that demography is returned
+          symmetric = TRUE, # to make sure that demography is returned
+          survey_pop = test_population()
         )$demography
       ),
       3L
@@ -1043,7 +1058,8 @@ test_that("The absence of reference population info is going well", {
         contact_matrix(
           polymod_nocountry,
           age_limits = c(0, 18, 60),
-          symmetric = TRUE # to make sure that demography is returned
+          symmetric = TRUE, # to make sure that demography is returned
+          survey_pop = test_population()
         )$demography
       )[1],
       "age.group"
@@ -1058,7 +1074,8 @@ test_that("Contact matrices per capita can be provided", {
       contact_matrix(
         polymod,
         age_limits = c(0, 18, 60),
-        per_capita = TRUE
+        per_capita = TRUE,
+        survey_pop = test_population()
       )$matrix.per.capita,
       "double"
     )
@@ -1069,7 +1086,8 @@ test_that("Contact matrices per capita can be provided", {
         polymod,
         age_limits = c(0, 18, 60),
         per_capita = TRUE,
-        counts = TRUE
+        counts = TRUE,
+        survey_pop = test_population()
       )$matrix.per.capita
     )
 
@@ -1079,7 +1097,8 @@ test_that("Contact matrices per capita can be provided", {
         polymod,
         age_limits = c(0, 18, 60),
         per_capita = TRUE,
-        split = TRUE
+        split = TRUE,
+        survey_pop = test_population()
       )$matrix.per.capita
     )
   })
@@ -1092,7 +1111,8 @@ test_that("Symmetric contact matrices per capita are actually symmetric", {
       polymod,
       age_limits = c(0, 18, 60),
       symmetric = TRUE, # to make sure that demography is returned
-      per_capita = TRUE
+      per_capita = TRUE,
+      survey_pop = test_population()
     )$matrix.per.capita
 
     expect_true(isSymmetric(matrix.per.capita, check.attributes = FALSE))
@@ -1104,7 +1124,12 @@ test_that("Contact matrices per capita are also generated when bootstrapping", {
   suppressWarnings({
     # get contact matrix per capita
     expect_length(
-      contact_matrix(polymod, age_limits = c(0, 18, 60), per_capita = TRUE),
+      contact_matrix(
+        polymod,
+        age_limits = c(0, 18, 60),
+        per_capita = TRUE,
+        survey_pop = test_population()
+      ),
       4
     )
 
@@ -1123,14 +1148,16 @@ test_that("symmetric matrices with large norm weights warn", {
     contact_matrix(
       survey = polymod,
       age_limits = c(0, 90),
-      symmetric = TRUE
+      symmetric = TRUE,
+      survey_pop = test_population()
     )
   )
   expect_warning(
     contact_matrix(
       survey = polymod,
       age_limits = c(0, 90),
-      symmetric = TRUE
+      symmetric = TRUE,
+      survey_pop = test_population()
     ),
     "artefacts after making the matrix symmetric"
   )

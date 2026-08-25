@@ -31,7 +31,6 @@ Imports:
     lifecycle,
     lubridate,
     purrr,
-    wpp2017,
     cli,
     rlang,
     methods

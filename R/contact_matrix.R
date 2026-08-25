@@ -8,13 +8,13 @@
 #'   given as country names or 2-letter (ISO Alpha-2) country
 #'   codes.
 #' @param survey_pop survey population -- a data frame with columns
-#'   `lower.age.limit` and `population`. Passing `NULL` (the default)
-#'   or a character vector of country names triggers the
-#'   `r lifecycle::badge("deprecated")` implicit lookup via [wpp_age()]
-#'   when `symmetric`, `split`, `per_capita`, `weigh_age`, or
-#'   `return_demography` is `TRUE`; supply an explicit data frame
-#'   (e.g. constructed from the `wpp2024` package or another source)
-#'   instead. If the population is coarser than the requested age groups it
+#'   `lower.age.limit` and `population`. Required when `symmetric`, `split`,
+#'   `per_capita`, `weigh_age`, or `return_demography` is `TRUE`, unless the
+#'   survey covers a single population with no country information, in which
+#'   case the participants themselves are used. Passing a character vector of
+#'   country names is `r lifecycle::badge("defunct")`; construct the data frame
+#'   yourself (e.g. from the `wpp2024` package or another source).
+#'   If the population is coarser than the requested age groups it
 #'   is linearly interpolated to finer groups, but this is deprecated (it
 #'   warns and will error in a future release); supply population at least as
 #'   fine as `age_limits`.
@@ -348,19 +348,18 @@ contact_matrix <- function(
   )
 
   if (need_survey_pop) {
-    ## warn if population data will be looked up automatically -----------------
+    ## population data is no longer looked up automatically -------------------
     has_country_info <- !is.null(countries) ||
       "country" %in% colnames(survey$participants)
-    if ((is.null(survey_pop) || is.character(survey_pop)) && has_country_info) {
-      lifecycle::deprecate_warn(
+    if (is.character(survey_pop) || (is.null(survey_pop) && has_country_info)) {
+      lifecycle::deprecate_stop(
         when = "0.6.0",
         what = I("Automatic country population lookup in `contact_matrix()`"),
         details = paste(
           "Pass `survey_pop` explicitly when `symmetric`, `split`,",
-          "`per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g.",
-          "as a data frame with columns `lower.age.limit` and `population`",
-          "constructed from the wpp2024 package or another source. The",
-          "implicit lookup will error in a future release."
+          "`per_capita`, `weigh_age`, or `return_demography` is TRUE, as a",
+          "data frame with columns `lower.age.limit` and `population`",
+          "constructed from the wpp2024 package or another source."
         )
       )
     }

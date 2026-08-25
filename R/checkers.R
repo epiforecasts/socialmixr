@@ -45,27 +45,6 @@ check_age_limits_increasing <- function(
   }
 }
 
-check_any_missing_countries <- function(
-  survey_countries,
-  country_pop,
-  call = rlang::caller_env()
-) {
-  missing_countries <- setdiff(
-    survey_countries,
-    unique(country_pop$country)
-  )
-  any_missing_country <- length(missing_countries) > 0
-  if (any_missing_country) {
-    cli::cli_abort(
-      message = c(
-        "Could not find population data for: {.val {missing_countries}}.",
-        i = "Pass population data directly via the {.arg survey_pop} argument."
-      ),
-      call = call
-    )
-  }
-}
-
 check_missing_countries <- function(
   countries,
   corrected_countries,

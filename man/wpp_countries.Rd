@@ -7,22 +7,17 @@
 wpp_countries()
 }
 \value{
-list of countries
+Always errors.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
 
-This function is deprecated in favour of passing population data directly
-to \code{\link[=contact_matrix]{contact_matrix()}} via the \code{survey_pop} argument, which removes the need
-for a country list. Additionally, the underlying \code{wpp2017} data is outdated.
-For countries available in more recent WPP editions, use the \code{wpp2024}
-package from GitHub.
-}
-\details{
-Uses the World Population Prospects data from the \code{wpp2017} package.
+\code{wpp_countries()} is defunct. Pass population data directly to
+\code{\link[=contact_matrix]{contact_matrix()}} via the \code{survey_pop} argument instead, which removes the
+need for a country list.
 }
 \examples{
-if (requireNamespace("wpp2017", quietly = TRUE)) {
-  wpp_countries()
+\dontrun{
+wpp_countries()
 }
 }
