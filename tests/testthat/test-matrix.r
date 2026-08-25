@@ -1257,16 +1257,14 @@ test_that("contact_matrix warns for multiple observations per participant", {
   )
 })
 
-test_that("deprecated dotted argument names warn but still work", {
-  withr::local_options(lifecycle_verbosity = "warning")
-
-  # contact_matrix() dotted args warn and are honoured
-  lifecycle::expect_deprecated(
+test_that("dotted argument names are defunct", {
+  expect_error(
     contact_matrix(polymod, age.limits = c(0, 18)),
-    regexp = "0[.]5[.]0"
+    class = "lifecycle_error_deprecated"
   )
-  lifecycle::expect_deprecated(
-    contact_matrix(polymod, age_limits = c(0, 18), weigh.dayofweek = TRUE)
+  expect_error(
+    contact_matrix(polymod, age_limits = c(0, 18), weigh.dayofweek = TRUE),
+    class = "lifecycle_error_deprecated"
   )
 
   fake_pop <- data.frame(lower.age.limit = c(0, 5), population = c(1e6, 5e6))
@@ -1275,13 +1273,13 @@ test_that("deprecated dotted argument names warn but still work", {
     class = "lifecycle_error_deprecated"
   )
 
-  # as_contact_survey() dotted args
   survey_list <- list(
     participants = polymod$participants,
     contacts = polymod$contacts,
     reference = polymod$reference
   )
-  lifecycle::expect_deprecated(
-    as_contact_survey(survey_list, id.column = "part_id")
+  expect_error(
+    as_contact_survey(survey_list, id.column = "part_id"),
+    class = "lifecycle_error_deprecated"
   )
 })

@@ -1,5 +1,44 @@
 # socialmixr (development version)
 
+## Breaking changes
+
+* Automatic country population lookup in `contact_matrix()` is now defunct.
+  Pass `survey_pop` explicitly as a data frame with columns `lower.age.limit`
+  and `population` when `symmetric`, `split`, `per_capita`, `weigh_age` or
+  `return_demography` is `TRUE`. Passing a character vector of country names
+  is defunct for the same reason. Surveys of a single population with no
+  country information continue to derive the population from the participants.
+
+* `wpp_age()`, `wpp_countries()` and `survey_country_population()` are now
+  defunct, and the `wpp2017` dependency has been removed. Population data now
+  comes from a source of your choosing, for example the `wpp2024` package on
+  GitHub.
+
+* Interpolating population data to age groups finer than the data itself is
+  now defunct. Supply population at least as fine as the age groups you ask
+  for.
+
+* `pop_age()`, `reduce_agegroups()`, `limits_to_agegroups()` and
+  `agegroups_to_limits()` are now defunct. Use `rebin_ages()` or
+  `align_ages()`, `reduce_age_groups()`, `limits_to_age_groups()` and
+  `age_groups_to_limits()` instead.
+
+* Passing a population data frame to `weigh()` is now defunct. Use
+  `weigh_by_age()`, which does the same post-stratification explicitly.
+
+* The dotted argument names deprecated in 0.5.0 (for example
+  `contact_matrix(survey.pop=)`, `contact_matrix(age.limits=)`,
+  `clean(participant.age.column=)`, `as_contact_survey(id.column=)`) are now
+  defunct. Use the underscore-separated names.
+
+## Internal
+
+* The unreachable implementations behind the defunct survey-download
+  functions have been removed, dropping the `curl`, `httr`, `memoise`, `oai`
+  and `xml2` dependencies. `get_survey()`, `download_survey()`,
+  `list_surveys()`, `survey_countries()` and `get_citation()` still error
+  with a pointer to the contactsurveys package.
+
 # socialmixr 0.7.0
 
 ## New features

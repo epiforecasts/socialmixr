@@ -39,7 +39,7 @@ NULL (default), will use "year" column if present}
 
 \item{...}{additional arguments (currently ignored)}
 
-\item{id.column, country.column, year.column}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use the underscore versions
+\item{id.column, country.column, year.column}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}} Use the underscore versions
 (e.g., \code{id_column}) instead.}
 }
 \value{

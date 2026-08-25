@@ -20,7 +20,7 @@
 #'   NULL (default), will use "year" column if present
 #' @param ... additional arguments (currently ignored)
 #' @param id.column,country.column,year.column
-#'   `r lifecycle::badge("deprecated")` Use the underscore versions
+#'   `r lifecycle::badge("defunct")` Use the underscore versions
 #'   (e.g., `id_column`) instead.
 #' @importFrom checkmate assert_list assert_names assert_data_frame
 #'   assert_character

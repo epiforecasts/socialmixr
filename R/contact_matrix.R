@@ -103,7 +103,7 @@
 #'   per capita (default is FALSE and not possible if 'counts=TRUE'
 #'   or 'split=TRUE').
 # nolint start: line_length_linter.
-#' @param survey.pop,age.limits,sample.participants,estimated.participant.age,estimated.contact.age,missing.participant.age,missing.contact.age,weigh.dayofweek,weigh.age,weight.threshold,symmetric.norm.threshold,sample.all.age.groups,sample.participants.max.tries,return.part.weights,return.demography,per.capita `r lifecycle::badge("deprecated")` Use the underscore-separated versions of these arguments instead.
+#' @param survey.pop,age.limits,sample.participants,estimated.participant.age,estimated.contact.age,missing.participant.age,missing.contact.age,weigh.dayofweek,weigh.age,weight.threshold,symmetric.norm.threshold,sample.all.age.groups,sample.participants.max.tries,return.part.weights,return.demography,per.capita `r lifecycle::badge("defunct")` Use the underscore-separated versions of these arguments instead.
 # nolint end
 #' @param ... further arguments to pass to [get_survey()]
 #'   and [check()] (especially column names).

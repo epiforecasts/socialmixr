@@ -174,7 +174,7 @@ or 'split=TRUE').}
 \item{...}{further arguments to pass to \code{\link[=get_survey]{get_survey()}}
 and \code{\link[=check]{check()}} (especially column names).}
 
-\item{survey.pop, age.limits, sample.participants, estimated.participant.age, estimated.contact.age, missing.participant.age, missing.contact.age, weigh.dayofweek, weigh.age, weight.threshold, symmetric.norm.threshold, sample.all.age.groups, sample.participants.max.tries, return.part.weights, return.demography, per.capita}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use the underscore-separated versions of these arguments instead.}
+\item{survey.pop, age.limits, sample.participants, estimated.participant.age, estimated.contact.age, missing.participant.age, missing.contact.age, weigh.dayofweek, weigh.age, weight.threshold, symmetric.norm.threshold, sample.all.age.groups, sample.participants.max.tries, return.part.weights, return.demography, per.capita}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}} Use the underscore-separated versions of these arguments instead.}
 }
 \value{
 a contact matrix, and the underlying demography of the
