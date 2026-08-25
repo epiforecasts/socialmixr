@@ -376,32 +376,3 @@ weigh_named <- function(participants, by, target) {
   participants
 }
 
-#' @autoglobal
-weigh_population <- function(participants, target, ...) {
-  if (!all(c("lower.age.limit", "population") %in% colnames(target))) {
-    cli::cli_abort(
-      "Data frame {.arg target} must have columns {.val lower.age.limit} \\
-       and {.val population}."
-    )
-  }
-
-  if (!"part_age" %in% colnames(participants)) {
-    cli::cli_abort(
-      "Column {.val part_age} not found in participant data. \\
-       Run {.fn assign_age_groups} first."
-    )
-  }
-
-  survey_pop_full <- data.table(target)
-  if (!"upper.age.limit" %in% colnames(survey_pop_full)) {
-    age_breaks <- age_groups_to_limits(participants$age.group)
-    survey_pop_full <- add_survey_upper_age_limit(
-      survey = survey_pop_full,
-      age_breaks = age_breaks
-    )
-  }
-  survey_pop_full <- survey_pop_reference(survey_pop_full, ...)
-
-  participants <- weight_by_age(participants, survey_pop_full)
-  participants
-}
