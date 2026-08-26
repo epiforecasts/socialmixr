@@ -562,7 +562,7 @@ survey_pop_year <- function(
   participants,
   age_limits
 ) {
-  if (is.null(survey_pop) || is.character(survey_pop)) {
+  if (is.null(survey_pop)) {
     survey_pop_info <- survey_pop_from_countries(
       survey_pop = survey_pop,
       countries = countries,
