@@ -3,10 +3,9 @@
 #' @description
 #' Internal numeric coarsener operating on `lower.age.limit` columns: rebins a
 #' population table to the age groups defined by `age_limits`, summing when
-#' coarser. Requesting age groups finer than the population data is deprecated:
-#' it warns and linearly interpolates, and will error in a future release.
-#' Wrapped by [rebin_ages()] (which errors on finer requests) and used by
-#' [pop_age()] and `contact_matrix()`'s population adjustment.
+#' coarser. Requesting age groups finer than the population data is defunct and
+#' errors. Wrapped by [rebin_ages()] and used by `contact_matrix()`'s population
+#' adjustment.
 #'
 #' @return data frame of age-specific population data
 #' @importFrom data.table data.table setkeyv

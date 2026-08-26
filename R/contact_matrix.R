@@ -14,10 +14,11 @@
 #'   case the participants themselves are used. Passing a character vector of
 #'   country names is `r lifecycle::badge("defunct")`; construct the data frame
 #'   yourself (e.g. from the `wpp2024` package or another source).
-#'   If the population is coarser than the requested age groups it
-#'   is linearly interpolated to finer groups, but this is deprecated (it
-#'   warns and will error in a future release); supply population at least as
-#'   fine as `age_limits`.
+#'   The population must be at least as fine as `age_limits`, and must reach at
+#'   least as high: splitting one of its bands to meet a finer or higher limit
+#'   would mean assuming how people are distributed within that band, and is
+#'   defunct. `weigh_age = TRUE` additionally requires single-year bands,
+#'   because age weighting post-stratifies participants by single year of age.
 #' @param age_limits lower limits of the age groups over which to
 #'   construct the matrix. If NULL (default), age limits are
 #'   inferred from participant and contact ages.
