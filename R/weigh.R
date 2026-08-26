@@ -375,4 +375,3 @@ weigh_named <- function(participants, by, target) {
   participants[, weight := weight * weight_factor]
   participants
 }
-
