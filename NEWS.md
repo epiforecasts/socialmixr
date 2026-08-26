@@ -1,5 +1,8 @@
 # socialmixr (development version)
 
+* The package now has a logo, showing the POLYMOD contact matrix for the
+  United Kingdom in five-year age groups.
+
 ## Breaking changes
 
 * Automatic country population lookup in `contact_matrix()` is now defunct.
