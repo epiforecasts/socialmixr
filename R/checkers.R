@@ -45,6 +45,33 @@ check_age_limits_increasing <- function(
   }
 }
 
+#' @autoglobal
+check_single_year_population <- function(
+  survey_pop,
+  call = rlang::caller_env()
+) {
+  limits <- sort(unique(survey_pop$lower.age.limit))
+  ## the resolver appends a zero band one year above the oldest age group, so
+  ## judge the spacing of the bands that carry population
+  carrying <- sort(unique(
+    survey_pop$lower.age.limit[survey_pop$population > 0]
+  ))
+  if (length(carrying) > 1 && any(diff(carrying) != 1)) {
+    cli::cli_abort(
+      message = c(
+        "Age weighting needs population data in single-year age bands.",
+        i = "{.code weigh_age = TRUE} post-stratifies participants by single
+             year of age; {.arg survey_pop} has coarser bands.",
+        i = "Split it with {.fn interpolate_ages} first, if assuming people are
+             distributed uniformly within each band is acceptable for your
+             data."
+      ),
+      call = call
+    )
+  }
+  invisible(limits)
+}
+
 check_missing_countries <- function(
   countries,
   corrected_countries,

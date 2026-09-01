@@ -16,9 +16,11 @@
 #'   yourself (e.g. from the `wpp2024` package or another source).
 #'   The population must be at least as fine as `age_limits`, and must reach at
 #'   least as high: splitting one of its bands to meet a finer or higher limit
-#'   would mean assuming how people are distributed within that band, and is
-#'   defunct. `weigh_age = TRUE` additionally requires single-year bands,
-#'   because age weighting post-stratifies participants by single year of age.
+#'   would mean assuming how people are distributed within that band, so it is
+#'   never done implicitly. `weigh_age = TRUE` additionally requires single-year
+#'   bands, because age weighting post-stratifies participants by single year of
+#'   age. To split coarser bands, accepting a uniform distribution within each,
+#'   use [interpolate_ages()] first.
 #' @param age_limits lower limits of the age groups over which to
 #'   construct the matrix. If NULL (default), age limits are
 #'   inferred from participant and contact ages.
@@ -381,9 +383,11 @@ contact_matrix <- function(
       age_breaks = part.age.group.present
     )
 
-    ## interpolate the population to single-year ages for age weighting, before
-    ## `survey_pop` is overwritten below (this interpolation is deprecated)
+    ## age weighting post-stratifies participants by single year of age, so it
+    ## needs the population in single-year bands; splitting coarser bands is
+    ## the user's call, via `interpolate_ages()`
     if (weigh_age) {
+      check_single_year_population(survey_pop)
       weigh_pop <- survey_pop_reference(survey_pop, ...)
       weigh_pop[,
         age := limits_to_age_groups(lower.age.limit, notation = "brackets")

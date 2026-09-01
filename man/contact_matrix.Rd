@@ -64,9 +64,11 @@ country names is \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages
 yourself (e.g. from the \code{wpp2024} package or another source).
 The population must be at least as fine as \code{age_limits}, and must reach at
 least as high: splitting one of its bands to meet a finer or higher limit
-would mean assuming how people are distributed within that band, and is
-defunct. \code{weigh_age = TRUE} additionally requires single-year bands,
-because age weighting post-stratifies participants by single year of age.}
+would mean assuming how people are distributed within that band, so it is
+never done implicitly. \code{weigh_age = TRUE} additionally requires single-year
+bands, because age weighting post-stratifies participants by single year of
+age. To split coarser bands, accepting a uniform distribution within each,
+use \code{\link[=interpolate_ages]{interpolate_ages()}} first.}
 
 \item{age_limits}{lower limits of the age groups over which to
 construct the matrix. If NULL (default), age limits are
