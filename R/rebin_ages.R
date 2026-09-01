@@ -59,8 +59,23 @@ rebin_ages_numeric <- function(
     lifecycle::deprecate_stop(
       "0.7.0",
       I("Interpolating population data to age groups finer than the data"),
-      details = "Supply population at least as fine as the requested age
-                 groups."
+      details = stats::setNames(
+        c(
+          paste0(
+            "Age limit(s) ",
+            toString(utils::head(finer_limits, 6)),
+            if (length(finer_limits) > 6) {
+              paste0(" and ", length(finer_limits) - 6, " more")
+            },
+            " fall inside the population's own age bands."
+          ),
+          "Population data must be at least as fine as the age groups asked
+           for, and must reach at least as high.",
+          "To split bands anyway, assuming people are distributed uniformly
+           within each, use `interpolate_ages()` first."
+        ),
+        c("", "i", "i")
+      )
     )
   }
 
