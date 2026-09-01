@@ -38,10 +38,14 @@
 
 ## New features
 
-* `interpolate_ages()` splits a population table into finer age groups,
-  dividing each band in proportion to width. This is the assumption that used
-  to be made silently, now made explicitly by the caller. `rebin_ages()`
-  remains the way to aggregate into coarser groups, which needs no assumption.
+* `interpolate_ages()` splits a population table into finer age groups, making
+  explicit the assumption that used to be applied silently. It interpolates the
+  cumulative population and differences it back, so the total and each original
+  band's total are preserved and no group comes out negative. By default it
+  fits a monotone spline, giving a distribution that varies smoothly across
+  band boundaries; `method = "uniform"` assumes constant density within each
+  band instead. `rebin_ages()` remains the way to aggregate into coarser
+  groups, which needs no assumption.
 
 ## Internal
 
