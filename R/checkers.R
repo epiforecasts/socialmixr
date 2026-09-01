@@ -63,8 +63,10 @@ check_single_year_population <- function(
           "Age weighting needs population data in single-year age bands.",
           "{.code weigh_age = TRUE} post-stratifies participants by single
            year of age; {.arg survey_pop} has coarser bands.",
-          "Split it with {.fn interpolate_ages} first, if you accept an
-           assumption about how people are distributed within each band."
+          "Splitting coarser bands into single years means assuming how
+           people are distributed within them; see
+           {.code vignette(\"socialmixr\")} for how to do that with a package
+           built for it."
         ),
         c("", "i", "i")
       ),

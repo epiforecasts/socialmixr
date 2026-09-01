@@ -17,11 +17,13 @@
   comes from a source of your choosing, for example the `wpp2024` package on
   GitHub.
 
-* Interpolating population data to age groups finer than the data itself no
-  longer happens implicitly. Population must be at least as fine as the age
-  groups asked for, and reach at least as high; otherwise `contact_matrix()`
-  errors. `weigh_age = TRUE` requires single-year bands, since age weighting
-  post-stratifies participants by single year of age.
+* Population data is no longer interpolated to age groups finer than the data
+  itself. It must be at least as fine as the age groups asked for, and reach at
+  least as high; otherwise `contact_matrix()` errors. `weigh_age = TRUE`
+  requires single-year bands, since age weighting post-stratifies participants
+  by single year of age. Splitting coarser bands is a demographic modelling
+  step, and out of scope here; the vignette shows how to do it with a package
+  built for it.
 
 * `pop_age()`, `reduce_agegroups()`, `limits_to_agegroups()` and
   `agegroups_to_limits()` are now defunct. Use `rebin_ages()` or
@@ -35,17 +37,6 @@
   `contact_matrix(survey.pop=)`, `contact_matrix(age.limits=)`,
   `clean(participant.age.column=)`, `as_contact_survey(id.column=)`) are now
   defunct. Use the underscore-separated names.
-
-## New features
-
-* `interpolate_ages()` splits a population table into finer age groups, making
-  explicit the assumption that used to be applied silently. It interpolates the
-  cumulative population and differences it back, so the total and each original
-  band's total are preserved and no group comes out negative. By default it
-  fits a monotone spline, giving a distribution that varies smoothly across
-  band boundaries; `method = "uniform"` assumes constant density within each
-  band instead. `rebin_ages()` remains the way to aggregate into coarser
-  groups, which needs no assumption.
 
 ## Internal
 

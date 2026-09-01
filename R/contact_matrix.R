@@ -16,11 +16,12 @@
 #'   yourself (e.g. from the `wpp2024` package or another source).
 #'   The population must be at least as fine as `age_limits`, and must reach at
 #'   least as high: splitting one of its bands to meet a finer or higher limit
-#'   would mean assuming how people are distributed within that band, so it is
-#'   never done implicitly. `weigh_age = TRUE` additionally requires single-year
+#'   means assuming how people are distributed within that band.
+#'   `weigh_age = TRUE` additionally requires single-year
 #'   bands, because age weighting post-stratifies participants by single year of
-#'   age. To split coarser bands, accepting a uniform distribution within each,
-#'   use [interpolate_ages()] first.
+#'   age. Splitting coarser bands is a demographic modelling step and is out of
+#'   scope for this package; `vignette("socialmixr")` shows how to do it with a
+#'   package built for it.
 #' @param age_limits lower limits of the age groups over which to
 #'   construct the matrix. If NULL (default), age limits are
 #'   inferred from participant and contact ages.

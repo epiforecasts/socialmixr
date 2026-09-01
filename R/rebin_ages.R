@@ -71,8 +71,9 @@ rebin_ages_numeric <- function(
           ),
           "Population data must be at least as fine as the age groups asked
            for, and must reach at least as high.",
-          "To split bands anyway, assuming people are distributed uniformly
-           within each, use `interpolate_ages()` first."
+          "Splitting bands means assuming how people are distributed within
+           them; see `vignette(\"socialmixr\")` for how to do that with a
+           package built for it."
         ),
         c("", "i", "i")
       )
