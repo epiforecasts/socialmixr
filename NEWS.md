@@ -17,9 +17,11 @@
   comes from a source of your choosing, for example the `wpp2024` package on
   GitHub.
 
-* Interpolating population data to age groups finer than the data itself is
-  now defunct. Supply population at least as fine as the age groups you ask
-  for.
+* Interpolating population data to age groups finer than the data itself no
+  longer happens implicitly. Population must be at least as fine as the age
+  groups asked for, and reach at least as high; otherwise `contact_matrix()`
+  errors. `weigh_age = TRUE` requires single-year bands, since age weighting
+  post-stratifies participants by single year of age.
 
 * `pop_age()`, `reduce_agegroups()`, `limits_to_agegroups()` and
   `agegroups_to_limits()` are now defunct. Use `rebin_ages()` or
@@ -33,6 +35,13 @@
   `contact_matrix(survey.pop=)`, `contact_matrix(age.limits=)`,
   `clean(participant.age.column=)`, `as_contact_survey(id.column=)`) are now
   defunct. Use the underscore-separated names.
+
+## New features
+
+* `interpolate_ages()` splits a population table into finer age groups,
+  dividing each band in proportion to width. This is the assumption that used
+  to be made silently, now made explicitly by the caller. `rebin_ages()`
+  remains the way to aggregate into coarser groups, which needs no assumption.
 
 ## Internal
 
