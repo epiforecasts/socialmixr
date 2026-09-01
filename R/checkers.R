@@ -58,13 +58,15 @@ check_single_year_population <- function(
   ))
   if (length(carrying) > 1 && any(diff(carrying) != 1)) {
     cli::cli_abort(
-      message = c(
-        "Age weighting needs population data in single-year age bands.",
-        i = "{.code weigh_age = TRUE} post-stratifies participants by single
-             year of age; {.arg survey_pop} has coarser bands.",
-        i = "Split it with {.fn interpolate_ages} first, if assuming people are
-             distributed uniformly within each band is acceptable for your
-             data."
+      message = stats::setNames(
+        c(
+          "Age weighting needs population data in single-year age bands.",
+          "{.code weigh_age = TRUE} post-stratifies participants by single
+           year of age; {.arg survey_pop} has coarser bands.",
+          "Split it with {.fn interpolate_ages} first, if you accept an
+           assumption about how people are distributed within each band."
+        ),
+        c("", "i", "i")
       ),
       call = call
     )
