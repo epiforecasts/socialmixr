@@ -978,6 +978,58 @@ test_that("participants with missing contact age are handled", {
 })
 
 
+test_that("population must reach as high as the requested age limits", {
+  ## the resolver pads with a zero band above the oldest age group, so limits
+  ## above the population's own top band would mean splitting it
+  ends_at_80 <- data.frame(
+    lower.age.limit = seq(0, 80, by = 5),
+    population = rep(3e6, 17)
+  )
+  expect_error(
+    contact_matrix(
+      polymod,
+      age_limits = seq(0, 90, by = 5),
+      symmetric = TRUE,
+      survey_pop = ends_at_80
+    ),
+    class = "lifecycle_error_deprecated"
+  )
+  ## the same population is fine for limits that stay within its range
+  expect_no_error(
+    suppressWarnings(contact_matrix(
+      polymod,
+      age_limits = seq(0, 70, by = 5),
+      symmetric = TRUE,
+      survey_pop = ends_at_80
+    ))
+  )
+})
+
+test_that("age weighting requires single-year population", {
+  five_year <- data.frame(
+    lower.age.limit = seq(0, 90, by = 5),
+    population = rep(3e6, 19)
+  )
+  expect_error(
+    contact_matrix(
+      polymod,
+      age_limits = c(0, 20, 60),
+      weigh_age = TRUE,
+      survey_pop = five_year
+    ),
+    "single-year age bands"
+  )
+  ## other population-based options work with the same coarse data
+  expect_no_error(
+    suppressWarnings(contact_matrix(
+      polymod,
+      age_limits = c(0, 20, 60),
+      symmetric = TRUE,
+      survey_pop = five_year
+    ))
+  )
+})
+
 test_that("user-defined reference populations with open age groups", {
   suppressWarnings({
     survey.pop <- data.frame(
