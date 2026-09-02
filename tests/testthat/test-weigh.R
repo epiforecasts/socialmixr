@@ -255,7 +255,11 @@ test_that("weigh() names the missing key column for other data frames", {
     weigh(
       polymod_grouped,
       "age.group",
-      target = data.frame(agegroup = c("a", "b"), p = c(1, 2))
+      target = data.frame(
+        agegroup = c("a", "b"),
+        p = c(1, 2),
+        stringsAsFactors = FALSE
+      )
     ),
     "must have a column matching"
   )
