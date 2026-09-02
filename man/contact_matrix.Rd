@@ -63,9 +63,11 @@ participants themselves are used. Passing a character vector of country
 names is \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}; construct the data frame
 yourself (e.g. from the \code{wpp2024} package or another source).
 
-The population must be at least as fine as \code{age_limits} and must reach at
-least as high, since splitting one of its bands to meet a finer or higher
-limit means assuming how people are distributed within that band.
+The population must cover every age group asked for: at least as fine as
+\code{age_limits}, reaching at least as high, and starting no higher than the
+youngest group. Splitting one of its bands to meet a finer or higher limit
+means assuming how people are distributed within that band, and a group it
+has no band for has no size at all.
 \code{weigh_age = TRUE} is stricter still: it always needs a population, in
 single-year bands, because \code{contact_matrix()} builds its weighting
 reference at single-year resolution. (The pipeline's \code{\link[=weigh_by_age]{weigh_by_age()}}

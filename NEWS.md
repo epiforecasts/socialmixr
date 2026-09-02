@@ -20,8 +20,9 @@
   GitHub.
 
 * Population data is no longer interpolated to age groups finer than the data
-  itself. It must be at least as fine as the age groups asked for, and reach at
-  least as high; otherwise `contact_matrix()` errors. `weigh_age = TRUE`
+  itself. It must cover every age group asked for: at least as fine as those
+  age groups, reaching at least as high, and starting no higher than the
+  youngest of them; otherwise `contact_matrix()` errors. `weigh_age = TRUE`
   now always requires an explicit `survey_pop` in single-year bands, because
   `contact_matrix()` builds its weighting reference at single-year resolution.
   The pipeline's `weigh_by_age()` weights at the population's own bands and has
