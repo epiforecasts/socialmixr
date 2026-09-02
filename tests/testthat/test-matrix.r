@@ -980,7 +980,10 @@ test_that("participants with missing contact age are handled", {
 
 test_that("a participants-derived population is not asked to reach further", {
   ## with no population supplied the participants are the population, so an age
-  ## group nobody falls into has no row rather than a reach to complain about
+  ## group nobody falls into has no row rather than a reach to complain about.
+  ## What is pinned here is only that no reach error fires: the population is
+  ## then shorter than the matrix, which is long-standing behaviour on this
+  ## path and not something this test asserts is right
   no_country <- data.table::copy(polymod$participants)
   no_country[, country := NULL]
   survey <- as_contact_survey(list(
