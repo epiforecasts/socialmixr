@@ -1016,6 +1016,21 @@ test_that("age weighting requires a population to be supplied", {
   )
 })
 
+test_that("age weighting says so when the population stops short", {
+  to_90 <- data.frame(lower.age.limit = 0:90, population = rep(1e5, 91))
+  ## the internal reference runs to the oldest age group, so the message must
+  ## name the population's reach rather than the ages it generates itself
+  expect_error(
+    contact_matrix(
+      polymod,
+      age_limits = c(0, 20, 100),
+      weigh_age = TRUE,
+      survey_pop = to_90
+    ),
+    "reaching the oldest age group"
+  )
+})
+
 test_that("age weighting accepts single-year bands that hold nobody", {
   with_gap <- data.frame(
     lower.age.limit = 0:90,
@@ -1123,8 +1138,7 @@ test_that("The absence of reference population info is going well", {
         contact_matrix(
           polymod_nocountry,
           age_limits = c(0, 18, 60),
-          symmetric = TRUE, # to make sure that demography is returned
-          survey_pop = test_population()
+          symmetric = TRUE # to make sure that demography is returned
         )$demography
       ),
       3L
@@ -1136,8 +1150,7 @@ test_that("The absence of reference population info is going well", {
         contact_matrix(
           polymod_nocountry,
           age_limits = c(0, 18, 60),
-          symmetric = TRUE, # to make sure that demography is returned
-          survey_pop = test_population()
+          symmetric = TRUE # to make sure that demography is returned
         )$demography
       )[1],
       "age.group"
