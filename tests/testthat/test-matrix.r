@@ -1043,7 +1043,8 @@ test_that("per-capita rates say which input the missing population is from", {
   named <- gsub(
     '"',
     "",
-    unlist(regmatches(message, gregexpr('"[a-z]+"', message)))
+    unlist(regmatches(message, gregexpr('"[a-z]+"', message))),
+    fixed = TRUE
   )
   expect_gt(length(named), 0)
   for (option in named) {
