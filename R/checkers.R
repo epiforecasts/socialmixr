@@ -60,9 +60,9 @@ check_single_year_population <- function(
           "{.fn contact_matrix} builds its weighting reference at single-year
            resolution, so {.code weigh_age = TRUE} needs {.arg survey_pop} in
            single-year bands.",
-          "Without one the population is taken from the participants
-           themselves, which is their own age distribution, so weighting to it
-           would leave the matrix unchanged."
+          "Without one the population is taken from the participants, which
+           exists only at the resolution of the matrix's age groups, so a
+           single-year reference would have to be split out of it."
         ),
         c("", "i", "i")
       ),
