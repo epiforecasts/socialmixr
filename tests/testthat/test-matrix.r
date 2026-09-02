@@ -978,6 +978,24 @@ test_that("participants with missing contact age are handled", {
 })
 
 
+test_that("only limits splitting a real band are named as splitting one", {
+  ## a population that is both coarser than the limits and stops short of them
+  ## should have the pad above its top band left out of the enumeration
+  ends_at_80 <- data.frame(
+    lower.age.limit = seq(0, 80, by = 5),
+    population = rep(3e6, 17)
+  )
+  expect_error(
+    contact_matrix(
+      polymod,
+      age_limits = c(0, 22, 85),
+      symmetric = TRUE,
+      survey_pop = ends_at_80
+    ),
+    "22 fall inside"
+  )
+})
+
 test_that("a participants-derived population is not asked to reach further", {
   ## with no population supplied the participants are the population, so an age
   ## group nobody falls into has no row rather than a reach to complain about.

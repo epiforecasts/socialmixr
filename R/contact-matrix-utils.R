@@ -650,6 +650,16 @@ adjust_survey_age_groups <- function(
       call = call
     )
   }
+  if (supplied_pop && splits_own_band) {
+    ## this rebin is bound to stop, and enumerating against the padded range
+    ## would name the pad as a band the population holds; drop it so the error
+    ## lists only limits that split a band the data actually has
+    rebin_ages_numeric(
+      as.data.frame(survey_pop)[!pad, , drop = FALSE],
+      part_age_group_present,
+      ...
+    )
+  }
 
   survey_pop <- data.table(
     rebin_ages_numeric(survey_pop, part_age_group_present, ...)
