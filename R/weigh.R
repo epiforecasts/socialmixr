@@ -26,10 +26,11 @@
 #' * a named numeric vector — same as above but `names(target)` are
 #'   matched against values of the `by` column.
 #'
-#' A data frame target that does *not* have a column named `by` but does
-#' have `lower.age.limit` and `population` triggers a deprecation warning
-#' and falls back to the old hidden age post-stratification path; use
-#' [weigh_by_age()] instead.
+#' A data frame target that does *not* have a column named `by` but does have
+#' `lower.age.limit` and `population` is `r lifecycle::badge("defunct")` and
+#' errors. Use [weigh_by_age()] instead, which post-stratifies by age
+#' explicitly; it weights at the population's own age bands, so its weights
+#' differ from the ones that path produced.
 #'
 #' @section `weigh_by_dayofweek()`:
 #'
