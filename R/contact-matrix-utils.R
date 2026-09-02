@@ -617,6 +617,31 @@ survey_pop_reference <- function(survey_pop, ...) {
 #' @autoglobal
 adjust_survey_age_groups <- function(survey_pop, part_age_group_present, ...) {
   survey_pop_max <- max(survey_pop$upper.age.limit)
+
+  ## the padded band above the oldest age group holds nobody; measure reach
+  ## against the population's own bands, and only when no requested limit
+  ## splits one of those, since that is the more specific problem
+  oldest_group <- max(part_age_group_present)
+  pad <- survey_pop$lower.age.limit == oldest_group + 1 &
+    survey_pop$lower.age.limit == max(survey_pop$lower.age.limit) &
+    survey_pop$population == 0
+  own_limits <- survey_pop$lower.age.limit[!pad]
+  splits_own_band <- length(own_limits) > 0 &&
+    length(setdiff(
+      part_age_group_present[
+        part_age_group_present >= min(own_limits) &
+          part_age_group_present <= max(own_limits)
+      ],
+      own_limits
+    )) > 0
+  if (!splits_own_band) {
+    check_population_reach(
+      own_limits,
+      oldest_group = oldest_group,
+      headline = "Population data must reach the oldest age group."
+    )
+  }
+
   survey_pop <- data.table(
     rebin_ages_numeric(survey_pop, part_age_group_present, ...)
   )

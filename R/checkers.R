@@ -99,26 +99,56 @@ check_single_year_population <- function(
   }
   ## the reference is built up to the oldest age group, so a population that
   ## stops short would be extended by splitting bands it does not have
-  stops_short <- !is.null(pad_limit) &&
-    length(limits) > 0 &&
-    max(limits) < pad_limit - 1
-  if (stops_short) {
-    cli::cli_abort(
-      message = stats::setNames(
-        c(
-          "Age weighting needs population data reaching the oldest age group.",
-          "{.arg survey_pop} reaches {.val {max(limits)}}; the oldest age
-           group starts at {.val {pad_limit - 1}}.",
-          "Supply population that reaches at least that far, or ask for age
-           groups within the population's range."
-        ),
-        c("", "i", "i")
-      ),
+  if (!is.null(pad_limit)) {
+    check_population_reach(
+      limits,
+      oldest_group = pad_limit - 1,
+      headline = "Age weighting needs population data reaching the oldest age
+                  group.",
       call = call
     )
   }
 
   invisible(limits)
+}
+
+#' Check that population data reaches the oldest age group
+#'
+#' @description
+#' `contact_matrix()` pads the population with an empty band above the oldest
+#' age group, so a limit above the population's own top band splits that pad
+#' rather than any band the data holds. Reporting it as interpolation would name
+#' a band the population does not have, so it is reported as the reach problem
+#' it is.
+#'
+#' @param limits the population's own lower age limits, excluding the pad
+#' @param oldest_group lower limit of the oldest age group asked for
+#' @param headline first line of the error, naming the path that needs the reach
+#' @param call environment to report the error against
+#' @keywords internal
+#' @noRd
+check_population_reach <- function(
+  limits,
+  oldest_group,
+  headline,
+  call = rlang::caller_env()
+) {
+  if (length(limits) == 0 || max(limits) >= oldest_group) {
+    return(invisible(limits))
+  }
+  cli::cli_abort(
+    message = stats::setNames(
+      c(
+        headline,
+        "{.arg survey_pop} reaches {.val {max(limits)}}; the oldest age
+         group starts at {.val {oldest_group}}.",
+        "Supply population that reaches at least that far, or ask for age
+         groups within the population's range."
+      ),
+      c("", "i", "i")
+    ),
+    call = call
+  )
 }
 
 check_missing_countries <- function(

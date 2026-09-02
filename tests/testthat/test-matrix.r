@@ -992,7 +992,7 @@ test_that("population must reach as high as the requested age limits", {
       symmetric = TRUE,
       survey_pop = ends_at_80
     ),
-    class = "lifecycle_error_deprecated"
+    "must reach the oldest age group"
   )
   ## the same population is fine for limits that stay within its range
   expect_no_error(
