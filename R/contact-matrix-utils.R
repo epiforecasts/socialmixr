@@ -615,12 +615,19 @@ survey_pop_reference <- function(survey_pop, ...) {
 }
 
 #' @autoglobal
-adjust_survey_age_groups <- function(survey_pop, part_age_group_present, ...) {
+adjust_survey_age_groups <- function(
+  survey_pop,
+  part_age_group_present,
+  supplied_pop = TRUE,
+  ...
+) {
   survey_pop_max <- max(survey_pop$upper.age.limit)
 
   ## the padded band above the oldest age group holds nobody; measure reach
   ## against the population's own bands, and only when no requested limit
-  ## splits one of those, since that is the more specific problem
+  ## splits one of those, since that is the more specific problem. A population
+  ## derived from the participants has no pad and no reach to demand: an age
+  ## group nobody falls into simply has no row.
   oldest_group <- max(part_age_group_present)
   pad <- survey_pop$lower.age.limit == oldest_group + 1 &
     survey_pop$lower.age.limit == max(survey_pop$lower.age.limit) &
@@ -634,7 +641,7 @@ adjust_survey_age_groups <- function(survey_pop, part_age_group_present, ...) {
       ],
       own_limits
     )) > 0
-  if (!splits_own_band) {
+  if (supplied_pop && !splits_own_band) {
     check_population_reach(
       own_limits,
       oldest_group = oldest_group,

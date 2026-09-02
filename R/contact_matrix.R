@@ -409,6 +409,7 @@ contact_matrix <- function(
     survey_pop <- adjust_survey_age_groups(
       survey_pop = survey_pop,
       part_age_group_present = part.age.group.present,
+      supplied_pop = supplied_pop,
       ...
     )
   }
