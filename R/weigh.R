@@ -148,7 +148,20 @@ weigh <- function(survey, by, target = NULL, groups = NULL, ...) {
     if (by %in% colnames(target)) {
       weigh_join_warn_groups(participants, by, target, groups)
     } else {
-      weigh_population_defunct(participants, target, ...)
+      if (all(c("lower.age.limit", "population") %in% colnames(target))) {
+        weigh_population_defunct(participants, target, ...)
+      } else {
+        cli::cli_abort(
+          message = stats::setNames(
+            c(
+              "Data frame {.arg target} must have a column matching
+               {.arg by} ({.val {by}}).",
+              "It has: {.val {colnames(target)}}."
+            ),
+            c("", "i")
+          )
+        )
+      }
     }
   } else if (!is.numeric(target)) {
     cli_abort_unknown_target()
