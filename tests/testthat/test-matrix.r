@@ -996,6 +996,27 @@ test_that("only limits splitting a real band are named as splitting one", {
   )
 })
 
+test_that("per-capita rates need a population for every age group", {
+  ## no POLYMOD participant is aged 86 to 89, so with the participants as the
+  ## population that group has no size to divide by
+  no_country <- data.table::copy(polymod$participants)
+  no_country[, country := NULL]
+  survey <- as_contact_survey(list(
+    participants = no_country,
+    contacts = polymod$contacts
+  ))
+  expect_error(
+    contact_matrix(survey, age_limits = c(0, 20, 86, 90), per_capita = TRUE),
+    "population for every age group"
+  )
+  ## age groups the participants do fall into are unaffected
+  expect_no_error(
+    suppressWarnings(
+      contact_matrix(survey, age_limits = c(0, 20, 60), per_capita = TRUE)
+    )
+  )
+})
+
 test_that("an empty age group drops out of a participants population", {
   ## no POLYMOD participant is aged 86 to 89, though contacts of those ages
   ## are reported, so the age group exists while the population row does not

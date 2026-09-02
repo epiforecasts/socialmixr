@@ -1259,7 +1259,34 @@ split_mean_norm_contacts <- function(
 }
 
 #' @autoglobal
-matrix_per_capita <- function(weighted_matrix, survey_pop) {
+matrix_per_capita <- function(
+  weighted_matrix,
+  survey_pop,
+  call = rlang::caller_env()
+) {
+  ## a per-capita rate divides by the population of the contact's age group, so
+  ## every group in the matrix needs one; a group the population has no row for
+  ## has an unknown size, which no arithmetic here can stand in for
+  matrix_limits <- age_groups_to_limits(colnames(weighted_matrix))
+  missing_groups <- colnames(weighted_matrix)[
+    !(matrix_limits %in% survey_pop$lower.age.limit)
+  ]
+  if (length(missing_groups) > 0) {
+    cli::cli_abort(
+      message = stats::setNames(
+        c(
+          "Per-capita contact rates need a population for every age group.",
+          "No population is known for age group{?s} {.val {missing_groups}}.",
+          "Without {.arg survey_pop}, the participants are the population, so
+           an age group holding no participants has no size to divide by.",
+          "Supply {.arg survey_pop} covering every age group, or ask for age
+           groups the participants fall into."
+        ),
+        c("", "i", "i", "i")
+      ),
+      call = call
+    )
+  }
   weighted_matrix_per_capita <- weighted_matrix /
     matrix(
       rep(survey_pop$population, nrow(survey_pop)),

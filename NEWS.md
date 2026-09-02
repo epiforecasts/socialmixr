@@ -32,6 +32,13 @@
   `align_ages()`, `reduce_age_groups()`, `limits_to_age_groups()` and
   `age_groups_to_limits()` instead.
 
+* For a survey of a single population with no country information, where the
+  population is derived from the participants, an age group holding no
+  participants is no longer given an interpolated population. Its size is
+  unknown, so the demography now reports the participants' own counts, and
+  `per_capita = TRUE` errors for such a group rather than dividing by a
+  made-up number.
+
 * Passing a population data frame to `weigh()` is now defunct. Use
   `weigh_by_age()`, which post-stratifies by age explicitly. It takes the
   population with an `age` column of group labels, so convert a
