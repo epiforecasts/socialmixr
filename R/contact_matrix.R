@@ -386,8 +386,8 @@ contact_matrix <- function(
     )
 
     ## age weighting post-stratifies participants by single year of age, so it
-    ## needs the population in single-year bands; splitting coarser bands is
-    ## the user's call, via `interpolate_ages()`
+    ## needs the population in single-year bands; splitting coarser bands is a
+    ## demographic modelling step, left to packages built for it
     if (weigh_age) {
       check_single_year_population(survey_pop, supplied = supplied_pop)
       weigh_pop <- survey_pop_reference(survey_pop, ...)
