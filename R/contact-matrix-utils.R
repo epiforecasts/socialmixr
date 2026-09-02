@@ -642,6 +642,20 @@ adjust_survey_age_groups <- function(
       ],
       own_limits
     )) > 0
+  ## rows without a population are dropped upstream, so a population made
+  ## entirely of them arrives here holding nothing at all
+  if (supplied_pop && length(own_limits) == 0) {
+    cli::cli_abort(
+      message = stats::setNames(
+        c(
+          "{.arg survey_pop} holds no population data.",
+          "Rows without a population are dropped, and none was left."
+        ),
+        c("", "i")
+      ),
+      call = call
+    )
+  }
   ## a population starting above the youngest age group leaves that group
   ## holding only the part of it the population covers, with nothing to say so
   if (supplied_pop && min(own_limits) > min(part_age_group_present)) {
@@ -1279,7 +1293,6 @@ split_mean_norm_contacts <- function(
 matrix_per_capita <- function(
   weighted_matrix,
   survey_pop,
-  supplied_pop = TRUE,
   call = rlang::caller_env()
 ) {
   ## a per-capita rate divides by the population of the contact's age group
@@ -1289,7 +1302,6 @@ matrix_per_capita <- function(
     headline = "Per-capita contact rates need a population for every age
                 group.",
     purpose = "per-capita rates",
-    supplied_pop = supplied_pop,
     call = call
   )
   weighted_matrix_per_capita <- weighted_matrix /

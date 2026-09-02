@@ -996,22 +996,7 @@ test_that("only limits splitting a real band are named as splitting one", {
   )
 })
 
-test_that("per-capita rates say which input the missing population is from", {
-  ## a supplied population that misses a group is diagnosed against the
-  ## population, not against the participants
-  starts_at_25 <- data.frame(
-    lower.age.limit = 25:90,
-    population = rep(1e5, 66)
-  )
-  expect_error(
-    contact_matrix(
-      polymod,
-      age_limits = c(0, 20, 60),
-      per_capita = TRUE,
-      survey_pop = starts_at_25
-    ),
-    "`survey_pop` starts at"
-  )
+test_that("per-capita rates report an age group with no population", {
   ## contacts of unknown age have no age group to hold a population at all
   single_year <- data.frame(
     lower.age.limit = 0:90,
@@ -1167,12 +1152,25 @@ test_that("population must cover the youngest age group too", {
   )
   ## starting exactly at the youngest limit is fine
   expect_no_error(
-    suppressWarnings(contact_matrix(
+    contact_matrix(
       polymod,
       age_limits = c(5, 20, 60),
       symmetric = TRUE,
       survey_pop = starts_at_5
-    ))
+    )
+  )
+  ## a population whose rows all lack a population value holds nothing
+  expect_error(
+    contact_matrix(
+      polymod,
+      age_limits = c(0, 20, 60),
+      symmetric = TRUE,
+      survey_pop = data.frame(
+        lower.age.limit = 0:10,
+        population = rep(NA_real_, 11)
+      )
+    ),
+    "holds no population data"
   )
 })
 

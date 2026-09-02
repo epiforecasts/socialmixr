@@ -161,11 +161,14 @@ check_population_reach <- function(
 #' the population has no row for has an unknown size, which no arithmetic here
 #' can stand in for.
 #'
+#' Only the participants-derived population reaches this: a supplied
+#' `survey_pop` is checked for coverage, reach and fineness before it is
+#' aggregated, so by here it has a row for every age group.
+#'
 #' @param weighted_matrix the matrix whose columns name the age groups
 #' @param survey_pop population data with a `lower.age.limit` column
 #' @param headline first line of the error, naming what needs the population
 #' @param purpose what the caller is asking for, for the remedy line
-#' @param supplied_pop whether the caller supplied the population
 #' @param call environment to report the error against
 #' @keywords internal
 #' @noRd
@@ -174,7 +177,6 @@ check_population_covers_groups <- function(
   survey_pop,
   headline,
   purpose,
-  supplied_pop = TRUE,
   call = rlang::caller_env()
 ) {
   matrix_groups <- colnames(weighted_matrix)
@@ -203,20 +205,10 @@ check_population_covers_groups <- function(
         c(
           headline,
           "No population is known for age group{?s} {.val {missing_groups}}.",
-          if (supplied_pop) {
-            "{.arg survey_pop} has no row covering {cli::qty(missing_groups)}
-             {?it/them}."
-          } else {
-            "Without {.arg survey_pop}, the participants are the population, so
-             an age group holding no participants has no size to divide by."
-          },
-          if (supplied_pop) {
-            "Supply population covering every age group, or ask for age groups
-             within the population's range."
-          } else {
-            "Supply {.arg survey_pop} covering every age group, or ask for age
-             groups the participants fall into."
-          }
+          "Without {.arg survey_pop}, the participants are the population, so
+           an age group holding no participants has no size to divide by.",
+          "Supply {.arg survey_pop} covering every age group, or ask for age
+           groups the participants fall into."
         ),
         c("", "i", "i", "i")
       ),

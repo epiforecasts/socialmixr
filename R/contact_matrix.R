@@ -495,8 +495,7 @@ contact_matrix <- function(
       survey_pop = survey_pop,
       headline = "Symmetrising the matrix needs a population for every age
                   group.",
-      purpose = "a symmetric matrix",
-      supplied_pop = supplied_pop
+      purpose = "a symmetric matrix"
     )
     weighted.matrix <- normalise_weighted_matrix(
       survey_pop = survey_pop,
@@ -540,8 +539,7 @@ contact_matrix <- function(
   if (per_capita && !counts && !split) {
     ret[["matrix.per.capita"]] <- matrix_per_capita(
       weighted_matrix = weighted.matrix,
-      survey_pop = survey_pop,
-      supplied_pop = supplied_pop
+      survey_pop = survey_pop
     )
   }
 
