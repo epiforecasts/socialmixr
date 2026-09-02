@@ -1065,8 +1065,8 @@ test_that("population must reach as high as the requested age limits", {
 test_that("age weighting requires a population to be supplied", {
   no_country <- copy_survey(polymod)
   no_country$participants$country <- NULL
-  ## without one the population comes from the participants, which exists only
-  ## at the resolution of the matrix's age groups
+  ## without one the population is the participants' own age distribution at
+  ## the matrix's age groups, so it is not an independent reference
   expect_error(
     contact_matrix(no_country, age_limits = 0:5, weigh_age = TRUE),
     "needs population data in single-year age bands"
