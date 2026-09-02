@@ -485,6 +485,16 @@ contact_matrix <- function(
   matrix_not_scalar <- prod(dim(as.matrix(weighted.matrix))) > 1
   na_in_weighted_mtx <- na_in_weighted_matrix(weighted.matrix)
   if (symmetric && matrix_not_scalar && !na_in_weighted_mtx) {
+    ## the population is indexed by position when symmetrising, so it has to
+    ## have a row for every age group in the matrix
+    check_population_covers_groups(
+      weighted_matrix = weighted.matrix,
+      survey_pop = survey_pop,
+      headline = "Symmetrising the matrix needs a population for every age
+                  group.",
+      purpose = "a symmetric matrix",
+      supplied_pop = supplied_pop
+    )
     weighted.matrix <- normalise_weighted_matrix(
       survey_pop = survey_pop,
       weighted_matrix = weighted.matrix,

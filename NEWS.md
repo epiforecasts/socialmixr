@@ -10,7 +10,9 @@
   and `population` when `symmetric`, `split`, `per_capita`, `weigh_age` or
   `return_demography` is `TRUE`. Passing a character vector of country names
   is defunct for the same reason. Surveys of a single population with no
-  country information continue to derive the population from the participants.
+  country information continue to derive the population from the participants,
+  except under `weigh_age = TRUE`, which always needs an explicit `survey_pop`
+  (see below).
 
 * `wpp_age()`, `wpp_countries()` and `survey_country_population()` are now
   defunct, and the `wpp2017` dependency has been removed. Population data now
@@ -36,8 +38,8 @@
   population is derived from the participants, an age group holding no
   participants is no longer given an interpolated population. Its size is
   unknown, so the demography now reports the participants' own counts, and
-  `per_capita = TRUE` errors for such a group rather than dividing by a
-  made-up number.
+  `per_capita = TRUE` and `counts = TRUE, symmetric = TRUE` error for such a
+  group rather than working from a made-up number.
 
 * Passing a population data frame to `weigh()` is now defunct. Use
   `weigh_by_age()`, which post-stratifies by age explicitly. It takes the

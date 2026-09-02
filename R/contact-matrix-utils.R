@@ -1265,56 +1265,16 @@ matrix_per_capita <- function(
   supplied_pop = TRUE,
   call = rlang::caller_env()
 ) {
-  ## a per-capita rate divides by the population of the contact's age group, so
-  ## every group in the matrix needs one; a group the population has no row for
-  ## has an unknown size, which no arithmetic here can stand in for
-  matrix_groups <- colnames(weighted_matrix)
-  unknown_age <- is.na(matrix_groups)
-  if (any(unknown_age)) {
-    cli::cli_abort(
-      message = stats::setNames(
-        c(
-          "Per-capita contact rates need a population for every age group.",
-          "The matrix has a column for contacts of unknown age, which no
-           population can give a size to.",
-          "Set {.code missing_contact_age = \"remove\"} or
-           {.code \"ignore\"} to ask for per-capita rates."
-        ),
-        c("", "i", "i")
-      ),
-      call = call
-    )
-  }
-  matrix_limits <- age_groups_to_limits(matrix_groups)
-  missing_groups <- matrix_groups[
-    !(matrix_limits %in% survey_pop$lower.age.limit)
-  ]
-  if (length(missing_groups) > 0) {
-    cli::cli_abort(
-      message = stats::setNames(
-        c(
-          "Per-capita contact rates need a population for every age group.",
-          "No population is known for age group{?s} {.val {missing_groups}}.",
-          if (supplied_pop) {
-            "{.arg survey_pop} has no row covering {cli::qty(missing_groups)}
-             {?it/them}."
-          } else {
-            "Without {.arg survey_pop}, the participants are the population, so
-             an age group holding no participants has no size to divide by."
-          },
-          if (supplied_pop) {
-            "Supply population covering every age group, or ask for age groups
-             within the population's range."
-          } else {
-            "Supply {.arg survey_pop} covering every age group, or ask for age
-             groups the participants fall into."
-          }
-        ),
-        c("", "i", "i", "i")
-      ),
-      call = call
-    )
-  }
+  ## a per-capita rate divides by the population of the contact's age group
+  check_population_covers_groups(
+    weighted_matrix = weighted_matrix,
+    survey_pop = survey_pop,
+    headline = "Per-capita contact rates need a population for every age
+                group.",
+    purpose = "per-capita rates",
+    supplied_pop = supplied_pop,
+    call = call
+  )
   weighted_matrix_per_capita <- weighted_matrix /
     matrix(
       rep(survey_pop$population, nrow(survey_pop)),

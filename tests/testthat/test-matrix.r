@@ -1060,6 +1060,35 @@ test_that("per-capita rates say which input the missing population is from", {
   }
 })
 
+test_that("symmetrising needs a population for every age group", {
+  ## the population is indexed by position when symmetrising, so a group with
+  ## no row would silently recycle a shorter vector over the matrix
+  no_country <- data.table::copy(polymod$participants)
+  no_country[, country := NULL]
+  survey <- as_contact_survey(list(
+    participants = no_country,
+    contacts = polymod$contacts
+  ))
+  expect_error(
+    contact_matrix(
+      survey,
+      age_limits = c(0, 20, 86, 90),
+      counts = TRUE,
+      symmetric = TRUE
+    ),
+    "Symmetrising the matrix needs a population"
+  )
+  ## age groups the participants do fall into are unaffected
+  expect_no_error(
+    suppressWarnings(contact_matrix(
+      survey,
+      age_limits = c(0, 20, 60),
+      counts = TRUE,
+      symmetric = TRUE
+    ))
+  )
+})
+
 test_that("per-capita rates need a population for every age group", {
   ## no POLYMOD participant is aged 86 to 89, so with the participants as the
   ## population that group has no size to divide by
