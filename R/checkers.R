@@ -79,6 +79,27 @@ check_single_year_population <- function(
       all(survey_pop$population[survey_pop$lower.age.limit == pad_limit] == 0)
     limits <- limits[!pad]
   }
+  ## the reference is built up to the oldest age group, so a population that
+  ## stops short would be extended by splitting bands it does not have
+  stops_short <- !is.null(pad_limit) &&
+    length(limits) > 0 &&
+    max(limits) < pad_limit - 1
+  if (stops_short) {
+    cli::cli_abort(
+      message = stats::setNames(
+        c(
+          "Age weighting needs population data reaching the oldest age group.",
+          "{.arg survey_pop} reaches {.val {max(limits)}}; the oldest age
+           group starts at {.val {pad_limit - 1}}.",
+          "Supply population that reaches at least that far, or ask for age
+           groups within the population's range."
+        ),
+        c("", "i", "i")
+      ),
+      call = call
+    )
+  }
+
   if (length(limits) > 1 && any(diff(limits) != 1)) {
     cli::cli_abort(
       message = stats::setNames(
