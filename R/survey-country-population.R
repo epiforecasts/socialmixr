@@ -24,10 +24,10 @@ survey_country_population <- function(survey, countries = NULL) {
     "0.7.0",
     "survey_country_population()",
     details = c(
-      "Pass a data frame with columns {.code lower.age.limit} and \\
-       {.code population} to {.fn contact_matrix} via {.arg survey_pop} \\
+      "Pass a data frame with columns `lower.age.limit` and \\
+       `population` to `contact_matrix()` via `survey_pop` \\
        instead.",
-      i = "The {.pkg wpp2024} package on GitHub provides more recent data."
+      i = "The `wpp2024` package on GitHub provides more recent data."
     )
   )
 }

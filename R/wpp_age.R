@@ -36,8 +36,8 @@ wpp_age <- function(countries, years) {
     "wpp_age()",
     details = c(
       "Pass population data directly via the \\
-      {.arg survey_pop} argument instead.",
-      i = "The {.pkg wpp2024} package on GitHub provides more recent data."
+      `survey_pop` argument instead.",
+      i = "The `wpp2024` package on GitHub provides more recent data."
     )
   )
 }
