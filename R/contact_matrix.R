@@ -115,8 +115,8 @@
 # nolint start: line_length_linter.
 #' @param survey.pop,age.limits,sample.participants,estimated.participant.age,estimated.contact.age,missing.participant.age,missing.contact.age,weigh.dayofweek,weigh.age,weight.threshold,symmetric.norm.threshold,sample.all.age.groups,sample.participants.max.tries,return.part.weights,return.demography,per.capita `r lifecycle::badge("defunct")` Use the underscore-separated versions of these arguments instead.
 # nolint end
-#' @param ... further arguments to pass to [get_survey()]
-#'   and [check()] (especially column names).
+#' @param ... further arguments to pass to [rebin_ages_numeric()] when
+#'   aggregating the population, namely `pop_age_column` and `pop_column`.
 #' @return a contact matrix, and the underlying demography of the
 #'   surveyed population
 #' @importFrom stats xtabs runif median
@@ -293,7 +293,7 @@ contact_matrix <- function(
   ## read arguments and check --------------------------------------------------
   survey_type <- c("participants", "contacts")
   dot.args <- list(...)
-  check_arg_dots_in(dot.args, check.contact_survey, pop_age)
+  check_arg_dots_in(dot.args, check.contact_survey, rebin_ages_numeric)
   estimated_participant_age <- match.arg(estimated_participant_age)
   estimated_contact_age <- match.arg(estimated_contact_age)
   missing_participant_age <- match.arg(missing_participant_age)

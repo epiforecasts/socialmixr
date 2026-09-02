@@ -53,7 +53,9 @@
 * The dotted argument names deprecated in 0.5.0 (for example
   `contact_matrix(survey.pop=)`, `contact_matrix(age.limits=)`,
   `clean(participant.age.column=)`, `as_contact_survey(id.column=)`) are now
-  defunct. Use the underscore-separated names.
+  defunct. Use the underscore-separated names. `contact_matrix()` also stops
+  silently accepting `pop.age.column` and `pop.column`, which it took but
+  never acted on; they are now reported as unknown arguments.
 
 ## Internal
 
