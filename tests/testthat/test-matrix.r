@@ -1013,32 +1013,48 @@ test_that("per-capita rates say which input the missing population is from", {
     "`survey_pop` has no row covering"
   )
   ## contacts of unknown age have no age group to hold a population at all
+  single_year <- data.frame(
+    lower.age.limit = 0:90,
+    population = rep(1e5, 91)
+  )
   expect_error(
     contact_matrix(
       polymod,
       age_limits = c(0, 20, 60),
       per_capita = TRUE,
-      survey_pop = data.frame(
-        lower.age.limit = 0:90,
-        population = rep(1e5, 91)
-      ),
+      survey_pop = single_year,
       missing_contact_age = "keep"
     ),
     "contacts of unknown age"
   )
-  ## the options it names have to be ones that run
-  for (option in c("remove", "ignore")) {
+  ## the options it names have to be ones that run, so read them out of the
+  ## message rather than repeating them here: a hint that grows a defunct
+  ## option back has to fail this
+  message <- tryCatch(
+    contact_matrix(
+      polymod,
+      age_limits = c(0, 20, 60),
+      per_capita = TRUE,
+      survey_pop = single_year,
+      missing_contact_age = "keep"
+    ),
+    error = conditionMessage
+  )
+  named <- gsub(
+    '"',
+    "",
+    unlist(regmatches(message, gregexpr('"[a-z]+"', message)))
+  )
+  expect_gt(length(named), 0)
+  for (option in named) {
     expect_no_error(
-      suppressWarnings(contact_matrix(
+      contact_matrix(
         polymod,
         age_limits = c(0, 20, 60),
         per_capita = TRUE,
-        survey_pop = data.frame(
-          lower.age.limit = 0:90,
-          population = rep(1e5, 91)
-        ),
+        survey_pop = single_year,
         missing_contact_age = option
-      ))
+      )
     )
   }
 })
