@@ -170,7 +170,10 @@ five_year <- data.frame(
   )
 )
 
-# split into single years with DemoTools (Sprague multipliers)
+# split into single years with DemoTools (Sprague multipliers).
+# DemoTools is not a dependency of socialmixr, so it is not installed when the
+# package is checked; the linter is told not to look for it.
+# nolint next: namespace_linter.
 single_year <- DemoTools::graduate(
   Value = five_year$population,
   Age = age_groups_to_limits(five_year$age),

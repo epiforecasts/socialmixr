@@ -11,9 +11,10 @@
 #'   `lower.age.limit` and `population`. Required when `symmetric`, `split`,
 #'   `per_capita` or `return_demography` is `TRUE`, unless the survey covers a
 #'   single population with no country information, in which case the
-#'   participants themselves are used. `weigh_age = TRUE` always needs one. Passing a character vector of
-#'   country names is `r lifecycle::badge("defunct")`; construct the data frame
-#'   yourself (e.g. from the `wpp2024` package or another source).
+#'   participants themselves are used. `weigh_age = TRUE` always needs one.
+#'   Passing a character vector of country names is
+#'   `r lifecycle::badge("defunct")`; construct the data frame yourself (e.g.
+#'   from the `wpp2024` package or another source).
 #'   The population must be at least as fine as `age_limits`, and must reach at
 #'   least as high: splitting one of its bands to meet a finer or higher limit
 #'   means assuming how people are distributed within that band.
