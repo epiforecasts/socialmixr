@@ -1089,10 +1089,10 @@ build_na_warning <- function(weighted_matrix) {
       warning_suggestion <- paste0(warning_suggestion, "setting ")
       suggested_options <- NULL
       if (anyNA(rownames(weighted_matrix))) {
-        suggested_options <- c(suggested_options, "'missing.participant.age'")
+        suggested_options <- c(suggested_options, "'missing_participant_age'")
       }
       if (anyNA(colnames(weighted_matrix))) {
-        suggested_options <- c(suggested_options, "'missing.contact.age'")
+        suggested_options <- c(suggested_options, "'missing_contact_age'")
       }
 
       warning_suggestion <-

@@ -241,7 +241,7 @@ warn_if_no_survey_countries <- function(
   if (survey_representative) {
     cli::cli_warn(
       message = c(
-        "No {.arg survey.pop} or {.arg countries} given, and no
+        "No {.arg survey_pop} or {.arg countries} given, and no
               {.arg country} column found in the data.",
         # nolint start
         "i" = "I don't know which population this is from (assuming the \\

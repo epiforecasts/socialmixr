@@ -172,7 +172,7 @@
 # warning is thrown if missing data exist
 
     `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
-    i  Consider setting 'missing.contact.age'.
+    i  Consider setting 'missing_contact_age'.
 
 # error is thrown if an unknown argument is passed
 
@@ -212,12 +212,12 @@
 ---
 
     `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
-    i  Consider setting 'missing.participant.age'.
+    i  Consider setting 'missing_participant_age'.
 
 ---
 
     `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
-    i  Consider setting 'missing.participant.age' and 'missing.contact.age'.
+    i  Consider setting 'missing_participant_age' and 'missing_contact_age'.
 
 # nonsensical operations are warned about
 
@@ -258,11 +258,11 @@
 ---
 
     `split = TRUE` does not work with missing data; will not split the contact matrix.
-    i  Consider setting 'missing.participant.age'.
+    i  Consider setting 'missing_participant_age'.
 
 # warning if survey is assumed to be representative
 
-    No `survey.pop` or `countries` given, and no `country` column found in the data.
+    No `survey_pop` or `countries` given, and no `country` column found in the data.
     i I don't know which population this is from (assuming the survey is representative).
 
 # user-defined reference populations with open age groups
