@@ -57,9 +57,9 @@ codes.}
 
 \item{survey_pop}{survey population -- a data frame with columns
 \code{lower.age.limit} and \code{population}. Required when \code{symmetric}, \code{split},
-\code{per_capita}, \code{weigh_age}, or \code{return_demography} is \code{TRUE}, unless the
-survey covers a single population with no country information, in which
-case the participants themselves are used. Passing a character vector of
+\code{per_capita} or \code{return_demography} is \code{TRUE}, unless the survey covers a
+single population with no country information, in which case the
+participants themselves are used. \code{weigh_age = TRUE} always needs one. Passing a character vector of
 country names is \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}; construct the data frame
 yourself (e.g. from the \code{wpp2024} package or another source).
 The population must be at least as fine as \code{age_limits}, and must reach at

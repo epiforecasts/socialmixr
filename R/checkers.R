@@ -48,6 +48,7 @@ check_age_limits_increasing <- function(
 #' @autoglobal
 check_single_year_population <- function(
   survey_pop,
+  supplied = TRUE,
   call = rlang::caller_env()
 ) {
   limits <- sort(unique(survey_pop$lower.age.limit))
@@ -61,8 +62,15 @@ check_single_year_population <- function(
       message = stats::setNames(
         c(
           "Age weighting needs population data in single-year age bands.",
-          "{.code weigh_age = TRUE} post-stratifies participants by single
-           year of age; {.arg survey_pop} has coarser bands.",
+          if (supplied) {
+            "{.code weigh_age = TRUE} post-stratifies participants by single
+             year of age; {.arg survey_pop} has coarser bands."
+          } else {
+            "{.code weigh_age = TRUE} post-stratifies participants by single
+             year of age, so it needs {.arg survey_pop} in single-year bands.
+             Without it the population is taken from the participants
+             themselves, at the age groups asked for."
+          },
           "Splitting coarser bands into single years means assuming how
            people are distributed within them; see
            {.code vignette(\"socialmixr\")} for how to do that with a package

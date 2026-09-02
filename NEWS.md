@@ -20,8 +20,8 @@
 * Population data is no longer interpolated to age groups finer than the data
   itself. It must be at least as fine as the age groups asked for, and reach at
   least as high; otherwise `contact_matrix()` errors. `weigh_age = TRUE`
-  requires single-year bands, since age weighting post-stratifies participants
-  by single year of age. Splitting coarser bands is a demographic modelling
+  now always requires an explicit `survey_pop` in single-year bands, since age
+  weighting post-stratifies participants by single year of age. Splitting coarser bands is a demographic modelling
   step, and out of scope here; the vignette shows how to do it with a package
   built for it.
 

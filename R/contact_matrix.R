@@ -9,9 +9,9 @@
 #'   codes.
 #' @param survey_pop survey population -- a data frame with columns
 #'   `lower.age.limit` and `population`. Required when `symmetric`, `split`,
-#'   `per_capita`, `weigh_age`, or `return_demography` is `TRUE`, unless the
-#'   survey covers a single population with no country information, in which
-#'   case the participants themselves are used. Passing a character vector of
+#'   `per_capita` or `return_demography` is `TRUE`, unless the survey covers a
+#'   single population with no country information, in which case the
+#'   participants themselves are used. `weigh_age = TRUE` always needs one. Passing a character vector of
 #'   country names is `r lifecycle::badge("defunct")`; construct the data frame
 #'   yourself (e.g. from the `wpp2024` package or another source).
 #'   The population must be at least as fine as `age_limits`, and must reach at
@@ -351,6 +351,7 @@ contact_matrix <- function(
     per_capita
   )
 
+  supplied_pop <- !is.null(survey_pop)
   if (need_survey_pop) {
     ## population data is no longer looked up automatically -------------------
     has_country_info <- !is.null(countries) ||
@@ -388,7 +389,7 @@ contact_matrix <- function(
     ## needs the population in single-year bands; splitting coarser bands is
     ## the user's call, via `interpolate_ages()`
     if (weigh_age) {
-      check_single_year_population(survey_pop)
+      check_single_year_population(survey_pop, supplied = supplied_pop)
       weigh_pop <- survey_pop_reference(survey_pop, ...)
       weigh_pop[,
         age := limits_to_age_groups(lower.age.limit, notation = "brackets")
