@@ -115,8 +115,9 @@
 # nolint start: line_length_linter.
 #' @param survey.pop,age.limits,sample.participants,estimated.participant.age,estimated.contact.age,missing.participant.age,missing.contact.age,weigh.dayofweek,weigh.age,weight.threshold,symmetric.norm.threshold,sample.all.age.groups,sample.participants.max.tries,return.part.weights,return.demography,per.capita `r lifecycle::badge("defunct")` Use the underscore-separated versions of these arguments instead.
 # nolint end
-#' @param ... further arguments to pass to [rebin_ages_numeric()] when
-#'   aggregating the population, namely `pop_age_column` and `pop_column`.
+#' @param ... passed on when the population is aggregated. The population is
+#'   read by its `lower.age.limit` and `population` columns throughout, so
+#'   there is nothing here for a caller to set.
 #' @return a contact matrix, and the underlying demography of the
 #'   surveyed population
 #' @importFrom stats xtabs runif median
