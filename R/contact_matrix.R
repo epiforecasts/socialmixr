@@ -11,19 +11,19 @@
 #'   `lower.age.limit` and `population`. Required when `symmetric`, `split`,
 #'   `per_capita` or `return_demography` is `TRUE`, unless the survey covers a
 #'   single population with no country information, in which case the
-#'   participants themselves are used. `weigh_age = TRUE` always needs one, in
+#'   participants themselves are used. Passing a character vector of country
+#'   names is `r lifecycle::badge("defunct")`; construct the data frame
+#'   yourself (e.g. from the `wpp2024` package or another source).
+#'
+#'   The population must be at least as fine as `age_limits` and must reach at
+#'   least as high, since splitting one of its bands to meet a finer or higher
+#'   limit means assuming how people are distributed within that band.
+#'   `weigh_age = TRUE` is stricter still: it always needs a population, in
 #'   single-year bands, because `contact_matrix()` builds its weighting
-#'   reference at single-year resolution; the pipeline's [weigh_by_age()]
-#'   weights at the population's own bands instead.
-#'   Passing a character vector of country names is
-#'   `r lifecycle::badge("defunct")`; construct the data frame yourself (e.g.
-#'   from the `wpp2024` package or another source).
-#'   The population must be at least as fine as `age_limits`, and must reach at
-#'   least as high: splitting one of its bands to meet a finer or higher limit
-#'   means assuming how people are distributed within that band.
-#'   `weigh_age = TRUE` additionally requires single-year
-#'   bands, because age weighting post-stratifies participants by single year of
-#'   age. Splitting coarser bands is a demographic modelling step and is out of
+#'   reference at single-year resolution. (The pipeline's [weigh_by_age()]
+#'   weights at the population's own bands, so it has no such requirement.)
+#'
+#'   Splitting coarser bands is a demographic modelling step and is out of
 #'   scope for this package; `vignette("socialmixr")` shows how to do it with a
 #'   package built for it.
 #' @param age_limits lower limits of the age groups over which to
@@ -404,8 +404,8 @@ contact_matrix <- function(
       ]
     }
 
-    ## adjust age groups by interpolating, in case they don't match between
-    ## demographic and survey data
+    ## aggregate the population into the matrix's age groups; a population
+    ## coarser than those groups errors rather than being split
     survey_pop <- adjust_survey_age_groups(
       survey_pop = survey_pop,
       part_age_group_present = part.age.group.present,

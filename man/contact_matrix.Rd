@@ -59,19 +59,19 @@ codes.}
 \code{lower.age.limit} and \code{population}. Required when \code{symmetric}, \code{split},
 \code{per_capita} or \code{return_demography} is \code{TRUE}, unless the survey covers a
 single population with no country information, in which case the
-participants themselves are used. \code{weigh_age = TRUE} always needs one, in
+participants themselves are used. Passing a character vector of country
+names is \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}; construct the data frame
+yourself (e.g. from the \code{wpp2024} package or another source).
+
+The population must be at least as fine as \code{age_limits} and must reach at
+least as high, since splitting one of its bands to meet a finer or higher
+limit means assuming how people are distributed within that band.
+\code{weigh_age = TRUE} is stricter still: it always needs a population, in
 single-year bands, because \code{contact_matrix()} builds its weighting
-reference at single-year resolution; the pipeline's \code{\link[=weigh_by_age]{weigh_by_age()}}
-weights at the population's own bands instead.
-Passing a character vector of country names is
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}; construct the data frame yourself (e.g.
-from the \code{wpp2024} package or another source).
-The population must be at least as fine as \code{age_limits}, and must reach at
-least as high: splitting one of its bands to meet a finer or higher limit
-means assuming how people are distributed within that band.
-\code{weigh_age = TRUE} additionally requires single-year
-bands, because age weighting post-stratifies participants by single year of
-age. Splitting coarser bands is a demographic modelling step and is out of
+reference at single-year resolution. (The pipeline's \code{\link[=weigh_by_age]{weigh_by_age()}}
+weights at the population's own bands, so it has no such requirement.)
+
+Splitting coarser bands is a demographic modelling step and is out of
 scope for this package; \code{vignette("socialmixr")} shows how to do it with a
 package built for it.}
 
