@@ -650,6 +650,14 @@ adjust_survey_age_groups <- function(
       call = call
     )
   }
+  if (!supplied_pop) {
+    ## the participants are the population, so an age group nobody falls into
+    ## has no row at all; aggregate to the groups that do have one, rather than
+    ## reading the gap as a request to split a band
+    part_age_group_present <- part_age_group_present[
+      part_age_group_present %in% own_limits
+    ]
+  }
   if (supplied_pop && splits_own_band) {
     ## this rebin is bound to stop, and enumerating against the padded range
     ## would name the pad as a band the population holds; drop it so the error

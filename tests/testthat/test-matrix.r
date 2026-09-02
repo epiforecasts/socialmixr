@@ -996,6 +996,26 @@ test_that("only limits splitting a real band are named as splitting one", {
   )
 })
 
+test_that("an empty age group drops out of a participants population", {
+  ## no POLYMOD participant is aged 86 to 89, though contacts of those ages
+  ## are reported, so the age group exists while the population row does not
+  no_country <- data.table::copy(polymod$participants)
+  no_country[, country := NULL]
+  survey <- as_contact_survey(list(
+    participants = no_country,
+    contacts = polymod$contacts
+  ))
+  expect_no_error(
+    suppressWarnings(
+      contact_matrix(survey, age_limits = c(0, 20, 86, 90), symmetric = TRUE)
+    )
+  )
+  ## the age limits inferred from the data have the same gap in them
+  expect_no_error(
+    suppressWarnings(contact_matrix(survey, symmetric = TRUE))
+  )
+})
+
 test_that("a participants-derived population is not asked to reach further", {
   ## with no population supplied the participants are the population, so an age
   ## group nobody falls into has no row rather than a reach to complain about.
