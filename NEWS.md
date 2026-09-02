@@ -34,8 +34,9 @@
 
 * Passing a population data frame to `weigh()` is now defunct. Use
   `weigh_by_age()`, which post-stratifies by age explicitly. It weights at the
-  population's own age bands rather than interpolating them, so its weights
-  differ from the ones the defunct path produced.
+  population's own age bands rather than rebinning to single years first, so
+  the two agree for a population already in single-year bands and diverge for a
+  coarser one.
 
 * The dotted argument names deprecated in 0.5.0 (for example
   `contact_matrix(survey.pop=)`, `contact_matrix(age.limits=)`,
