@@ -645,16 +645,17 @@ adjust_survey_age_groups <- function(
       ],
       own_limits
     )) > 0
-  ## an empty frame, rows that all lack a population (dropped upstream) and a
-  ## lone empty band above the oldest age group all arrive here the same way
+  ## rows without a population are dropped upstream and the empty band above
+  ## the oldest age group is set aside just above, and a population left with
+  ## nothing arrives here the same way whichever of those emptied it
   if (supplied_pop && length(own_limits) == 0) {
     cli::cli_abort(
       message = stats::setNames(
         c(
           "{.arg survey_pop} holds no population data.",
-          "It has no row holding a population for any age group asked for.",
-          "Check that it has {.code lower.age.limit} and {.code population}
-           columns with values in them."
+          "Once rows without a population and the empty band above the oldest
+           age group are set aside, no row is left.",
+          "Supply population covering the age groups asked for."
         ),
         c("", "i", "i")
       ),
