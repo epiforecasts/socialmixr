@@ -619,6 +619,7 @@ adjust_survey_age_groups <- function(
   survey_pop,
   part_age_group_present,
   supplied_pop = TRUE,
+  call = rlang::caller_env(),
   ...
 ) {
   survey_pop_max <- max(survey_pop$upper.age.limit)
@@ -645,7 +646,8 @@ adjust_survey_age_groups <- function(
     check_population_reach(
       own_limits,
       oldest_group = oldest_group,
-      headline = "Population data must reach the oldest age group."
+      headline = "Population data must reach the oldest age group.",
+      call = call
     )
   }
 
