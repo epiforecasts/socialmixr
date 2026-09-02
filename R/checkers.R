@@ -49,28 +49,42 @@ check_age_limits_increasing <- function(
 check_single_year_population <- function(
   survey_pop,
   supplied = TRUE,
+  pad_limit = NULL,
   call = rlang::caller_env()
 ) {
-  limits <- sort(unique(survey_pop$lower.age.limit))
-  ## the resolver appends a zero band one year above the oldest age group, so
-  ## judge the spacing of the bands that carry population
-  carrying <- sort(unique(
-    survey_pop$lower.age.limit[survey_pop$population > 0]
-  ))
-  if (length(carrying) > 1 && any(diff(carrying) != 1)) {
+  if (!supplied) {
     cli::cli_abort(
       message = stats::setNames(
         c(
           "Age weighting needs population data in single-year age bands.",
-          if (supplied) {
-            "{.code weigh_age = TRUE} post-stratifies participants by single
-             year of age; {.arg survey_pop} has coarser bands."
-          } else {
-            "{.code weigh_age = TRUE} post-stratifies participants by single
-             year of age, so it needs {.arg survey_pop} in single-year bands.
-             Without it the population is taken from the participants
-             themselves, at the age groups asked for."
-          },
+          "{.code weigh_age = TRUE} post-stratifies participants by single
+           year of age, so it needs {.arg survey_pop} in single-year bands.",
+          "Without one the population is taken from the participants
+           themselves, which is their own age distribution, so weighting to it
+           would leave the matrix unchanged."
+        ),
+        c("", "i", "i")
+      ),
+      call = call
+    )
+  }
+
+  limits <- sort(unique(survey_pop$lower.age.limit))
+  ## the resolver appends a zero band one year above the oldest age group;
+  ## drop that one by position, so that a real band holding nobody still counts
+  if (!is.null(pad_limit)) {
+    pad <- limits == pad_limit &
+      limits == max(limits) &
+      all(survey_pop$population[survey_pop$lower.age.limit == pad_limit] == 0)
+    limits <- limits[!pad]
+  }
+  if (length(limits) > 1 && any(diff(limits) != 1)) {
+    cli::cli_abort(
+      message = stats::setNames(
+        c(
+          "Age weighting needs population data in single-year age bands.",
+          "{.code weigh_age = TRUE} post-stratifies participants by single
+           year of age; {.arg survey_pop} has coarser bands.",
           "Splitting coarser bands into single years means assuming how
            people are distributed within them; see
            {.code vignette(\"socialmixr\")} for how to do that with a package

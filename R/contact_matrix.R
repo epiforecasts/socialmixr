@@ -389,7 +389,11 @@ contact_matrix <- function(
     ## needs the population in single-year bands; splitting coarser bands is a
     ## demographic modelling step, left to packages built for it
     if (weigh_age) {
-      check_single_year_population(survey_pop, supplied = supplied_pop)
+      check_single_year_population(
+        survey_pop,
+        supplied = supplied_pop,
+        pad_limit = max(part.age.group.present) + 1
+      )
       weigh_pop <- survey_pop_reference(survey_pop, ...)
       weigh_pop[,
         age := limits_to_age_groups(lower.age.limit, notation = "brackets")
