@@ -37,6 +37,22 @@ test_that("rebin_ages coarsens without changing total population", {
   expect_lt(nrow(coarser), nrow(pop))
 })
 
+test_that("rebin_ages reports every age limit that falls inside a band", {
+  pop <- data.frame(
+    age = limits_to_age_groups(seq(0, 20, by = 10), notation = "brackets"),
+    population = rep(1000, 3)
+  )
+  ## more than one offending limit must not break the message
+  expect_error(
+    rebin_ages(pop, age_limits = c(0, 5, 15)),
+    "Age limits fall inside"
+  )
+  expect_error(
+    rebin_ages(pop, age_limits = c(0, 5, 10)),
+    "Age limit falls inside"
+  )
+})
+
 test_that("rebin_ages errors when finer age groups are requested", {
   pop <- data.frame(
     age = limits_to_age_groups(seq(0, 20, by = 5), notation = "brackets"),

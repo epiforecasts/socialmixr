@@ -150,9 +150,10 @@ rebin_ages <- function(pop, age_limits) {
     cli::cli_abort(c(
       "{.arg age_limits} requests finer age groups than the population data
        provides.",
-      i = "{cli::qty(finer)}Age limit{?s} {.val {finer}} fall{?s} inside the
-           population's age bands; {.fn rebin_ages} only coarsens (aggregates).
-           Supply finer population data, or use coarser {.arg age_limits}."
+      i = "{cli::qty(length(finer))}Age limit{?s} {?falls/fall} inside the
+           population's age bands: {.val {finer}}. {.fn rebin_ages} only
+           coarsens (aggregates); supply finer population data, or use coarser
+           {.arg age_limits}."
     ))
   }
   rebinned <- rebin_ages_numeric(
