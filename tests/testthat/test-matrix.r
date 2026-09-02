@@ -978,6 +978,22 @@ test_that("participants with missing contact age are handled", {
 })
 
 
+test_that("a participants-derived population is not asked to reach further", {
+  ## with no population supplied the participants are the population, so an age
+  ## group nobody falls into has no row rather than a reach to complain about
+  no_country <- data.table::copy(polymod$participants)
+  no_country[, country := NULL]
+  survey <- as_contact_survey(list(
+    participants = no_country,
+    contacts = polymod$contacts
+  ))
+  expect_no_error(
+    suppressWarnings(
+      contact_matrix(survey, age_limits = c(0, 20, 100), symmetric = TRUE)
+    )
+  )
+})
+
 test_that("population must reach as high as the requested age limits", {
   ## the resolver pads with a zero band above the oldest age group, so limits
   ## above the population's own top band would mean splitting it
