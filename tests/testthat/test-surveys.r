@@ -18,7 +18,6 @@ test_that("defunct messages read as text, not as cli markup", {
   ## Every defunct entry point belongs here, not only the exported functions:
   ## the paths inside working functions carry the migration advice for the
   ## changes users are most likely to meet.
-  uk <- polymod[polymod$participants$country == "United Kingdom"]
   pop <- data.frame(lower.age.limit = c(0, 20), population = c(1e6, 2e6))
   defunct_calls <- list(
     wpp_age = function() wpp_age("Italy"),
@@ -45,6 +44,13 @@ test_that("defunct messages read as text, not as cli markup", {
     },
     sampled_contact_age = function() {
       contact_matrix(polymod, missing_contact_age = "sample")
+    },
+    assign_age_groups_sample = function() {
+      assign_age_groups(
+        polymod,
+        age_limits = c(0, 20),
+        missing_contact_age = "sample"
+      )
     },
     weigh_population = function() {
       weigh(
