@@ -1161,8 +1161,8 @@ test_that("population must cover the youngest age group too", {
   )
   ## a frame with no rows is caught before anything measures it, so it says so
   ## and leaks no base warning about the min or max of nothing
-  expect_error(
-    expect_no_warning(
+  expect_no_warning(
+    expect_error(
       contact_matrix(
         polymod,
         age_limits = c(0, 20, 60),
@@ -1171,9 +1171,9 @@ test_that("population must cover the youngest age group too", {
           lower.age.limit = numeric(0),
           population = numeric(0)
         )
-      )
-    ),
-    "It has no rows"
+      ),
+      "It has no rows"
+    )
   )
   ## rows that all lack a value, and a lone empty band above the oldest age
   ## group, are indistinguishable by the time the population is aggregated
