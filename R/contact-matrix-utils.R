@@ -1278,7 +1278,7 @@ matrix_per_capita <- function(
           "The matrix has a column for contacts of unknown age, which no
            population can give a size to.",
           "Set {.code missing_contact_age = \"remove\"} or
-           {.code \"sample\"} to ask for per-capita rates."
+           {.code \"ignore\"} to ask for per-capita rates."
         ),
         c("", "i", "i")
       ),

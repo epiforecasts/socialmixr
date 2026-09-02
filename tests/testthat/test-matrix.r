@@ -1026,6 +1026,21 @@ test_that("per-capita rates say which input the missing population is from", {
     ),
     "contacts of unknown age"
   )
+  ## the options it names have to be ones that run
+  for (option in c("remove", "ignore")) {
+    expect_no_error(
+      suppressWarnings(contact_matrix(
+        polymod,
+        age_limits = c(0, 20, 60),
+        per_capita = TRUE,
+        survey_pop = data.frame(
+          lower.age.limit = 0:90,
+          population = rep(1e5, 91)
+        ),
+        missing_contact_age = option
+      ))
+    )
+  }
 })
 
 test_that("per-capita rates need a population for every age group", {
