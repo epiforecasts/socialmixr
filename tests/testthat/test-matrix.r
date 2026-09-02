@@ -1016,6 +1016,19 @@ test_that("age weighting requires a population to be supplied", {
   )
 })
 
+test_that("age weighting names the coarser bands first", {
+  ## a table that is both coarser than single years and stops short should be
+  ## told about the coarseness, since fixing the reach alone would not help
+  short_and_coarse <- data.frame(
+    lower.age.limit = seq(0, 80, by = 5),
+    population = rep(1e6, 17)
+  )
+  expect_error(
+    contact_matrix(polymod, weigh_age = TRUE, survey_pop = short_and_coarse),
+    "single-year age bands"
+  )
+})
+
 test_that("age weighting says so when the population stops short", {
   to_90 <- data.frame(lower.age.limit = 0:90, population = rep(1e5, 91))
   ## the internal reference runs to the oldest age group, so the message must

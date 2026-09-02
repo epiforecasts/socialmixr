@@ -79,6 +79,24 @@ check_single_year_population <- function(
       all(survey_pop$population[survey_pop$lower.age.limit == pad_limit] == 0)
     limits <- limits[!pad]
   }
+  if (length(limits) > 1 && any(diff(limits) != 1)) {
+    cli::cli_abort(
+      message = stats::setNames(
+        c(
+          "Age weighting needs population data in single-year age bands.",
+          "{.fn contact_matrix} builds its weighting reference at single-year
+           resolution; {.arg survey_pop} has coarser bands.",
+          "In the {.fn compute_matrix} pipeline, {.fn weigh_by_age} weights at
+           the population's own bands; it takes {.arg pop} with an {.code age}
+           column of group labels rather than {.code lower.age.limit}.",
+          "To split the bands instead, see {.code vignette(\"socialmixr\")};
+           that means assuming how people are distributed within them."
+        ),
+        c("", "i", "i", "i")
+      ),
+      call = call
+    )
+  }
   ## the reference is built up to the oldest age group, so a population that
   ## stops short would be extended by splitting bands it does not have
   stops_short <- !is.null(pad_limit) &&
@@ -100,24 +118,6 @@ check_single_year_population <- function(
     )
   }
 
-  if (length(limits) > 1 && any(diff(limits) != 1)) {
-    cli::cli_abort(
-      message = stats::setNames(
-        c(
-          "Age weighting needs population data in single-year age bands.",
-          "{.fn contact_matrix} builds its weighting reference at single-year
-           resolution; {.arg survey_pop} has coarser bands.",
-          "In the {.fn compute_matrix} pipeline, {.fn weigh_by_age} weights at
-           the population's own bands; it takes {.arg pop} with an {.code age}
-           column of group labels rather than {.code lower.age.limit}.",
-          "To split the bands instead, see {.code vignette(\"socialmixr\")};
-           that means assuming how people are distributed within them."
-        ),
-        c("", "i", "i", "i")
-      ),
-      call = call
-    )
-  }
   invisible(limits)
 }
 
