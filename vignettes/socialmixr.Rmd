@@ -177,14 +177,22 @@ single_year <- DemoTools::graduate(
   method = "sprague"
 )
 
+single_limits <- as.integer(names(single_year))
+
+# for the pipeline functions, which take age-group labels
 uk_pop <- data.frame(
-  age = limits_to_age_groups(
-    as.integer(names(single_year)),
-    notation = "brackets"
-  ),
+  age = limits_to_age_groups(single_limits, notation = "brackets"),
+  population = as.numeric(single_year)
+)
+
+# for contact_matrix(), whose survey_pop takes lower age limits
+uk_survey_pop <- data.frame(
+  lower.age.limit = single_limits,
   population = as.numeric(single_year)
 )
 ```
+
+The two shapes differ because `align_ages()` and the post-processing functions work with age-group labels, while `contact_matrix()` takes a `lower.age.limit` column.
 
 The methods differ in how much smoothness they impose and what they assume about neighbouring bands, so which one suits your data is a question for those packages' documentation. Both provide methods rather than data, so you still need population counts from elsewhere.
 
