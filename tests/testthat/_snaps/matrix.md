@@ -144,7 +144,7 @@
       contact_matrix(survey = "bogus")
     Condition
       Error in `contact_matrix()`:
-      ! `survey` must be a survey object (created using `survey()` or `get_survey()`).
+      ! `survey` must be a survey object (created using `as_contact_survey()` or `load_survey()`).
 
 # error is thrown if age limits are non-numeric
 

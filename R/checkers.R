@@ -19,7 +19,7 @@ check_if_contact_survey <- function(
   if (!inherits(x, "contact_survey")) {
     cli::cli_abort(
       message = "{.arg {arg}} must be a survey object (created using \\
-         {.fn survey} or {.fn get_survey}).",
+         {.fn as_contact_survey} or {.fn load_survey}).",
       call = call
     )
   }
