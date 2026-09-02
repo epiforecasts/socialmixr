@@ -303,7 +303,7 @@ contact_matrix <- function(
   if (missing_contact_age == "sample") {
     lifecycle::deprecate_stop(
       "0.5.0",
-      "contact_matrix(missing_contact_age = 'sample')",
+      "contact_matrix(missing_contact_age = 'cannot be \"sample\"')",
       details = paste(
         "Use 'remove' to exclude contacts with missing ages, 'keep' to retain",
         "them as a separate age group, or 'ignore' to drop only those contacts."
