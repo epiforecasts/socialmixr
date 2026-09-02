@@ -22,7 +22,12 @@
 #'   name == "United Kingdom" & year == 2020,
 #'   .(lower.age.limit = age, population = pop * 1000)
 #' ]
-#' contact_matrix(polymod, countries = "United Kingdom", survey_pop = uk_pop)
+#' contact_matrix(
+#'   polymod,
+#'   countries = "United Kingdom",
+#'   survey_pop = uk_pop,
+#'   symmetric = TRUE
+#' )
 #' }
 #' @export
 wpp_age <- function(countries, years) {
