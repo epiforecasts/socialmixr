@@ -265,7 +265,7 @@
     No `survey_pop` or `countries` given, and no `country` column found in the data.
     i I don't know which population this is from (assuming the survey is representative).
 
-# user-defined reference populations with open age groups
+# user-defined reference populations matching the age limits
 
     Code
       contact_matrix(polymod_nocountry, age_limits = c(0, 18, 60), symmetric = TRUE,

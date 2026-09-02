@@ -1030,14 +1030,14 @@ test_that("age weighting requires single-year population", {
   )
 })
 
-test_that("user-defined reference populations with open age groups", {
+test_that("user-defined reference populations matching the age limits", {
   suppressWarnings({
     survey.pop <- data.frame(
       lower.age.limit = c(0, 18, 60),
       population = c(4e6, 1e5, 6e6)
     )
 
-    # to handle the open ended age group in the survey.pop
+    # the oldest group is open-ended in the returned demography
     expect_identical(
       nrow(
         contact_matrix(
