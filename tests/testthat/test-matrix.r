@@ -1005,6 +1005,32 @@ test_that("population must reach as high as the requested age limits", {
   )
 })
 
+test_that("age weighting requires a population to be supplied", {
+  no_country <- copy_survey(polymod)
+  no_country$participants$country <- NULL
+  ## without one the population comes from the participants themselves, so
+  ## weighting to it would leave the matrix unchanged
+  expect_error(
+    contact_matrix(no_country, age_limits = 0:5, weigh_age = TRUE),
+    "needs population data in single-year age bands"
+  )
+})
+
+test_that("age weighting accepts single-year bands that hold nobody", {
+  with_gap <- data.frame(
+    lower.age.limit = 0:90,
+    population = replace(rep(1e5, 91), 46, 0)
+  )
+  expect_no_error(
+    suppressWarnings(contact_matrix(
+      polymod,
+      age_limits = c(0, 20, 60),
+      weigh_age = TRUE,
+      survey_pop = with_gap
+    ))
+  )
+})
+
 test_that("age weighting requires single-year population", {
   five_year <- data.frame(
     lower.age.limit = seq(0, 90, by = 5),
