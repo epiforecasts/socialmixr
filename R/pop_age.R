@@ -25,5 +25,14 @@ pop_age <- function(
   pop.age.column = deprecated(),
   pop.column = deprecated()
 ) {
-  lifecycle::deprecate_stop("0.7.0", "pop_age()", "rebin_ages()")
+  lifecycle::deprecate_stop(
+    "0.7.0",
+    "pop_age()",
+    "rebin_ages()",
+    details = paste(
+      "`rebin_ages()` takes the population with an `age` column of group",
+      "labels, so convert a `lower.age.limit` table with",
+      "`limits_to_age_groups()` first."
+    )
+  )
 }

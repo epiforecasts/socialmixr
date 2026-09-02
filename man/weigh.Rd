@@ -62,9 +62,11 @@ matched against values of the \code{by} column.
 A data frame target that does \emph{not} have a column named \code{by} but does have
 \code{lower.age.limit} and \code{population} is \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}} and
 errors. Use \code{\link[=weigh_by_age]{weigh_by_age()}} instead, which post-stratifies by age
-explicitly. It weights at the population's own age bands, where the old path
-first rebinned to single years, so the two agree for a population already in
-single-year bands and diverge for a coarser one.
+explicitly. It takes the population with an \code{age} column of group labels, so
+convert a \code{lower.age.limit} table with \code{\link[=limits_to_age_groups]{limits_to_age_groups()}} first. It
+weights at the population's own age bands, where the old path first rebinned
+to single years, so the two agree for a population already in single-year
+bands and diverge for a coarser one.
 }
 
 \section{\code{weigh_by_dayofweek()}}{

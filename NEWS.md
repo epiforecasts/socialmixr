@@ -33,7 +33,9 @@
   `age_groups_to_limits()` instead.
 
 * Passing a population data frame to `weigh()` is now defunct. Use
-  `weigh_by_age()`, which post-stratifies by age explicitly. It weights at the
+  `weigh_by_age()`, which post-stratifies by age explicitly. It takes the
+  population with an `age` column of group labels, so convert a
+  `lower.age.limit` table with `limits_to_age_groups()` first. It weights at the
   population's own age bands rather than rebinning to single years first, so
   the two agree for a population already in single-year bands and diverge for a
   coarser one.
