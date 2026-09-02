@@ -20,8 +20,10 @@
 * Population data is no longer interpolated to age groups finer than the data
   itself. It must be at least as fine as the age groups asked for, and reach at
   least as high; otherwise `contact_matrix()` errors. `weigh_age = TRUE`
-  now always requires an explicit `survey_pop` in single-year bands, since age
-  weighting post-stratifies participants by single year of age. Splitting coarser bands is a demographic modelling
+  now always requires an explicit `survey_pop` in single-year bands, because
+  `contact_matrix()` builds its weighting reference at single-year resolution.
+  The pipeline's `weigh_by_age()` weights at the population's own bands and has
+  no such requirement. Splitting coarser bands is a demographic modelling
   step, and out of scope here; the vignette shows how to do it with a package
   built for it.
 
@@ -31,7 +33,9 @@
   `age_groups_to_limits()` instead.
 
 * Passing a population data frame to `weigh()` is now defunct. Use
-  `weigh_by_age()`, which does the same post-stratification explicitly.
+  `weigh_by_age()`, which post-stratifies by age explicitly. It weights at the
+  population's own age bands rather than interpolating them, so its weights
+  differ from the ones the defunct path produced.
 
 * The dotted argument names deprecated in 0.5.0 (for example
   `contact_matrix(survey.pop=)`, `contact_matrix(age.limits=)`,

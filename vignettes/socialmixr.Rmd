@@ -157,7 +157,7 @@ custom_pop <- data.frame(
 
 ## When your population is coarser than your age groups
 
-socialmixr aggregates population data into coarser age groups, and errors if you ask for age groups finer than the data provides. Splitting a band means assuming how people are distributed within it, which is a demographic modelling choice. The same applies when the population stops below the top of the matrix, for instance an 80+ table with age groups reaching to 90, and to `weigh_age = TRUE`, which needs single-year bands because it post-stratifies participants by single year of age.
+socialmixr aggregates population data into coarser age groups, and errors if you ask for age groups finer than the data provides. Splitting a band means assuming how people are distributed within it, which is a demographic modelling choice. The same applies when the population stops below the top of the matrix, for instance an 80+ table with age groups reaching to 90, and to `contact_matrix(weigh_age = TRUE)`, which builds its weighting reference at single-year resolution and so needs single-year bands. The pipeline's `weigh_by_age()` weights at the population's own bands, so it takes the population as it is.
 
 Demographers call the splitting step graduation or ungrouping, and there are packages that do it properly. [DemoTools](https://github.com/timriffe/DemoTools) offers the classical methods and some modern ones behind a single `graduate()` call; [ungroup](https://cran.r-project.org/package=ungroup) implements the penalized composite link model. Split the population there, then pass the result to socialmixr:
 

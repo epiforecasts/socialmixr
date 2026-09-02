@@ -57,8 +57,9 @@ check_single_year_population <- function(
       message = stats::setNames(
         c(
           "Age weighting needs population data in single-year age bands.",
-          "{.code weigh_age = TRUE} post-stratifies participants by single
-           year of age, so it needs {.arg survey_pop} in single-year bands.",
+          "{.fn contact_matrix} builds its weighting reference at single-year
+           resolution, so {.code weigh_age = TRUE} needs {.arg survey_pop} in
+           single-year bands.",
           "Without one the population is taken from the participants
            themselves, which is their own age distribution, so weighting to it
            would leave the matrix unchanged."
@@ -83,14 +84,14 @@ check_single_year_population <- function(
       message = stats::setNames(
         c(
           "Age weighting needs population data in single-year age bands.",
-          "{.code weigh_age = TRUE} post-stratifies participants by single
-           year of age; {.arg survey_pop} has coarser bands.",
-          "Splitting coarser bands into single years means assuming how
-           people are distributed within them; see
-           {.code vignette(\"socialmixr\")} for how to do that with a package
-           built for it."
+          "{.fn contact_matrix} builds its weighting reference at single-year
+           resolution; {.arg survey_pop} has coarser bands.",
+          "{.fn weigh_by_age} weights at the population's own bands, so it
+           takes this population as it is.",
+          "To split the bands instead, see {.code vignette(\"socialmixr\")};
+           that means assuming how people are distributed within them."
         ),
-        c("", "i", "i")
+        c("", "i", "i", "i")
       ),
       call = call
     )

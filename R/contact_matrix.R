@@ -11,7 +11,10 @@
 #'   `lower.age.limit` and `population`. Required when `symmetric`, `split`,
 #'   `per_capita` or `return_demography` is `TRUE`, unless the survey covers a
 #'   single population with no country information, in which case the
-#'   participants themselves are used. `weigh_age = TRUE` always needs one.
+#'   participants themselves are used. `weigh_age = TRUE` always needs one, in
+#'   single-year bands, because `contact_matrix()` builds its weighting
+#'   reference at single-year resolution; the pipeline's [weigh_by_age()]
+#'   weights at the population's own bands instead.
 #'   Passing a character vector of country names is
 #'   `r lifecycle::badge("defunct")`; construct the data frame yourself (e.g.
 #'   from the `wpp2024` package or another source).

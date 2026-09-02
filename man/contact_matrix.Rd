@@ -59,9 +59,13 @@ codes.}
 \code{lower.age.limit} and \code{population}. Required when \code{symmetric}, \code{split},
 \code{per_capita} or \code{return_demography} is \code{TRUE}, unless the survey covers a
 single population with no country information, in which case the
-participants themselves are used. \code{weigh_age = TRUE} always needs one. Passing a character vector of
-country names is \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}; construct the data frame
-yourself (e.g. from the \code{wpp2024} package or another source).
+participants themselves are used. \code{weigh_age = TRUE} always needs one, in
+single-year bands, because \code{contact_matrix()} builds its weighting
+reference at single-year resolution; the pipeline's \code{\link[=weigh_by_age]{weigh_by_age()}}
+weights at the population's own bands instead.
+Passing a character vector of country names is
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}; construct the data frame yourself (e.g.
+from the \code{wpp2024} package or another source).
 The population must be at least as fine as \code{age_limits}, and must reach at
 least as high: splitting one of its bands to meet a finer or higher limit
 means assuming how people are distributed within that band.
