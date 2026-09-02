@@ -247,8 +247,9 @@ weigh_population_defunct <- function(participants, target, ...) {
     details = c(
       paste(
         "Silent dispatch to age post-stratification from `weigh()` is",
-        "removed. Use `weigh_by_age()` instead, which does the same",
-        "interpolation and post-stratification explicitly."
+        "removed. Use `weigh_by_age()` instead, which post-stratifies by age",
+        "explicitly. It weights at the population's own age bands, so its",
+        "weights differ from the ones this path produced."
       )
     )
   )
