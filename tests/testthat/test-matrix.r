@@ -996,6 +996,38 @@ test_that("only limits splitting a real band are named as splitting one", {
   )
 })
 
+test_that("per-capita rates say which input the missing population is from", {
+  ## a supplied population that misses a group should not be diagnosed as the
+  ## participants-derived one
+  starts_at_25 <- data.frame(
+    lower.age.limit = 25:90,
+    population = rep(1e5, 66)
+  )
+  expect_error(
+    contact_matrix(
+      polymod,
+      age_limits = c(0, 20, 60),
+      per_capita = TRUE,
+      survey_pop = starts_at_25
+    ),
+    "`survey_pop` has no row covering"
+  )
+  ## contacts of unknown age have no age group to hold a population at all
+  expect_error(
+    contact_matrix(
+      polymod,
+      age_limits = c(0, 20, 60),
+      per_capita = TRUE,
+      survey_pop = data.frame(
+        lower.age.limit = 0:90,
+        population = rep(1e5, 91)
+      ),
+      missing_contact_age = "keep"
+    ),
+    "contacts of unknown age"
+  )
+})
+
 test_that("per-capita rates need a population for every age group", {
   ## no POLYMOD participant is aged 86 to 89, so with the participants as the
   ## population that group has no size to divide by

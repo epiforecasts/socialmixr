@@ -527,7 +527,8 @@ contact_matrix <- function(
   if (per_capita && !counts && !split) {
     ret[["matrix.per.capita"]] <- matrix_per_capita(
       weighted_matrix = weighted.matrix,
-      survey_pop = survey_pop
+      survey_pop = survey_pop,
+      supplied_pop = supplied_pop
     )
   }
 
