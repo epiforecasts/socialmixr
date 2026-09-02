@@ -1159,19 +1159,24 @@ test_that("population must cover the youngest age group too", {
       survey_pop = starts_at_5
     )
   )
-  ## a population whose rows all lack a population value holds nothing
-  expect_error(
-    contact_matrix(
-      polymod,
-      age_limits = c(0, 20, 60),
-      symmetric = TRUE,
-      survey_pop = data.frame(
-        lower.age.limit = 0:10,
-        population = rep(NA_real_, 11)
-      )
-    ),
-    "holds no population data"
+  ## every way a population can arrive holding nothing: no rows at all, rows
+  ## that all lack a value, and a lone empty band above the oldest age group
+  empty_shapes <- list(
+    data.frame(lower.age.limit = numeric(0), population = numeric(0)),
+    data.frame(lower.age.limit = 0:10, population = rep(NA_real_, 11)),
+    data.frame(lower.age.limit = 61, population = 0)
   )
+  for (shape in empty_shapes) {
+    expect_error(
+      contact_matrix(
+        polymod,
+        age_limits = c(0, 20, 60),
+        symmetric = TRUE,
+        survey_pop = shape
+      ),
+      "holds no population data"
+    )
+  }
 })
 
 test_that("population must reach as high as the requested age limits", {

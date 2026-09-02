@@ -375,6 +375,21 @@ contact_matrix <- function(
         )
       )
     }
+    ## measuring an empty population would only produce base warnings about
+    ## min() and max() of nothing before anything could explain the problem
+    if (supplied_pop && nrow(as.data.frame(survey_pop)) == 0) {
+      cli::cli_abort(
+        message = stats::setNames(
+          c(
+            "{.arg survey_pop} holds no population data.",
+            "It has no rows.",
+            "Check that it has {.code lower.age.limit} and {.code population}
+             columns with values in them."
+          ),
+          c("", "i", "i")
+        )
+      )
+    }
     ## check if survey population is not given or is a country vector
     survey_pop_info <- survey_pop_year(
       survey_pop = survey_pop,

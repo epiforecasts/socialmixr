@@ -507,7 +507,10 @@ add_upper_age_limits <- function(
 survey_pop_from_data <- function(survey_pop, part_age_group_present) {
   survey_pop <- data.table(survey_pop)
   # make sure max survey_pop age exceeds participant age group breaks
-  if (max(survey_pop$lower.age.limit) < max(part_age_group_present)) {
+  if (
+    nrow(survey_pop) > 0 &&
+      max(survey_pop$lower.age.limit) < max(part_age_group_present)
+  ) {
     survey_pop <- rbind(
       survey_pop,
       list(max(part_age_group_present + 1), 0)
@@ -642,16 +645,18 @@ adjust_survey_age_groups <- function(
       ],
       own_limits
     )) > 0
-  ## rows without a population are dropped upstream, so a population made
-  ## entirely of them arrives here holding nothing at all
+  ## an empty frame, rows that all lack a population (dropped upstream) and a
+  ## lone empty band above the oldest age group all arrive here the same way
   if (supplied_pop && length(own_limits) == 0) {
     cli::cli_abort(
       message = stats::setNames(
         c(
           "{.arg survey_pop} holds no population data.",
-          "Rows without a population are dropped, and none was left."
+          "It has no row holding a population for any age group asked for.",
+          "Check that it has {.code lower.age.limit} and {.code population}
+           columns with values in them."
         ),
-        c("", "i")
+        c("", "i", "i")
       ),
       call = call
     )
