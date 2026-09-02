@@ -642,6 +642,23 @@ adjust_survey_age_groups <- function(
       ],
       own_limits
     )) > 0
+  ## a population starting above the youngest age group leaves that group
+  ## holding only the part of it the population covers, with nothing to say so
+  if (supplied_pop && min(own_limits) > min(part_age_group_present)) {
+    cli::cli_abort(
+      message = stats::setNames(
+        c(
+          "Population data must cover the youngest age group.",
+          "{.arg survey_pop} starts at {.val {min(own_limits)}}; the youngest
+           age group starts at {.val {min(part_age_group_present)}}.",
+          "Supply population from that age up, or ask for age groups within
+           the population's range."
+        ),
+        c("", "i", "i")
+      ),
+      call = call
+    )
+  }
   if (supplied_pop && !splits_own_band) {
     check_population_reach(
       own_limits,

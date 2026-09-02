@@ -997,8 +997,8 @@ test_that("only limits splitting a real band are named as splitting one", {
 })
 
 test_that("per-capita rates say which input the missing population is from", {
-  ## a supplied population that misses a group should not be diagnosed as the
-  ## participants-derived one
+  ## a supplied population that misses a group is diagnosed against the
+  ## population, not against the participants
   starts_at_25 <- data.frame(
     lower.age.limit = 25:90,
     population = rep(1e5, 66)
@@ -1010,7 +1010,7 @@ test_that("per-capita rates say which input the missing population is from", {
       per_capita = TRUE,
       survey_pop = starts_at_25
     ),
-    "`survey_pop` has no row covering"
+    "`survey_pop` starts at"
   )
   ## contacts of unknown age have no age group to hold a population at all
   single_year <- data.frame(
@@ -1146,6 +1146,33 @@ test_that("a participants-derived population is not asked to reach further", {
     suppressWarnings(
       contact_matrix(survey, age_limits = c(0, 20, 100), symmetric = TRUE)
     )
+  )
+})
+
+test_that("population must cover the youngest age group too", {
+  ## a population starting above the youngest limit would leave that group
+  ## holding only part of itself, with nothing in the result to say so
+  starts_at_5 <- data.frame(
+    lower.age.limit = seq(5, 80, by = 5),
+    population = rep(3e6, 16)
+  )
+  expect_error(
+    contact_matrix(
+      polymod,
+      age_limits = c(0, 20, 60),
+      symmetric = TRUE,
+      survey_pop = starts_at_5
+    ),
+    "cover the youngest age group"
+  )
+  ## starting exactly at the youngest limit is fine
+  expect_no_error(
+    suppressWarnings(contact_matrix(
+      polymod,
+      age_limits = c(5, 20, 60),
+      symmetric = TRUE,
+      survey_pop = starts_at_5
+    ))
   )
 })
 
