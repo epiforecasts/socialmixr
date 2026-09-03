@@ -377,12 +377,17 @@ contact_matrix <- function(
     }
     ## measuring an empty population would only produce base warnings about
     ## min() and max() of nothing before anything could explain the problem
-    if (supplied_pop && nrow(as.data.frame(survey_pop)) == 0) {
+    supplied_values <- if (supplied_pop && is.data.frame(survey_pop)) {
+      as.data.frame(survey_pop)[["population"]]
+    }
+    has_no_rows <- supplied_pop && nrow(as.data.frame(survey_pop)) == 0
+    has_no_values <- !is.null(supplied_values) && all(is.na(supplied_values))
+    if (has_no_rows || has_no_values) {
       cli::cli_abort(
         message = stats::setNames(
           c(
             "{.arg survey_pop} holds no population data.",
-            "It has no rows.",
+            "No row of it holds a population.",
             "Check that it has {.code lower.age.limit} and {.code population}
              columns with values in them."
           ),
