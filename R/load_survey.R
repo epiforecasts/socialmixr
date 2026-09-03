@@ -81,7 +81,7 @@ load_survey <- function(files, participant_key = NULL, ...) {
   if (!is.null(new_survey$reference)) {
     cli::cli_inform(
       "Using {new_survey$reference$title}. To cite this in a publication,\\
-      use the {.fn get_citation} function."
+      use {.fn contactsurveys::get_citation}."
     )
   }
 
