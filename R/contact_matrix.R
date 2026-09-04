@@ -21,10 +21,10 @@
 #' ```
 #'
 #' The weighing functions stand in for `weigh_age` and `weigh_dayofweek`, and
-#' take the survey: [weigh_by_age()] and [weigh_by_dayofweek()] belong after
+#' take the survey. [weigh_by_age()] and [weigh_by_dayofweek()] belong after
 #' [assign_age_groups()], which adds the age column [weigh_by_age()] needs and
 #' settles which participants the matrix is built from, and before
-#' [compute_matrix()], which is what consumes the weights.
+#' [compute_matrix()], which consumes the weights.
 #'
 #' The post-processing functions stand in for `symmetric`, `split` and
 #' `per_capita`, and take the matrix: pipe the [compute_matrix()] result into
@@ -148,14 +148,13 @@
 #' @param ... passed on when the population is aggregated. The population is
 #'   read by its `lower.age.limit` and `population` columns throughout, so
 #'   there is nothing here for a caller to set.
-#' @return a list holding `matrix` and `participants`, participant counts by
-#'   age group. `matrix` is the contact matrix, or the assortativity matrix
-#'   when `split = TRUE`. The list also holds `demography` under the
-#'   conditions described above; `mean.contacts`, `normalisation` and
-#'   `contacts` when `split = TRUE`, `counts` is not and no age group is
-#'   missing; `matrix.per.capita` when `per_capita = TRUE` and neither
-#'   `counts` nor `split` is; and `participants.weights` when
-#'   `return_part_weights = TRUE`.
+#' @return a list. It always holds `matrix` and `participants`, the participant
+#'   counts by age group; `matrix` is the contact matrix, or the assortativity
+#'   matrix when `split = TRUE`. It also holds `demography` under the
+#'   conditions above; `mean.contacts`, `normalisation` and `contacts` when
+#'   `split = TRUE`, `counts` is not and no age group is missing;
+#'   `matrix.per.capita` when `per_capita = TRUE` and neither `counts` nor
+#'   `split` is; and `participants.weights` when `return_part_weights = TRUE`.
 #' @importFrom stats xtabs runif median
 #' @importFrom utils data
 #' @importFrom countrycode countrycode
