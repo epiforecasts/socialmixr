@@ -148,8 +148,12 @@
 #' @param ... passed on when the population is aggregated. The population is
 #'   read by its `lower.age.limit` and `population` columns throughout, so
 #'   there is nothing here for a caller to set.
-#' @return a contact matrix, and the underlying demography of the
-#'   surveyed population
+#' @return a list holding `matrix`, the contact matrix, and `participants`,
+#'   participant counts by age group. It also holds `demography` under the
+#'   conditions described above; `mean.contacts`, `normalisation` and
+#'   `contacts` when `split = TRUE`; `matrix.per.capita` when
+#'   `per_capita = TRUE` and `split` is not; and `participants.weights` when
+#'   `return_part_weights = TRUE`.
 #' @importFrom stats xtabs runif median
 #' @importFrom utils data
 #' @importFrom countrycode countrycode
