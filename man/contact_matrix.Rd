@@ -98,8 +98,8 @@ number of contacts, in each age group (split further into the
 product of the mean number of contacts across the whole
 population (\code{mean.contacts}), a normalisation constant
 (\code{normalisation}) and age-specific variation in contacts
-(\code{contacts})), multiplied with an assortativity matrix
-(\code{assortativity}) and a population multiplier (\code{demography}).
+(\code{contacts})), multiplied with an assortativity matrix (returned in
+\code{matrix}) and a population multiplier (\code{demography}).
 For more detail on this, see the "Getting Started" vignette.}
 
 \item{sample_participants}{whether to sample participants
@@ -188,11 +188,46 @@ there is nothing here for a caller to set.}
 \item{survey.pop, age.limits, sample.participants, estimated.participant.age, estimated.contact.age, missing.participant.age, missing.contact.age, weigh.dayofweek, weigh.age, weight.threshold, symmetric.norm.threshold, sample.all.age.groups, sample.participants.max.tries, return.part.weights, return.demography, per.capita}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}} Use the underscore-separated versions of these arguments instead.}
 }
 \value{
-a contact matrix, and the underlying demography of the
-surveyed population
+a list. It always holds \code{matrix}, the contact matrix, and
+\code{participants}, the participant counts by age group. It also holds
+\code{demography} under the conditions above; \code{matrix.per.capita} when
+\code{per_capita = TRUE} and neither \code{counts} nor \code{split} is; and
+\code{participants.weights} when \code{return_part_weights = TRUE}.
+
+\code{split = TRUE} splits the matrix when \code{counts} is not set and every age
+group has participants. The split adds \code{mean.contacts}, \code{normalisation}
+and \code{contacts}, and \code{matrix} then holds the assortativity matrix. When
+those conditions do not hold \code{contact_matrix()} warns, skips the split,
+and \code{matrix} holds the contact matrix as usual.
 }
 \description{
-Samples a contact survey
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+
+Computes a contact matrix from a diary survey in a single call, together
+with participant counts by age group. The demography comes too when any of
+\code{symmetric}, \code{split}, \code{per_capita} or \code{weigh_age} is \code{TRUE}, or when
+\code{return_demography = TRUE}; setting \code{return_demography = FALSE} suppresses
+it even then.
+
+\code{contact_matrix()} is superseded: it is still maintained and is not going
+away, but new code is better written as the pipeline it wraps.
+The pipeline composes the same steps, and can group by more than age:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{survey |>
+  assign_age_groups(age_limits = c(0, 5, 15)) |>
+  weigh_by_dayofweek() |>
+  compute_matrix()
+}\if{html}{\out{</div>}}
+
+The weighing functions stand in for \code{weigh_age} and \code{weigh_dayofweek}, and
+take the survey. \code{\link[=weigh_by_age]{weigh_by_age()}} and \code{\link[=weigh_by_dayofweek]{weigh_by_dayofweek()}} belong after
+\code{\link[=assign_age_groups]{assign_age_groups()}}, which adds the age column \code{\link[=weigh_by_age]{weigh_by_age()}} needs and
+settles which participants the matrix is built from, and before
+\code{\link[=compute_matrix]{compute_matrix()}}, which consumes the weights.
+
+The post-processing functions stand in for \code{symmetric}, \code{split} and
+\code{per_capita}, and take the matrix: pipe the \code{\link[=compute_matrix]{compute_matrix()}} result into
+\code{\link[=symmetrise]{symmetrise()}}, \code{\link[=split_matrix]{split_matrix()}} or \code{\link[=per_capita]{per_capita()}}.
 }
 \examples{
 data(polymod)
@@ -201,6 +236,9 @@ contact_matrix(
   countries = "United Kingdom",
   age_limits = c(0, 1, 5, 15)
 )
+}
+\seealso{
+\code{\link[=compute_matrix]{compute_matrix()}} for the pipeline this function wraps
 }
 \author{
 Sebastian Funk

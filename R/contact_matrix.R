@@ -1,6 +1,36 @@
 #' Generate a contact matrix from diary survey data
 #'
-#' Samples a contact survey
+#' @description
+#' `r lifecycle::badge("superseded")`
+#'
+#' Computes a contact matrix from a diary survey in a single call, together
+#' with participant counts by age group. The demography comes too when any of
+#' `symmetric`, `split`, `per_capita` or `weigh_age` is `TRUE`, or when
+#' `return_demography = TRUE`; setting `return_demography = FALSE` suppresses
+#' it even then.
+#'
+#' `contact_matrix()` is superseded: it is still maintained and is not going
+#' away, but new code is better written as the pipeline it wraps.
+#' The pipeline composes the same steps, and can group by more than age:
+#'
+#' ```r
+#' survey |>
+#'   assign_age_groups(age_limits = c(0, 5, 15)) |>
+#'   weigh_by_dayofweek() |>
+#'   compute_matrix()
+#' ```
+#'
+#' The weighing functions stand in for `weigh_age` and `weigh_dayofweek`, and
+#' take the survey. [weigh_by_age()] and [weigh_by_dayofweek()] belong after
+#' [assign_age_groups()], which adds the age column [weigh_by_age()] needs and
+#' settles which participants the matrix is built from, and before
+#' [compute_matrix()], which consumes the weights.
+#'
+#' The post-processing functions stand in for `symmetric`, `split` and
+#' `per_capita`, and take the matrix: pipe the [compute_matrix()] result into
+#' [symmetrise()], [split_matrix()] or [per_capita()].
+#'
+#' @seealso [compute_matrix()] for the pipeline this function wraps
 #'
 #' @param survey a [survey()] object.
 #' @param countries limit to one or more countries; if NULL
@@ -45,8 +75,8 @@
 #'   product of the mean number of contacts across the whole
 #'   population (`mean.contacts`), a normalisation constant
 #'   (`normalisation`) and age-specific variation in contacts
-#'   (`contacts`)), multiplied with an assortativity matrix
-#'   (`assortativity`) and a population multiplier (`demography`).
+#'   (`contacts`)), multiplied with an assortativity matrix (returned in
+#'   `matrix`) and a population multiplier (`demography`).
 #'   For more detail on this, see the "Getting Started" vignette.
 #' @param sample_participants whether to sample participants
 #'   randomly (with replacement); done multiple times this can be
@@ -118,8 +148,17 @@
 #' @param ... passed on when the population is aggregated. The population is
 #'   read by its `lower.age.limit` and `population` columns throughout, so
 #'   there is nothing here for a caller to set.
-#' @return a contact matrix, and the underlying demography of the
-#'   surveyed population
+#' @return a list. It always holds `matrix`, the contact matrix, and
+#'   `participants`, the participant counts by age group. It also holds
+#'   `demography` under the conditions above; `matrix.per.capita` when
+#'   `per_capita = TRUE` and neither `counts` nor `split` is; and
+#'   `participants.weights` when `return_part_weights = TRUE`.
+#'
+#'   `split = TRUE` splits the matrix when `counts` is not set and every age
+#'   group has participants. The split adds `mean.contacts`, `normalisation`
+#'   and `contacts`, and `matrix` then holds the assortativity matrix. When
+#'   those conditions do not hold `contact_matrix()` warns, skips the split,
+#'   and `matrix` holds the contact matrix as usual.
 #' @importFrom stats xtabs runif median
 #' @importFrom utils data
 #' @importFrom countrycode countrycode
