@@ -1012,9 +1012,8 @@ test_that("per-capita rates report an age group with no population", {
     ),
     "contacts of unknown age"
   )
-  ## the options it names have to be ones that run, so read them out of the
-  ## message rather than repeating them here: a hint that grows a defunct
-  ## option back has to fail this
+  ## read the options out of the message: a hint that names a defunct option
+  ## again has to fail this
   message <- tryCatch(
     contact_matrix(
       polymod,
@@ -1116,11 +1115,10 @@ test_that("an empty age group drops out of a participants population", {
 })
 
 test_that("a participants-derived population is not asked to reach further", {
-  ## with no population supplied the participants are the population, so an age
-  ## group nobody falls into has no row rather than a reach to complain about.
-  ## What is pinned here is only that no reach error fires: the population is
-  ## then shorter than the matrix, which is long-standing behaviour on this
-  ## path and not something this test asserts is right
+  ## with no population supplied the participants are the population, so an
+  ## age group nobody falls into simply has no row. This pins only the absence
+  ## of a reach error: the population is then shorter than the matrix, which is
+  ## long-standing behaviour here and not something this test endorses
   no_country <- data.table::copy(polymod$participants)
   no_country[, country := NULL]
   survey <- as_contact_survey(list(
@@ -1159,8 +1157,8 @@ test_that("population must cover the youngest age group too", {
       survey_pop = starts_at_5
     )
   )
-  ## a frame with no rows is caught before anything measures it, so it says so
-  ## and leaks no base warning about the min or max of nothing
+  ## a frame with no rows is caught before anything measures it, so no base
+  ## warning leaks
   expect_no_warning(
     expect_error(
       contact_matrix(
@@ -1175,8 +1173,7 @@ test_that("population must cover the youngest age group too", {
       "No row of it holds a population"
     )
   )
-  ## a population whose rows all lack a value is caught there too, so it warns
-  ## about nothing either
+  ## a population whose rows all lack a value is caught there too
   expect_no_warning(
     expect_error(
       contact_matrix(
@@ -1257,8 +1254,8 @@ test_that("age weighting names the coarser bands first", {
 
 test_that("age weighting says so when the population stops short", {
   to_90 <- data.frame(lower.age.limit = 0:90, population = rep(1e5, 91))
-  ## the internal reference runs to the oldest age group, so the message must
-  ## name the population's reach rather than the ages it generates itself
+  ## the message must name the population's reach, since the ages beyond it
+  ## are generated internally
   expect_error(
     contact_matrix(
       polymod,

@@ -375,8 +375,7 @@ contact_matrix <- function(
         )
       )
     }
-    ## measuring an empty population would only produce base warnings about
-    ## min() and max() of nothing before anything could explain the problem
+    ## catch an empty population before min() and max() warn about nothing
     supplied_values <- if (supplied_pop && is.data.frame(survey_pop)) {
       as.data.frame(survey_pop)[["population"]]
     }
@@ -412,9 +411,8 @@ contact_matrix <- function(
       age_breaks = part.age.group.present
     )
 
-    ## age weighting post-stratifies participants by single year of age, so it
-    ## needs the population in single-year bands; splitting coarser bands is a
-    ## demographic modelling step, left to packages built for it
+    ## age weighting works at single-year resolution, so it needs the
+    ## population in single-year bands
     if (weigh_age) {
       check_single_year_population(
         survey_pop,
@@ -427,8 +425,8 @@ contact_matrix <- function(
       ]
     }
 
-    ## aggregate the population into the matrix's age groups; a population
-    ## coarser than those groups errors rather than being split
+    ## aggregate the population into the matrix's age groups; a coarser one
+    ## errors
     survey_pop <- adjust_survey_age_groups(
       survey_pop = survey_pop,
       part_age_group_present = part.age.group.present,
@@ -508,8 +506,8 @@ contact_matrix <- function(
   matrix_not_scalar <- prod(dim(as.matrix(weighted.matrix))) > 1
   na_in_weighted_mtx <- na_in_weighted_matrix(weighted.matrix)
   if (symmetric && matrix_not_scalar && !na_in_weighted_mtx) {
-    ## the population is indexed by position when symmetrising, so it has to
-    ## have a row for every age group in the matrix
+    ## symmetrising indexes the population by position, so it needs a row for
+    ## every age group
     check_population_covers_groups(
       weighted_matrix = weighted.matrix,
       survey_pop = survey_pop,

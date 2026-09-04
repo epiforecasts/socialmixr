@@ -73,8 +73,7 @@ check_single_year_population <- function(
   }
 
   limits <- sort(unique(survey_pop$lower.age.limit))
-  ## the resolver appends a zero band one year above the oldest age group;
-  ## drop that one by position, so that a real band holding nobody still counts
+  ## drop the resolver's zero pad by position, so a real empty band still counts
   if (!is.null(pad_limit)) {
     pad <- limits == pad_limit &
       limits == max(limits) &
@@ -99,8 +98,8 @@ check_single_year_population <- function(
       call = call
     )
   }
-  ## the reference is built up to the oldest age group, so a population that
-  ## stops short would be extended by splitting bands it does not have
+  ## the reference runs to the oldest age group; a short population cannot
+  ## fill it
   if (!is.null(pad_limit)) {
     check_population_reach(
       limits,
@@ -118,10 +117,9 @@ check_single_year_population <- function(
 #'
 #' @description
 #' `contact_matrix()` pads the population with an empty band above the oldest
-#' age group, so a limit above the population's own top band splits that pad
-#' rather than any band the data holds. Reporting it as interpolation would name
-#' a band the population does not have, so it is reported as the reach problem
-#' it is.
+#' age group, so a limit above the population's own top band splits that pad.
+#' Reporting that as interpolation would name a band the population does not
+#' have, so it is reported as a reach problem instead.
 #'
 #' @param limits the population's own lower age limits, excluding the pad
 #' @param oldest_group lower limit of the oldest age group asked for
@@ -158,8 +156,7 @@ check_population_reach <- function(
 #' @description
 #' The matrix's consumers index the population by position, so a population
 #' missing a row for one of the matrix's age groups silently recycles. A group
-#' the population has no row for has an unknown size, which no arithmetic here
-#' can stand in for.
+#' with no row has an unknown size, and no arithmetic here can stand in for it.
 #'
 #' Only the participants-derived population reaches this: a supplied
 #' `survey_pop` is checked for coverage, reach and fineness before it is

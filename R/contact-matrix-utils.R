@@ -534,8 +534,8 @@ survey_pop_from_countries <- function(
   age_limits,
   call = rlang::caller_env()
 ) {
-  ## reached only when neither a population nor any country information is
-  ## given, in which case the participants stand in for the population
+  ## reached only without a population or country information, so the
+  ## participants stand in for it
   survey_representative <- survey_is_representative(
     countries = countries,
     participants = participants,
@@ -627,11 +627,9 @@ adjust_survey_age_groups <- function(
 ) {
   survey_pop_max <- max(survey_pop$upper.age.limit)
 
-  ## the padded band above the oldest age group holds nobody; measure reach
-  ## against the population's own bands, and only when no requested limit
-  ## splits one of those, since that is the more specific problem. A population
-  ## derived from the participants has no pad and no reach to demand: an age
-  ## group nobody falls into simply has no row.
+  ## measure reach against the population's own bands, leaving out the zero
+  ## pad above them, and only when no requested limit splits one of those:
+  ## a split band is the more specific problem
   oldest_group <- max(part_age_group_present)
   pad <- survey_pop$lower.age.limit == oldest_group + 1 &
     survey_pop$lower.age.limit == max(survey_pop$lower.age.limit) &
@@ -645,9 +643,7 @@ adjust_survey_age_groups <- function(
       ],
       own_limits
     )) > 0
-  ## rows without a population are dropped upstream and the empty band above
-  ## the oldest age group is set aside just above, and a population left with
-  ## nothing arrives here the same way whichever of those emptied it
+  ## dropped NA rows and a lone pad band both leave nothing behind here
   if (supplied_pop && length(own_limits) == 0) {
     cli::cli_abort(
       message = stats::setNames(
@@ -662,8 +658,8 @@ adjust_survey_age_groups <- function(
       call = call
     )
   }
-  ## a population starting above the youngest age group leaves that group
-  ## holding only the part of it the population covers, with nothing to say so
+  ## a population starting higher leaves the youngest group holding only the
+  ## part of itself the population covers, silently
   if (supplied_pop && min(own_limits) > min(part_age_group_present)) {
     cli::cli_abort(
       message = stats::setNames(
@@ -688,17 +684,15 @@ adjust_survey_age_groups <- function(
     )
   }
   if (!supplied_pop) {
-    ## the participants are the population, so an age group nobody falls into
-    ## has no row at all; aggregate to the groups that do have one, rather than
-    ## reading the gap as a request to split a band
+    ## the participants are the population, so an empty age group has no row;
+    ## aggregate to the groups that do have one
     part_age_group_present <- part_age_group_present[
       part_age_group_present %in% own_limits
     ]
   }
   if (supplied_pop && splits_own_band) {
-    ## this rebin is bound to stop, and enumerating against the padded range
-    ## would name the pad as a band the population holds; drop it so the error
-    ## lists only limits that split a band the data actually has
+    ## this rebin is bound to stop; drop the pad so the error names only
+    ## limits that split a band the population holds
     rebin_ages_numeric(
       as.data.frame(survey_pop)[!pad, , drop = FALSE],
       part_age_group_present,

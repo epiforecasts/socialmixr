@@ -15,9 +15,8 @@ test_that("get_survey() is defunct", {
 test_that("defunct messages read as text, not as cli markup", {
   ## `lifecycle::deprecate_stop(details = )` does not interpolate cli inline
   ## markup, so a `{.arg x}` written there reaches the user with its braces.
-  ## Every defunct entry point belongs here, not only the exported functions:
-  ## the paths inside working functions carry the migration advice for the
-  ## changes users are most likely to meet.
+  ## Every defunct entry point belongs here, including the paths inside
+  ## working functions: those hold the migration advice users meet most often.
   pop <- data.frame(lower.age.limit = c(0, 20), population = c(1e6, 2e6))
   defunct_calls <- list(
     wpp_age = function() wpp_age("Italy"),
