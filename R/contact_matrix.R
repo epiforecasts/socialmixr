@@ -75,8 +75,8 @@
 #'   product of the mean number of contacts across the whole
 #'   population (`mean.contacts`), a normalisation constant
 #'   (`normalisation`) and age-specific variation in contacts
-#'   (`contacts`)), multiplied with an assortativity matrix
-#'   (`assortativity`) and a population multiplier (`demography`).
+#'   (`contacts`)), multiplied with an assortativity matrix (returned in
+#'   `matrix`) and a population multiplier (`demography`).
 #'   For more detail on this, see the "Getting Started" vignette.
 #' @param sample_participants whether to sample participants
 #'   randomly (with replacement); done multiple times this can be
@@ -148,11 +148,13 @@
 #' @param ... passed on when the population is aggregated. The population is
 #'   read by its `lower.age.limit` and `population` columns throughout, so
 #'   there is nothing here for a caller to set.
-#' @return a list holding `matrix`, the contact matrix, and `participants`,
-#'   participant counts by age group. It also holds `demography` under the
+#' @return a list holding `matrix` and `participants`, participant counts by
+#'   age group. `matrix` is the contact matrix, or the assortativity matrix
+#'   when `split = TRUE`. The list also holds `demography` under the
 #'   conditions described above; `mean.contacts`, `normalisation` and
-#'   `contacts` when `split = TRUE`; `matrix.per.capita` when
-#'   `per_capita = TRUE` and `split` is not; and `participants.weights` when
+#'   `contacts` when `split = TRUE`, `counts` is not and no age group is
+#'   missing; `matrix.per.capita` when `per_capita = TRUE` and neither
+#'   `counts` nor `split` is; and `participants.weights` when
 #'   `return_part_weights = TRUE`.
 #' @importFrom stats xtabs runif median
 #' @importFrom utils data

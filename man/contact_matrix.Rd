@@ -98,8 +98,8 @@ number of contacts, in each age group (split further into the
 product of the mean number of contacts across the whole
 population (\code{mean.contacts}), a normalisation constant
 (\code{normalisation}) and age-specific variation in contacts
-(\code{contacts})), multiplied with an assortativity matrix
-(\code{assortativity}) and a population multiplier (\code{demography}).
+(\code{contacts})), multiplied with an assortativity matrix (returned in
+\code{matrix}) and a population multiplier (\code{demography}).
 For more detail on this, see the "Getting Started" vignette.}
 
 \item{sample_participants}{whether to sample participants
@@ -188,11 +188,13 @@ there is nothing here for a caller to set.}
 \item{survey.pop, age.limits, sample.participants, estimated.participant.age, estimated.contact.age, missing.participant.age, missing.contact.age, weigh.dayofweek, weigh.age, weight.threshold, symmetric.norm.threshold, sample.all.age.groups, sample.participants.max.tries, return.part.weights, return.demography, per.capita}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}} Use the underscore-separated versions of these arguments instead.}
 }
 \value{
-a list holding \code{matrix}, the contact matrix, and \code{participants},
-participant counts by age group. It also holds \code{demography} under the
+a list holding \code{matrix} and \code{participants}, participant counts by
+age group. \code{matrix} is the contact matrix, or the assortativity matrix
+when \code{split = TRUE}. The list also holds \code{demography} under the
 conditions described above; \code{mean.contacts}, \code{normalisation} and
-\code{contacts} when \code{split = TRUE}; \code{matrix.per.capita} when
-\code{per_capita = TRUE} and \code{split} is not; and \code{participants.weights} when
+\code{contacts} when \code{split = TRUE}, \code{counts} is not and no age group is
+missing; \code{matrix.per.capita} when \code{per_capita = TRUE} and neither
+\code{counts} nor \code{split} is; and \code{participants.weights} when
 \code{return_part_weights = TRUE}.
 }
 \description{
