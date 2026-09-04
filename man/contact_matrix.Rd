@@ -195,9 +195,10 @@ surveyed population
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
 
 Computes a contact matrix from a diary survey in a single call, together
-with the participants it was built from, and the demography as well
-whenever a population is involved -- that is, when any of \code{symmetric},
-\code{split}, \code{per_capita}, \code{weigh_age} or \code{return_demography} is set.
+with participant counts by age group. The demography comes too when any of
+\code{symmetric}, \code{split}, \code{per_capita} or \code{weigh_age} is \code{TRUE}, or when
+\code{return_demography = TRUE}; setting \code{return_demography = FALSE} suppresses
+it even then.
 
 \code{contact_matrix()} is superseded: it is still maintained and existing code
 keeps working, but new code is better written as the pipeline it wraps.
@@ -211,8 +212,9 @@ The pipeline composes the same steps, and can group by more than age:
 
 The weighing functions stand in for \code{weigh_age} and \code{weigh_dayofweek}, and
 take the survey: \code{\link[=weigh_by_age]{weigh_by_age()}} and \code{\link[=weigh_by_dayofweek]{weigh_by_dayofweek()}} belong after
-\code{\link[=assign_age_groups]{assign_age_groups()}} and before \code{\link[=compute_matrix]{compute_matrix()}}, since both weigh
-within the age groups the matrix will use.
+\code{\link[=assign_age_groups]{assign_age_groups()}}, which adds the age column \code{\link[=weigh_by_age]{weigh_by_age()}} needs and
+settles which participants the matrix is built from, and before
+\code{\link[=compute_matrix]{compute_matrix()}}, which is what consumes the weights.
 
 The post-processing functions stand in for \code{symmetric}, \code{split} and
 \code{per_capita}, and take the matrix: pipe the \code{\link[=compute_matrix]{compute_matrix()}} result into

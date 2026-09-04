@@ -4,9 +4,10 @@
 #' `r lifecycle::badge("superseded")`
 #'
 #' Computes a contact matrix from a diary survey in a single call, together
-#' with the participants it was built from, and the demography as well
-#' whenever a population is involved -- that is, when any of `symmetric`,
-#' `split`, `per_capita`, `weigh_age` or `return_demography` is set.
+#' with participant counts by age group. The demography comes too when any of
+#' `symmetric`, `split`, `per_capita` or `weigh_age` is `TRUE`, or when
+#' `return_demography = TRUE`; setting `return_demography = FALSE` suppresses
+#' it even then.
 #'
 #' `contact_matrix()` is superseded: it is still maintained and existing code
 #' keeps working, but new code is better written as the pipeline it wraps.
@@ -21,8 +22,9 @@
 #'
 #' The weighing functions stand in for `weigh_age` and `weigh_dayofweek`, and
 #' take the survey: [weigh_by_age()] and [weigh_by_dayofweek()] belong after
-#' [assign_age_groups()] and before [compute_matrix()], since both weigh
-#' within the age groups the matrix will use.
+#' [assign_age_groups()], which adds the age column [weigh_by_age()] needs and
+#' settles which participants the matrix is built from, and before
+#' [compute_matrix()], which is what consumes the weights.
 #'
 #' The post-processing functions stand in for `symmetric`, `split` and
 #' `per_capita`, and take the matrix: pipe the [compute_matrix()] result into
