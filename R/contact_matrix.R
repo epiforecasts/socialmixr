@@ -3,8 +3,10 @@
 #' @description
 #' `r lifecycle::badge("superseded")`
 #'
-#' Computes a contact matrix from a diary survey in a single call, along with
-#' the demography it was built from.
+#' Computes a contact matrix from a diary survey in a single call, together
+#' with the participants it was built from, and the demography as well
+#' whenever a population is involved -- that is, when any of `symmetric`,
+#' `split`, `per_capita`, `weigh_age` or `return_demography` is set.
 #'
 #' `contact_matrix()` is superseded: it is still maintained and existing code
 #' keeps working, but new code is better written as the pipeline it wraps.
@@ -13,13 +15,18 @@
 #' ```r
 #' survey |>
 #'   assign_age_groups(age_limits = c(0, 5, 15)) |>
+#'   weigh_by_dayofweek() |>
 #'   compute_matrix()
 #' ```
 #'
-#' Pipe that result into [symmetrise()], [split_matrix()] or [per_capita()]
-#' for the post-processing the `symmetric`, `split` and `per_capita` arguments
-#' perform here, and use [weigh_by_age()] or [weigh_by_dayofweek()] for
-#' `weigh_age` and `weigh_dayofweek`.
+#' The weighing functions stand in for `weigh_age` and `weigh_dayofweek`, and
+#' take the survey: [weigh_by_age()] and [weigh_by_dayofweek()] belong after
+#' [assign_age_groups()] and before [compute_matrix()], since both weigh
+#' within the age groups the matrix will use.
+#'
+#' The post-processing functions stand in for `symmetric`, `split` and
+#' `per_capita`, and take the matrix: pipe the [compute_matrix()] result into
+#' [symmetrise()], [split_matrix()] or [per_capita()].
 #'
 #' @seealso [compute_matrix()] for the pipeline this function wraps
 #'

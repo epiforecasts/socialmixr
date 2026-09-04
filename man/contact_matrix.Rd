@@ -194,8 +194,10 @@ surveyed population
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
 
-Computes a contact matrix from a diary survey in a single call, along with
-the demography it was built from.
+Computes a contact matrix from a diary survey in a single call, together
+with the participants it was built from, and the demography as well
+whenever a population is involved -- that is, when any of \code{symmetric},
+\code{split}, \code{per_capita}, \code{weigh_age} or \code{return_demography} is set.
 
 \code{contact_matrix()} is superseded: it is still maintained and existing code
 keeps working, but new code is better written as the pipeline it wraps.
@@ -203,13 +205,18 @@ The pipeline composes the same steps, and can group by more than age:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{survey |>
   assign_age_groups(age_limits = c(0, 5, 15)) |>
+  weigh_by_dayofweek() |>
   compute_matrix()
 }\if{html}{\out{</div>}}
 
-Pipe that result into \code{\link[=symmetrise]{symmetrise()}}, \code{\link[=split_matrix]{split_matrix()}} or \code{\link[=per_capita]{per_capita()}}
-for the post-processing the \code{symmetric}, \code{split} and \code{per_capita} arguments
-perform here, and use \code{\link[=weigh_by_age]{weigh_by_age()}} or \code{\link[=weigh_by_dayofweek]{weigh_by_dayofweek()}} for
-\code{weigh_age} and \code{weigh_dayofweek}.
+The weighing functions stand in for \code{weigh_age} and \code{weigh_dayofweek}, and
+take the survey: \code{\link[=weigh_by_age]{weigh_by_age()}} and \code{\link[=weigh_by_dayofweek]{weigh_by_dayofweek()}} belong after
+\code{\link[=assign_age_groups]{assign_age_groups()}} and before \code{\link[=compute_matrix]{compute_matrix()}}, since both weigh
+within the age groups the matrix will use.
+
+The post-processing functions stand in for \code{symmetric}, \code{split} and
+\code{per_capita}, and take the matrix: pipe the \code{\link[=compute_matrix]{compute_matrix()}} result into
+\code{\link[=symmetrise]{symmetrise()}}, \code{\link[=split_matrix]{split_matrix()}} or \code{\link[=per_capita]{per_capita()}}.
 }
 \examples{
 data(polymod)
