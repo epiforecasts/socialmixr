@@ -3,6 +3,14 @@
 * The package now has a logo, showing the POLYMOD contact matrix for the
   United Kingdom in five-year age groups.
 
+## Superseded
+
+* `contact_matrix()` is now marked superseded. It is still maintained and
+  existing code keeps working, but new code is better written as the pipeline
+  it wraps: `assign_age_groups()` and `compute_matrix()`, followed by
+  `symmetrise()`, `split_matrix()` or `per_capita()`. The pipeline composes the
+  same steps and can group by more than age.
+
 ## Breaking changes
 
 * Automatic country population lookup in `contact_matrix()` is now defunct.

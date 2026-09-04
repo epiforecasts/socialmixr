@@ -1,6 +1,27 @@
 #' Generate a contact matrix from diary survey data
 #'
-#' Samples a contact survey
+#' @description
+#' `r lifecycle::badge("superseded")`
+#'
+#' Computes a contact matrix from a diary survey in a single call, along with
+#' the demography it was built from.
+#'
+#' `contact_matrix()` is superseded: it is still maintained and existing code
+#' keeps working, but new code is better written as the pipeline it wraps.
+#' The pipeline composes the same steps, and can group by more than age:
+#'
+#' ```r
+#' survey |>
+#'   assign_age_groups(age_limits = c(0, 5, 15)) |>
+#'   compute_matrix()
+#' ```
+#'
+#' Pipe that result into [symmetrise()], [split_matrix()] or [per_capita()]
+#' for the post-processing the `symmetric`, `split` and `per_capita` arguments
+#' perform here, and use [weigh_by_age()] or [weigh_by_dayofweek()] for
+#' `weigh_age` and `weigh_dayofweek`.
+#'
+#' @seealso [compute_matrix()] for the pipeline this function wraps
 #'
 #' @param survey a [survey()] object.
 #' @param countries limit to one or more countries; if NULL

@@ -192,7 +192,24 @@ a contact matrix, and the underlying demography of the
 surveyed population
 }
 \description{
-Samples a contact survey
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+
+Computes a contact matrix from a diary survey in a single call, along with
+the demography it was built from.
+
+\code{contact_matrix()} is superseded: it is still maintained and existing code
+keeps working, but new code is better written as the pipeline it wraps.
+The pipeline composes the same steps, and can group by more than age:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{survey |>
+  assign_age_groups(age_limits = c(0, 5, 15)) |>
+  compute_matrix()
+}\if{html}{\out{</div>}}
+
+Pipe that result into \code{\link[=symmetrise]{symmetrise()}}, \code{\link[=split_matrix]{split_matrix()}} or \code{\link[=per_capita]{per_capita()}}
+for the post-processing the \code{symmetric}, \code{split} and \code{per_capita} arguments
+perform here, and use \code{\link[=weigh_by_age]{weigh_by_age()}} or \code{\link[=weigh_by_dayofweek]{weigh_by_dayofweek()}} for
+\code{weigh_age} and \code{weigh_dayofweek}.
 }
 \examples{
 data(polymod)
@@ -201,6 +218,9 @@ contact_matrix(
   countries = "United Kingdom",
   age_limits = c(0, 1, 5, 15)
 )
+}
+\seealso{
+\code{\link[=compute_matrix]{compute_matrix()}} for the pipeline this function wraps
 }
 \author{
 Sebastian Funk
