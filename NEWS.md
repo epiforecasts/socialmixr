@@ -5,6 +5,13 @@
 
 ## Breaking changes
 
+* A `survey_pop` with a missing `population` for any band at or above the
+  youngest age group asked for is now rejected by `contact_matrix()`. Such rows
+  were dropped before the population was aggregated, so the age group holding
+  them was reported and weighted as though those people did not exist, with no
+  indication that anything had been left out. Bands below the youngest age
+  group are unaffected, since they are dropped either way.
+
 * Automatic country population lookup in `contact_matrix()` is now defunct.
   Pass `survey_pop` explicitly as a data frame with columns `lower.age.limit`
   and `population` when `symmetric`, `split`, `per_capita`, `weigh_age` or

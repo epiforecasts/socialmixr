@@ -1132,6 +1132,46 @@ test_that("a participants-derived population is not asked to reach further", {
   )
 })
 
+test_that("a population with unknown bands is not quietly aggregated", {
+  ## rows without a population are dropped before aggregating, so the group
+  ## holding them would be reported and weighted as though they were absent
+  with_gap <- data.frame(lower.age.limit = 0:90, population = rep(1e5, 91))
+  with_gap$population[with_gap$lower.age.limit %in% 30:40] <- NA_real_
+  expect_error(
+    contact_matrix(
+      polymod,
+      age_limits = c(0, 20, 60),
+      symmetric = TRUE,
+      survey_pop = with_gap
+    ),
+    "no population for ages 30, 31"
+  )
+  ## one unknown band reads as one
+  one_gap <- data.frame(lower.age.limit = 0:90, population = rep(1e5, 91))
+  one_gap$population[one_gap$lower.age.limit == 30] <- NA_real_
+  expect_error(
+    contact_matrix(
+      polymod,
+      age_limits = c(0, 20, 60),
+      symmetric = TRUE,
+      survey_pop = one_gap
+    ),
+    "no population for age 30\\."
+  )
+  ## bands below the youngest age group are dropped either way, so an unknown
+  ## one there changes nothing
+  low_gap <- data.frame(lower.age.limit = 0:90, population = rep(1e5, 91))
+  low_gap$population[low_gap$lower.age.limit %in% 0:5] <- NA_real_
+  expect_no_error(
+    suppressWarnings(contact_matrix(
+      polymod,
+      age_limits = c(20, 60),
+      symmetric = TRUE,
+      survey_pop = low_gap
+    ))
+  )
+})
+
 test_that("population must cover the youngest age group too", {
   ## a population starting above the youngest limit would leave that group
   ## holding only part of itself, with nothing in the result to say so

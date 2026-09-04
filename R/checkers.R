@@ -215,6 +215,50 @@ check_population_covers_groups <- function(
   invisible(missing_groups)
 }
 
+#' Check that a supplied population is known across the age groups asked for
+#'
+#' @description
+#' Rows without a population are dropped before the population is aggregated,
+#' so a band of unknown size would silently shrink the age group containing it.
+#' Only bands at or above the youngest age group matter: anything below it is
+#' dropped whether it holds a population or not.
+#'
+#' @param survey_pop population data with `lower.age.limit` and `population`
+#' @param part_age_group_present lower limits of the age groups asked for
+#' @param call environment to report the error against
+#' @keywords internal
+#' @noRd
+check_population_known <- function(
+  survey_pop,
+  part_age_group_present,
+  call = rlang::caller_env()
+) {
+  used <- survey_pop$lower.age.limit >= min(part_age_group_present)
+  unknown <- sort(
+    survey_pop$lower.age.limit[used & is.na(survey_pop$population)]
+  )
+  if (length(unknown) == 0) {
+    return(invisible(unknown))
+  }
+  cli::cli_abort(
+    message = stats::setNames(
+      c(
+        "Population data must be known across the age groups asked for.",
+        "{.arg survey_pop} has no population for {cli::qty(length(unknown))}
+         age{?s} {toString(utils::head(unknown, 6))}{if (length(unknown) > 6)
+         paste0(' and ', length(unknown) - 6, ' more')}.",
+        "Those rows are dropped before the population is aggregated, leaving
+         the age group holding them short by however many people they stand
+         for.",
+        "Supply a population for those ages, or ask for age groups that do
+         not cover them."
+      ),
+      c("", "i", "i", "i")
+    ),
+    call = call
+  )
+}
+
 check_missing_countries <- function(
   countries,
   corrected_countries,
