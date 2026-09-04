@@ -408,7 +408,7 @@ contact_matrix <- function(
     part.age.group.present <- get_age_group_lower_limits(age_limits)
 
     ## rows without a population are dropped below, so an age group holding
-    ## one would be reported and weighted as though those people were absent
+    ## one would be counted as though those people were absent
     if (supplied_pop) {
       check_population_known(survey_pop, part.age.group.present)
     }

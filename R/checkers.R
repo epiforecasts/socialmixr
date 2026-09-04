@@ -250,9 +250,9 @@ check_population_known <- function(
         "{.arg survey_pop} has no population for {cli::qty(length(unknown))}
          age{?s} {toString(utils::head(unknown, 6))}{if (length(unknown) > 6)
          paste0(' and ', length(unknown) - 6, ' more')}.",
-        "Those rows are dropped before the population is aggregated, which
-         would leave the age group holding them short by however many people
-         they stand for.",
+        "Those rows are dropped before the population is aggregated, leaving
+         the age group holding them short by however many people they stand
+         for.",
         "Supply a population for those ages, or ask for age groups that do
          not cover them."
       ),
