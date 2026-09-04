@@ -155,6 +155,49 @@ custom_pop <- data.frame(
 )
 ```
 
+## When your population is coarser than your age groups
+
+socialmixr aggregates population data into coarser age groups, and errors if you ask for age groups finer than the data provides. Splitting a band means assuming how people are distributed within it, which is a demographic modelling choice. The same applies when the population stops below the top of the matrix, for instance an 80+ table with age groups reaching to 90, and to `contact_matrix(weigh_age = TRUE)`, which builds its weighting reference at single-year resolution and so needs single-year bands. The pipeline's `weigh_by_age()` weights at the population's own bands, so it takes the population as it is.
+
+Demographers call the splitting step graduation or ungrouping, and there are packages that do it properly. [DemoTools](https://github.com/timriffe/DemoTools) offers the classical methods and some modern ones behind a single `graduate()` call; [ungroup](https://cran.r-project.org/package=ungroup) implements the penalized composite link model. Split the population there, then pass the result to socialmixr:
+
+```{r eval = FALSE}
+five_year <- data.frame(
+  age = limits_to_age_groups(seq(0, 80, by = 5), notation = "brackets"),
+  population = c(
+    3.4e6, 3.5e6, 3.8e6, 3.9e6, 3.9e6, 3.7e6, 4.1e6, 4.6e6, 4.6e6,
+    3.9e6, 3.6e6, 3.9e6, 3.1e6, 2.7e6, 2.3e6, 1.9e6, 1.4e6
+  )
+)
+
+# split into single years with DemoTools (Sprague multipliers).
+# DemoTools is not a socialmixr dependency, hence the nolint below.
+# nolint next: namespace_linter.
+single_year <- DemoTools::graduate(
+  Value = five_year$population,
+  Age = age_groups_to_limits(five_year$age),
+  method = "sprague"
+)
+
+single_limits <- as.integer(names(single_year))
+
+# for the pipeline functions, which take age-group labels
+uk_pop <- data.frame(
+  age = limits_to_age_groups(single_limits, notation = "brackets"),
+  population = as.numeric(single_year)
+)
+
+# for contact_matrix(), whose survey_pop takes lower age limits
+uk_survey_pop <- data.frame(
+  lower.age.limit = single_limits,
+  population = as.numeric(single_year)
+)
+```
+
+The two shapes differ because `align_ages()` and the post-processing functions work with age-group labels, while `contact_matrix()` takes a `lower.age.limit` column.
+
+The methods differ in how much smoothness they impose and what they assume about neighbouring bands, so which one suits your data is a question for those packages' documentation. Both provide methods rather than data, so you still need population counts from elsewhere.
+
 For the rest of this vignette we use a small constructed `uk_pop` for the United Kingdom, sufficient to illustrate the post-processing functions:
 
 ```{r}

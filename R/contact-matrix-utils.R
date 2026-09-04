@@ -507,30 +507,16 @@ add_upper_age_limits <- function(
 survey_pop_from_data <- function(survey_pop, part_age_group_present) {
   survey_pop <- data.table(survey_pop)
   # make sure max survey_pop age exceeds participant age group breaks
-  if (max(survey_pop$lower.age.limit) < max(part_age_group_present)) {
+  if (
+    nrow(survey_pop) > 0 &&
+      max(survey_pop$lower.age.limit) < max(part_age_group_present)
+  ) {
     survey_pop <- rbind(
       survey_pop,
       list(max(part_age_group_present + 1), 0)
     )
   }
   survey_pop
-}
-
-#' @autoglobal
-get_survey_countries <- function(survey_pop, countries, participants) {
-  if (!is.null(survey_pop)) {
-    ## survey population is given as vector of countries
-    survey_countries <- survey_pop
-  } else if (!is.null(countries)) {
-    ## survey population not given but countries requested from
-    ## survey - get population data from those countries
-    survey_countries <- countries
-  } else if ("country" %in% colnames(participants)) {
-    ## neither survey population nor country names given - try to
-    ## guess country or countries surveyed from participant data
-    survey_countries <- unique(participants[, country])
-  }
-  survey_countries
 }
 
 #' @autoglobal
@@ -548,7 +534,8 @@ survey_pop_from_countries <- function(
   age_limits,
   call = rlang::caller_env()
 ) {
-  # no countries, and no survey_pop
+  ## reached only without a population or country information, so the
+  ## participants stand in for it
   survey_representative <- survey_is_representative(
     countries = countries,
     participants = participants,
@@ -557,52 +544,12 @@ survey_pop_from_countries <- function(
 
   warn_if_no_survey_countries(survey_representative, call = call)
 
-  # there aren't countries or survey pop, get the countries
-  if (!survey_representative) {
-    survey_countries <- get_survey_countries(
-      survey_pop = survey_pop,
-      countries = countries,
-      participants = participants
-    )
-    ## get population data for countries from 'wpp' package
-    country_pop <- data.table(wpp_age(survey_countries))
-
-    country_pop$country <- normalise_country_names(country_pop$country)
-
-    ## check if survey data are from a specific year - in that case
-    ## use demographic data from that year, otherwise latest
-    if ("year" %in% colnames(participants)) {
-      survey_year <- participants[, median(year, na.rm = TRUE)]
-    } else {
-      survey_year <- country_pop[, max(year, na.rm = TRUE)]
-      cli::cli_warn(
-        "No information on {.val year} found in the data. Will use
-            {.val {survey_year}} population data."
-      )
-    }
-
-    ## check if any survey countries are not in wpp
-    check_any_missing_countries(survey_countries, country_pop)
-
-    ## get demographic data closest to survey year
-    country_pop_year <- unique(country_pop[, year])
-    survey_year <- min(
-      country_pop_year[which.min(abs(survey_year - country_pop_year))]
-    )
-    survey_pop <- country_pop[year == survey_year][,
-      list(population = sum(population)),
-      by = "lower.age.limit"
-    ]
-  }
-
-  if (survey_representative) {
-    survey_pop <- participants[, list(population = .N), by = lower.age.limit]
-    survey_pop <- survey_pop[!is.na(lower.age.limit)]
-    if ("year" %in% colnames(participants)) {
-      survey_year <- participants[, median(year, na.rm = TRUE)]
-    } else {
-      survey_year <- NULL
-    }
+  survey_pop <- participants[, list(population = .N), by = lower.age.limit]
+  survey_pop <- survey_pop[!is.na(lower.age.limit)]
+  if ("year" %in% colnames(participants)) {
+    survey_year <- participants[, median(year, na.rm = TRUE)]
+  } else {
+    survey_year <- NULL
   }
 
   list(
@@ -618,7 +565,7 @@ survey_pop_year <- function(
   participants,
   age_limits
 ) {
-  if (is.null(survey_pop) || is.character(survey_pop)) {
+  if (is.null(survey_pop)) {
     survey_pop_info <- survey_pop_from_countries(
       survey_pop = survey_pop,
       countries = countries,
@@ -671,8 +618,88 @@ survey_pop_reference <- function(survey_pop, ...) {
 }
 
 #' @autoglobal
-adjust_survey_age_groups <- function(survey_pop, part_age_group_present, ...) {
+adjust_survey_age_groups <- function(
+  survey_pop,
+  part_age_group_present,
+  supplied_pop = TRUE,
+  call = rlang::caller_env(),
+  ...
+) {
   survey_pop_max <- max(survey_pop$upper.age.limit)
+
+  ## measure reach against the population's own bands, leaving out the zero
+  ## pad above them, and only when no requested limit splits one of those:
+  ## a split band is the more specific problem
+  oldest_group <- max(part_age_group_present)
+  pad <- survey_pop$lower.age.limit == oldest_group + 1 &
+    survey_pop$lower.age.limit == max(survey_pop$lower.age.limit) &
+    survey_pop$population == 0
+  own_limits <- survey_pop$lower.age.limit[!pad]
+  splits_own_band <- length(own_limits) > 0 &&
+    length(setdiff(
+      part_age_group_present[
+        part_age_group_present >= min(own_limits) &
+          part_age_group_present <= max(own_limits)
+      ],
+      own_limits
+    )) > 0
+  ## dropped NA rows and a lone pad band both leave nothing behind here
+  if (supplied_pop && length(own_limits) == 0) {
+    cli::cli_abort(
+      message = stats::setNames(
+        c(
+          "{.arg survey_pop} holds no population data.",
+          "Once rows without a population and the empty band above the oldest
+           age group are set aside, no row is left.",
+          "Supply population covering the age groups asked for."
+        ),
+        c("", "i", "i")
+      ),
+      call = call
+    )
+  }
+  ## a population starting higher leaves the youngest group holding only the
+  ## part of itself the population covers, silently
+  if (supplied_pop && min(own_limits) > min(part_age_group_present)) {
+    cli::cli_abort(
+      message = stats::setNames(
+        c(
+          "Population data must cover the youngest age group.",
+          "{.arg survey_pop} starts at {.val {min(own_limits)}}; the youngest
+           age group starts at {.val {min(part_age_group_present)}}.",
+          "Supply population from that age up, or ask for age groups within
+           the population's range."
+        ),
+        c("", "i", "i")
+      ),
+      call = call
+    )
+  }
+  if (supplied_pop && !splits_own_band) {
+    check_population_reach(
+      own_limits,
+      oldest_group = oldest_group,
+      headline = "Population data must reach the oldest age group.",
+      call = call
+    )
+  }
+  if (!supplied_pop) {
+    ## the participants are the population, so an empty age group has no row;
+    ## aggregate to the groups that do have one
+    part_age_group_present <- part_age_group_present[
+      part_age_group_present %in% own_limits
+    ]
+  }
+  if (supplied_pop && splits_own_band) {
+    ## this rebin is bound to stop; drop the pad so the error names only
+    ## limits that split a band the population holds
+    rebin_ages_numeric(
+      as.data.frame(survey_pop)[!pad, , drop = FALSE],
+      part_age_group_present,
+      ...
+    )
+  }
+
   survey_pop <- data.table(
     rebin_ages_numeric(survey_pop, part_age_group_present, ...)
   )
@@ -1145,10 +1172,10 @@ build_na_warning <- function(weighted_matrix) {
       warning_suggestion <- paste0(warning_suggestion, "setting ")
       suggested_options <- NULL
       if (anyNA(rownames(weighted_matrix))) {
-        suggested_options <- c(suggested_options, "'missing.participant.age'")
+        suggested_options <- c(suggested_options, "'missing_participant_age'")
       }
       if (anyNA(colnames(weighted_matrix))) {
-        suggested_options <- c(suggested_options, "'missing.contact.age'")
+        suggested_options <- c(suggested_options, "'missing_contact_age'")
       }
 
       warning_suggestion <-
@@ -1263,7 +1290,20 @@ split_mean_norm_contacts <- function(
 }
 
 #' @autoglobal
-matrix_per_capita <- function(weighted_matrix, survey_pop) {
+matrix_per_capita <- function(
+  weighted_matrix,
+  survey_pop,
+  call = rlang::caller_env()
+) {
+  ## a per-capita rate divides by the population of the contact's age group
+  check_population_covers_groups(
+    weighted_matrix = weighted_matrix,
+    survey_pop = survey_pop,
+    headline = "Per-capita contact rates need a population for every age
+                group.",
+    purpose = "per-capita rates",
+    call = call
+  )
   weighted_matrix_per_capita <- weighted_matrix /
     matrix(
       rep(survey_pop$population, nrow(survey_pop)),

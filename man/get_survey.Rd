@@ -8,12 +8,10 @@ files, or a survey variable}
 get_survey(survey, clear_cache = FALSE, ...)
 }
 \arguments{
-\item{survey}{a DOI or url to get the survey from, or a \code{\link[=survey]{survey()}} object.}
+\item{survey}{a DOI or url to get the survey from, or a survey object}
 
 \item{clear_cache}{logical, whether to clear the cache before downloading
-the survey; by default, the cache is not cleared and so multiple calls of
-this function to access the same survey will not result in repeated
-downloads.}
+the survey}
 
 \item{...}{currently unused}
 }
@@ -25,23 +23,10 @@ Always errors.
 
 \code{get_survey()} is defunct. Use \code{contactsurveys::download_survey()} and then
 \code{\link[=load_survey]{load_survey()}} instead.
-
-Downloads survey data, or extracts them from files, and returns a clean data
-set. If a survey URL is accessed multiple times, the data will be cached
-(unless \code{clear_cache} is set to \code{TRUE}) to avoid repeated downloads.
-
-If survey objects are used repeatedly the downloaded files can be saved and
-reloaded between sessions then survey objects can be saved/loaded using
-\code{\link[base:readRDS]{base::saveRDS()}} and \code{\link[base:readRDS]{base::readRDS()}}, or via the individual survey files
-that can be downloaded using \code{\link[=download_survey]{download_survey()}} and subsequently loaded
-using \code{\link[=load_survey]{load_survey()}}.
 }
 \examples{
 \dontrun{
-list_surveys()
 peru_doi <- "https://doi.org/10.5281/zenodo.1095664"
-peru_survey <- get_survey(peru_doi)
-## --> We now recommend:
 peru_survey <- contactsurveys::download_survey(peru_doi)
 peru_data <- load_survey(peru_survey)
 }

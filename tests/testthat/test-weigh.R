@@ -248,14 +248,31 @@ test_that("weigh_by_age() errors when part_age missing", {
 })
 ## nolint end: nonportable_path_linter
 
-test_that("weigh() with population data frame is deprecated", {
+test_that("weigh() names the missing key column for other data frames", {
+  ## a mistyped key column is not a population table, and should not be
+  ## diagnosed as one
+  expect_error(
+    weigh(
+      polymod_grouped,
+      "age.group",
+      target = data.frame(
+        agegroup = c("a", "b"),
+        p = c(1, 2),
+        stringsAsFactors = FALSE
+      )
+    ),
+    "must have a column matching"
+  )
+})
+
+test_that("weigh() with population data frame is defunct", {
   uk_pop <- data.frame(
     lower.age.limit = 0:99,
     population = rep(500000L, 100)
   )
-  lifecycle::expect_deprecated(
+  expect_error(
     weigh(polymod_grouped, "age.group", target = uk_pop),
-    "population data frame"
+    class = "lifecycle_error_deprecated"
   )
 })
 

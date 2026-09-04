@@ -8,16 +8,26 @@
 #'   given as country names or 2-letter (ISO Alpha-2) country
 #'   codes.
 #' @param survey_pop survey population -- a data frame with columns
-#'   `lower.age.limit` and `population`. Passing `NULL` (the default)
-#'   or a character vector of country names triggers the
-#'   `r lifecycle::badge("deprecated")` implicit lookup via [wpp_age()]
-#'   when `symmetric`, `split`, `per_capita`, `weigh_age`, or
-#'   `return_demography` is `TRUE`; supply an explicit data frame
-#'   (e.g. constructed from the `wpp2024` package or another source)
-#'   instead. If the population is coarser than the requested age groups it
-#'   is linearly interpolated to finer groups, but this is deprecated (it
-#'   warns and will error in a future release); supply population at least as
-#'   fine as `age_limits`.
+#'   `lower.age.limit` and `population`. Required when `symmetric`, `split`,
+#'   `per_capita` or `return_demography` is `TRUE`, unless the survey covers a
+#'   single population with no country information, in which case the
+#'   participants themselves are used. Passing a character vector of country
+#'   names is `r lifecycle::badge("defunct")`; construct the data frame
+#'   yourself (e.g. from the `wpp2024` package or another source).
+#'
+#'   The population must cover every age group asked for: at least as fine as
+#'   `age_limits`, reaching at least as high, and starting no higher than the
+#'   youngest group. Splitting one of its bands to meet a finer or higher limit
+#'   means assuming how people are distributed within that band, and a group it
+#'   has no band for has no size at all.
+#'   `weigh_age = TRUE` is stricter still: it always needs a population, in
+#'   single-year bands, because `contact_matrix()` builds its weighting
+#'   reference at single-year resolution. (The pipeline's [weigh_by_age()]
+#'   weights at the population's own bands, so it has no such requirement.)
+#'
+#'   Splitting coarser bands is a demographic modelling step and is out of
+#'   scope for this package; `vignette("socialmixr")` shows how to do it with a
+#'   package built for it.
 #' @param age_limits lower limits of the age groups over which to
 #'   construct the matrix. If NULL (default), age limits are
 #'   inferred from participant and contact ages.
@@ -103,10 +113,11 @@
 #'   per capita (default is FALSE and not possible if 'counts=TRUE'
 #'   or 'split=TRUE').
 # nolint start: line_length_linter.
-#' @param survey.pop,age.limits,sample.participants,estimated.participant.age,estimated.contact.age,missing.participant.age,missing.contact.age,weigh.dayofweek,weigh.age,weight.threshold,symmetric.norm.threshold,sample.all.age.groups,sample.participants.max.tries,return.part.weights,return.demography,per.capita `r lifecycle::badge("deprecated")` Use the underscore-separated versions of these arguments instead.
+#' @param survey.pop,age.limits,sample.participants,estimated.participant.age,estimated.contact.age,missing.participant.age,missing.contact.age,weigh.dayofweek,weigh.age,weight.threshold,symmetric.norm.threshold,sample.all.age.groups,sample.participants.max.tries,return.part.weights,return.demography,per.capita `r lifecycle::badge("defunct")` Use the underscore-separated versions of these arguments instead.
 # nolint end
-#' @param ... further arguments to pass to [get_survey()]
-#'   and [check()] (especially column names).
+#' @param ... passed on when the population is aggregated. The population is
+#'   read by its `lower.age.limit` and `population` columns throughout, so
+#'   there is nothing here for a caller to set.
 #' @return a contact matrix, and the underlying demography of the
 #'   surveyed population
 #' @importFrom stats xtabs runif median
@@ -283,7 +294,7 @@ contact_matrix <- function(
   ## read arguments and check --------------------------------------------------
   survey_type <- c("participants", "contacts")
   dot.args <- list(...)
-  check_arg_dots_in(dot.args, check.contact_survey, pop_age)
+  check_arg_dots_in(dot.args, check.contact_survey, rebin_ages_numeric)
   estimated_participant_age <- match.arg(estimated_participant_age)
   estimated_contact_age <- match.arg(estimated_contact_age)
   missing_participant_age <- match.arg(missing_participant_age)
@@ -292,7 +303,7 @@ contact_matrix <- function(
   if (missing_contact_age == "sample") {
     lifecycle::deprecate_stop(
       "0.5.0",
-      "contact_matrix(missing_contact_age = 'sample')",
+      "contact_matrix(missing_contact_age = 'cannot be \"sample\"')",
       details = paste(
         "Use 'remove' to exclude contacts with missing ages, 'keep' to retain",
         "them as a separate age group, or 'ignore' to drop only those contacts."
@@ -347,20 +358,39 @@ contact_matrix <- function(
     per_capita
   )
 
+  supplied_pop <- !is.null(survey_pop)
   if (need_survey_pop) {
-    ## warn if population data will be looked up automatically -----------------
+    ## population data is no longer looked up automatically -------------------
     has_country_info <- !is.null(countries) ||
       "country" %in% colnames(survey$participants)
-    if ((is.null(survey_pop) || is.character(survey_pop)) && has_country_info) {
-      lifecycle::deprecate_warn(
+    if (is.character(survey_pop) || (is.null(survey_pop) && has_country_info)) {
+      lifecycle::deprecate_stop(
         when = "0.6.0",
         what = I("Automatic country population lookup in `contact_matrix()`"),
         details = paste(
           "Pass `survey_pop` explicitly when `symmetric`, `split`,",
-          "`per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g.",
-          "as a data frame with columns `lower.age.limit` and `population`",
-          "constructed from the wpp2024 package or another source. The",
-          "implicit lookup will error in a future release."
+          "`per_capita`, `weigh_age`, or `return_demography` is TRUE, as a",
+          "data frame with columns `lower.age.limit` and `population`",
+          "constructed from the wpp2024 package or another source."
+        )
+      )
+    }
+    ## catch an empty population before min() and max() warn about nothing
+    supplied_values <- if (supplied_pop && is.data.frame(survey_pop)) {
+      as.data.frame(survey_pop)[["population"]]
+    }
+    has_no_rows <- supplied_pop && nrow(as.data.frame(survey_pop)) == 0
+    has_no_values <- !is.null(supplied_values) && all(is.na(supplied_values))
+    if (has_no_rows || has_no_values) {
+      cli::cli_abort(
+        message = stats::setNames(
+          c(
+            "{.arg survey_pop} holds no population data.",
+            "No row of it holds a population.",
+            "Check that it has {.code lower.age.limit} and {.code population}
+             columns with values in them."
+          ),
+          c("", "i", "i")
         )
       )
     }
@@ -381,20 +411,26 @@ contact_matrix <- function(
       age_breaks = part.age.group.present
     )
 
-    ## interpolate the population to single-year ages for age weighting, before
-    ## `survey_pop` is overwritten below (this interpolation is deprecated)
+    ## age weighting works at single-year resolution, so it needs the
+    ## population in single-year bands
     if (weigh_age) {
+      check_single_year_population(
+        survey_pop,
+        supplied = supplied_pop,
+        pad_limit = max(part.age.group.present) + 1
+      )
       weigh_pop <- survey_pop_reference(survey_pop, ...)
       weigh_pop[,
         age := limits_to_age_groups(lower.age.limit, notation = "brackets")
       ]
     }
 
-    ## adjust age groups by interpolating, in case they don't match between
-    ## demographic and survey data
+    ## aggregate the population into the matrix's age groups; a coarser one
+    ## errors
     survey_pop <- adjust_survey_age_groups(
       survey_pop = survey_pop,
       part_age_group_present = part.age.group.present,
+      supplied_pop = supplied_pop,
       ...
     )
   }
@@ -470,6 +506,15 @@ contact_matrix <- function(
   matrix_not_scalar <- prod(dim(as.matrix(weighted.matrix))) > 1
   na_in_weighted_mtx <- na_in_weighted_matrix(weighted.matrix)
   if (symmetric && matrix_not_scalar && !na_in_weighted_mtx) {
+    ## symmetrising indexes the population by position, so it needs a row for
+    ## every age group
+    check_population_covers_groups(
+      weighted_matrix = weighted.matrix,
+      survey_pop = survey_pop,
+      headline = "Symmetrising the matrix needs a population for every age
+                  group.",
+      purpose = "a symmetric matrix"
+    )
     weighted.matrix <- normalise_weighted_matrix(
       survey_pop = survey_pop,
       weighted_matrix = weighted.matrix,

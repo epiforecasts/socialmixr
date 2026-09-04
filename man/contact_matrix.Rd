@@ -56,16 +56,26 @@ given as country names or 2-letter (ISO Alpha-2) country
 codes.}
 
 \item{survey_pop}{survey population -- a data frame with columns
-\code{lower.age.limit} and \code{population}. Passing \code{NULL} (the default)
-or a character vector of country names triggers the
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} implicit lookup via \code{\link[=wpp_age]{wpp_age()}}
-when \code{symmetric}, \code{split}, \code{per_capita}, \code{weigh_age}, or
-\code{return_demography} is \code{TRUE}; supply an explicit data frame
-(e.g. constructed from the \code{wpp2024} package or another source)
-instead. If the population is coarser than the requested age groups it
-is linearly interpolated to finer groups, but this is deprecated (it
-warns and will error in a future release); supply population at least as
-fine as \code{age_limits}.}
+\code{lower.age.limit} and \code{population}. Required when \code{symmetric}, \code{split},
+\code{per_capita} or \code{return_demography} is \code{TRUE}, unless the survey covers a
+single population with no country information, in which case the
+participants themselves are used. Passing a character vector of country
+names is \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}; construct the data frame
+yourself (e.g. from the \code{wpp2024} package or another source).
+
+The population must cover every age group asked for: at least as fine as
+\code{age_limits}, reaching at least as high, and starting no higher than the
+youngest group. Splitting one of its bands to meet a finer or higher limit
+means assuming how people are distributed within that band, and a group it
+has no band for has no size at all.
+\code{weigh_age = TRUE} is stricter still: it always needs a population, in
+single-year bands, because \code{contact_matrix()} builds its weighting
+reference at single-year resolution. (The pipeline's \code{\link[=weigh_by_age]{weigh_by_age()}}
+weights at the population's own bands, so it has no such requirement.)
+
+Splitting coarser bands is a demographic modelling step and is out of
+scope for this package; \code{vignette("socialmixr")} shows how to do it with a
+package built for it.}
 
 \item{age_limits}{lower limits of the age groups over which to
 construct the matrix. If NULL (default), age limits are
@@ -171,10 +181,11 @@ parameters).}
 per capita (default is FALSE and not possible if 'counts=TRUE'
 or 'split=TRUE').}
 
-\item{...}{further arguments to pass to \code{\link[=get_survey]{get_survey()}}
-and \code{\link[=check]{check()}} (especially column names).}
+\item{...}{passed on when the population is aggregated. The population is
+read by its \code{lower.age.limit} and \code{population} columns throughout, so
+there is nothing here for a caller to set.}
 
-\item{survey.pop, age.limits, sample.participants, estimated.participant.age, estimated.contact.age, missing.participant.age, missing.contact.age, weigh.dayofweek, weigh.age, weight.threshold, symmetric.norm.threshold, sample.all.age.groups, sample.participants.max.tries, return.part.weights, return.demography, per.capita}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use the underscore-separated versions of these arguments instead.}
+\item{survey.pop, age.limits, sample.participants, estimated.participant.age, estimated.contact.age, missing.participant.age, missing.contact.age, weigh.dayofweek, weigh.age, weight.threshold, symmetric.norm.threshold, sample.all.age.groups, sample.participants.max.tries, return.part.weights, return.demography, per.capita}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}} Use the underscore-separated versions of these arguments instead.}
 }
 \value{
 a contact matrix, and the underlying demography of the

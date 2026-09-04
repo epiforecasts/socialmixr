@@ -40,7 +40,7 @@ normalise_country_names <- function(countries) {
 #' @param participant_age_column the column in `x$participants`
 #'   containing participants' age
 #' @param ... ignored
-#' @param participant.age.column `r lifecycle::badge("deprecated")`
+#' @param participant.age.column `r lifecycle::badge("defunct")`
 #'   Use `participant_age_column` instead.
 #' @importFrom data.table fcase
 #' @importFrom countrycode countrycode
