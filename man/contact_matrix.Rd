@@ -188,13 +188,17 @@ there is nothing here for a caller to set.}
 \item{survey.pop, age.limits, sample.participants, estimated.participant.age, estimated.contact.age, missing.participant.age, missing.contact.age, weigh.dayofweek, weigh.age, weight.threshold, symmetric.norm.threshold, sample.all.age.groups, sample.participants.max.tries, return.part.weights, return.demography, per.capita}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}} Use the underscore-separated versions of these arguments instead.}
 }
 \value{
-a list. It always holds \code{matrix} and \code{participants}, the participant
-counts by age group; \code{matrix} is the contact matrix, or the assortativity
-matrix when \code{split = TRUE}. It also holds \code{demography} under the
-conditions above; \code{mean.contacts}, \code{normalisation} and \code{contacts} when
-\code{split = TRUE}, \code{counts} is not and no age group is missing;
-\code{matrix.per.capita} when \code{per_capita = TRUE} and neither \code{counts} nor
-\code{split} is; and \code{participants.weights} when \code{return_part_weights = TRUE}.
+a list. It always holds \code{matrix}, the contact matrix, and
+\code{participants}, the participant counts by age group. It also holds
+\code{demography} under the conditions above; \code{matrix.per.capita} when
+\code{per_capita = TRUE} and neither \code{counts} nor \code{split} is; and
+\code{participants.weights} when \code{return_part_weights = TRUE}.
+
+\code{split = TRUE} splits the matrix when \code{counts} is not set and every age
+group has participants. The split adds \code{mean.contacts}, \code{normalisation}
+and \code{contacts}, and \code{matrix} then holds the assortativity matrix. When
+those conditions do not hold \code{contact_matrix()} warns, skips the split,
+and \code{matrix} holds the contact matrix as usual.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
@@ -205,8 +209,8 @@ with participant counts by age group. The demography comes too when any of
 \code{return_demography = TRUE}; setting \code{return_demography = FALSE} suppresses
 it even then.
 
-\code{contact_matrix()} is superseded: it is still maintained and existing code
-keeps working, but new code is better written as the pipeline it wraps.
+\code{contact_matrix()} is superseded: it is still maintained and is not going
+away, but new code is better written as the pipeline it wraps.
 The pipeline composes the same steps, and can group by more than age:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{survey |>

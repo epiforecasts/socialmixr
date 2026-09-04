@@ -9,8 +9,8 @@
 #' `return_demography = TRUE`; setting `return_demography = FALSE` suppresses
 #' it even then.
 #'
-#' `contact_matrix()` is superseded: it is still maintained and existing code
-#' keeps working, but new code is better written as the pipeline it wraps.
+#' `contact_matrix()` is superseded: it is still maintained and is not going
+#' away, but new code is better written as the pipeline it wraps.
 #' The pipeline composes the same steps, and can group by more than age:
 #'
 #' ```r
@@ -148,13 +148,17 @@
 #' @param ... passed on when the population is aggregated. The population is
 #'   read by its `lower.age.limit` and `population` columns throughout, so
 #'   there is nothing here for a caller to set.
-#' @return a list. It always holds `matrix` and `participants`, the participant
-#'   counts by age group; `matrix` is the contact matrix, or the assortativity
-#'   matrix when `split = TRUE`. It also holds `demography` under the
-#'   conditions above; `mean.contacts`, `normalisation` and `contacts` when
-#'   `split = TRUE`, `counts` is not and no age group is missing;
-#'   `matrix.per.capita` when `per_capita = TRUE` and neither `counts` nor
-#'   `split` is; and `participants.weights` when `return_part_weights = TRUE`.
+#' @return a list. It always holds `matrix`, the contact matrix, and
+#'   `participants`, the participant counts by age group. It also holds
+#'   `demography` under the conditions above; `matrix.per.capita` when
+#'   `per_capita = TRUE` and neither `counts` nor `split` is; and
+#'   `participants.weights` when `return_part_weights = TRUE`.
+#'
+#'   `split = TRUE` splits the matrix when `counts` is not set and every age
+#'   group has participants. The split adds `mean.contacts`, `normalisation`
+#'   and `contacts`, and `matrix` then holds the assortativity matrix. When
+#'   those conditions do not hold `contact_matrix()` warns, skips the split,
+#'   and `matrix` holds the contact matrix as usual.
 #' @importFrom stats xtabs runif median
 #' @importFrom utils data
 #' @importFrom countrycode countrycode
