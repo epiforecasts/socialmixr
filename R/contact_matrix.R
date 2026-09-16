@@ -155,13 +155,13 @@
 #'   `participants.weights` when `return_part_weights = TRUE`.
 #'
 #'   `split = TRUE` splits the matrix when `counts` is not set and the matrix
-#'   has no missing entry and no missing group label. A group that no
-#'   participant falls into gives a row of `NA`, and
-#'   `missing_participant_age = "keep"` or `missing_contact_age = "keep"` adds
-#'   a group labelled `NA`; either one skips the split. The split adds
-#'   `mean.contacts`, `normalisation` and `contacts`, and `matrix` then holds
-#'   the assortativity matrix. When it is skipped `contact_matrix()` warns and
-#'   `matrix` holds the contact matrix as usual.
+#'   has no missing entry and no missing group label. Most often a missing
+#'   entry comes from an age group no participant falls into, and a missing
+#'   label from keeping participants or contacts whose age is unknown, but any
+#'   missing value has the same effect. The split adds `mean.contacts`,
+#'   `normalisation` and `contacts`, and `matrix` then holds the assortativity
+#'   matrix. When it is skipped `contact_matrix()` warns and `matrix` holds the
+#'   contact matrix as usual.
 #' @importFrom stats xtabs runif median
 #' @importFrom utils data
 #' @importFrom countrycode countrycode

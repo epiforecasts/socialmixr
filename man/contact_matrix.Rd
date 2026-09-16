@@ -195,13 +195,13 @@ a list. It always holds \code{matrix}, the contact matrix, and
 \code{participants.weights} when \code{return_part_weights = TRUE}.
 
 \code{split = TRUE} splits the matrix when \code{counts} is not set and the matrix
-has no missing entry and no missing group label. A group that no
-participant falls into gives a row of \code{NA}, and
-\code{missing_participant_age = "keep"} or \code{missing_contact_age = "keep"} adds
-a group labelled \code{NA}; either one skips the split. The split adds
-\code{mean.contacts}, \code{normalisation} and \code{contacts}, and \code{matrix} then holds
-the assortativity matrix. When it is skipped \code{contact_matrix()} warns and
-\code{matrix} holds the contact matrix as usual.
+has no missing entry and no missing group label. Most often a missing
+entry comes from an age group no participant falls into, and a missing
+label from keeping participants or contacts whose age is unknown, but any
+missing value has the same effect. The split adds \code{mean.contacts},
+\code{normalisation} and \code{contacts}, and \code{matrix} then holds the assortativity
+matrix. When it is skipped \code{contact_matrix()} warns and \code{matrix} holds the
+contact matrix as usual.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
