@@ -2,7 +2,8 @@
 ## exactly, so one table serves every test that needs a population.
 ##
 ## The profile is the UK age structure in 2005 (UN World Population Prospects,
-## five-year bands spread evenly), so age weighting acts on a realistic shape.
+## each five-year total spread evenly across its years), so age weighting acts
+## on a realistic shape.
 test_population <- function() {
   five_year <- c(
     3453670, 3558887, 3826567, 3960166, 3906577, 3755132, 4169859, 4694734,
