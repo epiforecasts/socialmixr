@@ -686,7 +686,8 @@ adjust_survey_age_groups <- function(
   }
   if (!supplied_pop) {
     ## the participants are the population, so an empty age group has no row;
-    ## aggregate to the groups that do have one
+    ## aggregate to the groups that do have one, since the gap would otherwise
+    ## count as a limit splitting a band
     part_age_group_present <- part_age_group_present[
       part_age_group_present %in% own_limits
     ]
