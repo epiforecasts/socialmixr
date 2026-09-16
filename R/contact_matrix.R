@@ -154,11 +154,14 @@
 #'   `per_capita = TRUE` and neither `counts` nor `split` is; and
 #'   `participants.weights` when `return_part_weights = TRUE`.
 #'
-#'   `split = TRUE` splits the matrix when `counts` is not set and every age
-#'   group has participants. The split adds `mean.contacts`, `normalisation`
-#'   and `contacts`, and `matrix` then holds the assortativity matrix. When
-#'   those conditions do not hold `contact_matrix()` warns, skips the split,
-#'   and `matrix` holds the contact matrix as usual.
+#'   `split = TRUE` splits the matrix when `counts` is not set and the matrix
+#'   has no missing entry and no missing group label. A group that no
+#'   participant falls into gives a row of `NA`, and
+#'   `missing_participant_age = "keep"` or `missing_contact_age = "keep"` adds
+#'   a group labelled `NA`; either one skips the split. The split adds
+#'   `mean.contacts`, `normalisation` and `contacts`, and `matrix` then holds
+#'   the assortativity matrix. When it is skipped `contact_matrix()` warns and
+#'   `matrix` holds the contact matrix as usual.
 #' @importFrom stats xtabs runif median
 #' @importFrom utils data
 #' @importFrom countrycode countrycode
