@@ -59,14 +59,9 @@ check_single_year_population <- function(
           "Age weighting needs population data in single-year age bands.",
           "{.fn contact_matrix} builds its weighting reference at single-year
            resolution, so {.code weigh_age = TRUE} needs {.arg survey_pop} in
-           single-year bands.",
-          "Without one the population is the participants' own age
-           distribution at the matrix's age groups, so it is not an independent
-           reference: at single-year age groups weighting to it changes
-           nothing, and at coarser ones it would have to be split to single
-           years."
+           single-year bands."
         ),
-        c("", "i", "i")
+        c("", "i")
       ),
       call = call
     )
@@ -87,13 +82,10 @@ check_single_year_population <- function(
           "Age weighting needs population data in single-year age bands.",
           "{.fn contact_matrix} builds its weighting reference at single-year
            resolution; {.arg survey_pop} has coarser bands.",
-          "In the {.fn compute_matrix} pipeline, {.fn weigh_by_age} weights at
-           the population's own bands; it takes {.arg pop} with an {.code age}
-           column of group labels rather than {.code lower.age.limit}.",
-          "To split the bands instead, see {.code vignette(\"socialmixr\")};
-           that means assuming how people are distributed within them."
+          "To split the coarse bands, see {.code vignette(\"socialmixr\")}
+           for packages that can do this."
         ),
-        c("", "i", "i", "i")
+        c("", "i", "i")
       ),
       call = call
     )
