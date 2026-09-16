@@ -658,8 +658,8 @@ adjust_survey_age_groups <- function(
       call = call
     )
   }
-  ## a population starting above the youngest age group would size that group
-  ## from only the part of it the population covers, with nothing to say so
+  ## a population starting above the youngest age group's lower limit leaves
+  ## that group missing everyone below where it starts, with nothing to say so
   if (supplied_pop && min(own_limits) > min(part_age_group_present)) {
     cli::cli_abort(
       message = stats::setNames(
