@@ -89,14 +89,14 @@
       $test2$matrix
                contact.age.group
       age.group     [0,5)   [5,Inf)
-        [0,5)   1.5429448  7.027931
-        [5,Inf) 0.3673316 13.474102
+        [0,5)   1.5429448  6.668339
+        [5,Inf) 0.4001003 13.474102
       
       $test2$demography
          age.group population proportion  year
             <char>      <num>      <num> <int>
-      1:     [0,5)   13498647 0.04967121  2005
-      2:   [5,Inf)  258261321 0.95032879  2005
+      1:     [0,5)      3e+06 0.05660377    NA
+      2:   [5,Inf)      5e+07 0.94339623    NA
       
       $test2$participants
          age.group participants proportion
@@ -107,27 +107,27 @@
       
       $test3
       $test3$mean.contacts
-      [1] 3.887154
+      [1] 3.863827
       
       $test3$normalisation
-      [1] 1.021167
+      [1] 1.032485
       
       $test3$contacts
-      [1] 1.0973166 1.4632281 0.9342813
+      [1] 1.175418 1.616747 0.917232
       
       $test3$matrix
                 contact.age.group
       age.group     [0,5)   [5,10)  [10,Inf)
-        [0,5)    1.769367 1.836114 0.8815070
-        [5,10)   1.376954 2.441012 0.8642004
-        [10,Inf) 1.035333 1.353471 0.9708081
+        [0,5)    1.927558 2.051420 0.8812613
+        [5,10)   1.491436 2.695547 0.8687810
+        [10,Inf) 1.129322 1.531346 0.9603600
       
       $test3$demography
          age.group population proportion  year
             <char>      <num>      <num> <int>
-      1:     [0,5)    1271578 0.06282841  2005
-      2:    [5,10)    1329536 0.06569210  2005
-      3:  [10,Inf)   17637787 0.87147948  2005
+      1:     [0,5)      3e+06 0.05357143    NA
+      2:    [5,10)      3e+06 0.05357143    NA
+      3:  [10,Inf)      5e+07 0.89285714    NA
       
       $test3$participants
          age.group participants proportion
@@ -144,7 +144,7 @@
       contact_matrix(survey = "bogus")
     Condition
       Error in `contact_matrix()`:
-      ! `survey` must be a survey object (created using `survey()` or `get_survey()`).
+      ! `survey` must be a survey object (created using `as_contact_survey()` or `load_survey()`).
 
 # error is thrown if age limits are non-numeric
 
@@ -171,8 +171,8 @@
 
 # warning is thrown if missing data exist
 
-    Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider setting 'missing_contact_age'.
 
 # error is thrown if an unknown argument is passed
 
@@ -199,83 +199,54 @@
       Error in `filter_countries()`:
       ! No participants left after selecting countries: "Romania"
 
-# warning if population needed but no 'year' column
-
-    Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
-
 # warning if day of week weigh requested but not present
 
     Column "dayofweek" not found in participant data.
     i Returning `survey` unchanged.
 
-# warning is thrown if country has no survey population
-
-    Code
-      contact_matrix(survey = polymod5, symmetric = TRUE)
-    Condition
-      Warning:
-      Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-      i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
-      Warning:
-      `wpp_age()` was deprecated in socialmixr 0.6.0.
-      Pass population data directly via the {.arg survey_pop} argument instead.
-      i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
-      Error in `survey_pop_from_countries()`:
-      ! Could not find population data for: "Zamonia".
-      i Pass population data directly via the `survey_pop` argument.
-
 # good suggestions are made
 
-    Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider adjusting the age limits.
 
 ---
 
-    Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider setting 'missing_participant_age'.
 
 ---
 
-    Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
+    `symmetric = TRUE` does not work with missing data; will not make matrix symmetric.
+    i  Consider setting 'missing_participant_age' and 'missing_contact_age'.
 
 # nonsensical operations are warned about
 
-    Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
+    `split = TRUE` does not make sense with `counts = TRUE`; will not split the contact matrix.
 
 ---
 
     Code
       contact_matrix(survey = polymod, counts = TRUE, symmetric = TRUE, age_limits = c(
-        0, 5))
+        0, 5), survey_pop = test_population())
     Condition
-      Warning:
-      Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-      i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
-      Warning:
-      `wpp_age()` was deprecated in socialmixr 0.6.0.
-      Pass population data directly via the {.arg survey_pop} argument instead.
-      i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
       Warning in `contact_matrix()`:
       `symmetric = TRUE` does not make sense with `counts = TRUE`; will not make matrix symmetric.
       Warning in `normalise_weighted_matrix()`:
       Large differences in the size of the sub-populations with the current age breaks are likely to result in artefacts after making the matrix symmetric.
       ! Please reconsider the age breaks to obtain more equally sized sub-populations.
-      i Normalization factors: [0.2 and 5.1]
+      i Normalization factors: [0.2 and 4.5]
     Output
       $matrix
                contact.age.group
       age.group    [0,5)  [5,Inf)
-        [0,5)   1463.000 26710.24
-        [5,Inf) 1396.075 87824.00
+        [0,5)   1463.000 23339.15
+        [5,Inf) 1418.289 87824.00
       
       $demography
          age.group population proportion  year
             <char>      <num>      <num> <int>
-      1:     [0,5)   13498647 0.04967121  2005
-      2:   [5,Inf)  258261321 0.95032879  2005
+      1:     [0,5)    3453670 0.05728738    NA
+      2:   [5,Inf)   56833081 0.94271262    NA
       
       $participants
          age.group participants proportion
@@ -286,30 +257,27 @@
 
 ---
 
-    Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
+    `split = TRUE` does not work with missing data; will not split the contact matrix.
+    i  Consider setting 'missing_participant_age'.
 
 # warning if survey is assumed to be representative
 
-    No `survey.pop` or `countries` given, and no `country` column found in the data.
+    No `survey_pop` or `countries` given, and no `country` column found in the data.
     i I don't know which population this is from (assuming the survey is representative).
 
-# user-defined reference populations with open age groups
+# user-defined reference populations matching the age limits
 
     Code
       contact_matrix(polymod_nocountry, age_limits = c(0, 18, 60), symmetric = TRUE,
       survey_pop = "dummy")
     Condition
-      Warning:
-      `wpp_age()` was deprecated in socialmixr 0.6.0.
-      Pass population data directly via the {.arg survey_pop} argument instead.
-      i The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from GitHub for more recent data.
-      Error in `survey_pop_from_countries()`:
-      ! Could not find population data for: "dummy".
-      i Pass population data directly via the `survey_pop` argument.
+      Error:
+      ! Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0 and is now defunct.
+      i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source.
 
 # symmetric matrices with large norm weights warn
 
-    Automatic country population lookup in `contact_matrix()` was deprecated in socialmixr 0.6.0.
-    i Pass `survey_pop` explicitly when `symmetric`, `split`, `per_capita`, `weigh_age`, or `return_demography` is TRUE, e.g. as a data frame with columns `lower.age.limit` and `population` constructed from the wpp2024 package or another source. The implicit lookup will error in a future release.
+    Large differences in the size of the sub-populations with the current age breaks are likely to result in artefacts after making the matrix symmetric.
+    ! Please reconsider the age breaks to obtain more equally sized sub-populations.
+    i Normalization factors: [0.5 and 2.2]
 

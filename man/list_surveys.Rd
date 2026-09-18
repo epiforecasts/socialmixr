@@ -8,9 +8,7 @@ list_surveys(clear_cache = FALSE)
 }
 \arguments{
 \item{clear_cache}{logical, whether to clear the cache before downloading
-the survey; by default, the cache is not cleared and so multiple calls of
-this function to access the same survey will not result in repeated
-downloads.}
+the survey}
 }
 \value{
 Always errors.
@@ -21,7 +19,6 @@ Always errors.
 \code{list_surveys()} is defunct. Use \code{contactsurveys::list_surveys()} instead.
 }
 \examples{
-# we recommend using the contactsurveys package now for listing surveys.
 \dontrun{
 contactsurveys::list_surveys()
 }

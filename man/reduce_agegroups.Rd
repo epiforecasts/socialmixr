@@ -2,7 +2,7 @@
 % Please edit documentation in R/reduce_age_groups.R
 \name{reduce_agegroups}
 \alias{reduce_agegroups}
-\title{Reduce the number of age groups (deprecated)}
+\title{Reduce the number of age groups (defunct)}
 \usage{
 reduce_agegroups(x, limits)
 }
@@ -12,10 +12,10 @@ reduce_agegroups(x, limits)
 \item{limits}{new limits}
 }
 \value{
-vector with the new age groups
+Always errors.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
 
 \code{reduce_agegroups()} was renamed to \code{\link[=reduce_age_groups]{reduce_age_groups()}} for naming
 consistency.

@@ -28,8 +28,6 @@ utils::globalVariables(c(
   "part_age", # <adjust_ppt_age_group_breaks>
   "age.group", # <adjust_ppt_age_group_breaks>
   "age.group", # <age_group_labels>
-  "country", # <get_survey_countries>
-  "population", # <survey_pop_from_countries>
   "lower.age.limit", # <survey_pop_from_countries>
   "lower.age.limit", # <add_survey_upper_age_limit>
   "population", # <add_survey_upper_age_limit>
@@ -78,20 +76,9 @@ utils::globalVariables(c(
   "population", # <contact_matrix>
   "proportion", # <contact_matrix>
   "participants", # <contact_matrix>
-  "file_name", # <download_survey>
-  "common_doi", # <.list_surveys>
-  "doi.nb", # <.list_surveys>
-  "identifier.1", # <.list_surveys>
-  "title", # <.list_surveys>
-  "creator", # <.list_surveys>
-  "identifier.2", # <.list_surveys>
   ".idx", # <joint_population_vector>
-  "..original.lower.age.limit", # <rebin_ages_numeric>
-  "..segment", # <rebin_ages_numeric>
-  "..upper.age.limit", # <rebin_ages_numeric>
   "population", # <align_ages>
   "part_id", # <[.contact_survey>
-  "population", # <survey_country_population>
   "weight", # <weigh>
   "weight", # <weigh_by_age>
   "lower.age.limit", # <weigh_by_age>
@@ -100,13 +87,5 @@ utils::globalVariables(c(
   "weight", # <weigh_join>
   "weight", # <weigh_grouped>
   "weight", # <weigh_named>
-  "sex", # <wpp_age>
-  "country", # <wpp_age>
-  "name", # <wpp_age>
-  "country_code", # <wpp_age>
-  "lower.age.limit", # <wpp_age>
-  "age", # <wpp_age>
-  "female", # <wpp_age>
-  "male", # <wpp_age>
   NULL
 ))

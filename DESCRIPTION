@@ -25,18 +25,12 @@ Depends:
 Imports:
     checkmate,
     countrycode,
-    curl,
     data.table,
     grDevices,
-    httr,
     jsonlite,
     lifecycle,
     lubridate,
-    memoise,
     purrr,
-    oai,
-    wpp2017,
-    xml2,
     cli,
     rlang,
     methods

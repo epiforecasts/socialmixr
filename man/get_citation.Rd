@@ -18,11 +18,9 @@ Always errors.
 \code{get_citation()} is defunct. Use \code{contactsurveys::get_citation()} instead.
 }
 \examples{
-# we recommend using the contactsurveys package for get_citation()
 \dontrun{
 data(polymod)
 citation <- contactsurveys::get_citation(polymod)
 print(citation)
-print(citation, style = "bibtex")
 }
 }

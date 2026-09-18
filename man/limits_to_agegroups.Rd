@@ -2,7 +2,7 @@
 % Please edit documentation in R/limits_to_age_groups.R
 \name{limits_to_agegroups}
 \alias{limits_to_agegroups}
-\title{Convert lower age limits to age groups (deprecated)}
+\title{Convert lower age limits to age groups (defunct)}
 \usage{
 limits_to_agegroups(
   x,
@@ -19,10 +19,10 @@ limits_to_agegroups(
 notation, e.g. 0-4)}
 }
 \value{
-Age groups as specified in \code{notation}
+Always errors.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
 
 \code{limits_to_agegroups()} was renamed to \code{\link[=limits_to_age_groups]{limits_to_age_groups()}} for naming
 consistency.

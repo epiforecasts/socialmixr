@@ -3,10 +3,9 @@
 #' @description
 #' Internal numeric coarsener operating on `lower.age.limit` columns: rebins a
 #' population table to the age groups defined by `age_limits`, summing when
-#' coarser. Requesting age groups finer than the population data is deprecated:
-#' it warns and linearly interpolates, and will error in a future release.
-#' Wrapped by [rebin_ages()] (which errors on finer requests) and used by
-#' [pop_age()] and `contact_matrix()`'s population adjustment.
+#' coarser. Requesting age groups finer than the population data is defunct and
+#' errors. Wrapped by [rebin_ages()] and used by `contact_matrix()`'s population
+#' adjustment.
 #'
 #' @return data frame of age-specific population data
 #' @importFrom data.table data.table setkeyv
@@ -57,42 +56,28 @@ rebin_ages_numeric <- function(
     pop[[pop_age_column]]
   )
   if (length(finer_limits) > 0) {
-    lifecycle::deprecate_warn(
+    lifecycle::deprecate_stop(
       "0.7.0",
       I("Interpolating population data to age groups finer than the data"),
-      details = "Supply population at least as fine as the requested age
-                 groups; interpolation will error in a future release."
-    )
-    ..original.upper.age.limit <- NULL
-    pop <- pop[,
-      ..original.upper.age.limit := c(pop[[pop_age_column]][-1], NA)
-    ]
-    pop <- pop[, ..original.lower.age.limit := get(pop_age_column)]
-    all_ages <- data.frame(age_limits[
-      age_limits <= max(pop[[pop_age_column]])
-    ])
-    colnames(all_ages) <- pop_age_column
-    pop <- merge(pop, all_ages, all = TRUE, by = pop_age_column)
-    pop <- pop[, ..segment := cumsum(!is.na(..original.lower.age.limit))]
-    pop <- pop[,
-      ..original.lower.age.limit := ..original.lower.age.limit[1],
-      by = ..segment
-    ]
-    pop <- pop[,
-      ..original.upper.age.limit := ..original.upper.age.limit[1],
-      by = ..segment
-    ]
-    pop <- pop[, paste(pop_column) := get(pop_column)[1], by = ..segment]
-    pop <- pop[, ..upper.age.limit := c(pop[[pop_age_column]][-1], NA)]
-    pop[
-      !is.na(..original.upper.age.limit),
-      paste(pop_column) := round(
-        get(pop_column) *
-          (..upper.age.limit - get(pop_age_column)) /
-          (..original.upper.age.limit - ..original.lower.age.limit)
+      details = stats::setNames(
+        c(
+          paste0(
+            "Age limit(s) ",
+            toString(utils::head(finer_limits, 6)),
+            if (length(finer_limits) > 6) {
+              paste0(" and ", length(finer_limits) - 6, " more")
+            },
+            " fall inside the population's own age bands."
+          ),
+          "Population data must be at least as fine as the age groups asked
+           for, and must reach at least as high.",
+          "Splitting bands means assuming how people are distributed within
+           them; see `vignette(\"socialmixr\")` for how to do that with a
+           package built for it."
+        ),
+        c("", "i", "i")
       )
-    ]
-    pop <- pop[, c(pop_age_column, pop_column), with = FALSE]
+    )
   }
 
   pop <- pop[get(pop_age_column) >= min(age_limits)]
@@ -165,9 +150,10 @@ rebin_ages <- function(pop, age_limits) {
     cli::cli_abort(c(
       "{.arg age_limits} requests finer age groups than the population data
        provides.",
-      i = "{cli::qty(finer)}Age limit{?s} {.val {finer}} fall{?s} inside the
-           population's age bands; {.fn rebin_ages} only coarsens (aggregates).
-           Supply finer population data, or use coarser {.arg age_limits}."
+      i = "{cli::qty(length(finer))}Age limit{?s} {?falls/fall} inside the
+           population's age bands: {.val {finer}}. {.fn rebin_ages} only
+           coarsens (aggregates); supply finer population data, or use coarser
+           {.arg age_limits}."
     ))
   }
   rebinned <- rebin_ages_numeric(

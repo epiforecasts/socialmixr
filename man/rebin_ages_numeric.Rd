@@ -31,9 +31,8 @@ data frame of age-specific population data
 \description{
 Internal numeric coarsener operating on \code{lower.age.limit} columns: rebins a
 population table to the age groups defined by \code{age_limits}, summing when
-coarser. Requesting age groups finer than the population data is deprecated:
-it warns and linearly interpolates, and will error in a future release.
-Wrapped by \code{\link[=rebin_ages]{rebin_ages()}} (which errors on finer requests) and used by
-\code{\link[=pop_age]{pop_age()}} and \code{contact_matrix()}'s population adjustment.
+coarser. Requesting age groups finer than the population data is defunct and
+errors. Wrapped by \code{\link[=rebin_ages]{rebin_ages()}} and used by \code{contact_matrix()}'s population
+adjustment.
 }
 \keyword{internal}

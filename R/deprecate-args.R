@@ -6,8 +6,8 @@
 #' @param new_name the new argument name (with underscore)
 #' @param fn_name the function name
 #' @param version the version when deprecated
-#' @return `new_arg`, or `old_arg` if it is supplied, in which case a
-#'   deprecation warning is issued via [lifecycle::deprecate_warn()].
+#' @return `new_arg`. Supplying `old_arg` errors via
+#'   [lifecycle::deprecate_stop()].
 #' @keywords internal
 #' @autoglobal
 deprecate_arg <- function(
@@ -19,13 +19,11 @@ deprecate_arg <- function(
   version = "0.5.0"
 ) {
   if (lifecycle::is_present(old_arg)) {
-    lifecycle::deprecate_warn(
+    lifecycle::deprecate_stop(
       version,
       paste0(fn_name, "(", old_name, ")"),
       paste0(fn_name, "(", new_name, ")")
     )
-    old_arg
-  } else {
-    new_arg
   }
+  new_arg
 }

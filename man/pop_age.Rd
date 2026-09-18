@@ -28,16 +28,16 @@ pop_age(
 
 \item{...}{ignored}
 
-\item{age.limits, pop.age.column, pop.column}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use the underscore
+\item{age.limits, pop.age.column, pop.column}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}} Use the underscore
 versions (e.g., \code{age_limits}) instead.}
 }
 \value{
-data frame of age-specific population data
+Always errors.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
 
-\code{pop_age()} is deprecated. To rebin a population table to explicit age
+\code{pop_age()} is defunct. To rebin a population table to explicit age
 limits, use \code{\link[=rebin_ages]{rebin_ages()}}. To align a population table to a contact
 matrix's age groups, use \code{\link[=align_ages]{align_ages()}}.
 }

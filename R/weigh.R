@@ -26,10 +26,14 @@
 #' * a named numeric vector — same as above but `names(target)` are
 #'   matched against values of the `by` column.
 #'
-#' A data frame target that does *not* have a column named `by` but does
-#' have `lower.age.limit` and `population` triggers a deprecation warning
-#' and falls back to the old hidden age post-stratification path; use
-#' [weigh_by_age()] instead.
+#' A data frame target that does *not* have a column named `by` but does have
+#' `lower.age.limit` and `population` is `r lifecycle::badge("defunct")` and
+#' errors. Use [weigh_by_age()] instead, which post-stratifies by age
+#' explicitly. It takes the population with an `age` column of group labels, so
+#' convert a `lower.age.limit` table with [limits_to_age_groups()] first. It
+#' weights at the population's own age bands, where the old path first rebinned
+#' to single years, so the two agree for a population already in single-year
+#' bands and diverge for a coarser one.
 #'
 #' @section `weigh_by_dayofweek()`:
 #'
@@ -147,8 +151,19 @@ weigh <- function(survey, by, target = NULL, groups = NULL, ...) {
   } else if (is.data.frame(target)) {
     if (by %in% colnames(target)) {
       weigh_join_warn_groups(participants, by, target, groups)
+    } else if (all(c("lower.age.limit", "population") %in% colnames(target))) {
+      weigh_population_defunct(participants, target, ...)
     } else {
-      weigh_population_deprecated(participants, target, ...)
+      cli::cli_abort(
+        message = stats::setNames(
+          c(
+            "Data frame {.arg target} must have a column matching
+             {.arg by} ({.val {by}}).",
+            "It has: {.val {colnames(target)}}."
+          ),
+          c("", "i")
+        )
+      )
     }
   } else if (!is.numeric(target)) {
     cli_abort_unknown_target()
@@ -237,8 +252,8 @@ weigh_named_warn_groups <- function(participants, by, target, groups) {
   weigh_named(participants, by, target)
 }
 
-weigh_population_deprecated <- function(participants, target, ...) {
-  lifecycle::deprecate_warn(
+weigh_population_defunct <- function(participants, target, ...) {
+  lifecycle::deprecate_stop(
     when = "0.7.0",
     what = I(
       "Passing a population data frame (with `lower.age.limit` and \\
@@ -247,12 +262,17 @@ weigh_population_deprecated <- function(participants, target, ...) {
     details = c(
       paste(
         "Silent dispatch to age post-stratification from `weigh()` is",
-        "removed. Use `weigh_by_age()` instead, which does the same",
-        "interpolation and post-stratification explicitly."
+        "removed. Use `weigh_by_age()` instead, which post-stratifies by age",
+        "explicitly. It takes the population with an `age` column of group",
+        "labels, so pass",
+        "`data.frame(age = limits_to_age_groups(target$lower.age.limit,",
+        "notation = \"brackets\"), population = target$population)`.",
+        "It weights at the population's own age bands, where this path first",
+        "rebinned to single years, so the two agree for a population already",
+        "in single-year bands and diverge for a coarser one."
       )
     )
   )
-  weigh_population(participants, target, ...)
 }
 
 #' @autoglobal
@@ -374,35 +394,5 @@ weigh_named <- function(participants, by, target) {
   )
 
   participants[, weight := weight * weight_factor]
-  participants
-}
-
-#' @autoglobal
-weigh_population <- function(participants, target, ...) {
-  if (!all(c("lower.age.limit", "population") %in% colnames(target))) {
-    cli::cli_abort(
-      "Data frame {.arg target} must have columns {.val lower.age.limit} \\
-       and {.val population}."
-    )
-  }
-
-  if (!"part_age" %in% colnames(participants)) {
-    cli::cli_abort(
-      "Column {.val part_age} not found in participant data. \\
-       Run {.fn assign_age_groups} first."
-    )
-  }
-
-  survey_pop_full <- data.table(target)
-  if (!"upper.age.limit" %in% colnames(survey_pop_full)) {
-    age_breaks <- age_groups_to_limits(participants$age.group)
-    survey_pop_full <- add_survey_upper_age_limit(
-      survey = survey_pop_full,
-      age_breaks = age_breaks
-    )
-  }
-  survey_pop_full <- survey_pop_reference(survey_pop_full, ...)
-
-  participants <- weight_by_age(participants, survey_pop_full)
   participants
 }
