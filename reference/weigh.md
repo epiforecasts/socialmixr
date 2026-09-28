@@ -72,9 +72,14 @@ the survey object with updated participant weights
   against values of the `by` column.
 
 A data frame target that does *not* have a column named `by` but does
-have `lower.age.limit` and `population` triggers a deprecation warning
-and falls back to the old hidden age post-stratification path; use
-`weigh_by_age()` instead.
+have `lower.age.limit` and `population` is **\[defunct\]** and errors.
+Use `weigh_by_age()` instead, which post-stratifies by age explicitly.
+It takes the population with an `age` column of group labels, so convert
+a `lower.age.limit` table with
+[`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md)
+first. It weights at the population's own age bands, where the old path
+first rebinned to single years, so the two agree for a population
+already in single-year bands and diverge for a coarser one.
 
 ## `weigh_by_dayofweek()`
 

@@ -5,6 +5,123 @@
 - The package now has a logo, showing the POLYMOD contact matrix for the
   United Kingdom in five-year age groups.
 
+### Superseded
+
+- [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  is now marked superseded. It is still maintained and is not going
+  away, but new code is better written as the pipeline it wraps:
+  [`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md)
+  and
+  [`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md),
+  followed by
+  [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+  [`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
+  or
+  [`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md).
+  The pipeline composes the same steps and can group by more than age.
+
+### Breaking changes
+
+- A `survey_pop` with a missing `population` for any band at or above
+  the youngest age group asked for is now rejected by
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md).
+  Such rows were dropped before the population was aggregated, so the
+  age group holding them was reported and weighted as though those
+  people did not exist, with no indication that anything had been left
+  out. Bands below the youngest age group are unaffected, since they are
+  dropped either way.
+
+- Automatic country population lookup in
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  is now defunct. Pass `survey_pop` explicitly as a data frame with
+  columns `lower.age.limit` and `population` when `symmetric`, `split`,
+  `per_capita`, `weigh_age` or `return_demography` is `TRUE`. Passing a
+  character vector of country names is defunct for the same reason.
+  Surveys of a single population with no country information continue to
+  derive the population from the participants, except under
+  `weigh_age = TRUE`, which always needs an explicit `survey_pop` (see
+  below).
+
+- [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md),
+  [`wpp_countries()`](https://epiforecasts.io/socialmixr/reference/wpp_countries.md)
+  and
+  [`survey_country_population()`](https://epiforecasts.io/socialmixr/reference/survey_country_population.md)
+  are now defunct, and the `wpp2017` dependency has been removed.
+  Population data now comes from a source of your choosing, for example
+  the `wpp2024` package on GitHub.
+
+- Population data is no longer interpolated to age groups finer than the
+  data itself. It must cover every age group asked for: at least as fine
+  as those age groups, reaching at least as high, and starting no higher
+  than the youngest of them; otherwise
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  errors. `weigh_age = TRUE` now always requires an explicit
+  `survey_pop` in single-year bands, because
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  builds its weighting reference at single-year resolution. The
+  pipeline’s
+  [`weigh_by_age()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  weights at the population’s own bands and has no such requirement.
+  Splitting coarser bands is a demographic modelling step, and out of
+  scope here; the vignette shows how to do it with a package built for
+  it.
+
+- [`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md),
+  [`reduce_agegroups()`](https://epiforecasts.io/socialmixr/reference/reduce_agegroups.md),
+  [`limits_to_agegroups()`](https://epiforecasts.io/socialmixr/reference/limits_to_agegroups.md)
+  and
+  [`agegroups_to_limits()`](https://epiforecasts.io/socialmixr/reference/agegroups_to_limits.md)
+  are now defunct. Use
+  [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
+  or
+  [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md),
+  [`reduce_age_groups()`](https://epiforecasts.io/socialmixr/reference/reduce_age_groups.md),
+  [`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md)
+  and
+  [`age_groups_to_limits()`](https://epiforecasts.io/socialmixr/reference/age_groups_to_limits.md)
+  instead.
+
+- For a survey of a single population with no country information, where
+  the population is derived from the participants, an age group holding
+  no participants is no longer given an interpolated population. Its
+  size is unknown, so the demography now reports the participants’ own
+  counts, and `per_capita = TRUE` and `counts = TRUE, symmetric = TRUE`
+  error for such a group rather than working from a made-up number.
+
+- Passing a population data frame to
+  [`weigh()`](https://epiforecasts.io/socialmixr/reference/weigh.md) is
+  now defunct. Use
+  [`weigh_by_age()`](https://epiforecasts.io/socialmixr/reference/weigh.md),
+  which post-stratifies by age explicitly. It takes the population with
+  an `age` column of group labels, so convert a `lower.age.limit` table
+  with
+  [`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md)
+  first. It weights at the population’s own age bands rather than
+  rebinning to single years first, so the two agree for a population
+  already in single-year bands and diverge for a coarser one.
+
+- The dotted argument names deprecated in 0.5.0 (for example
+  `contact_matrix(survey.pop=)`, `contact_matrix(age.limits=)`,
+  `clean(participant.age.column=)`, `as_contact_survey(id.column=)`) are
+  now defunct. Use the underscore-separated names.
+  [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
+  also stops silently accepting `pop.age.column` and `pop.column`, which
+  it took but never acted on; they are now reported as unknown
+  arguments.
+
+### Internal
+
+- The unreachable implementations behind the defunct survey-download
+  functions have been removed, dropping the `curl`, `httr`, `memoise`,
+  `oai` and `xml2` dependencies.
+  [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md),
+  [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md),
+  [`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md),
+  [`survey_countries()`](https://epiforecasts.io/socialmixr/reference/survey_countries.md)
+  and
+  [`get_citation()`](https://epiforecasts.io/socialmixr/reference/get_citation.md)
+  still error with a pointer to the contactsurveys package.
+
 ## socialmixr 0.7.0
 
 CRAN release: 2026-08-22

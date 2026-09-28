@@ -12,9 +12,7 @@ survey_countries(survey, country.column = "country", ...)
 
 - survey:
 
-  a DOI or url to get the survey from, or a
-  [`survey()`](https://epiforecasts.io/socialmixr/reference/survey.md)
-  object.
+  a DOI or url to get the survey from, or a survey object
 
 - country.column:
 
@@ -22,8 +20,7 @@ survey_countries(survey, country.column = "country", ...)
 
 - ...:
 
-  further arguments for
-  [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md)
+  currently unused
 
 ## Value
 
@@ -40,11 +37,6 @@ and then explore the country column yourself.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-data(polymod)
-survey_countries(polymod)
-} # }
-## --> we now recommend
 if (FALSE) { # \dontrun{
 doi_peru <- "10.5281/zenodo.1095664" # nolint
 # download the data with the contactsurveys package

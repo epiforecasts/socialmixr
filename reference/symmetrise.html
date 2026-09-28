@@ -95,8 +95,9 @@ appear in the matrix, plus a <code>population</code> column with the size of eac
 combination. One row per combination of levels is required, and levels are
 matched to the matrix exactly, without interpolation.</p>
 <p>Use <code><a href="align_ages.html">align_ages()</a></code> to build this from a raw population table: it aggregates
-each grouping to the matrix's levels (interpolating the age grouping where
-needed) and labels the columns to match.</p>
+each grouping to the matrix's levels, coarsening the age grouping where
+needed, and labels the columns to match. A population coarser than the
+matrix's age groups is an error rather than being split.</p>
     </div>
 
     <div class="section level2">

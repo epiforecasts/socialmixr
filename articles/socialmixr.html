@@ -61,7 +61,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Funk</h4>
             
-            <h4 data-toc-skip class="date">2026-08-25</h4>
+            <h4 data-toc-skip class="date">2026-09-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/vignettes/socialmixr.Rmd" class="external-link"><code>vignettes/socialmixr.Rmd</code></a></small>
       <div class="d-none name"><code>socialmixr.Rmd</code></div>
@@ -493,14 +493,73 @@ mock-up with the same columns:</p>
 <span>  age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
 <span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12000000</span>, <span class="fl">35000000</span>, <span class="fl">20000000</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="when-your-population-is-coarser-than-your-age-groups">When your population is coarser than your age groups<a class="anchor" aria-label="anchor" href="#when-your-population-is-coarser-than-your-age-groups"></a>
+</h3>
+<p>socialmixr aggregates population data into coarser age groups, and
+errors if you ask for age groups finer than the data provides. Splitting
+a band means assuming how people are distributed within it, which is a
+demographic modelling choice. The same applies when the population stops
+below the top of the matrix, for instance an 80+ table with age groups
+reaching to 90, and to <code>contact_matrix(weigh_age = TRUE)</code>,
+which builds its weighting reference at single-year resolution and so
+needs single-year bands. The pipeline’s <code><a href="../reference/weigh.html">weigh_by_age()</a></code>
+weights at the population’s own bands, so it takes the population as it
+is.</p>
+<p>Demographers call the splitting step graduation or ungrouping, and
+there are packages that do it properly. <a href="https://github.com/timriffe/DemoTools" class="external-link">DemoTools</a> offers the
+classical methods and some modern ones behind a single
+<code>graduate()</code> call; <a href="https://cran.r-project.org/package=ungroup" class="external-link">ungroup</a> implements
+the penalized composite link model. Split the population there, then
+pass the result to socialmixr:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">five_year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span>, by <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
+<span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="fl">3.4e6</span>, <span class="fl">3.5e6</span>, <span class="fl">3.8e6</span>, <span class="fl">3.9e6</span>, <span class="fl">3.9e6</span>, <span class="fl">3.7e6</span>, <span class="fl">4.1e6</span>, <span class="fl">4.6e6</span>, <span class="fl">4.6e6</span>,</span>
+<span>    <span class="fl">3.9e6</span>, <span class="fl">3.6e6</span>, <span class="fl">3.9e6</span>, <span class="fl">3.1e6</span>, <span class="fl">2.7e6</span>, <span class="fl">2.3e6</span>, <span class="fl">1.9e6</span>, <span class="fl">1.4e6</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># split into single years with DemoTools (Sprague multipliers).</span></span>
+<span><span class="co"># DemoTools is not a socialmixr dependency, hence the nolint below.</span></span>
+<span><span class="co"># nolint next: namespace_linter.</span></span>
+<span><span class="va">single_year</span> <span class="op">&lt;-</span> <span class="fu">DemoTools</span><span class="fu">::</span><span class="fu">graduate</span><span class="op">(</span></span>
+<span>  Value <span class="op">=</span> <span class="va">five_year</span><span class="op">$</span><span class="va">population</span>,</span>
+<span>  Age <span class="op">=</span> <span class="fu"><a href="../reference/age_groups_to_limits.html">age_groups_to_limits</a></span><span class="op">(</span><span class="va">five_year</span><span class="op">$</span><span class="va">age</span><span class="op">)</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"sprague"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">single_limits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">single_year</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># for the pipeline functions, which take age-group labels</span></span>
+<span><span class="va">uk_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="va">single_limits</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
+<span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">single_year</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># for contact_matrix(), whose survey_pop takes lower age limits</span></span>
+<span><span class="va">uk_survey_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  lower.age.limit <span class="op">=</span> <span class="va">single_limits</span>,</span>
+<span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">single_year</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The two shapes differ because <code><a href="../reference/align_ages.html">align_ages()</a></code> and the
+post-processing functions work with age-group labels, while
+<code><a href="../reference/contact_matrix.html">contact_matrix()</a></code> takes a <code>lower.age.limit</code>
+column.</p>
+<p>The methods differ in how much smoothness they impose and what they
+assume about neighbouring bands, so which one suits your data is a
+question for those packages’ documentation. Both provide methods rather
+than data, so you still need population counts from elsewhere.</p>
 <p>For the rest of this vignette we use a small constructed
 <code>uk_pop</code> for the United Kingdom, sufficient to illustrate the
 post-processing functions:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">uk_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
 <span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">750000</span>, <span class="fl">3200000</span>, <span class="fl">7500000</span>, <span class="fl">56000000</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="symmetric-contact-matrices">Symmetric contact matrices<a class="anchor" aria-label="anchor" href="#symmetric-contact-matrices"></a>
@@ -526,7 +585,7 @@ to obtain a symmetric contact matrix that fulfills it, one can use</p>
 <p>To get this version of the contact matrix, compute the matrix and
 pass the population through <code><a href="../reference/align_ages.html">align_ages()</a></code> to
 <code><a href="../reference/symmetrise.html">symmetrise()</a></code>:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">uk_matrix</span> <span class="op">&lt;-</span> <span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_matrix.html">compute_matrix</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -564,7 +623,7 @@ contact matrix
 can show asymmetry if the sub-population sizes are different, but the
 contact matrix per capita will be fully symmetric:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow><mo>′</mo></msubsup><mo>=</mo><mfrac><mrow><msub><mi>m</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>N</mi><mi>i</mi></msub><mo>+</mo><msub><mi>m</mi><mrow><mi>j</mi><mi>i</mi></mrow></msub><msub><mi>N</mi><mi>j</mi></msub></mrow><mrow><mn>2</mn><msub><mi>N</mi><mi>i</mi></msub><msub><mi>N</mi><mi>j</mi></msub></mrow></mfrac><mo>=</mo><msubsup><mi>c</mi><mrow><mi>j</mi><mi>i</mi></mrow><mo>′</mo></msubsup></mrow><annotation encoding="application/x-tex">c'_{ij} = \frac{m_{ij} N_i + m_{ji} N_j}{2N_iN_j} = c'_{ji}</annotation></semantics></math></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">de_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  age <span class="op">=</span> <span class="fu"><a href="../reference/limits_to_age_groups.html">limits_to_age_groups</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">60</span><span class="op">)</span>, notation <span class="op">=</span> <span class="st">"brackets"</span><span class="op">)</span>,</span>
 <span>  population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">67000000</span>, <span class="fl">16000000</span><span class="op">)</span></span>
@@ -621,7 +680,7 @@ in <code>$matrix</code>, with additional components
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math>)
 and <code>$contacts</code>
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mi>i</mi></msub><annotation encoding="application/x-tex">d_i</annotation></semantics></math>).</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">uk_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/split_matrix.html">split_matrix</a></span><span class="op">(</span>survey_pop <span class="op">=</span> <span class="fu"><a href="../reference/align_ages.html">align_ages</a></span><span class="op">(</span><span class="va">uk_pop</span>, <span class="va">uk_matrix</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Contact matrix (4 age groups)</span> ──</span></span>
@@ -648,7 +707,7 @@ dataset, the indicators <code>cnt_home</code>, <code>cnt_work</code>,
 1 depending on where a contact occurred. The filter is evaluated against
 whichever table contains the referenced columns (participants, contacts,
 or both). Multiple filters can be chained:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># contact matrix for school-related contacts</span></span>
 <span><span class="va">polymod</span><span class="op">[</span><span class="va">cnt_school</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -732,7 +791,7 @@ applies this post-stratification normalisation within age groups.</p>
 <p><code><a href="../reference/weigh.html">weigh()</a></code> is composable: each call multiplies new weights
 into the participants’ <code>weight</code> column. Common recipes are
 wrapped as <code>weigh_by_*()</code> convenience functions:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/weigh.html">weigh_by_dayofweek</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -752,7 +811,7 @@ each band.</p>
 <p>For arbitrary discrete joins, <code><a href="../reference/weigh.html">weigh()</a></code> itself takes a
 two-column data frame whose key column matches <code>by</code> —
 e.g. pooling participants across countries by a target share:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">country_target</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  country <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"United Kingdom"</span>, <span class="st">"Germany"</span>, <span class="st">"Italy"</span><span class="op">)</span>,</span>
 <span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.3</span><span class="op">)</span>,</span>
@@ -769,7 +828,7 @@ e.g. pooling participants across countries by a target share:</p>
 <p><code><a href="../reference/weigh.html">weigh()</a></code> with no <code>target</code> multiplies an
 existing participant column directly into the weight. For instance, to
 give more importance to participants from large households:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">polymod</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/weigh.html">weigh</a></span><span class="op">(</span><span class="st">"hh_size"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -792,7 +851,7 @@ weights. <code><a href="../reference/compute_matrix.html">compute_matrix()</a></
 re-normalises so that the weight sum equals the group size. Weights
 close to the threshold may slightly exceed it after
 re-normalisation.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">polymod</span><span class="op">[</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assign_age_groups.html">assign_age_groups</a></span><span class="op">(</span>age_limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/weigh.html">weigh_by_dayofweek</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -872,7 +931,7 @@ represented by
 </table>
 <p>The summary statistics for the sample (N) and reference population
 (P) are as follows</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">6</span></span>
 <span><span class="va">N_age</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">N_age.group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span></span>
@@ -1506,7 +1565,7 @@ at 3. As such, the weighted population average equals:</p>
 <p>The contact matrices can be plotted by using the
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a></code> function of the <code>ggplot2</code>
 package.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">reshape2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/melt.html" class="external-link">melt</a></span><span class="op">(</span></span>
 <span>  <span class="va">mr</span>,</span>
 <span>  varnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age.group"</span>, <span class="st">"age.group.contact"</span><span class="op">)</span>,</span>
@@ -1515,7 +1574,7 @@ package.</p>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age.group</span>, y <span class="op">=</span> <span class="va">age.group.contact</span>, fill <span class="op">=</span> <span class="va">contacts</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="socialmixr_files/figure-html/unnamed-chunk-35-1.png" class="r-plt" alt="" width="384"></p>
+<p><img src="socialmixr_files/figure-html/unnamed-chunk-36-1.png" class="r-plt" alt="" width="384"></p>
 </div>
 <div class="section level3">
 <h3 id="using-r-base">Using R base<a class="anchor" aria-label="anchor" href="#using-r-base"></a>
@@ -1524,12 +1583,12 @@ package.</p>
 <code><a href="../reference/matrix_plot.html">matrix_plot()</a></code> function as a grid of coloured rectangles
 with the numeric values in the cells. Heat colours are used by default,
 though this can be changed.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/matrix_plot.html">matrix_plot</a></span><span class="op">(</span><span class="va">mr</span><span class="op">)</span></span></code></pre></div>
-<p><img src="socialmixr_files/figure-html/unnamed-chunk-36-1.png" class="r-plt" alt="" width="384"></p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/matrix_plot.html">matrix_plot</a></span><span class="op">(</span><span class="va">mr</span><span class="op">)</span></span></code></pre></div>
+<p><img src="socialmixr_files/figure-html/unnamed-chunk-37-1.png" class="r-plt" alt="" width="384"></p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/matrix_plot.html">matrix_plot</a></span><span class="op">(</span><span class="va">mr</span>, color.palette <span class="op">=</span> <span class="va">gray.colors</span><span class="op">)</span></span></code></pre></div>
-<p><img src="socialmixr_files/figure-html/unnamed-chunk-36-2.png" class="r-plt" alt="" width="384"></p>
+<p><img src="socialmixr_files/figure-html/unnamed-chunk-37-2.png" class="r-plt" alt="" width="384"></p>
 </div>
 </div>
 <div class="section level2">

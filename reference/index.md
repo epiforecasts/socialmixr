@@ -27,7 +27,7 @@
   : Extract the empirical age distribution of contacts from a survey
 
 - [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-  : Generate a contact matrix from diary survey data
+  **\[superseded\]** : Generate a contact matrix from diary survey data
 
 - [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md)
   **\[defunct\]** : Download a survey from its Zenodo repository
@@ -43,9 +43,6 @@
 - [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md)
   **\[defunct\]** : Get a survey, either from its Zenodo repository, a
   set of files, or a survey variable
-
-- [`is_doi()`](https://epiforecasts.io/socialmixr/reference/is_doi.md) :
-  Checks if a character string is a DOI
 
 - [`limits_to_age_groups()`](https://epiforecasts.io/socialmixr/reference/limits_to_age_groups.md)
   : Convert lower age limits to age groups.
@@ -86,7 +83,7 @@
   **\[defunct\]** : List all countries contained in a survey
 
 - [`survey_country_population()`](https://epiforecasts.io/socialmixr/reference/survey_country_population.md)
-  **\[deprecated\]** : Get survey country population data
+  **\[defunct\]** : Get survey country population data
 
 - [`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md)
   : Symmetrise a contact matrix
@@ -97,9 +94,9 @@
   : Weigh survey participants
 
 - [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md)
-  **\[deprecated\]** : Get age-specific population data according to the
+  **\[defunct\]** : Get age-specific population data according to the
   World Population Prospects 2017 edition
 
 - [`wpp_countries()`](https://epiforecasts.io/socialmixr/reference/wpp_countries.md)
-  **\[deprecated\]** : List all countries and regions for which
-  socialmixr has population data
+  **\[defunct\]** : List all countries and regions for which socialmixr
+  has population data

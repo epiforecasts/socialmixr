@@ -1,14 +1,11 @@
 # List all countries and regions for which socialmixr has population data
 
-**\[deprecated\]**
+**\[defunct\]**
 
-This function is deprecated in favour of passing population data
-directly to
+`wpp_countries()` is defunct. Pass population data directly to
 [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)
-via the `survey_pop` argument, which removes the need for a country
-list. Additionally, the underlying `wpp2017` data is outdated. For
-countries available in more recent WPP editions, use the `wpp2024`
-package from GitHub.
+via the `survey_pop` argument instead, which removes the need for a
+country list.
 
 ## Usage
 
@@ -18,120 +15,12 @@ wpp_countries()
 
 ## Value
 
-list of countries
-
-## Details
-
-Uses the World Population Prospects data from the `wpp2017` package.
+Always errors.
 
 ## Examples
 
 ``` r
-if (requireNamespace("wpp2017", quietly = TRUE)) {
-  wpp_countries()
-}
-#> Warning: `wpp_countries()` was deprecated in socialmixr 0.6.0.
-#> Pass population data directly via the {.arg survey_pop} argument instead.
-#> ℹ The underlying {.pkg wpp2017} data is also outdated; use {.pkg wpp2024} from
-#>   GitHub for more recent data.
-#>   [1] "Burundi"                          "Comoros"                         
-#>   [3] "Djibouti"                         "Eritrea"                         
-#>   [5] "Ethiopia"                         "Kenya"                           
-#>   [7] "Madagascar"                       "Malawi"                          
-#>   [9] "Mauritius"                        "Mayotte"                         
-#>  [11] "Mozambique"                       "Réunion"                         
-#>  [13] "Rwanda"                           "Seychelles"                      
-#>  [15] "Somalia"                          "South Sudan"                     
-#>  [17] "Uganda"                           "Tanzania"                        
-#>  [19] "Zambia"                           "Zimbabwe"                        
-#>  [21] "Angola"                           "Cameroon"                        
-#>  [23] "Central African Republic"         "Chad"                            
-#>  [25] "Congo - Brazzaville"              "Congo - Kinshasa"                
-#>  [27] "Equatorial Guinea"                "Gabon"                           
-#>  [29] "São Tomé & Príncipe"              "Algeria"                         
-#>  [31] "Egypt"                            "Libya"                           
-#>  [33] "Morocco"                          "Sudan"                           
-#>  [35] "Tunisia"                          "Western Sahara"                  
-#>  [37] "Botswana"                         "Lesotho"                         
-#>  [39] "Namibia"                          "South Africa"                    
-#>  [41] "Eswatini"                         "Benin"                           
-#>  [43] "Burkina Faso"                     "Cape Verde"                      
-#>  [45] "Côte d’Ivoire"                    "Gambia"                          
-#>  [47] "Ghana"                            "Guinea"                          
-#>  [49] "Guinea-Bissau"                    "Liberia"                         
-#>  [51] "Mali"                             "Mauritania"                      
-#>  [53] "Niger"                            "Nigeria"                         
-#>  [55] "Senegal"                          "Sierra Leone"                    
-#>  [57] "Togo"                             "China"                           
-#>  [59] "Hong Kong SAR China"              "Macao SAR China"                 
-#>  [61] "North Korea"                      "Japan"                           
-#>  [63] "Mongolia"                         "South Korea"                     
-#>  [65] "Kazakhstan"                       "Kyrgyzstan"                      
-#>  [67] "Tajikistan"                       "Turkmenistan"                    
-#>  [69] "Uzbekistan"                       "Afghanistan"                     
-#>  [71] "Bangladesh"                       "Bhutan"                          
-#>  [73] "India"                            "Iran"                            
-#>  [75] "Maldives"                         "Nepal"                           
-#>  [77] "Pakistan"                         "Sri Lanka"                       
-#>  [79] "Brunei"                           "Cambodia"                        
-#>  [81] "Indonesia"                        "Laos"                            
-#>  [83] "Malaysia"                         "Myanmar (Burma)"                 
-#>  [85] "Philippines"                      "Singapore"                       
-#>  [87] "Thailand"                         "Timor-Leste"                     
-#>  [89] "Vietnam"                          "Armenia"                         
-#>  [91] "Azerbaijan"                       "Bahrain"                         
-#>  [93] "Cyprus"                           "Georgia"                         
-#>  [95] "Iraq"                             "Israel"                          
-#>  [97] "Jordan"                           "Kuwait"                          
-#>  [99] "Lebanon"                          "Oman"                            
-#> [101] "Qatar"                            "Saudi Arabia"                    
-#> [103] "Palestinian Territories"          "Syria"                           
-#> [105] "Turkey"                           "United Arab Emirates"            
-#> [107] "Yemen"                            "Belarus"                         
-#> [109] "Bulgaria"                         "Czechia"                         
-#> [111] "Hungary"                          "Poland"                          
-#> [113] "Moldova"                          "Romania"                         
-#> [115] "Russia"                           "Slovakia"                        
-#> [117] "Ukraine"                          "Denmark"                         
-#> [119] "Estonia"                          "Finland"                         
-#> [121] "Iceland"                          "Ireland"                         
-#> [123] "Latvia"                           "Lithuania"                       
-#> [125] "Norway"                           "Sweden"                          
-#> [127] "United Kingdom"                   "Albania"                         
-#> [129] "Bosnia & Herzegovina"             "Croatia"                         
-#> [131] "Greece"                           "Italy"                           
-#> [133] "Malta"                            "Montenegro"                      
-#> [135] "Portugal"                         "Serbia"                          
-#> [137] "Slovenia"                         "Spain"                           
-#> [139] "North Macedonia"                  "Austria"                         
-#> [141] "Belgium"                          "France"                          
-#> [143] "Germany"                          "Luxembourg"                      
-#> [145] "Netherlands"                      "Switzerland"                     
-#> [147] "Antigua & Barbuda"                "Aruba"                           
-#> [149] "Bahamas"                          "Barbados"                        
-#> [151] "Cuba"                             "Curaçao"                         
-#> [153] "Dominican Republic"               "Grenada"                         
-#> [155] "Guadeloupe"                       "Haiti"                           
-#> [157] "Jamaica"                          "Martinique"                      
-#> [159] "Puerto Rico"                      "St. Lucia"                       
-#> [161] "St. Vincent & Grenadines"         "Trinidad & Tobago"               
-#> [163] "U.S. Virgin Islands"              "Belize"                          
-#> [165] "Costa Rica"                       "El Salvador"                     
-#> [167] "Guatemala"                        "Honduras"                        
-#> [169] "Mexico"                           "Nicaragua"                       
-#> [171] "Panama"                           "Argentina"                       
-#> [173] "Bolivia"                          "Brazil"                          
-#> [175] "Chile"                            "Colombia"                        
-#> [177] "Ecuador"                          "French Guiana"                   
-#> [179] "Guyana"                           "Paraguay"                        
-#> [181] "Peru"                             "Suriname"                        
-#> [183] "Uruguay"                          "Venezuela"                       
-#> [185] "Canada"                           "United States"                   
-#> [187] "Australia"                        "New Zealand"                     
-#> [189] "Fiji"                             "New Caledonia"                   
-#> [191] "Papua New Guinea"                 "Solomon Islands"                 
-#> [193] "Vanuatu"                          "Guam"                            
-#> [195] "Kiribati"                         "Micronesia (Federated States of)"
-#> [197] "French Polynesia"                 "Samoa"                           
-#> [199] "Tonga"                           
+if (FALSE) { # \dontrun{
+wpp_countries()
+} # }
 ```

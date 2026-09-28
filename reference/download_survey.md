@@ -6,8 +6,6 @@
 [`contactsurveys::download_survey()`](http://epiforecasts.io/contactsurveys/reference/download_survey.md)
 instead.
 
-`download_survey()` downloads survey data from Zenodo.
-
 ## Usage
 
 ``` r
@@ -42,12 +40,7 @@ load_survey
 ## Examples
 
 ``` r
-# we recommend using the contactsurveys package for download_survey()
 if (FALSE) { # \dontrun{
-# if needed, discover surveys with:
-contactsurveys::list_surveys()
-peru_survey <- download_survey("https://doi.org/10.5281/zenodo.1095664")
-# -->
 peru_survey <- contactsurveys::download_survey(
   "https://doi.org/10.5281/zenodo.1095664"
 )

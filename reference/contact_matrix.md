@@ -1,6 +1,44 @@
 # Generate a contact matrix from diary survey data
 
-Samples a contact survey
+**\[superseded\]**
+
+Computes a contact matrix from a diary survey in a single call, together
+with participant counts by age group. The demography comes too when any
+of `symmetric`, `split`, `per_capita` or `weigh_age` is `TRUE`, or when
+`return_demography = TRUE`; setting `return_demography = FALSE`
+suppresses it even then.
+
+`contact_matrix()` is superseded: it is still maintained and is not
+going away, but new code is better written as the pipeline it wraps. The
+pipeline composes the same steps, and can group by more than age:
+
+    survey |>
+      assign_age_groups(age_limits = c(0, 5, 15)) |>
+      weigh_by_dayofweek() |>
+      compute_matrix()
+
+The weighing functions stand in for `weigh_age` and `weigh_dayofweek`,
+and take the survey.
+[`weigh_by_age()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+and
+[`weigh_by_dayofweek()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+belong after
+[`assign_age_groups()`](https://epiforecasts.io/socialmixr/reference/assign_age_groups.md),
+which adds the age column
+[`weigh_by_age()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+needs and settles which participants the matrix is built from, and
+before
+[`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md),
+which consumes the weights.
+
+The post-processing functions stand in for `symmetric`, `split` and
+`per_capita`, and take the matrix: pipe the
+[`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
+result into
+[`symmetrise()`](https://epiforecasts.io/socialmixr/reference/symmetrise.md),
+[`split_matrix()`](https://epiforecasts.io/socialmixr/reference/split_matrix.md)
+or
+[`per_capita()`](https://epiforecasts.io/socialmixr/reference/per_capita.md).
 
 ## Usage
 
@@ -65,16 +103,28 @@ contact_matrix(
 - survey_pop:
 
   survey population – a data frame with columns `lower.age.limit` and
-  `population`. Passing `NULL` (the default) or a character vector of
-  country names triggers the **\[deprecated\]** implicit lookup via
-  [`wpp_age()`](https://epiforecasts.io/socialmixr/reference/wpp_age.md)
-  when `symmetric`, `split`, `per_capita`, `weigh_age`, or
-  `return_demography` is `TRUE`; supply an explicit data frame (e.g.
-  constructed from the `wpp2024` package or another source) instead. If
-  the population is coarser than the requested age groups it is linearly
-  interpolated to finer groups, but this is deprecated (it warns and
-  will error in a future release); supply population at least as fine as
-  `age_limits`.
+  `population`. Required when `symmetric`, `split`, `per_capita` or
+  `return_demography` is `TRUE`, unless the survey covers a single
+  population with no country information, in which case the participants
+  themselves are used. Passing a character vector of country names is
+  **\[defunct\]**; construct the data frame yourself (e.g. from the
+  `wpp2024` package or another source).
+
+  The population must cover every age group asked for: at least as fine
+  as `age_limits`, reaching at least as high, and starting no higher
+  than the youngest group. Splitting one of its bands to meet a finer or
+  higher limit means assuming how people are distributed within that
+  band, and a group it has no band for has no size at all.
+  `weigh_age = TRUE` is stricter still: it always needs a population, in
+  single-year bands, because `contact_matrix()` builds its weighting
+  reference at single-year resolution. (The pipeline's
+  [`weigh_by_age()`](https://epiforecasts.io/socialmixr/reference/weigh.md)
+  weights at the population's own bands, so it has no such requirement.)
+
+  Splitting coarser bands is a demographic modelling step and is out of
+  scope for this package;
+  [`vignette("socialmixr")`](https://epiforecasts.io/socialmixr/articles/socialmixr.md)
+  shows how to do it with a package built for it.
 
 - age_limits:
 
@@ -106,8 +156,8 @@ contact_matrix(
   of contacts across the whole population (`mean.contacts`), a
   normalisation constant (`normalisation`) and age-specific variation in
   contacts (`contacts`)), multiplied with an assortativity matrix
-  (`assortativity`) and a population multiplier (`demography`). For more
-  detail on this, see the "Getting Started" vignette.
+  (returned in `matrix`) and a population multiplier (`demography`). For
+  more detail on this, see the "Getting Started" vignette.
 
 - sample_participants:
 
@@ -206,10 +256,9 @@ contact_matrix(
 
 - ...:
 
-  further arguments to pass to
-  [`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md)
-  and [`check()`](https://epiforecasts.io/socialmixr/reference/check.md)
-  (especially column names).
+  passed on when the population is aggregated. The population is read by
+  its `lower.age.limit` and `population` columns throughout, so there is
+  nothing here for a caller to set.
 
 - survey.pop, age.limits, sample.participants,
   estimated.participant.age, estimated.contact.age,
@@ -218,13 +267,30 @@ contact_matrix(
   sample.all.age.groups, sample.participants.max.tries,
   return.part.weights, return.demography, per.capita:
 
-  **\[deprecated\]** Use the underscore-separated versions of these
+  **\[defunct\]** Use the underscore-separated versions of these
   arguments instead.
 
 ## Value
 
-a contact matrix, and the underlying demography of the surveyed
-population
+a list. It always holds `matrix`, the contact matrix, and
+`participants`, the participant counts by age group. It also holds
+`demography` under the conditions above; `matrix.per.capita` when
+`per_capita = TRUE` and neither `counts` nor `split` is; and
+`participants.weights` when `return_part_weights = TRUE`.
+
+`split = TRUE` splits the matrix when `counts` is not set and the matrix
+has no missing entry and no missing group label. Most often a missing
+entry comes from an age group no participant falls into, and a missing
+label from keeping participants or contacts whose age is unknown, but
+any missing value has the same effect. The split adds `mean.contacts`,
+`normalisation` and `contacts`, and `matrix` then holds the
+assortativity matrix. When it is skipped `contact_matrix()` warns and
+`matrix` holds the contact matrix as usual.
+
+## See also
+
+[`compute_matrix()`](https://epiforecasts.io/socialmixr/reference/compute_matrix.md)
+for the pipeline this function wraps
 
 ## Author
 

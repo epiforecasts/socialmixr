@@ -1,6 +1,6 @@
-# Convert age groups to lower age limits (deprecated)
+# Convert age groups to lower age limits (defunct)
 
-**\[deprecated\]**
+**\[defunct\]**
 
 `agegroups_to_limits()` was renamed to
 [`age_groups_to_limits()`](https://epiforecasts.io/socialmixr/reference/age_groups_to_limits.md)
@@ -23,4 +23,4 @@ agegroups_to_limits(x)
 
 ## Value
 
-a numeric vector of lower age limits
+Always errors.

@@ -58,7 +58,7 @@ as_contact_survey(
 
 - id.column, country.column, year.column:
 
-  **\[deprecated\]** Use the underscore versions (e.g., `id_column`)
+  **\[defunct\]** Use the underscore versions (e.g., `id_column`)
   instead.
 
 ## Value

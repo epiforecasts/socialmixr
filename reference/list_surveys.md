@@ -16,10 +16,7 @@ list_surveys(clear_cache = FALSE)
 
 - clear_cache:
 
-  logical, whether to clear the cache before downloading the survey; by
-  default, the cache is not cleared and so multiple calls of this
-  function to access the same survey will not result in repeated
-  downloads.
+  logical, whether to clear the cache before downloading the survey
 
 ## Value
 
@@ -28,7 +25,6 @@ Always errors.
 ## Examples
 
 ``` r
-# we recommend using the contactsurveys package now for listing surveys.
 if (FALSE) { # \dontrun{
 contactsurveys::list_surveys()
 } # }

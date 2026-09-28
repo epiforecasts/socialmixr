@@ -13,8 +13,8 @@ load_survey(files, participant_key = NULL, ...)
 
 - files:
 
-  a vector of file names as returned by
-  [`download_survey()`](https://epiforecasts.io/socialmixr/reference/download_survey.md)
+  a vector of file names, as returned by
+  [`contactsurveys::download_survey()`](http://epiforecasts.io/contactsurveys/reference/download_survey.md)
 
 - participant_key:
 
@@ -42,12 +42,15 @@ observations per participant, the returned object includes an
 
 ``` r
 if (FALSE) { # \dontrun{
-list_surveys()
-peru_files <- download_survey("https://doi.org/10.5281/zenodo.1095664")
+peru_files <- contactsurveys::download_survey(
+  "https://doi.org/10.5281/zenodo.1095664"
+)
 peru_survey <- load_survey(peru_files)
 
 # For longitudinal surveys, specify the unique key explicitly:
-france_files <- download_survey("https://doi.org/10.5281/zenodo.1157918")
+france_files <- contactsurveys::download_survey(
+  "https://doi.org/10.5281/zenodo.1157918"
+)
 france_survey <- load_survey(france_files,
   participant_key = c("part_id", "wave", "studyDay")
 )

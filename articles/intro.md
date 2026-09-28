@@ -106,26 +106,32 @@ The key argument to the pipeline functions is the `survey` they operate
 on. The `socialmixr` package includes the POLYMOD survey. It also
 provides access to all surveys in the [Social contact
 data](https://zenodo.org/communities/social_contact_data) community on
-[Zenodo](https://zenodo.org). The available surveys can be listed (if an
-internet connection is available) with
+[Zenodo](https://zenodo.org), through the
+[contactsurveys](https://github.com/epiforecasts/contactsurveys)
+package. The available surveys can be listed (if an internet connection
+is available) with
 
 ``` r
 
-list_surveys()
+contactsurveys::list_surveys()
 ```
 
-A survey can be downloaded using the
-[`get_survey()`](https://epiforecasts.io/socialmixr/reference/get_survey.md)
-command. This will get the relevant data of a survey given its Zenodo
-DOI (as returned by
-[`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md)).
+A survey can be downloaded with
+[`contactsurveys::download_survey()`](http://epiforecasts.io/contactsurveys/reference/download_survey.md),
+which takes a Zenodo DOI (as returned by
+[`list_surveys()`](https://epiforecasts.io/socialmixr/reference/list_surveys.md))
+and returns the files to read with
+[`load_survey()`](https://epiforecasts.io/socialmixr/reference/load_survey.md).
 If a survey is to be used repeatedly it is worth downloading it and
 storing it locally to avoid the need for a network connection and speed
 up processing.
 
 ``` r
 
-peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
+peru_files <- contactsurveys::download_survey(
+  "https://doi.org/10.5281/zenodo.1095664"
+)
+peru_survey <- load_survey(peru_files)
 saveRDS(peru_survey, "peru.rds")
 ```
 
@@ -224,10 +230,10 @@ mr <- Reduce("+", lapply(m["matrix", ], function(x) x / ncol(m)))
 mr
 #>           contact.age.group
 #> age.group       [0,1)     [1,5)    [5,15)  [15,Inf)
-#>   [0,1)    0.33391941 1.2776557  2.425495  9.687399
-#>   [1,5)    0.16547847 4.3282087  2.953951 11.494036
-#>   [5,15)   0.05806729 0.9617232 15.013352 11.589739
-#>   [15,Inf) 0.04648687 0.7006939  2.655210 19.345135
+#>   [0,1)    0.66941520 1.4653216  2.239825  9.516199
+#>   [1,5)    0.17351062 4.1862425  3.231979 10.537373
+#>   [5,15)   0.04861199 1.0862724 16.281085 13.031183
+#>   [15,Inf) 0.06060143 0.7797536  2.533281 19.295795
 ```
 
 ## Demography

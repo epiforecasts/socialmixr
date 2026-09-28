@@ -59,7 +59,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>The socialmixr package</h1>
 
       <p class="author">Sebastian Funk</p>
-      <p class="date">2026-08-25</p>
+      <p class="date">2026-09-28</p>
 
       <small class="dont-index">Source: <a href="https://github.com/epiforecasts/socialmixr/blob/main/vignettes/intro.qmd" class="external-link"><code>vignettes/intro.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -142,15 +142,18 @@
 <p>The resulting survey object can be inspected, subset, or passed through any number of <code><a href="../reference/weigh.html">weigh()</a></code> calls before <code><a href="../reference/compute_matrix.html">compute_matrix()</a></code>.</p>
 </section></section><section class="section level2"><h2 id="surveys">Surveys<a class="anchor" aria-label="anchor" href="#surveys"></a>
 </h2>
-<p>The key argument to the pipeline functions is the <code>survey</code> they operate on. The <code>socialmixr</code> package includes the POLYMOD survey. It also provides access to all surveys in the <a href="https://zenodo.org/communities/social_contact_data" class="external-link">Social contact data</a> community on <a href="https://zenodo.org" class="external-link">Zenodo</a>. The available surveys can be listed (if an internet connection is available) with</p>
+<p>The key argument to the pipeline functions is the <code>survey</code> they operate on. The <code>socialmixr</code> package includes the POLYMOD survey. It also provides access to all surveys in the <a href="https://zenodo.org/communities/social_contact_data" class="external-link">Social contact data</a> community on <a href="https://zenodo.org" class="external-link">Zenodo</a>, through the <a href="https://github.com/epiforecasts/contactsurveys" class="external-link">contactsurveys</a> package. The available surveys can be listed (if an internet connection is available) with</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/list_surveys.html">list_surveys</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">contactsurveys</span><span class="fu">::</span><span class="fu"><a href="http://epiforecasts.io/contactsurveys/reference/list_surveys.html" class="external-link">list_surveys</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>A survey can be downloaded using the <code><a href="../reference/get_survey.html">get_survey()</a></code> command. This will get the relevant data of a survey given its Zenodo DOI (as returned by <code><a href="../reference/list_surveys.html">list_surveys()</a></code>). If a survey is to be used repeatedly it is worth downloading it and storing it locally to avoid the need for a network connection and speed up processing.</p>
+<p>A survey can be downloaded with <code><a href="http://epiforecasts.io/contactsurveys/reference/download_survey.html" class="external-link">contactsurveys::download_survey()</a></code>, which takes a Zenodo DOI (as returned by <code><a href="../reference/list_surveys.html">list_surveys()</a></code>) and returns the files to read with <code><a href="../reference/load_survey.html">load_survey()</a></code>. If a survey is to be used repeatedly it is worth downloading it and storing it locally to avoid the need for a network connection and speed up processing.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">peru_survey</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_survey.html">get_survey</a></span><span class="op">(</span><span class="st">"https://doi.org/10.5281/zenodo.1095664"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">peru_files</span> <span class="op">&lt;-</span> <span class="fu">contactsurveys</span><span class="fu">::</span><span class="fu"><a href="http://epiforecasts.io/contactsurveys/reference/download_survey.html" class="external-link">download_survey</a></span><span class="op">(</span></span>
+<span>  <span class="st">"https://doi.org/10.5281/zenodo.1095664"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">peru_survey</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_survey.html">load_survey</a></span><span class="op">(</span><span class="va">peru_files</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">peru_survey</span>, <span class="st">"peru.rds"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>This way, the <code>peru</code> data set can be loaded in the future without the need for an internet connection using</p>
@@ -232,10 +235,10 @@
 <span><span class="va">mr</span></span>
 <span><span class="co">#&gt;           contact.age.group</span></span>
 <span><span class="co">#&gt; age.group       [0,1)     [1,5)    [5,15)  [15,Inf)</span></span>
-<span><span class="co">#&gt;   [0,1)    0.33391941 1.2776557  2.425495  9.687399</span></span>
-<span><span class="co">#&gt;   [1,5)    0.16547847 4.3282087  2.953951 11.494036</span></span>
-<span><span class="co">#&gt;   [5,15)   0.05806729 0.9617232 15.013352 11.589739</span></span>
-<span><span class="co">#&gt;   [15,Inf) 0.04648687 0.7006939  2.655210 19.345135</span></span></code></pre></div>
+<span><span class="co">#&gt;   [0,1)    0.66941520 1.4653216  2.239825  9.516199</span></span>
+<span><span class="co">#&gt;   [1,5)    0.17351062 4.1862425  3.231979 10.537373</span></span>
+<span><span class="co">#&gt;   [5,15)   0.04861199 1.0862724 16.281085 13.031183</span></span>
+<span><span class="co">#&gt;   [15,Inf) 0.06060143 0.7797536  2.533281 19.295795</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="demography">Demography<a class="anchor" aria-label="anchor" href="#demography"></a>
 </h2>

@@ -3,12 +3,9 @@
 Internal numeric coarsener operating on `lower.age.limit` columns:
 rebins a population table to the age groups defined by `age_limits`,
 summing when coarser. Requesting age groups finer than the population
-data is deprecated: it warns and linearly interpolates, and will error
-in a future release. Wrapped by
+data is defunct and errors. Wrapped by
 [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md)
-(which errors on finer requests) and used by
-[`pop_age()`](https://epiforecasts.io/socialmixr/reference/pop_age.md)
-and
+and used by
 [`contact_matrix()`](https://epiforecasts.io/socialmixr/reference/contact_matrix.md)'s
 population adjustment.
 

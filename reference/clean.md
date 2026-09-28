@@ -31,7 +31,7 @@ clean(
 
 - participant.age.column:
 
-  **\[deprecated\]** Use `participant_age_column` instead.
+  **\[defunct\]** Use `participant_age_column` instead.
 
 ## Value
 

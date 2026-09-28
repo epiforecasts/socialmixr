@@ -123,10 +123,14 @@ the corresponding entry in <code>groups</code>. The per-participant factor is
 <code>target[g] / n_in_group</code>.</p></li>
 <li><p>a named numeric vector — same as above but <code>names(target)</code> are
 matched against values of the <code>by</code> column.</p></li>
-</ul><p>A data frame target that does <em>not</em> have a column named <code>by</code> but does
-have <code>lower.age.limit</code> and <code>population</code> triggers a deprecation warning
-and falls back to the old hidden age post-stratification path; use
-<code>weigh_by_age()</code> instead.</p>
+</ul><p>A data frame target that does <em>not</em> have a column named <code>by</code> but does have
+<code>lower.age.limit</code> and <code>population</code> is <a href="https://lifecycle.r-lib.org/articles/stages.html#defunct" class="external-link"><img src="figures/lifecycle-defunct.svg" alt="[Defunct]"></a> and
+errors. Use <code>weigh_by_age()</code> instead, which post-stratifies by age
+explicitly. It takes the population with an <code>age</code> column of group labels, so
+convert a <code>lower.age.limit</code> table with <code><a href="limits_to_age_groups.html">limits_to_age_groups()</a></code> first. It
+weights at the population's own age bands, where the old path first rebinned
+to single years, so the two agree for a population already in single-year
+bands and diverge for a coarser one.</p>
     </div>
     <div class="section level2">
     <h2 id="weigh-by-dayofweek-"><code>weigh_by_dayofweek()</code><a class="anchor" aria-label="anchor" href="#weigh-by-dayofweek-"></a></h2>

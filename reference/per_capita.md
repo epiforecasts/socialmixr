@@ -39,8 +39,9 @@ levels are matched to the matrix exactly, without interpolation.
 Use
 [`align_ages()`](https://epiforecasts.io/socialmixr/reference/align_ages.md)
 to build this from a raw population table: it aggregates each grouping
-to the matrix's levels (interpolating the age grouping where needed) and
-labels the columns to match.
+to the matrix's levels, coarsening the age grouping where needed, and
+labels the columns to match. A population coarser than the matrix's age
+groups is an error rather than being split.
 
 ## Examples
 

@@ -1,8 +1,8 @@
 # Change age groups in population data
 
-**\[deprecated\]**
+**\[defunct\]**
 
-`pop_age()` is deprecated. To rebin a population table to explicit age
+`pop_age()` is defunct. To rebin a population table to explicit age
 limits, use
 [`rebin_ages()`](https://epiforecasts.io/socialmixr/reference/rebin_ages.md).
 To align a population table to a contact matrix's age groups, use
@@ -49,9 +49,9 @@ pop_age(
 
 - age.limits, pop.age.column, pop.column:
 
-  **\[deprecated\]** Use the underscore versions (e.g., `age_limits`)
+  **\[defunct\]** Use the underscore versions (e.g., `age_limits`)
   instead.
 
 ## Value
 
-data frame of age-specific population data
+Always errors.

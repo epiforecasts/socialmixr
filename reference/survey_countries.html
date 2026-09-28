@@ -52,7 +52,7 @@
 
 
 <dl><dt id="arg-survey">survey<a class="anchor" aria-label="anchor" href="#arg-survey"></a></dt>
-<dd><p>a DOI or url to get the survey from, or a <code><a href="survey.html">survey()</a></code> object.</p></dd>
+<dd><p>a DOI or url to get the survey from, or a survey object</p></dd>
 
 
 <dt id="arg-country-column">country.column<a class="anchor" aria-label="anchor" href="#arg-country-column"></a></dt>
@@ -60,7 +60,7 @@
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>further arguments for <code><a href="get_survey.html">get_survey()</a></code></p></dd>
+<dd><p>currently unused</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -76,11 +76,6 @@ and <code><a href="load_survey.html">load_survey()</a></code> and then explore t
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">survey_countries</span><span class="op">(</span><span class="va">polymod</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
-<span class="r-in"><span><span class="co">## --&gt; we now recommend</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">doi_peru</span> <span class="op">&lt;-</span> <span class="st">"10.5281/zenodo.1095664"</span> <span class="co"># nolint</span></span></span>
 <span class="r-in"><span><span class="co"># download the data with the contactsurveys package</span></span></span>
 <span class="r-in"><span><span class="va">peru_survey</span> <span class="op">&lt;-</span> <span class="fu">contactsurveys</span><span class="fu">::</span><span class="fu"><a href="http://epiforecasts.io/contactsurveys/reference/download_survey.html" class="external-link">download_survey</a></span><span class="op">(</span><span class="va">doi_peru</span><span class="op">)</span></span></span>
