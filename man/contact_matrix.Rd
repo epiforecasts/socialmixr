@@ -56,16 +56,26 @@ given as country names or 2-letter (ISO Alpha-2) country
 codes.}
 
 \item{survey_pop}{survey population -- a data frame with columns
-\code{lower.age.limit} and \code{population}. Passing \code{NULL} (the default)
-or a character vector of country names triggers the
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} implicit lookup via \code{\link[=wpp_age]{wpp_age()}}
-when \code{symmetric}, \code{split}, \code{per_capita}, \code{weigh_age}, or
-\code{return_demography} is \code{TRUE}; supply an explicit data frame
-(e.g. constructed from the \code{wpp2024} package or another source)
-instead. If the population is coarser than the requested age groups it
-is linearly interpolated to finer groups, but this is deprecated (it
-warns and will error in a future release); supply population at least as
-fine as \code{age_limits}.}
+\code{lower.age.limit} and \code{population}. Required when \code{symmetric}, \code{split},
+\code{per_capita} or \code{return_demography} is \code{TRUE}, unless the survey covers a
+single population with no country information, in which case the
+participants themselves are used. Passing a character vector of country
+names is \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}; construct the data frame
+yourself (e.g. from the \code{wpp2024} package or another source).
+
+The population must cover every age group asked for: at least as fine as
+\code{age_limits}, reaching at least as high, and starting no higher than the
+youngest group. Splitting one of its bands to meet a finer or higher limit
+means assuming how people are distributed within that band, and a group it
+has no band for has no size at all.
+\code{weigh_age = TRUE} is stricter still: it always needs a population, in
+single-year bands, because \code{contact_matrix()} builds its weighting
+reference at single-year resolution. (The pipeline's \code{\link[=weigh_by_age]{weigh_by_age()}}
+weights at the population's own bands, so it has no such requirement.)
+
+Splitting coarser bands is a demographic modelling step and is out of
+scope for this package; \code{vignette("socialmixr")} shows how to do it with a
+package built for it.}
 
 \item{age_limits}{lower limits of the age groups over which to
 construct the matrix. If NULL (default), age limits are
@@ -88,8 +98,8 @@ number of contacts, in each age group (split further into the
 product of the mean number of contacts across the whole
 population (\code{mean.contacts}), a normalisation constant
 (\code{normalisation}) and age-specific variation in contacts
-(\code{contacts})), multiplied with an assortativity matrix
-(\code{assortativity}) and a population multiplier (\code{demography}).
+(\code{contacts})), multiplied with an assortativity matrix (returned in
+\code{matrix}) and a population multiplier (\code{demography}).
 For more detail on this, see the "Getting Started" vignette.}
 
 \item{sample_participants}{whether to sample participants
@@ -171,17 +181,56 @@ parameters).}
 per capita (default is FALSE and not possible if 'counts=TRUE'
 or 'split=TRUE').}
 
-\item{...}{further arguments to pass to \code{\link[=get_survey]{get_survey()}}
-and \code{\link[=check]{check()}} (especially column names).}
+\item{...}{passed on when the population is aggregated. The population is
+read by its \code{lower.age.limit} and \code{population} columns throughout, so
+there is nothing here for a caller to set.}
 
-\item{survey.pop, age.limits, sample.participants, estimated.participant.age, estimated.contact.age, missing.participant.age, missing.contact.age, weigh.dayofweek, weigh.age, weight.threshold, symmetric.norm.threshold, sample.all.age.groups, sample.participants.max.tries, return.part.weights, return.demography, per.capita}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use the underscore-separated versions of these arguments instead.}
+\item{survey.pop, age.limits, sample.participants, estimated.participant.age, estimated.contact.age, missing.participant.age, missing.contact.age, weigh.dayofweek, weigh.age, weight.threshold, symmetric.norm.threshold, sample.all.age.groups, sample.participants.max.tries, return.part.weights, return.demography, per.capita}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}} Use the underscore-separated versions of these arguments instead.}
 }
 \value{
-a contact matrix, and the underlying demography of the
-surveyed population
+a list. It always holds \code{matrix}, the contact matrix, and
+\code{participants}, the participant counts by age group. It also holds
+\code{demography} under the conditions above; \code{matrix.per.capita} when
+\code{per_capita = TRUE} and neither \code{counts} nor \code{split} is; and
+\code{participants.weights} when \code{return_part_weights = TRUE}.
+
+\code{split = TRUE} splits the matrix when \code{counts} is not set and the matrix
+has no missing entry and no missing group label. Most often a missing
+entry comes from an age group no participant falls into, and a missing
+label from keeping participants or contacts whose age is unknown, but any
+missing value has the same effect. The split adds \code{mean.contacts},
+\code{normalisation} and \code{contacts}, and \code{matrix} then holds the assortativity
+matrix. When it is skipped \code{contact_matrix()} warns and \code{matrix} holds the
+contact matrix as usual.
 }
 \description{
-Samples a contact survey
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+
+Computes a contact matrix from a diary survey in a single call, together
+with participant counts by age group. The demography comes too when any of
+\code{symmetric}, \code{split}, \code{per_capita} or \code{weigh_age} is \code{TRUE}, or when
+\code{return_demography = TRUE}; setting \code{return_demography = FALSE} suppresses
+it even then.
+
+\code{contact_matrix()} is superseded: it is still maintained and is not going
+away, but new code is better written as the pipeline it wraps.
+The pipeline composes the same steps, and can group by more than age:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{survey |>
+  assign_age_groups(age_limits = c(0, 5, 15)) |>
+  weigh_by_dayofweek() |>
+  compute_matrix()
+}\if{html}{\out{</div>}}
+
+The weighing functions stand in for \code{weigh_age} and \code{weigh_dayofweek}, and
+take the survey. \code{\link[=weigh_by_age]{weigh_by_age()}} and \code{\link[=weigh_by_dayofweek]{weigh_by_dayofweek()}} belong after
+\code{\link[=assign_age_groups]{assign_age_groups()}}, which adds the age column \code{\link[=weigh_by_age]{weigh_by_age()}} needs and
+settles which participants the matrix is built from, and before
+\code{\link[=compute_matrix]{compute_matrix()}}, which consumes the weights.
+
+The post-processing functions stand in for \code{symmetric}, \code{split} and
+\code{per_capita}, and take the matrix: pipe the \code{\link[=compute_matrix]{compute_matrix()}} result into
+\code{\link[=symmetrise]{symmetrise()}}, \code{\link[=split_matrix]{split_matrix()}} or \code{\link[=per_capita]{per_capita()}}.
 }
 \examples{
 data(polymod)
@@ -190,6 +239,9 @@ contact_matrix(
   countries = "United Kingdom",
   age_limits = c(0, 1, 5, 15)
 )
+}
+\seealso{
+\code{\link[=compute_matrix]{compute_matrix()}} for the pipeline this function wraps
 }
 \author{
 Sebastian Funk

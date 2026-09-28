@@ -15,22 +15,21 @@ reduce_age_groups <- function(x, limits) {
   ret
 }
 
-#' Reduce the number of age groups (deprecated)
+#' Reduce the number of age groups (defunct)
 #'
 #' @description
-#' `r lifecycle::badge("deprecated")`
+#' `r lifecycle::badge("defunct")`
 #'
 #' `reduce_agegroups()` was renamed to [reduce_age_groups()] for naming
 #' consistency.
 #' @inheritParams reduce_age_groups
-#' @return vector with the new age groups
+#' @return Always errors.
 #' @keywords internal
 #' @export
 reduce_agegroups <- function(x, limits) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "0.7.0",
     "reduce_agegroups()",
     "reduce_age_groups()"
   )
-  reduce_age_groups(x, limits)
 }

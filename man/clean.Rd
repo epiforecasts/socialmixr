@@ -20,7 +20,7 @@ containing participants' age}
 
 \item{...}{ignored}
 
-\item{participant.age.column}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\item{participant.age.column}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
 Use \code{participant_age_column} instead.}
 }
 \value{

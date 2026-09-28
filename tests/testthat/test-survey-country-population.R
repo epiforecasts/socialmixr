@@ -1,36 +1,10 @@
-withr::local_options(
-  lifecycle_verbosity = "warning",
-  .local_envir = teardown_env()
-)
-
-test_that("survey_country_population() works", {
-  expect_snapshot(
-    as.data.frame(survey_country_population(polymod))
+test_that("survey_country_population() is defunct", {
+  expect_error(
+    survey_country_population(polymod),
+    class = "lifecycle_error_deprecated"
   )
-  expect_snapshot(
-    as.data.frame(survey_country_population(polymod, countries = "Belgium"))
+  expect_error(
+    survey_country_population(polymod, countries = "Belgium"),
+    class = "lifecycle_error_deprecated"
   )
-  expect_snapshot(
-    as.data.frame(survey_country_population(
-      polymod,
-      countries = c("Belgium", "Italy")
-    ))
-  )
-  expect_snapshot(
-    as.data.frame(survey_country_population(polymod, countries = "Australia"))
-  )
-})
-
-test_that("survey_country_population() errors appropriately", {
-  # When no country information provided
-  polymod_copy <- polymod
-  polymod_copy$participants$country <- NULL
-  expect_snapshot(
-    error = TRUE,
-    survey_country_population(polymod_copy)
-  )
-})
-
-test_that("survey_country_population() is deprecated", {
-  lifecycle::expect_deprecated(survey_country_population(polymod))
 })

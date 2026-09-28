@@ -2,7 +2,8 @@
 #'
 #' @description Loads a survey from a local file system. Tables are expected
 #'   as csv files, and a reference (if present) as JSON.
-#' @param files a vector of file names as returned by [download_survey()]
+#' @param files a vector of file names, as returned by
+#'   `contactsurveys::download_survey()`
 #' @param participant_key character vector specifying columns that uniquely
 #'   identify participant observations. For cross-sectional surveys this is
 #'   typically just `"part_id"` (the default). For longitudinal surveys with
@@ -14,12 +15,15 @@
 #' @importFrom jsonlite fromJSON
 #' @examples
 #' \dontrun{
-#' list_surveys()
-#' peru_files <- download_survey("https://doi.org/10.5281/zenodo.1095664")
+#' peru_files <- contactsurveys::download_survey(
+#'   "https://doi.org/10.5281/zenodo.1095664"
+#' )
 #' peru_survey <- load_survey(peru_files)
 #'
 #' # For longitudinal surveys, specify the unique key explicitly:
-#' france_files <- download_survey("https://doi.org/10.5281/zenodo.1157918")
+#' france_files <- contactsurveys::download_survey(
+#'   "https://doi.org/10.5281/zenodo.1157918"
+#' )
 #' france_survey <- load_survey(france_files,
 #'   participant_key = c("part_id", "wave", "studyDay")
 #' )
@@ -76,8 +80,8 @@ load_survey <- function(files, participant_key = NULL, ...) {
 
   if (!is.null(new_survey$reference)) {
     cli::cli_inform(
-      "Using {new_survey$reference$title}. To cite this in a publication,\\
-      use the {.fn get_citation} function."
+      "Using {new_survey$reference$title}. To cite this in a publication, \\
+      use {.fn contactsurveys::get_citation}."
     )
   }
 

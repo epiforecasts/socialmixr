@@ -20,8 +20,8 @@ deprecate_arg(old_arg, new_arg, old_name, new_name, fn_name, version = "0.5.0")
 \item{version}{the version when deprecated}
 }
 \value{
-\code{new_arg}, or \code{old_arg} if it is supplied, in which case a
-deprecation warning is issued via \code{\link[lifecycle:deprecate_soft]{lifecycle::deprecate_warn()}}.
+\code{new_arg}. Supplying \code{old_arg} errors via
+\code{\link[lifecycle:deprecate_soft]{lifecycle::deprecate_stop()}}.
 }
 \description{
 Handle deprecated argument

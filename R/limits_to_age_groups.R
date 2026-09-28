@@ -75,15 +75,15 @@ age_groups_to_limits <- function(x) {
   as.numeric(sub("^\\[?(\\d+).*", "\\1", lvls))
 }
 
-#' Convert lower age limits to age groups (deprecated)
+#' Convert lower age limits to age groups (defunct)
 #'
 #' @description
-#' `r lifecycle::badge("deprecated")`
+#' `r lifecycle::badge("defunct")`
 #'
 #' `limits_to_agegroups()` was renamed to [limits_to_age_groups()] for naming
 #' consistency.
 #' @inheritParams limits_to_age_groups
-#' @return Age groups as specified in `notation`
+#' @return Always errors.
 #' @keywords internal
 #' @export
 limits_to_agegroups <- function(
@@ -91,34 +91,28 @@ limits_to_agegroups <- function(
   limits = sort(unique(x)),
   notation = c("dashes", "brackets")
 ) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "0.7.0",
     "limits_to_agegroups()",
     "limits_to_age_groups()"
   )
-  if (missing(notation)) {
-    limits_to_age_groups(x, limits)
-  } else {
-    limits_to_age_groups(x, limits, notation)
-  }
 }
 
-#' Convert age groups to lower age limits (deprecated)
+#' Convert age groups to lower age limits (defunct)
 #'
 #' @description
-#' `r lifecycle::badge("deprecated")`
+#' `r lifecycle::badge("defunct")`
 #'
 #' `agegroups_to_limits()` was renamed to [age_groups_to_limits()] for naming
 #' consistency.
 #' @inheritParams age_groups_to_limits
-#' @return a numeric vector of lower age limits
+#' @return Always errors.
 #' @keywords internal
 #' @export
 agegroups_to_limits <- function(x) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "0.7.0",
     "agegroups_to_limits()",
     "age_groups_to_limits()"
   )
-  age_groups_to_limits(x)
 }

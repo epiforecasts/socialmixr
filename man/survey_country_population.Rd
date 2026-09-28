@@ -14,22 +14,18 @@ this will be used instead of the potential "country" column in
 "participants".}
 }
 \value{
-A data table with population data by age group for the survey
-countries, aggregated by lower age limit. The function will error if no
-country information is available from either the survey or countries
-argument.
+Always errors.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
 
-This function is deprecated alongside \code{\link[=wpp_age]{wpp_age()}}, which it wraps. The
-underlying \code{wpp2017} data is outdated. Construct a \code{data.frame} with
-columns \code{lower.age.limit} and \code{population} from a current source (e.g.
-the \code{wpp2024} package from GitHub) and pass it to \code{\link[=contact_matrix]{contact_matrix()}}
-via the \code{survey_pop} argument instead.
+\code{survey_country_population()} is defunct alongside \code{\link[=wpp_age]{wpp_age()}}, which it
+wrapped. Construct a \code{data.frame} with columns \code{lower.age.limit} and
+\code{population} from a current source (e.g. the \code{wpp2024} package from GitHub)
+and pass it to \code{\link[=contact_matrix]{contact_matrix()}} via the \code{survey_pop} argument instead.
 }
 \examples{
-if (requireNamespace("wpp2017", quietly = TRUE)) {
-  survey_country_population(polymod, countries = "Belgium")
+\dontrun{
+survey_country_population(polymod, countries = "Belgium")
 }
 }

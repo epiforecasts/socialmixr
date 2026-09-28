@@ -7,7 +7,8 @@
 load_survey(files, participant_key = NULL, ...)
 }
 \arguments{
-\item{files}{a vector of file names as returned by \code{\link[=download_survey]{download_survey()}}}
+\item{files}{a vector of file names, as returned by
+\code{contactsurveys::download_survey()}}
 
 \item{participant_key}{character vector specifying columns that uniquely
 identify participant observations. For cross-sectional surveys this is
@@ -30,12 +31,15 @@ as csv files, and a reference (if present) as JSON.
 }
 \examples{
 \dontrun{
-list_surveys()
-peru_files <- download_survey("https://doi.org/10.5281/zenodo.1095664")
+peru_files <- contactsurveys::download_survey(
+  "https://doi.org/10.5281/zenodo.1095664"
+)
 peru_survey <- load_survey(peru_files)
 
 # For longitudinal surveys, specify the unique key explicitly:
-france_files <- download_survey("https://doi.org/10.5281/zenodo.1157918")
+france_files <- contactsurveys::download_survey(
+  "https://doi.org/10.5281/zenodo.1157918"
+)
 france_survey <- load_survey(france_files,
   participant_key = c("part_id", "wave", "studyDay")
 )

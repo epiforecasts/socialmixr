@@ -23,16 +23,9 @@ Always errors.
 
 \code{download_survey()} is defunct. Use \code{contactsurveys::download_survey()}
 instead.
-
-\code{download_survey()} downloads survey data from Zenodo.
 }
 \examples{
-# we recommend using the contactsurveys package for download_survey()
 \dontrun{
-# if needed, discover surveys with:
-contactsurveys::list_surveys()
-peru_survey <- download_survey("https://doi.org/10.5281/zenodo.1095664")
-# -->
 peru_survey <- contactsurveys::download_survey(
   "https://doi.org/10.5281/zenodo.1095664"
 )

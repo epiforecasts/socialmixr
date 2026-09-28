@@ -66,16 +66,19 @@ The resulting survey object can be inspected, subset, or passed through any numb
 
 # Surveys
 
-The key argument to the pipeline functions is the `survey` they operate on. The `socialmixr` package includes the POLYMOD survey. It also provides access to all surveys in the [Social contact data](https://zenodo.org/communities/social_contact_data) community on [Zenodo](https://zenodo.org). The available surveys can be listed (if an internet connection is available) with
+The key argument to the pipeline functions is the `survey` they operate on. The `socialmixr` package includes the POLYMOD survey. It also provides access to all surveys in the [Social contact data](https://zenodo.org/communities/social_contact_data) community on [Zenodo](https://zenodo.org), through the [contactsurveys](https://github.com/epiforecasts/contactsurveys) package. The available surveys can be listed (if an internet connection is available) with
 
 ```{r eval=FALSE}
-list_surveys()
+contactsurveys::list_surveys()
 ```
 
-A survey can be downloaded using the `get_survey()` command. This will get the relevant data of a survey given its Zenodo DOI (as returned by `list_surveys()`). If a survey is to be used repeatedly it is worth downloading it and storing it locally to avoid the need for a network connection and speed up processing.
+A survey can be downloaded with `contactsurveys::download_survey()`, which takes a Zenodo DOI (as returned by `list_surveys()`) and returns the files to read with `load_survey()`. If a survey is to be used repeatedly it is worth downloading it and storing it locally to avoid the need for a network connection and speed up processing.
 
 ```{r eval=FALSE}
-peru_survey <- get_survey("https://doi.org/10.5281/zenodo.1095664")
+peru_files <- contactsurveys::download_survey(
+  "https://doi.org/10.5281/zenodo.1095664"
+)
+peru_survey <- load_survey(peru_files)
 saveRDS(peru_survey, "peru.rds")
 ```
 
