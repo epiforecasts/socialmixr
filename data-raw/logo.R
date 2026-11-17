@@ -3,11 +3,14 @@
 ## keeps both signatures of an empirical contact matrix visible: the diagonal
 ## of within-age-group contacts and the parent-child wings either side of it.
 ##
-## Writes data-raw/logo.svg. The rendered logo used by the package is produced
-## from it with, from the package root:
+## Writes data-raw/logo.svg and data-raw/logo-dark.svg, the same design on a
+## dark ground for dark themes. The rendered logos used by the package are
+## produced from them with, from the package root:
 ##
 ##   inkscape --export-type=png --export-filename=man/figures/logo.png \
 ##     --export-width=240 --export-background-opacity=0 data-raw/logo.svg
+##   inkscape --export-type=png --export-filename=man/figures/logo-dark.png \
+##     --export-width=240 --export-background-opacity=0 data-raw/logo-dark.svg
 ##
 ## Any other SVG renderer (rsvg-convert, ImageMagick) works as well. The
 ## wordmark is set in Fira Sans, falling back to any sans-serif face.
@@ -46,7 +49,19 @@ ramp <- colorRamp(viridis, space = "Lab")
 ## much larger school-age peak on the diagonal
 scaled <- pmin(as.vector(mat), 2)
 level <- (scaled - min(scaled)) / (max(scaled) - min(scaled))
-cols <- matrix(rgb(ramp(level), maxColorValue = 255), n, n)
+
+## on the dark ground the ramp starts further up viridis, because its deep
+## purple end would sink into the background
+themes <- list(
+  light = list(
+    file = "logo", ground = "#f7f7f5", border = "#31688E",
+    text_col = "#1b2430", stops = c(0, 1)
+  ),
+  dark = list(
+    file = "logo-dark", ground = "#141b24", border = "#5f9fc6",
+    text_col = "#eef1f4", stops = c(0.2, 1)
+  )
+)
 
 ## standard R hex sticker proportions (43.9 x 50.8 mm), pointy top
 width <- 1200
@@ -65,37 +80,44 @@ gap <- 5
 cell <- side / n
 x0 <- cx - side / 2
 y0 <- cy - side / 2 - 80
-tiles <- unlist(lapply(seq_len(n), function(i) {
-  sprintf(
-    '<rect x="%.2f" y="%.2f" width="%.2f" height="%.2f" rx="3" fill="%s"/>',
-    x0 + (seq_len(n) - 1) * cell + gap / 2, y0 + (i - 1) * cell + gap / 2,
-    cell - gap, cell - gap, cols[i, ]
+for (theme in themes) {
+  stops <- theme$stops
+  cols <- matrix(
+    rgb(ramp(stops[1] + level * (stops[2] - stops[1])), maxColorValue = 255),
+    n, n
   )
-}))
+  tiles <- unlist(lapply(seq_len(n), function(i) {
+    sprintf(
+      '<rect x="%.2f" y="%.2f" width="%.2f" height="%.2f" rx="3" fill="%s"/>',
+      x0 + (seq_len(n) - 1) * cell + gap / 2, y0 + (i - 1) * cell + gap / 2,
+      cell - gap, cell - gap, cols[i, ]
+    )
+  }))
 
-svg <- c(
-  sprintf(
-    paste0(
-      '<svg xmlns="http://www.w3.org/2000/svg" width="%.0f" height="%.0f" ',
-      'viewBox="0 0 %.0f %.0f">'
+  svg <- c(
+    sprintf(
+      paste0(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="%.0f" height="%.0f" ',
+        'viewBox="0 0 %.0f %.0f">'
+      ),
+      width, height, width, height
     ),
-    width, height, width, height
-  ),
-  sprintf('<path d="%s" fill="#f7f7f5"/>', hexagon()),
-  tiles,
-  sprintf(
-    '<path d="%s" fill="none" stroke="#31688E" stroke-width="26"/>',
-    hexagon(0.985)
-  ),
-  sprintf(
-    paste0(
-      '<text x="%.0f" y="%.0f" text-anchor="middle" font-size="132" ',
-      'font-weight="600" fill="#1b2430" ',
-      'font-family="Fira Sans, DejaVu Sans, sans-serif">socialmixr</text>'
+    sprintf('<path d="%s" fill="%s"/>', hexagon(), theme$ground),
+    tiles,
+    sprintf(
+      '<path d="%s" fill="none" stroke="%s" stroke-width="26"/>',
+      hexagon(0.985), theme$border
     ),
-    cx, height - 250
-  ),
-  "</svg>"
-)
+    sprintf(
+      paste0(
+        '<text x="%.0f" y="%.0f" text-anchor="middle" font-size="132" ',
+        'font-weight="600" fill="%s" ',
+        'font-family="Fira Sans, DejaVu Sans, sans-serif">socialmixr</text>'
+      ),
+      cx, height - 250, theme$text_col
+    ),
+    "</svg>"
+  )
 
-writeLines(svg, file.path("data-raw", "logo.svg"))
+  writeLines(svg, file.path("data-raw", paste0(theme$file, ".svg")))
+}
